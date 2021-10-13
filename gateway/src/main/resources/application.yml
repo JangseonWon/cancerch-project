@@ -11,7 +11,7 @@ spring:
     gateway:
       routes:
         - id: avoid-service
-            uri: lb://avoid-service
+          uri: lb://avoid-service
           predicates:
             - Path=/avoid/**, /avoid.html, /avoid/*.js, /css/avoid.css
 server:
