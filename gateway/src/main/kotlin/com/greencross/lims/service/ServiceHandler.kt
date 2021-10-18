@@ -41,7 +41,7 @@ class ServiceHandler(
                         svc.children(pages.toTypedArray())
                     }
                 }
-            ).map { svc: Service -> svc.title("RnD").order("X").prefix("/RnD-service") }
+            ).map { svc: Service -> svc.title("RnD").order("C").prefix("/RnD-service") }
             .doOnNext{
                 Log.info(it.toString())
             }
