@@ -18,7 +18,7 @@ open class ServiceRouter(
 
     private fun services(request: ServerRequest): Mono<ServerResponse> {
         return ServerResponse.ok().bodyValue(Page().icon("fa-cubes")
-            .title("Modeler")
-            .uri("/referral-classifier-service/modeler.html").order("1"))
+            .title("Avoid")
+            .uri("/RnD-service/avoid.html").order("1"))
     }
 }

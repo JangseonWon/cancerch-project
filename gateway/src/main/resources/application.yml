@@ -15,4 +15,4 @@ spring:
           predicates:
             - Path=/avoid/**, /avoid.html, /avoid/*.js, /css/avoid.css
 server:
-  port: 26030
+  port: 26035

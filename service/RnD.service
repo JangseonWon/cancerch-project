@@ -3,7 +3,7 @@ Description=GCGenome RnD Service
 
 [Service]
 WorkingDirectory=/usr/local/bin
-ExecStart=java -jar /var/lib/lims/RnD-1.0.jar --spring.config.location=/etc/lims/RnD.yml
+ExecStart=java -jar /var/lib/lims/RnD.jar --spring.config.location=/etc/lims/RnD.yml
 ExecReload=/bin/kill -INT
 KillMode=control-group
 Restart=on-failure

@@ -30,7 +30,7 @@ spring:
               - DELETE
       routes:
         - id: RnD-gateway
-          uri: http://localhost:26030/
+          uri: http://localhost:26035/
           predicates:
             - Path=/**
 server:
