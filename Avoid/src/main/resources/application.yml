@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: Avoid-service
+  main:
+    web-application-type: reactive
+  cloud:
+    zookeeper:
+      connect-string: test:12181
+      discovery:
+        root: /RnD
+    stream:
+      function:
+        definition: publish-model;broadcast-model;publish-sample;broadcast-sample;publish-learning-message;broadcast-learning-message;
+      bindings:
+        publish-model-out-0.destination: referral-classifier-models
+        broadcast-model-in-0.destination: referral-classifier-models
+        publish-learning-message-out-0.destination: referral-classifier-learning-message
+        broadcast-learning-message-in-0.destination: referral-classifier-learning-message
+        publish-sample-out-0.destination: referral-classifier-document-samples
+        broadcast-sample-in-0.destination: referral-classifier-document-samples
+      kafka:
+        binder:
+          brokers: gemini, pisces, aries, taurus, libra
+          auto-add-partitions: true
+  r2dbc:
+    url: r2dbc:postgresql://gemini:5432/lims
+    username: referral_classifier
+    password: rc1004!@
+    pool:
+      initial-size: 100
+      max-size: 500
+      max-idle-time: 30m
+      validation-query: SELECT 1
+server:
+  port: 0
+  temp-directory: D:\data\models

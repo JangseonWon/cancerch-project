@@ -1,0 +1,81 @@
+plugins {
+    id "org.wisepersist.gwt" version "1.1.13"
+    id "java"
+    id "maven-publish"
+    id "org.jetbrains.kotlin.jvm"
+}
+apply plugin: "java"
+apply plugin: "gwt-base"
+apply plugin: "kotlin"
+
+group "com.greencross"
+archivesBaseName = "RnD-shared"
+version "1.0"
+java.sourceCompatibility = JavaVersion.VERSION_11
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.jboss.elemento:elemento-core:1.0.3")
+    implementation("com.google.jsinterop:jsinterop-annotations:2.0.0")
+    compileOnly("org.projectlombok:lombok:1.18.16")
+    annotationProcessor('org.projectlombok:lombok:1.18.16')
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.2")
+    implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+}
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "11"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "11"
+    }
+}
+
+gwt {
+    gwtVersion = "2.9.0"
+    minHeapSize = "1024M"
+    maxHeapSize = "2048M"
+    jsInteropExports.setGenerate(true)
+    compiler {
+        localWorkers = 12
+        disableClassMetadata = true
+        disableCastChecking = true
+    }
+}
+ext {
+    lombok = project.configurations.annotationProcessor.find { it.name.startsWith("lombok") }
+}
+compileGwt {
+    minHeapSize = "2048M"
+    maxHeapSize = "4096M"
+    jvmArgs "-XX:ReservedCodeCacheSize=512M","-Xss2M", "-javaagent:${lombok}=ECJ", "-generateJsInteropExport"
+}
+
+jar {
+    from sourceSets.main.allSource
+    archiveName "${archivesBaseName}.jar"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "com.greencross"
+            artifactId = "RnD-data"
+            version = 1.0
+            from components.java
+        }
+    }
+}
