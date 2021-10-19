@@ -36,6 +36,10 @@ tasks {
         archiveFileName.set("RnD-gateway.jar")
     }
 }
+tasks.processResources {
+    dependsOn("copyWebResources")
+    if (project.gradle.startParameter.taskNames.contains("build")) exclude("application.yml")
+}
 tasks.getByName<Jar>("jar") {
     enabled = false
 }
