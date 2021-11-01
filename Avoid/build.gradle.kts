@@ -74,7 +74,7 @@ tasks.processResources {
 }
 tasks {
     bootJar {
-        archiveFileName.set("Rnd-Avoid.jar")
+        archiveFileName.set("RnD-Avoid.jar")
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
