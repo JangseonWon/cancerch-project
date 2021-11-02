@@ -42,9 +42,9 @@ public final class RequestInitBuilder {
 	@JsProperty
 	private String redirect;
 	@JsProperty
-	private String rnd;
+	private String referrer;
 	@JsProperty
-	private String rndPolicy;
+	private String referrerPolicy;
 	@JsProperty
 	private AbortSignal signal;
 	@JsProperty
@@ -169,14 +169,14 @@ public final class RequestInitBuilder {
 	}
 	@JsOverlay
 	@JsIgnore
-	public RequestInitBuilder rnd(String rnd) {
-		this.rnd = rnd;
+	public RequestInitBuilder referrer(String referrer) {
+		this.referrer = referrer;
 		return this;
 	}
 	@JsOverlay
 	@JsIgnore
-	public RequestInitBuilder rndPolicy(String rndPolicy) {
-		this.rndPolicy = rndPolicy;
+	public RequestInitBuilder referrerPolicy(String referrerPolicy) {
+		this.referrerPolicy = referrerPolicy;
 		return this;
 	}
 	@JsOverlay
