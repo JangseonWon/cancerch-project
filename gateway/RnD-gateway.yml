@@ -10,9 +10,9 @@ spring:
         root: /RnD
     gateway:
       routes:
-        - id: avoid-service
-          uri: lb://avoid-service
+        - id: worklist-service
+          uri: lb://worklist-service
           predicates:
-            - Path=/avoid/**, /avoid.html, /avoid/*.js, /css/avoid.css
+            - Path=/worklist/**, /worklist.html, /worklist/*.js, /css/worklist.css
 server:
   port: 26040

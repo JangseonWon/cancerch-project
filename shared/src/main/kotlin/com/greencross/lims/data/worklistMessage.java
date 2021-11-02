@@ -1,4 +1,4 @@
 package com.greencross.lims.data;
 
-public class Avoid {
+public class worklistMessage {
 }

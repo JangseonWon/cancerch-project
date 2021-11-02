@@ -32,7 +32,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.16")
 }
 gwt {
-    gwt.modules "com.greencross.lims.Avoid"
+    gwt.modules "com.greencross.lims.worklist"
     gwtVersion = "2.9.0"
     minHeapSize = "1024M"
     maxHeapSize = "2048M"
@@ -50,7 +50,7 @@ gwtDev {
     war file("src/main/webapp")
 }
 war {
-    archiveFileName = "RnD-Avoid.war"
+    archiveFileName = "RnD-worklist.war"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 clean.doFirst {

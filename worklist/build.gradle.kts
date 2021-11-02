@@ -46,8 +46,8 @@ dependencies {
 
 tasks.register<Copy>("copyWebResources") {
     delete(files("src/main/resources/static"))
-    dependsOn(":Avoid-ui:build")
-    from(zipTree("../Avoid-ui/build/libs/RnD-Avoid.war")) {
+    dependsOn(":worklist-ui:build")
+    from(zipTree("../worklist-ui/build/libs/RnD-worklist.war")) {
         include("**/*.js")
         include("**/*.css")
         include("**/*.png")
@@ -74,7 +74,7 @@ tasks.processResources {
 }
 tasks {
     bootJar {
-        archiveFileName.set("RnD-Avoid.jar")
+        archiveFileName.set("RnD-worklist.jar")
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

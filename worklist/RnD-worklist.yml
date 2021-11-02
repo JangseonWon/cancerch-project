@@ -1,23 +1,22 @@
 spring:
   application:
-    name: Avoid-service
+    name: worklist-service
   main:
     web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: gemini:2181,pisces:2181,aries:2181,taurus:2181
       discovery:
         root: /RnD
     stream:
       function:
-        definition: publish-model;broadcast-model;publish-sample;broadcast-sample;publish-learning-message;broadcast-learning-message;
+        definition: publish-model;broadcast-model;publish-sample;broadcast-sample;
       bindings:
         publish-model-out-0.destination: referral-classifier-models
         broadcast-model-in-0.destination: referral-classifier-models
-        publish-learning-message-out-0.destination: referral-classifier-learning-message
-        broadcast-learning-message-in-0.destination: referral-classifier-learning-message
         publish-sample-out-0.destination: referral-classifier-document-samples
         broadcast-sample-in-0.destination: referral-classifier-document-samples
+
       kafka:
         binder:
           brokers: gemini, pisces, aries, taurus, libra
@@ -33,4 +32,4 @@ spring:
       validation-query: SELECT 1
 server:
   port: 0
-  temp-directory: D:\data\models
+  temp-directory: /data/lims/tmp/RnD/worklist

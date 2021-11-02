@@ -1,6 +1,6 @@
 rootProject.name = "RnD"
 include("service")
 include("gateway")
-include("Avoid-ui")
+include("worklist-ui")
 include("shared")
-include("Avoid")
+include("worklist")
