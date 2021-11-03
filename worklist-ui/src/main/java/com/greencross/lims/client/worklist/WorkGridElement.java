@@ -14,11 +14,10 @@ import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.*;
 
-import static org.jboss.elemento.Elements.div;
-import static org.jboss.elemento.Elements.label;
+import static org.jboss.elemento.Elements.*;
 import static org.jboss.elemento.EventType.bind;
 
-public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
+class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
     public static WorkGridElement instance() { return new WorkGridElement(div()); }
     private enum COLUMN_KEY {
         NO, TITLE, CREATOR, SAMPLE, STATE, COMMENT, CREATED
@@ -78,6 +77,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     public WorkGridElement value(Worklist... worklists){
         this.values.clear();
+
         sheet.values(Arrays.stream(worklists)
                 .peek(m->this.values.put(m.id(), m))
                 .peek(m->this.values.put(String.valueOf(m.no()), m))
@@ -89,11 +89,13 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .peek(m->this.values.put(m.createdAt(), m))
                 .map(WorkGridElement::map)
                 .toArray(Data[]::new));
+        Arrays.stream(sheet.values()).forEach(t->DomGlobal.console.log(t));
         onUpdateSheet();
         return that();
     }
     private static Data map(Worklist value) {
         if(value == null) return null;
+
         return new Data(value.id())
                 .put(COLUMN_KEY.NO.name(), String.valueOf(value.no()))
                 .put(COLUMN_KEY.TITLE.name(), value.title())
@@ -107,6 +109,12 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         sheet.refresh();
         return that();
     }
+    public Optional<Worklist> sheet(){
+        return Arrays.stream(sheet.values())
+                .map(d->values.get(d.idx()))
+                .findAny();
+    }
+
     @Override
     public Optional<Worklist> selection() {
         return Arrays.stream(sheet.values())
@@ -114,18 +122,15 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .map(d->values.get(d.idx()))
                 .findAny();
     }
-
-    @Override
-    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Worklist>> listener) {
-        return onSelectionChange(sheet.element(), listener);
-    }
-
     @Override
     public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Optional<Worklist>> listener) {
         EventListener wrapper = evt->listener.handle(SelectionChangeEvent.event(evt, selection()));
         return bind(dom, "selection-change", wrapper);
     }
-
+    @Override
+    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Worklist>> listener) {
+        return onSelectionChange(sheet.element(), listener);
+    }
     @Override
     public WorkGridElement that() {
         return this;

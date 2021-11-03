@@ -1,5 +1,6 @@
 package com.greencross.lims.client.worklist;
 
+import com.google.gwt.core.client.Scheduler;
 import com.greencross.lims.api.WorklistApi;
 import com.greencross.lims.client.ControllerElement;
 import com.greencross.lims.data.Worklist;
@@ -9,6 +10,8 @@ import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.ButtonElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import org.jboss.elemento.HtmlContentBuilder;
+
+import java.util.Arrays;
 
 import static org.jboss.elemento.Elements.div;
 
@@ -34,6 +37,13 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
          .add(div().css("layout")
             .add(grid.css("layout-item")));
 
+        grid.onSelectionChange(evt -> {
+            Scheduler.get().scheduleFixedDelay(()->{
+                grid.refresh();
+                return false;
+            }, 200);
+        });
+
         WorklistApi.WorklistEvent.listen()
                 .onCreate(evt->grid.append(evt.value()))
                 .onDelete(evt->grid.delete(evt.value()));
@@ -49,7 +59,7 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     private void del(){
         grid.selection().map(Worklist::id).ifPresent(WorklistApi::deleteWorklist);
     }
-    private void save(){
+    private void save() {
 
     }
     private void detail(){
