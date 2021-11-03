@@ -1,38 +1,29 @@
 package com.greencross.lims.entity
 
 import org.springframework.data.annotation.*
-import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
-import java.io.Serializable
 import java.time.LocalDateTime
 
-@Table("RnD.worklist")
+@Table("worklist")
 data class Worklist(
     @Id
-    @Column("id") private val id: String
-    ) : Serializable, Persistable <String> {
-    @Column("no") var no: String? = null
-    @Column("title") var title: String? = null
-
+    @Column("id") private val id: String,
+    @Column("no") var no: Int,
+    @Column("title") var title: String,
     @CreatedBy
     @Column("created_by")
-    var createdBy: String? = null
+    var createdBy: String,
 
-    @Column("sample") var sample: Long? = null
-    @Column("state") var state: String? = null
-    @Column("comment") var comment: String? = null
+    @Column("sample") var sample: Long,
+    @Column("state") var state: String,
+    @Column("comment") var comment: String,
 
     @CreatedDate
     @Column("created_at")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime
+    )
+{
 
-
-    override fun getId(): String {
-        return id
-    }
-    override fun isNew(): Boolean {
-        return createdAt == null
-    }
 }

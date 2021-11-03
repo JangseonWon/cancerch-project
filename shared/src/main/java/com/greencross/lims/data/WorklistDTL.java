@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Setter(onMethod_= {@JsOverlay, @JsIgnore})
 @Getter(onMethod_= {@JsOverlay, @JsIgnore})
 @Accessors(fluent=true)
-public final class Worklist {
+public final class WorklistDTL {
     private String id;
     private Double no;
     private String title;

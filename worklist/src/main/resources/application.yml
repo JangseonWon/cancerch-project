@@ -10,22 +10,18 @@ spring:
         root: /RnD
     stream:
       function:
-        definition: publish-model;broadcast-model;publish-sample;broadcast-sample;publish-learning-message;broadcast-learning-message;
+        definition: publish-worklist;broadcast-worklist;
       bindings:
-        publish-model-out-0.destination: referral-classifier-models
-        broadcast-model-in-0.destination: referral-classifier-models
-        publish-learning-message-out-0.destination: referral-classifier-learning-message
-        broadcast-learning-message-in-0.destination: referral-classifier-learning-message
-        publish-sample-out-0.destination: referral-classifier-document-samples
-        broadcast-sample-in-0.destination: referral-classifier-document-samples
+        publish-worklist-out-0.destination: rnd-worklist
+        broadcast-worklist-in-0.destination: rnd-worklist
       kafka:
         binder:
-          brokers: gemini, pisces, aries, taurus, libra
+          brokers: localhost:9092
           auto-add-partitions: true
   r2dbc:
     url: r2dbc:postgresql://gemini:5432/lims
-    username: referral_classifier
-    password: rc1004!@
+    username: rnd
+    password: rnd1004!@
     pool:
       initial-size: 100
       max-size: 500

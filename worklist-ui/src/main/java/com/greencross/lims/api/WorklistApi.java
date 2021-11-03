@@ -18,6 +18,10 @@ public class WorklistApi {
                 .then(r->Promise.resolve((Worklist[]) r));
     }
 
+    public static void deleteWorklist(String id) {
+
+    }
+
     public static class WorklistEvent {
         private static EventSource listener;
         public static WorklistEvent listen(){
