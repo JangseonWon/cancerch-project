@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.UUID;
-
 @JsType(isNative=true, namespace= JsPackage.GLOBAL, name="Object")
 @Setter(onMethod_= {@JsOverlay, @JsIgnore})
 @Getter(onMethod_= {@JsOverlay, @JsIgnore})
@@ -22,4 +20,5 @@ public final class Worklist {
     private String createdBy;
     @JsProperty(name="created_at")
     private String createdAt;
+    public Worklist(){}
 }

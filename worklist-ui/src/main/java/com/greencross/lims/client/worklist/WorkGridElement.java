@@ -75,7 +75,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
 
         return that();
     }
-    public WorkGridElement value(Worklist... worklists){
+    public WorkGridElement values(Worklist... worklists){
         this.values.clear();
 
         sheet.values(Arrays.stream(worklists)
@@ -89,7 +89,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
                 .peek(m->this.values.put(m.createdAt(), m))
                 .map(WorkGridElement::map)
                 .toArray(Data[]::new));
-        Arrays.stream(sheet.values()).forEach(t->DomGlobal.console.log(t));
+
         onUpdateSheet();
         return that();
     }
@@ -105,14 +105,18 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
                 .put(COLUMN_KEY.COMMENT.name(), value.comment())
                 .put(COLUMN_KEY.CREATED.name(), value.createdAt().split("T")[0]);
     }
+
+    public Worklist[] save() {
+        return Arrays.stream(sheet.values())
+                .filter((d)->d.isChanged(COLUMN_KEY.COMMENT.name())
+                        ||d.isChanged(COLUMN_KEY.TITLE.name())
+                        ||d.isChanged(COLUMN_KEY.SAMPLE.name()))
+                .map(d->values.get(d.idx()))
+                .toArray(Worklist[]::new);
+    }
     public WorkGridElement refresh() {
         sheet.refresh();
         return that();
-    }
-    public Optional<Worklist> sheet(){
-        return Arrays.stream(sheet.values())
-                .map(d->values.get(d.idx()))
-                .findAny();
     }
 
     @Override

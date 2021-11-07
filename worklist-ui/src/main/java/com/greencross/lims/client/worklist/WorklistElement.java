@@ -11,6 +11,7 @@ import net.sayaya.ui.ButtonElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import org.jboss.elemento.HtmlContentBuilder;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import static org.jboss.elemento.Elements.div;
@@ -44,23 +45,26 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
             }, 200);
         });
 
-        WorklistApi.WorklistEvent.listen()
-                .onCreate(evt->grid.append(evt.value()))
-                .onDelete(evt->grid.delete(evt.value()));
+//        WorklistApi.WorklistEvent.listen()
+//                .onCreate(evt->grid.append(evt.value()))
+//                .onDelete(evt->grid.delete(evt.value()));
 
         WorklistApi.findWorklist().then(worklists->{
-            grid.value(worklists);
+            grid.values(worklists);
             return null;
         });
     }
     private void add(){
-
+        Worklist worklist = new Worklist();
+        worklist.id("").no(0.0).title("").sample(0.0).comment("").state("open").createdBy("").createdAt("");
+        grid.append(worklist);
     }
     private void del(){
         grid.selection().map(Worklist::id).ifPresent(WorklistApi::deleteWorklist);
+        grid.selection().ifPresent(grid::delete);
     }
     private void save() {
-
+        Arrays.stream(grid.save()).forEach(t->DomGlobal.console.log(t));
     }
     private void detail(){
         String id = grid.selection().get().id();
