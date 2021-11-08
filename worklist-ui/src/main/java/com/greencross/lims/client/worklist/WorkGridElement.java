@@ -13,6 +13,7 @@ import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.jboss.elemento.Elements.*;
 import static org.jboss.elemento.EventType.bind;
@@ -20,7 +21,7 @@ import static org.jboss.elemento.EventType.bind;
 class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
     public static WorkGridElement instance() { return new WorkGridElement(div()); }
     private enum COLUMN_KEY {
-        NO, TITLE, CREATOR, SAMPLE, STATE, COMMENT, CREATED
+        ID, NO, TITLE, CREATOR, SAMPLE, STATE, COMMENT, CREATED
     }
     private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Worklist is not present yet. Create Worklist.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
@@ -39,7 +40,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
         SheetElementSelectableSingle.header(sheet);
 
         config.columns(
-                ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").align("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").align("center").readOnly(true).build(),
                 ColumnBuilder.string(COLUMN_KEY.TITLE.name()).width(250).name("Title").build(),
                 ColumnBuilder.string(COLUMN_KEY.CREATOR.name()).width(80).name("Creator").align("center").readOnly(true).build(),
                 ColumnBuilder.string(COLUMN_KEY.SAMPLE.name()).width(80).name("Sample").align("center").build(),
@@ -61,9 +62,12 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
             }
         }
     }
+
+    public Double getLastIndex(){ return Double.parseDouble(sheet.values()[0].get(COLUMN_KEY.NO.name()))+1.0; }
     public WorkGridElement append(Worklist worklist){
         this.values.put(worklist.id(), worklist);
-        sheet.append(map(worklist));
+        Data convert = map(worklist);
+        sheet.values(Stream.concat(Stream.of(convert), Arrays.stream(sheet.values())).toArray(Data[]::new)).refresh();
         onUpdateSheet();
 
         return that();
@@ -77,7 +81,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
     }
     public WorkGridElement values(Worklist... worklists){
         this.values.clear();
-
+        sheet.clear();
         sheet.values(Arrays.stream(worklists)
                 .peek(m->this.values.put(m.id(), m))
                 .peek(m->this.values.put(String.valueOf(m.no()), m))
@@ -93,10 +97,35 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
         onUpdateSheet();
         return that();
     }
+    public Worklist[] added() {
+        return Arrays.stream(sheet.values())
+                .filter((d)->(d.isChanged(COLUMN_KEY.COMMENT.name())
+                        ||d.isChanged(COLUMN_KEY.TITLE.name())
+                        ||d.isChanged(COLUMN_KEY.SAMPLE.name()))
+                        && d.get(COLUMN_KEY.CREATED.name()).equals("")
+                )
+                .map(WorkGridElement::map)
+                .toArray(Worklist[]::new);
+    }
+    public Worklist[] save() {
+        return Arrays.stream(sheet.values())
+                .filter((d)->(d.isChanged(COLUMN_KEY.COMMENT.name())
+                        ||d.isChanged(COLUMN_KEY.TITLE.name())
+                        ||d.isChanged(COLUMN_KEY.SAMPLE.name()))
+                        && !d.get(COLUMN_KEY.CREATED.name()).equals("")
+                )
+                .map(WorkGridElement::map)
+                .toArray(Worklist[]::new);
+    }
+    public WorkGridElement refresh() {
+        sheet.refresh();
+        return that();
+    }
     private static Data map(Worklist value) {
         if(value == null) return null;
 
         return new Data(value.id())
+                .put(COLUMN_KEY.ID.name(), value.id())
                 .put(COLUMN_KEY.NO.name(), String.valueOf(value.no()))
                 .put(COLUMN_KEY.TITLE.name(), value.title())
                 .put(COLUMN_KEY.CREATOR.name(), value.createdBy())
@@ -106,17 +135,18 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
                 .put(COLUMN_KEY.CREATED.name(), value.createdAt().split("T")[0]);
     }
 
-    public Worklist[] save() {
-        return Arrays.stream(sheet.values())
-                .filter((d)->d.isChanged(COLUMN_KEY.COMMENT.name())
-                        ||d.isChanged(COLUMN_KEY.TITLE.name())
-                        ||d.isChanged(COLUMN_KEY.SAMPLE.name()))
-                .map(d->values.get(d.idx()))
-                .toArray(Worklist[]::new);
-    }
-    public WorkGridElement refresh() {
-        sheet.refresh();
-        return that();
+    private static Worklist map(Data value) {
+        if(value == null) return null;
+        return new Worklist()
+                .id(value.get(COLUMN_KEY.ID.name()))
+                .no(Double.parseDouble(value.get(COLUMN_KEY.NO.name())))
+                .title(value.get(COLUMN_KEY.TITLE.name()))
+                .createdBy(value.get(COLUMN_KEY.CREATOR.name()))
+                .sample(Double.parseDouble(value.get(COLUMN_KEY.SAMPLE.name())))
+                .state(value.get(COLUMN_KEY.STATE.name()))
+                .comment(value.get(COLUMN_KEY.COMMENT.name()))
+                .createdAt(value.get(COLUMN_KEY.CREATED.name()))
+                .activation("TRUE");
     }
 
     @Override

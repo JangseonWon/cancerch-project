@@ -17,14 +17,16 @@ data class Worklist(
     @Column("title") var title: String,
     @CreatedBy
     @Column("created_by")
-    var createdBy: String,
+    var createdBy: String? = null,
 
     @Column("sample") var sample: Long,
     @Column("state") var state: String,
     @Column("comment") var comment: String,
     @CreatedDate
     @Column("created_at")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime? = null,
+    @Column("activation")
+    var activation: String
 
     ): Serializable, Persistable<UUID>{
 
@@ -34,4 +36,5 @@ data class Worklist(
     override fun isNew(): Boolean {
         return createdAt == null
     }
+
 }

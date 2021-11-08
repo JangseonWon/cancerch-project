@@ -20,5 +20,6 @@ public final class Worklist {
     private String createdBy;
     @JsProperty(name="created_at")
     private String createdAt;
+    private String activation;
     public Worklist(){}
 }

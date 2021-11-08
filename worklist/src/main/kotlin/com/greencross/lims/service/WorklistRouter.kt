@@ -17,12 +17,26 @@ open class WorklistRouter(private val handler: WorklistHandler) {
         return RouterFunctions
             .route(RequestPredicates.GET("/worklist"), this::findAll)
             .andRoute(RequestPredicates.GET("/worklist/changes"), this::subscribeWorklist)
+            .andRoute(RequestPredicates.PUT("/worklist/save"), this::saveChanges)
+            .andRoute(RequestPredicates.PATCH("/worklist/update"), this::updateChanges)
     }
     private fun findAll(request: ServerRequest): Mono<ServerResponse> {
         return handler.list().collectList()
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
             .switchIfEmpty(ServerResponse.noContent().build())
             .onErrorResume(ServerResponse.badRequest()::bodyValue)
+    }
+    private fun saveChanges(request: ServerRequest): Mono<ServerResponse> {
+        return request.bodyToFlux(Worklist::class.java)
+            .flatMap{t->handler.save(t)}
+            .then(ServerResponse.ok().build())
+            .onErrorResume(ServerResponse.badRequest()::bodyValue)
+    }
+    private fun updateChanges(request: ServerRequest): Mono<ServerResponse>{
+        return request.bodyToFlux(Worklist::class.java)
+            .flatMap{t->handler.update(t)}
+            .then(ServerResponse.ok().build())
+//            .onErrorResume(ServerResponse.badRequest()::bodyValue)
     }
     private fun subscribeWorklist(request: ServerRequest): Mono<ServerResponse> {
         return ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM)

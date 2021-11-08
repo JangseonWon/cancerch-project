@@ -3,6 +3,7 @@ package com.greencross.lims.api;
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.dto.Promise;
 import elemental2.dom.EventSource;
+import elemental2.dom.RequestInit;
 import elemental2.dom.Response;
 import jsinterop.base.Js;
 import lombok.experimental.UtilityClass;
@@ -20,6 +21,26 @@ public class WorklistApi {
 
     public static void deleteWorklist(String id) {
 
+    }
+
+    public static Promise<Response> save(Worklist[] worklists){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+            new String[] {"Content-Type", "application/json;"}
+        });
+        request.setMethod("PUT");
+        request.setBody(JSON.stringify(worklists));
+        return FetchApi.request("/worklist/save", request);
+    }
+
+    public static Promise<Response> update(Worklist[] worklists){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/json;"}
+        });
+        request.setMethod("PATCH");
+        request.setBody(JSON.stringify(worklists));
+        return FetchApi.request("/worklist/update", request);
     }
 
     public static class WorklistEvent {

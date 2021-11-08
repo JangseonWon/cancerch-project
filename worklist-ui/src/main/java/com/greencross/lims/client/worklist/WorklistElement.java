@@ -24,6 +24,7 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     private final ButtonElement Add = ButtonElement.outline().css("button").text("Add List").before(IconElement.icon(IconElement.Type.Regular, "fa-plus"));
     private final ButtonElement Del = ButtonElement.outline().css("button").text("Del List").before(IconElement.icon(IconElement.Type.Regular, "fa-minus"));
     private final ButtonElement Save = ButtonElement.outline().css("button").text("Save List").before(IconElement.icon(IconElement.Type.Regular, "fa-check"));
+    private final ButtonElement Close = ButtonElement.outline().css("button").text("Close Worklist").before(IconElement.icon(IconElement.Type.Regular, "fa-door-closed"));
     private final ButtonElement Detail = ButtonElement.outline().css("button").text("Detail").before(IconElement.icon(IconElement.Type.Regular, "fa-eye"));
 
     public WorklistElement(HtmlContentBuilder<HTMLDivElement> e) {
@@ -31,10 +32,11 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
         Add.onClick(evt->add());
         Del.onClick(evt->del());
         Save.onClick(evt->save());
+        Close.onClick(evt->close());
         Detail.onClick(evt->detail());
 
         e.add(controller.add(div().add(Detail))
-                        .add(div().add(Add).add(Del).add(Save)))
+                        .add(div().add(Close).add(Add).add(Del).add(Save)))
          .add(div().css("layout")
             .add(grid.css("layout-item")));
 
@@ -44,19 +46,22 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
                 return false;
             }, 200);
         });
-
-//        WorklistApi.WorklistEvent.listen()
-//                .onCreate(evt->grid.append(evt.value()))
-//                .onDelete(evt->grid.delete(evt.value()));
-
+        update();
+    }
+    private void update(){
         WorklistApi.findWorklist().then(worklists->{
             grid.values(worklists);
             return null;
         });
     }
+    private void close(){
+//        grid.selection().map(Worklist)
+    }
     private void add(){
+        Double no = grid.getLastIndex();
+
         Worklist worklist = new Worklist();
-        worklist.id("").no(0.0).title("").sample(0.0).comment("").state("open").createdBy("").createdAt("");
+        worklist.id("").no(no).title("").sample(0.0).comment("").state("open").createdBy("").createdAt("");
         grid.append(worklist);
     }
     private void del(){
@@ -64,7 +69,33 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
         grid.selection().ifPresent(grid::delete);
     }
     private void save() {
-        Arrays.stream(grid.save()).forEach(t->DomGlobal.console.log(t));
+        Worklist[] chgWorklists = grid.save();
+        Worklist[] addWorklists = grid.added();
+
+        if(checker(chgWorklists)){
+//            Arrays.stream(chgWorklists).forEach(t->DomGlobal.console.log(t));
+            WorklistApi.update(chgWorklists).then(response -> {
+                update();
+                return null;
+            });
+        }
+        else DomGlobal.alert("기존 Row의 Title, Sample 컬럼이 공백입니다.");
+        if(checker(addWorklists)){
+//            Arrays.stream(addWorklists).forEach(t->DomGlobal.console.log(t));
+            WorklistApi.save(addWorklists).then(response -> {
+                update();
+                return null;
+            });
+        }
+        else DomGlobal.alert("신규 Row의 변경사항이 없거나 Title, Sample 컬럼이 공백입니다.");
+    }
+    private boolean checker(Worklist[] worklists){
+        Worklist[] checker = Arrays.stream(worklists)
+                .filter(t->t.title().equals("")
+                        || t.sample().toString().equals("0"))
+                .toArray(Worklist[]::new);
+        return worklists.length != 0
+                && checker.length == 0;
     }
     private void detail(){
         String id = grid.selection().get().id();
