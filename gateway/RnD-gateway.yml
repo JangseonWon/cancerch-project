@@ -14,5 +14,9 @@ spring:
           uri: lb://worklist-service
           predicates:
             - Path=/worklist/**, /worklist.html, /worklist/*.js, /css/worklist.css
+        - id: analysis-service
+          uri: lb://analysis-service
+          predicates:
+            - Path=/analysis/**, /analysis.html, /analysis/*.js, /css/analysis.css
 server:
   port: 26040

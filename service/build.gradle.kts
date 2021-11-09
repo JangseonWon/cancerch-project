@@ -33,9 +33,6 @@ tasks {
         archiveFileName.set("RnD.jar")
     }
 }
-tasks.processResources {
-    if (project.gradle.startParameter.taskNames.contains("build")) exclude("application.yml")
-}
 tasks.getByName<Jar>("jar") {
     enabled = false
 }

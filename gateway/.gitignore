@@ -88,7 +88,5 @@ fabric.properties
 .idea/misc.xml
 .idea/vcs.xml
 gradle/
-src/test/resources/
-src/main/resources/static
 gradlew
 gradlew.bat
