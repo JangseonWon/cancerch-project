@@ -1,8 +1,11 @@
 rootProject.name = "RnD"
 include("service")
 include("gateway")
-include("worklist-ui")
 include("shared")
 include("worklist")
+include("worklist-ui")
 include("dna")
 include("dna-ui")
+include("analysis")
+include("analysis-ui")
+include("analysis-crawler")
