@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("org.springframework.boot") version "2.5.4"
+    id("org.springframework.boot") version "2.5.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
@@ -10,7 +10,7 @@ configurations {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
     }
 }
-extra["springCloudVersion"] = "2020.0.3"
+extra["springCloudVersion"] = "2020.0.4"
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
