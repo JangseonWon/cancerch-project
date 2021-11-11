@@ -28,6 +28,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;
     private final Map<String, Worklist> values = new HashMap<>();
+    private Double index = 0.0;
     private WorkGridElement(HtmlContentBuilder<HTMLDivElement> e){
         super(e.css("worklist"));
         _this = e;
@@ -63,7 +64,7 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
         }
     }
 
-    public Double getLastIndex(){ return Double.parseDouble(sheet.values()[0].get(COLUMN_KEY.NO.name()))+1.0; }
+    public Double getLastIndex(){ return ++index; }
     public WorkGridElement append(Worklist worklist){
         this.values.put(worklist.id(), worklist);
         Data convert = map(worklist);
@@ -79,7 +80,8 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
 
         return that();
     }
-    public WorkGridElement values(Worklist... worklists){
+    public WorkGridElement values(Double index, Worklist... worklists){
+        this.index = index;
         this.values.clear();
         sheet.clear();
         sheet.values(Arrays.stream(worklists)

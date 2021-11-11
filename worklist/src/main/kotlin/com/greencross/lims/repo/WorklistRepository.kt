@@ -9,5 +9,6 @@ import reactor.core.publisher.Flux
 import java.util.*
 
 interface WorklistRepository: ReactiveCrudRepository<Worklist, UUID>, ReactiveQuerydslPredicateExecutor<Worklist>, QuerydslR2dbcFragment<Worklist> {
-//    fun findAllByActivation(orderSpecifier: OrderSpecifier<Int>, activation: String): Flux<Worklist>
+    fun findByStateAndActivation(state: String, activation: String): Flux<Worklist>
+    fun findByActivation(activation: String): Flux<Worklist>
 }

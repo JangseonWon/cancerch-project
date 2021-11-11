@@ -13,14 +13,32 @@ import static elemental2.core.Global.JSON;
 
 @UtilityClass
 public class WorklistApi {
-    public Promise<Worklist[]> findWorklist(){
-        return FetchApi.request("/worklist")
+    public Promise<Worklist[]> findWorklist(boolean chkr){
+        return FetchApi.request("/worklist/list/"+chkr)
                 .then(Response::json)
                 .then(r->Promise.resolve((Worklist[]) r));
     }
 
-    public static void deleteWorklist(String id) {
-
+    public static Promise<Response> deleteWorklist(String id) {
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/json;"}
+        });
+        request.setMethod("PUT");
+        return FetchApi.request("/worklist/delete/"+id, request);
+    }
+    public Promise<Object> getNo(){
+        return FetchApi.request("/worklist/no")
+                .then(Response::json)
+                .then(Promise::resolve);
+    }
+    public static Promise<Response> closeWorklist(String id){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/json;"}
+        });
+        request.setMethod("PATCH");
+        return FetchApi.request("/worklist/close/" + id, request);
     }
 
     public static Promise<Response> save(Worklist[] worklists){

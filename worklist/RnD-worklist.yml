@@ -9,12 +9,6 @@ spring:
       discovery:
         root: /RnD
     stream:
-      function:
-        definition: publish-worklist;broadcast-worklist;
-        bindings:
-          publish-worklist-out-0.destination: rnd-worklist
-          broadcast-worklist-in-0.destination: rnd-worklist
-
       kafka:
         binder:
           brokers: gemini, pisces, aries, taurus, libra

@@ -23,8 +23,8 @@ import static org.jboss.elemento.Elements.div;
 import static org.jboss.elemento.Elements.label;
 import static org.jboss.elemento.EventType.bind;
 
-public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
-    public static WorkDetailGridElement instance() { return new WorkDetailGridElement(div()); }
+public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,  WorkDetailBotGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
+    public static  WorkDetailBotGridElement instance() { return new  WorkDetailBotGridElement(div()); }
     private enum COLUMN_KEY {
         NO, ID, REQUEST, STB, REMARK, RECEIPT, TYPE, CODE, PATIENT, SEX, ORGANIZATION, ORG_NUM, COMPLETE, SPECIMEN, COMMENT
     }
@@ -33,8 +33,8 @@ public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, Wo
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;
     private final Map<String, Worklist> values = new HashMap<>();
-    private WorkDetailGridElement(HtmlContentBuilder<HTMLDivElement> e){
-        super(e.css("worklist"));
+    private  WorkDetailBotGridElement(HtmlContentBuilder<HTMLDivElement> e){
+        super(e.css("bot"));
         _this = e;
         this.config = SheetElement.builder();
         this.sheet = config.build();
@@ -75,21 +75,21 @@ public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, Wo
             }
         }
     }
-    public WorkDetailGridElement append(Worklist worklist){
+    public WorkDetailBotGridElement append(Worklist worklist){
         this.values.put(worklist.id(), worklist);
         sheet.append(map(worklist));
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailGridElement delete(Worklist worklist){
+    public WorkDetailBotGridElement delete(Worklist worklist){
         this.values.remove(worklist.id());
         sheet.delete(worklist.id());
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailGridElement value(Worklist... worklists){
+    public WorkDetailBotGridElement value(Worklist... worklists){
         this.values.clear();
         sheet.values(Arrays.stream(worklists)
                 .peek(m->this.values.put(m.id(), m))
@@ -100,7 +100,7 @@ public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, Wo
                 .peek(m->this.values.put(m.state(), m))
                 .peek(m->this.values.put(m.comment(), m))
                 .peek(m->this.values.put(m.createdAt(), m))
-                .map(WorkDetailGridElement::map)
+                .map(WorkDetailBotGridElement::map)
                 .toArray(Data[]::new));
         onUpdateSheet();
         return that();
@@ -123,7 +123,7 @@ public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, Wo
                 .put(COLUMN_KEY.SPECIMEN.name(), value.createdAt().split("T")[0])
                 .put(COLUMN_KEY.COMMENT.name(), value.createdAt().split("T")[0]);
     }
-    public WorkDetailGridElement refresh() {
+    public WorkDetailBotGridElement refresh() {
         sheet.refresh();
         return that();
     }
@@ -147,7 +147,7 @@ public class WorkDetailGridElement extends HTMLElementBuilder<HTMLDivElement, Wo
     }
 
     @Override
-    public WorkDetailGridElement that() {
+    public WorkDetailBotGridElement that() {
         return this;
     }
 }
