@@ -24,7 +24,7 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     private final ButtonElement Del = ButtonElement.outline().css("button").text("Del List").before(IconElement.icon(IconElement.Type.Regular, "fa-minus"));
     private final ButtonElement Save = ButtonElement.outline().css("button").text("Save All").before(IconElement.icon(IconElement.Type.Regular, "fa-check"));
     private final ButtonElement Close = ButtonElement.outline().css("button").text("Close Worklist").before(IconElement.icon(IconElement.Type.Regular, "fa-door-closed"));
-    private final ButtonElement Detail = ButtonElement.outline().css("button").text("Detail").before(IconElement.icon(IconElement.Type.Regular, "fa-eye"));
+    private final ButtonElement Detail = ButtonElement.outline().css("button").text("Detail").before(IconElement.icon(IconElement.Type.Regular, "fa-eye")).enabled(false);
     private final CheckBoxElement CloseChecker = CheckBoxElement.checkBox(true).text("View Open Worklist");
     private Boolean addFlag = false;
     private Boolean chgFlag = false;
