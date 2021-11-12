@@ -93,9 +93,9 @@ src/main/resources/static
 src/main/java/com/greencross/lims/api/FetchApi.java
 gradlew
 gradlew.bat
-/src/main/webapp/modeler/
-/src/main/webapp/css/
-/src/main/webapp/font/
-/src/main/webapp/js/
-/src/main/webapp/sound/
+/src/main/webapp/css/**
+/src/main/webapp/font/**
+/src/main/webapp/js/**
+/src/main/webapp/sound/**
 /war
+/src/main/webapp/worklist/**
