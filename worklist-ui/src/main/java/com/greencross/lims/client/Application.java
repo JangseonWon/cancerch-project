@@ -7,15 +7,14 @@ import elemental2.dom.DomGlobal;
 import org.jboss.elemento.Elements;
 
 public class Application implements EntryPoint {
-
    public void onModuleLoad(){
        String hash = DomGlobal.window.location.hash;
        if(hash == null || hash.trim().isEmpty()) Elements.body().add(WorklistElement.instance());
        else try{
-           String param = hash;
-
+           String param = hash.substring(1);
            if("link".equalsIgnoreCase(param)){
-               Elements.body().add(WorklistDetailElement.instance(param));
+                String[] params = DomGlobal.window.location.search.substring(1).split("#");
+               Elements.body().add(WorklistDetailElement.instance(params[0]));
            }
        } catch(Exception ignore){
            Elements.body().add(WorklistElement.instance());

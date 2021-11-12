@@ -6,11 +6,10 @@ import elemental2.dom.EventTarget;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLLabelElement;
 import net.sayaya.ui.HTMLElementBuilder;
+import net.sayaya.ui.chart.*;
+import net.sayaya.ui.chart.column.ColumnBuilder;
 import net.sayaya.ui.event.HasSelectionChangeHandlers;
-import net.sayaya.ui.sheet.Data;
-import net.sayaya.ui.sheet.SheetElement;
-import net.sayaya.ui.sheet.SheetElementSelectableSingle;
-import net.sayaya.ui.sheet.column.ColumnBuilder;
+import net.sayaya.ui.chart.SheetElementSelectableMulti;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
@@ -26,7 +25,7 @@ import static org.jboss.elemento.EventType.bind;
 public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailTopGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
     public static WorkDetailTopGridElement instance() { return new WorkDetailTopGridElement(div()); }
     private enum COLUMN_KEY {
-        NO, ID, REQUEST, STB, REMARK, RECEIPT, TYPE, CODE, PATIENT, SEX, ORGANIZATION, ORG_NUM, COMPLETE, SPECIMEN, COMMENT
+        NO, RECEIPT, ID, TYPE, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, TAT
     }
     private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Worklist is not present yet. Create Worklist.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
@@ -42,24 +41,20 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         layout();
     }
     private void layout() {
-        SheetElementSelectableSingle.header(sheet);
+        SheetElementSelectableMulti.header(sheet);
 
         config.columns(
-                ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.ID.name()).width(250).name("ID").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.REQUEST.name()).width(80).name("REQUEST NUM").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.STB.name()).width(80).name("STB").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.REMARK.name()).width(80).name("REMARK").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.RECEIPT.name()).width(300).name("RECEIPT").build(),
-                ColumnBuilder.string(COLUMN_KEY.TYPE.name()).width(80).name("TYPE").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.CODE.name()).width(80).name("CODE").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.PATIENT.name()).width(80).name("PATIENT").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.ORGANIZATION.name()).width(80).name("ORGANIZATION").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.ORG_NUM.name()).width(80).name("ORG_NUM").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.COMPLETE.name()).width(80).name("COMPLETE").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.SPECIMEN.name()).width(80).name("SPECIMEN").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.COMMENT.name()).width(80).name("COMMENT").align("center").build()
-
+                ColumnBuilder.string(COLUMN_KEY.NO.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.RECEIPT.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.ID.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.TYPE.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.MRN.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.PATIENT_NAME.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.PATIENT_CODE.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.SEX.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.SPECIMEN_TYPE.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.END_DT.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.TAT.name()).build()
         ).stretchH("all");
     }
     private void onUpdateSheet() {
@@ -110,18 +105,9 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         return new Data(value.id())
                 .put(COLUMN_KEY.NO.name(), String.valueOf(value.no()))
                 .put(COLUMN_KEY.ID.name(), value.title())
-                .put(COLUMN_KEY.REQUEST.name(), value.createdBy())
-                .put(COLUMN_KEY.STB.name(), String.valueOf(value.sample()))
-                .put(COLUMN_KEY.REMARK.name(), value.state())
                 .put(COLUMN_KEY.RECEIPT.name(), value.comment())
-                .put(COLUMN_KEY.TYPE.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.CODE.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.PATIENT.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.ORGANIZATION.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.ORG_NUM.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.COMPLETE.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.SPECIMEN.name(), value.createdAt().split("T")[0])
-                .put(COLUMN_KEY.COMMENT.name(), value.createdAt().split("T")[0]);
+                .put(COLUMN_KEY.TYPE.name(), value.createdAt().split("T")[0]);
+
     }
     public WorkDetailTopGridElement refresh() {
         sheet.refresh();
