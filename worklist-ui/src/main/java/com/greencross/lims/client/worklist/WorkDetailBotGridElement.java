@@ -26,7 +26,7 @@ import static org.jboss.elemento.EventType.bind;
 public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,  WorkDetailBotGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
     public static  WorkDetailBotGridElement instance() { return new  WorkDetailBotGridElement(div()); }
     private enum COLUMN_KEY {
-        NO, ID, REQUEST, STB, REMARK, RECEIPT, TYPE, CODE, PATIENT, SEX, ORGANIZATION, ORG_NUM, COMPLETE, SPECIMEN, COMMENT
+        NO, ID, REQUEST, STB, REMARK, RECEIPT, TYPE, CODE, PATIENT, SEX, ORGANIZATION, ORG_NUM, COMPLETE, SPECIMEN, BATCH_ID, SAMPLE_ID, COMMENT, PREP_KIT, METHODS, CONC, VOLUME, TOTAL_AMOUNT, RESULT, FAIL_REASON,
     }
     private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Worklist is not present yet. Create Worklist.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
@@ -34,7 +34,7 @@ public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,
     private final HtmlContentBuilder<HTMLDivElement> _this;
     private final Map<String, Worklist> values = new HashMap<>();
     private  WorkDetailBotGridElement(HtmlContentBuilder<HTMLDivElement> e){
-        super(e.css("bot"));
+        super(e.css("bot_grid"));
         _this = e;
         this.config = SheetElement.builder();
         this.sheet = config.build();
@@ -59,7 +59,6 @@ public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,
                 ColumnBuilder.string(COLUMN_KEY.COMPLETE.name()).width(80).name("COMPLETE").align("center").build(),
                 ColumnBuilder.string(COLUMN_KEY.SPECIMEN.name()).width(80).name("SPECIMEN").align("center").build(),
                 ColumnBuilder.string(COLUMN_KEY.COMMENT.name()).width(80).name("COMMENT").align("center").build()
-
         ).stretchH("all");
     }
     private void onUpdateSheet() {

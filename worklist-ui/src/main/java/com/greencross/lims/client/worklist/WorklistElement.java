@@ -27,8 +27,11 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     private final ButtonElement Del = ButtonElement.outline().css("button").text("Del List").before(IconElement.icon(IconElement.Type.Regular, "fa-minus"));
     private final ButtonElement Save = ButtonElement.outline().css("button").text("Save All").before(IconElement.icon(IconElement.Type.Regular, "fa-check"));
     private final ButtonElement Close = ButtonElement.outline().css("button").text("Close Worklist").before(IconElement.icon(IconElement.Type.Regular, "fa-door-closed"));
-    private final ButtonElement Detail = ButtonElement.outline().css("button").text("Detail").enabled(false).before(IconElement.icon(IconElement.Type.Regular, "fa-eye"));
+    private final ButtonElement Detail = ButtonElement.outline().css("button").text("Detail").before(IconElement.icon(IconElement.Type.Regular, "fa-eye")).enabled(false);
     private final CheckBoxElement CloseChecker = CheckBoxElement.checkBox(true).text("View Open Worklist");
+    private Boolean addFlag = false;
+    private Boolean chgFlag = false;
+
     public WorklistElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.css("top"));
         Add.onClick(evt->add());
@@ -63,6 +66,7 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
             });
             return null;
         });
+        addFlag = false;
     }
     private void close(){
         String id = grid.selection().get().id();
@@ -76,6 +80,7 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
         Worklist worklist = new Worklist();
         worklist.id("").no(grid.getLastIndex()).title("").sample(0.0).comment("").state("open").createdBy("").createdAt("");
         grid.append(worklist);
+        addFlag = true;
     }
     private void del(){
         grid.selection().map(Worklist::id).ifPresent(WorklistApi::deleteWorklist);
@@ -84,21 +89,25 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     private void save() {
         Worklist[] chgWorklists = grid.save();
         Worklist[] addWorklists = grid.added();
+        chgFlag = chgWorklists.length > 0;
 
-        if(checker(chgWorklists)){
-            WorklistApi.update(chgWorklists).then(response -> {
-                update();
-                return null;
-            });
+        if(chgFlag) {
+            if (checker(chgWorklists)) {
+                WorklistApi.update(chgWorklists).then(response -> {
+                    update();
+                    return null;
+                });
+            } else DomGlobal.alert("기존 Row의 Title, Sample 컬럼이 공백입니다.");
         }
-        else DomGlobal.alert("기존 Row의 Title, Sample 컬럼이 공백입니다.");
-        if(checker(addWorklists)){
-            WorklistApi.save(addWorklists).then(response -> {
-                update();
-                return null;
-            });
+        if(addFlag){
+            if(checker(addWorklists))
+                WorklistApi.save(addWorklists).then(response -> {
+                    update();
+                    return null;
+                });
+            else DomGlobal.alert("신규 Row의 변경사항이 없거나 Title, Sample 컬럼이 공백입니다.");
         }
-        else DomGlobal.alert("신규 Row의 변경사항이 없거나 Title, Sample 컬럼이 공백입니다.");
+
     }
     private boolean checker(Worklist[] worklists){
         Worklist[] checker = Arrays.stream(worklists)

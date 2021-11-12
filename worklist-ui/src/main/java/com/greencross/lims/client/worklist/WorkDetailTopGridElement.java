@@ -34,7 +34,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     private final HtmlContentBuilder<HTMLDivElement> _this;
     private final Map<String, Worklist> values = new HashMap<>();
     private WorkDetailTopGridElement(HtmlContentBuilder<HTMLDivElement> e){
-        super(e.css("top"));
+        super(e.css("top_grid"));
         _this = e;
         this.config = SheetElement.builder();
         this.sheet = config.build();
