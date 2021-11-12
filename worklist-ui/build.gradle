@@ -46,8 +46,8 @@ compileGwt {
 }
 gwtDev {
     jvmArgs "-XX:ReservedCodeCacheSize=512M","-javaagent:${lombok}=ECJ"
-    port 9667
-    codeServerPort 9666
+    port 9668
+    codeServerPort 9669
     war file("src/main/webapp")
 }
 war {
