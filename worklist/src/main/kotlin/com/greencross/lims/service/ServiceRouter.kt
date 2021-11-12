@@ -18,7 +18,7 @@ open class ServiceRouter(
 
     private fun services(request: ServerRequest): Mono<ServerResponse> {
         return ServerResponse.ok().bodyValue(Page().icon("fa-list-ul")
-            .title("worklist")
+            .title("Worklist")
             .uri("/RnD-service/worklist.html").order("1"))
     }
 }
