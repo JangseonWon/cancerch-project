@@ -29,18 +29,21 @@ class WorklistDetailHandler (
     private fun toDto(entity: com.greencross.lims.entity.Request): Mono<Request_>{
         return SampleRepo.findById(entity.sample.toString())
             .flatMap(this::toDto)
+            .zipWith(ServiceRepo.findById(entity.service))
             .map {p->Request_(
                 sample = entity.sample,
                 info = entity.info,
                 service = entity.service,
                 dateRequest = entity.dateRequest,
-                type = p.type,
-                remark = p.remark,
-                patient = p.patient,
-                mrn = p.mrn,
-                name = p.name,
-                code = p.code,
-                sex = p.sex
+                type = p.t1.type,
+                remark = p.t1.remark,
+                patient = p.t1.patient,
+                customerName = p.t1.customerName,
+                mrn = p.t1.mrn,
+                name = p.t1.name,
+                code = p.t1.code,
+//                sex = p.t1.sex
+                serviceName = p.t2.name
             )}
 //            .zipWith(ServiceRepo.findById(entity.service))
 //            .map { p->Request_(
@@ -69,7 +72,7 @@ class WorklistDetailHandler (
                 mrn = p.mrn,
                 name = p.name,
                 code = p.code,
-                sex = p.sex.toString()
+//                sex = p.sex
             )}
     }
     private fun toDto(entity: com.greencross.lims.entity.Patient): Patient{
@@ -78,7 +81,7 @@ class WorklistDetailHandler (
             mrn = entity.mrn,
             name = entity.name,
             code = entity.code,
-            sex = entity.sex
+//            sex = entity.sex
         )
     }
 }

@@ -8,5 +8,5 @@ class Sample (
     val mrn: String? = null,
     val name: String? = null,
     val code: String? = null,
-    val sex: String? = null,
+//    val sex: Sex? = null,
 )

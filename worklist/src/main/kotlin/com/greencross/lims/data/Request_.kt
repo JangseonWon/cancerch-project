@@ -7,21 +7,16 @@ data class Request_ (
     val info: String? = null,
     val service: String? = null,
     val dateRequest: LocalDateTime? = null,
-//    //sample
+    //sample
     val type: String? = null,
     val remark: String? = null,
     val patient: String? = null,
-//    //patient
+    //patient
     val customerName: String? = null,
     val mrn: String? = null,
     val name: String? = null,
     val code: String? = null,
-    val sex: String? = null,
-//    //request
-
-//    val sample: Double? = 0.0,
-//    val info: String? = null,
-//    val service: String? = null,
-//    //service
-//    val serviceName: String? = null
+    val sex: Sex? = null,
+    //request
+    val serviceName: String? = null
 )

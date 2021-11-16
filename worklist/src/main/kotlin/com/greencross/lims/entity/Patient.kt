@@ -10,7 +10,7 @@ class Patient(
     @Id val id: String,
     val name: String?=null,
     val code: String?=null,
-    val sex: Sex?=null,
+//    val sex: Sex?=null,
     @Column("customer_name") val customerName: String?=null,
     val mrn: String?=null
 )
