@@ -1,15 +1,11 @@
 package com.greencross.lims.client.worklist;
 
 import com.greencross.lims.data.Request;
-import elemental2.dom.EventListener;
-import elemental2.dom.EventTarget;
-import elemental2.dom.HTMLDivElement;
-import elemental2.dom.HTMLLabelElement;
-import net.sayaya.ui.HTMLElementBuilder;
+import elemental2.dom.*;
 import net.sayaya.ui.chart.*;
+import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.column.ColumnBuilder;
 import net.sayaya.ui.event.HasSelectionChangeHandlers;
-import net.sayaya.ui.chart.SheetElementSelectableMulti;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
@@ -27,7 +23,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     private enum COLUMN_KEY {
         RECEIPT, ID, TYPE, CUSTOMER_NAME, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, REMARK, INFO
     }
-    private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Worklist is not present yet. Create Worklist.").style("text-align: center; align-self: center; width: 100%;");
+    private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Sample list is not present yet. Review by F5.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;
@@ -44,18 +40,18 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         SheetElementSelectableMulti.header(sheet);
 
         config.columns(
-                ColumnBuilder.string(COLUMN_KEY.RECEIPT.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.ID.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.TYPE.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.CUSTOMER_NAME.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.MRN.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.PATIENT_NAME.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.PATIENT_CODE.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.SEX.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.SPECIMEN_TYPE.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.END_DT.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.REMARK.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.INFO.name()).build()
+                ColumnBuilder.string(COLUMN_KEY.RECEIPT.name()).name("접수일").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.ID.name()).name("검체번호").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.TYPE.name()).name("검사명").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.CUSTOMER_NAME.name()).name("의뢰기관").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.MRN.name()).name("MRN").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.PATIENT_NAME.name()).name("수진자명").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.PATIENT_CODE.name()).name("수진자코드").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.SEX.name()).name("성별").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.SPECIMEN_TYPE.name()).name("검체종류").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.END_DT.name()).name("완료예정일").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.REMARK.name()).name("REMARK").width(100).build(),
+                ColumnBuilder.string(COLUMN_KEY.INFO.name()).name("검체정보").width(100).build()
         ).stretchH("all");
     }
     private void onUpdateSheet() {
@@ -85,9 +81,10 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     }
     public WorkDetailTopGridElement value(Request[] sample){
         this.values.clear();
+        sheet.clear();
         sheet.values(Arrays.stream(sample)
                 .peek(m->this.values.put(m.dateRequest(), m))
-                .peek(m->this.values.put(m.sample().toString(), m))
+                .peek(m->this.values.put(String.valueOf(m.sample()), m))
                 .peek(m->this.values.put(m.serviceName(), m))
                 .peek(m->this.values.put(m.customerName(), m))
                 .peek(m->this.values.put(m.mrn(), m))
@@ -105,17 +102,17 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     }
     private static Data map(Request value) {
         if(value == null) return null;
-        return new Data(value.sample().toString())
-                .put(COLUMN_KEY.RECEIPT.name(), String.valueOf(value.dateRequest().split("T")[0]))
+        return new Data(String.valueOf(value.sample()))
+                .put(COLUMN_KEY.RECEIPT.name(), value.dateRequest())
                 .put(COLUMN_KEY.ID.name(), String.valueOf(value.sample()))
-                .put(COLUMN_KEY.TYPE.name(), value.serviceName())
+                .put(COLUMN_KEY.TYPE.name(),  String.valueOf(value.serviceName()))
                 .put(COLUMN_KEY.CUSTOMER_NAME.name(), value.customerName())
                 .put(COLUMN_KEY.MRN.name(), value.mrn())
                 .put(COLUMN_KEY.PATIENT_NAME.name(), value.name())
                 .put(COLUMN_KEY.PATIENT_CODE.name(), value.code())
                 .put(COLUMN_KEY.SEX.name(), value.sex())
                 .put(COLUMN_KEY.SPECIMEN_TYPE.name(), value.type())
-                .put(COLUMN_KEY.END_DT.name(), value.dateEnd().split("T")[0])
+                .put(COLUMN_KEY.END_DT.name(), String.valueOf(value.dateEnd()))
                 .put(COLUMN_KEY.REMARK.name(), value.remark())
                 .put(COLUMN_KEY.INFO.name(), value.info());
 
