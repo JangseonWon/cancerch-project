@@ -1,5 +1,6 @@
 package com.greencross.lims.client.worklist;
 
+import com.greencross.lims.data.Work;
 import com.greencross.lims.data.Worklist;
 import elemental2.dom.EventListener;
 import elemental2.dom.EventTarget;
@@ -22,7 +23,7 @@ import static org.jboss.elemento.Elements.div;
 import static org.jboss.elemento.Elements.label;
 import static org.jboss.elemento.EventType.bind;
 
-public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailTopGridElement> implements HasSelectionChangeHandlers<Optional<Worklist>> {
+public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailTopGridElement> implements HasSelectionChangeHandlers<Optional<Work>> {
     public static WorkDetailTopGridElement instance() { return new WorkDetailTopGridElement(div()); }
     private enum COLUMN_KEY {
         NO, RECEIPT, ID, TYPE, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, TAT
@@ -31,7 +32,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     private final SheetElement sheet;
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;
-    private final Map<String, Worklist> values = new HashMap<>();
+    private final Map<String, Work> values = new HashMap<>();
     private WorkDetailTopGridElement(HtmlContentBuilder<HTMLDivElement> e){
         super(e.css("top_grid"));
         _this = e;
@@ -70,23 +71,23 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
             }
         }
     }
-    public WorkDetailTopGridElement append(Worklist worklist){
-        this.values.put(worklist.id(), worklist);
-        sheet.append(map(worklist));
+    public WorkDetailTopGridElement append(Work work){
+        this.values.put(work.id(), work);
+        sheet.append(map(work));
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailTopGridElement delete(Worklist worklist){
-        this.values.remove(worklist.id());
-        sheet.delete(worklist.id());
+    public WorkDetailTopGridElement delete(Work work){
+        this.values.remove(work.id());
+        sheet.delete(work.id());
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailTopGridElement value(Worklist... worklists){
+    public WorkDetailTopGridElement value(Work... work){
         this.values.clear();
-        sheet.values(Arrays.stream(worklists)
+        sheet.values(Arrays.stream(work)
                 .peek(m->this.values.put(m.id(), m))
                 .peek(m->this.values.put(String.valueOf(m.no()), m))
                 .peek(m->this.values.put(m.title(), m))
@@ -100,7 +101,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         onUpdateSheet();
         return that();
     }
-    private static Data map(Worklist value) {
+    private static Data map(Work value) {
         if(value == null) return null;
         return new Data(value.id())
                 .put(COLUMN_KEY.NO.name(), String.valueOf(value.no()))
@@ -114,7 +115,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         return that();
     }
     @Override
-    public Optional<Worklist> selection() {
+    public Optional<Work> selection() {
         return Arrays.stream(sheet.values())
                 .filter((d) -> d.state() == Data.DataState.SELECTED)
                 .map(d->values.get(d.idx()))
@@ -122,12 +123,12 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     }
 
     @Override
-    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Worklist>> listener) {
+    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Work>> listener) {
         return onSelectionChange(sheet.element(), listener);
     }
 
     @Override
-    public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Optional<Worklist>> listener) {
+    public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Optional<Work>> listener) {
         EventListener wrapper = evt->listener.handle(SelectionChangeEvent.event(evt, selection()));
         return bind(dom, "selection-change", wrapper);
     }

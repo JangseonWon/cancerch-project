@@ -25,7 +25,7 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
     private final TextFieldElement<String> Reader = TextFieldElement.textBox().outlined().text("검체바코드").style("margin-left: 10px;");
     private final TextFieldElement<JsDate> DateFrom = TextFieldElement.dateBox().outlined().text("Date from").value(new JsDate());
     private final TextFieldElement<JsDate> DateTo = TextFieldElement.dateBox().outlined().text("Date to").value(yesterday());
-
+    private String mode = "normal";
     public static WorklistDetailElement instance(String id) { return new WorklistDetailElement(div());}
     public WorklistDetailElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.css("top"));
