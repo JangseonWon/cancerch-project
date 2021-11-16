@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to="worklist">
-    <inherits name="net.sayaya.UI"/>
     <inherits name="net.sayaya.Chart"/>
     <inherits name="com.greencross.lims.Icon"/>
     <inherits name="com.greencross.lims.Shared"/>

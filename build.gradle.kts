@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.5.20" apply false
-    kotlin("kapt") version "1.5.20" apply false
+    kotlin("jvm") version "1.6.0-RC2" apply false
+    kotlin("kapt") version "1.6.0-RC2" apply false
 }
 
 subprojects {

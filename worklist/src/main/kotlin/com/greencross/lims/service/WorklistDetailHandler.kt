@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.LocalDateTime
 
 @Service
 class WorklistDetailHandler (
@@ -22,8 +23,8 @@ class WorklistDetailHandler (
     private val PatientRepo: PatientRepository,
     private val mapper: WorklistDetailToDto
 ) {
-    fun sample(): Flux<Request_> {
-        return RequestRepo.findByService("N201")
+    fun sample(yesterday: String, today: String): Flux<Request_> {
+        return RequestRepo.findByServiceAndDateRequestBetween("N201", yesterday, today)
             .flatMap(this::toDto)
     }
     private fun toDto(entity: com.greencross.lims.entity.Request): Mono<Request_>{

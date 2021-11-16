@@ -23,7 +23,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     private enum COLUMN_KEY {
         RECEIPT, ID, TYPE, CUSTOMER_NAME, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, REMARK, INFO
     }
-    private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Sample list is not present yet. Review by F5.").style("text-align: center; align-self: center; width: 100%;");
+    private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Sample list is not present yet. Review by F5 OR Change to-from Date.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;

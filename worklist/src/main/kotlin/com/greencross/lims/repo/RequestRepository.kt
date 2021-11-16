@@ -9,5 +9,5 @@ import java.util.*
 
 interface RequestRepository: ReactiveCrudRepository<Request, UUID>, ReactiveQuerydslPredicateExecutor<Request>,
     QuerydslR2dbcFragment<Request> {
-        fun findByService(service: String): Flux<Request>
+        fun findByServiceAndDateRequestBetween(service: String, start: String, end: String): Flux<Request>
     }

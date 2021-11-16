@@ -11,11 +11,11 @@ open class WorklistDetailRouter(private val handler: WorklistDetailHandler) {
     @Bean
     open fun WorklistDetailRouter(): RouterFunction<ServerResponse?> {
         return RouterFunctions
-            .route(RequestPredicates.GET("/worklist/sample"), this::findSample)
+            .route(RequestPredicates.GET("/worklist/sample/{yesterday}&{today}"), this::findSample)
     }
 
     private fun findSample(request: ServerRequest): Mono<ServerResponse> {
-        return handler.sample().collectList()
+        return handler.sample(request.pathVariable("yesterday"), request.pathVariable("today")).collectList()
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
             .switchIfEmpty(ServerResponse.noContent().build())
             .onErrorResume(ServerResponse.badRequest()::bodyValue)
