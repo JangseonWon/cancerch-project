@@ -14,7 +14,7 @@ public class WorklistDTLApi {
                 .then(r->Promise.resolve((Work[]) r));
     }
     public Promise<Request[]> findSample(){
-        return FetchApi.request("/work/sample")
+        return FetchApi.request("/worklist/sample")
                 .then(Response::json)
                 .then(r->Promise.resolve((Request[]) r));
     }

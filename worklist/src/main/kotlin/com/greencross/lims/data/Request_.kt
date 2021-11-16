@@ -7,6 +7,7 @@ data class Request_ (
     val info: String? = null,
     val service: String? = null,
     val dateRequest: LocalDateTime? = null,
+    val dateEnd: LocalDateTime? = null,
     //sample
     val type: String? = null,
     val remark: String? = null,
@@ -16,7 +17,7 @@ data class Request_ (
     val mrn: String? = null,
     val name: String? = null,
     val code: String? = null,
-    val sex: Sex? = null,
+    val sex: String? = null,
     //request
     val serviceName: String? = null
 )

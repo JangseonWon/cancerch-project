@@ -35,6 +35,7 @@ class WorklistDetailHandler (
                 info = entity.info,
                 service = entity.service,
                 dateRequest = entity.dateRequest,
+                dateEnd = entity.dateEnd,
                 type = p.t1.type,
                 remark = p.t1.remark,
                 patient = p.t1.patient,
@@ -42,24 +43,9 @@ class WorklistDetailHandler (
                 mrn = p.t1.mrn,
                 name = p.t1.name,
                 code = p.t1.code,
-//                sex = p.t1.sex
+                sex = p.t1.sex,
                 serviceName = p.t2.name
             )}
-//            .zipWith(ServiceRepo.findById(entity.service))
-//            .map { p->Request_(
-//                id = p.t1.id,
-//                type = p.t1.type,
-//                remark = p.t1.remark,
-//                customerName = p.t1.customerName,
-//                mrn = p.t1.mrn,
-//                name = p.t1.name,
-//                code = p.t1.code,
-//                sex = p.t1.sex,
-//                dateRequest = entity.dateRequest,
-//                sample = p.sample,
-//                info = entity.info,
-//                serviceName = p.t2.name
-//            )}
     }
     private fun toDto(entity: com.greencross.lims.entity.Sample): Mono<Sample>{
         return PatientRepo.findById(entity.patient)
@@ -72,7 +58,7 @@ class WorklistDetailHandler (
                 mrn = p.mrn,
                 name = p.name,
                 code = p.code,
-//                sex = p.sex
+                sex = p.sex
             )}
     }
     private fun toDto(entity: com.greencross.lims.entity.Patient): Patient{
@@ -81,7 +67,7 @@ class WorklistDetailHandler (
             mrn = entity.mrn,
             name = entity.name,
             code = entity.code,
-//            sex = entity.sex
+            sex = entity.sex
         )
     }
 }

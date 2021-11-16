@@ -10,14 +10,18 @@ import lombok.experimental.Accessors;
 @Getter(onMethod_= {@JsOverlay, @JsIgnore})
 @Accessors(fluent=true)
 public final class Request {
-    private String id;
-    private Double no;
-    private String title;
     private Double sample;
-    private String comment;
-    private String state;
-    @JsProperty(name="created_by")
-    private String createdBy;
-    @JsProperty(name="created_at")
-    private String createdAt;
+    private String info;
+    private String service;
+    private String dateRequest;
+    private String dateEnd;
+    private String type;
+    private String remark;
+    private String patient;
+    private String customerName;
+    private String mrn;
+    private String name;
+    private String code;
+    private String sex;
+    private String serviceName;
 }

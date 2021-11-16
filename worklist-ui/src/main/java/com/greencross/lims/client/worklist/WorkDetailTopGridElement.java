@@ -1,7 +1,6 @@
 package com.greencross.lims.client.worklist;
 
-import com.greencross.lims.data.Work;
-import com.greencross.lims.data.Worklist;
+import com.greencross.lims.data.Request;
 import elemental2.dom.EventListener;
 import elemental2.dom.EventTarget;
 import elemental2.dom.HTMLDivElement;
@@ -23,16 +22,16 @@ import static org.jboss.elemento.Elements.div;
 import static org.jboss.elemento.Elements.label;
 import static org.jboss.elemento.EventType.bind;
 
-public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailTopGridElement> implements HasSelectionChangeHandlers<Optional<Work>> {
+public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement, WorkDetailTopGridElement> implements HasSelectionChangeHandlers<Optional<Request>> {
     public static WorkDetailTopGridElement instance() { return new WorkDetailTopGridElement(div()); }
     private enum COLUMN_KEY {
-        NO, RECEIPT, ID, TYPE, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, TAT
+        RECEIPT, ID, TYPE, CUSTOMER_NAME, MRN, PATIENT_NAME, PATIENT_CODE, SEX, SPECIMEN_TYPE, END_DT, REMARK, INFO
     }
     private final HtmlContentBuilder<HTMLLabelElement> lblEmpty = label("Worklist is not present yet. Create Worklist.").style("text-align: center; align-self: center; width: 100%;");
     private final SheetElement sheet;
     private final SheetElement.SheetConfiguration config;
     private final HtmlContentBuilder<HTMLDivElement> _this;
-    private final Map<String, Work> values = new HashMap<>();
+    private final Map<String, Request> values = new HashMap<>();
     private WorkDetailTopGridElement(HtmlContentBuilder<HTMLDivElement> e){
         super(e.css("top_grid"));
         _this = e;
@@ -45,17 +44,18 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         SheetElementSelectableMulti.header(sheet);
 
         config.columns(
-                ColumnBuilder.string(COLUMN_KEY.NO.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.RECEIPT.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.ID.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.TYPE.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.CUSTOMER_NAME.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.MRN.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.PATIENT_NAME.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.PATIENT_CODE.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.SEX.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.SPECIMEN_TYPE.name()).build(),
                 ColumnBuilder.string(COLUMN_KEY.END_DT.name()).build(),
-                ColumnBuilder.string(COLUMN_KEY.TAT.name()).build()
+                ColumnBuilder.string(COLUMN_KEY.REMARK.name()).build(),
+                ColumnBuilder.string(COLUMN_KEY.INFO.name()).build()
         ).stretchH("all");
     }
     private void onUpdateSheet() {
@@ -71,43 +71,53 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
             }
         }
     }
-    public WorkDetailTopGridElement append(Work work){
-        this.values.put(work.id(), work);
-        sheet.append(map(work));
+    public WorkDetailTopGridElement append(Request sample){
+        sheet.append(map(sample));
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailTopGridElement delete(Work work){
-        this.values.remove(work.id());
-        sheet.delete(work.id());
+    public WorkDetailTopGridElement delete(Request sample){
+        sheet.delete(sample.sample().toString());
         onUpdateSheet();
 
         return that();
     }
-    public WorkDetailTopGridElement value(Work... work){
+    public WorkDetailTopGridElement value(Request[] sample){
         this.values.clear();
-        sheet.values(Arrays.stream(work)
-                .peek(m->this.values.put(m.id(), m))
-                .peek(m->this.values.put(String.valueOf(m.no()), m))
-                .peek(m->this.values.put(m.title(), m))
-                .peek(m->this.values.put(m.createdBy(), m))
-                .peek(m->this.values.put(String.valueOf(m.sample()), m))
-                .peek(m->this.values.put(m.state(), m))
-                .peek(m->this.values.put(m.comment(), m))
-                .peek(m->this.values.put(m.createdAt(), m))
+        sheet.values(Arrays.stream(sample)
+                .peek(m->this.values.put(m.dateRequest(), m))
+                .peek(m->this.values.put(m.sample().toString(), m))
+                .peek(m->this.values.put(m.serviceName(), m))
+                .peek(m->this.values.put(m.customerName(), m))
+                .peek(m->this.values.put(m.mrn(), m))
+                .peek(m->this.values.put(m.name(), m))
+                .peek(m->this.values.put(m.code(), m))
+                .peek(m->this.values.put(m.sex(), m))
+                .peek(m->this.values.put(m.type(), m))
+                .peek(m->this.values.put(m.dateEnd(), m))
+                .peek(m->this.values.put(m.remark(), m))
+                .peek(m->this.values.put(m.info(), m))
                 .map(WorkDetailTopGridElement::map)
                 .toArray(Data[]::new));
         onUpdateSheet();
         return that();
     }
-    private static Data map(Work value) {
+    private static Data map(Request value) {
         if(value == null) return null;
-        return new Data(value.id())
-                .put(COLUMN_KEY.NO.name(), String.valueOf(value.no()))
-                .put(COLUMN_KEY.ID.name(), value.title())
-                .put(COLUMN_KEY.RECEIPT.name(), value.comment())
-                .put(COLUMN_KEY.TYPE.name(), value.createdAt().split("T")[0]);
+        return new Data(value.sample().toString())
+                .put(COLUMN_KEY.RECEIPT.name(), String.valueOf(value.dateRequest().split("T")[0]))
+                .put(COLUMN_KEY.ID.name(), String.valueOf(value.sample()))
+                .put(COLUMN_KEY.TYPE.name(), value.serviceName())
+                .put(COLUMN_KEY.CUSTOMER_NAME.name(), value.customerName())
+                .put(COLUMN_KEY.MRN.name(), value.mrn())
+                .put(COLUMN_KEY.PATIENT_NAME.name(), value.name())
+                .put(COLUMN_KEY.PATIENT_CODE.name(), value.code())
+                .put(COLUMN_KEY.SEX.name(), value.sex())
+                .put(COLUMN_KEY.SPECIMEN_TYPE.name(), value.type())
+                .put(COLUMN_KEY.END_DT.name(), value.dateEnd().split("T")[0])
+                .put(COLUMN_KEY.REMARK.name(), value.remark())
+                .put(COLUMN_KEY.INFO.name(), value.info());
 
     }
     public WorkDetailTopGridElement refresh() {
@@ -115,7 +125,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         return that();
     }
     @Override
-    public Optional<Work> selection() {
+    public Optional<Request> selection() {
         return Arrays.stream(sheet.values())
                 .filter((d) -> d.state() == Data.DataState.SELECTED)
                 .map(d->values.get(d.idx()))
@@ -123,12 +133,12 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     }
 
     @Override
-    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Work>> listener) {
+    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Optional<Request>> listener) {
         return onSelectionChange(sheet.element(), listener);
     }
 
     @Override
-    public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Optional<Work>> listener) {
+    public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Optional<Request>> listener) {
         EventListener wrapper = evt->listener.handle(SelectionChangeEvent.event(evt, selection()));
         return bind(dom, "selection-change", wrapper);
     }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 class Request(
     @Id val sample: Double,
     @Column("date_request") val dateRequest: LocalDateTime? = null,
+    @Column("date_due") val dateEnd: LocalDateTime? = null,
     val info: String? = null,
     val service: String
 )

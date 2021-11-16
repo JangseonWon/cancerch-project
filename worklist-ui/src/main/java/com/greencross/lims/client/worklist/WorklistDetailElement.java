@@ -1,5 +1,6 @@
 package com.greencross.lims.client.worklist;
 
+import com.greencross.lims.api.WorklistDTLApi;
 import com.greencross.lims.client.ControllerElement;
 import elemental2.core.JsDate;
 import elemental2.dom.HTMLDivElement;
@@ -47,8 +48,11 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
         yesterday.setHours(0, 0, 0, 0);
         return yesterday;
     }
-    private static void update(){
-
+    private void update(){
+        WorklistDTLApi.findSample().then(sample -> {
+            topGrid.value(sample);
+            return null;
+        });
     }
     @Override
     public WorklistDetailElement that() {
