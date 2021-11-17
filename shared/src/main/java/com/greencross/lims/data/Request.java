@@ -13,15 +13,19 @@ public final class Request {
     private Double sample;
     private String info;
     private String service;
+    @JsProperty(name = "date_request")
     private String dateRequest;
+    @JsProperty(name = "date_end")
     private String dateEnd;
     private String type;
     private String remark;
     private String patient;
+    @JsProperty(name = "customer_name")
     private String customerName;
     private String mrn;
     private String name;
     private String code;
     private String sex;
+    @JsProperty(name = "service_name")
     private String serviceName;
 }

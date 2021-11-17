@@ -25,7 +25,7 @@ class WorklistDetailHandler (
 ) {
     fun sample(yesterday: String, today: String): Flux<Request_> {
         return RequestRepo.findByServiceAndDateRequestBetween("N201", yesterday, today)
-            .flatMap(this::toDto)
+            .flatMap(this::toDto).sort(Comparator.comparing { r->r.sample })
     }
     private fun toDto(entity: com.greencross.lims.entity.Request): Mono<Request_>{
         return SampleRepo.findById(entity.sample.toString())

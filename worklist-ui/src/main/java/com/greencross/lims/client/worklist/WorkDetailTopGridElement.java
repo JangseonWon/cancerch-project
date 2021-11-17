@@ -103,7 +103,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     private static Data map(Request value) {
         if(value == null) return null;
         return new Data(String.valueOf(value.sample()))
-                .put(COLUMN_KEY.RECEIPT.name(), value.dateRequest())
+                .put(COLUMN_KEY.RECEIPT.name(), value.dateRequest().split("T")[0])
                 .put(COLUMN_KEY.ID.name(), String.valueOf(value.sample()))
                 .put(COLUMN_KEY.TYPE.name(),  String.valueOf(value.serviceName()))
                 .put(COLUMN_KEY.CUSTOMER_NAME.name(), value.customerName())
@@ -112,7 +112,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
                 .put(COLUMN_KEY.PATIENT_CODE.name(), value.code())
                 .put(COLUMN_KEY.SEX.name(), value.sex())
                 .put(COLUMN_KEY.SPECIMEN_TYPE.name(), value.type())
-                .put(COLUMN_KEY.END_DT.name(), String.valueOf(value.dateEnd()))
+                .put(COLUMN_KEY.END_DT.name(), String.valueOf(value.dateEnd().split("T")[0]))
                 .put(COLUMN_KEY.REMARK.name(), value.remark())
                 .put(COLUMN_KEY.INFO.name(), value.info());
 

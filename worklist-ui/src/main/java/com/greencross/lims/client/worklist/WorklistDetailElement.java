@@ -29,6 +29,7 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
     private final TextFieldElement<JsDate> DateFrom = TextFieldElement.dateBox().outlined().text("Date from").value(new JsDate());
     private final TextFieldElement<JsDate> DateTo = TextFieldElement.dateBox().outlined().text("Date to").value(yesterday());
     private String mode = "normal";
+    private Boolean backChecker = false;
     public static WorklistDetailElement instance(String id) { return new WorklistDetailElement(div());}
     public WorklistDetailElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.css("top"));
@@ -36,19 +37,23 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
             update(DateTo.value(), DateFrom.value());
         });
         Back.onClick(evt->{
+            if(backChecker)
+                if(!DomGlobal.confirm("변경사항이 반영되지 않습니다. 돌아가시겠습니까?"))
+                    return ;
             DomGlobal.location.assign("worklist.html");
         });
         Save.onClick(evt->{
-
+            if(backChecker) backChecker = false;
         });
         Add.onClick(evt->{
+            mode = "add";
 
         });
         Up.onClick(evt->{
-
+            if(!backChecker) backChecker = true;
         });
         Down.onClick(evt->{
-
+            if(!backChecker) backChecker = true;
         });
 
         e.add(controller
