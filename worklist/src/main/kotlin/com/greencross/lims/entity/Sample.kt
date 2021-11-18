@@ -10,6 +10,7 @@ class Sample(
     @Column("sample_type")
     val sampleType: String?=null,
     val remark: String?=null,
-    val patient: String
+    val patient: String,
+    val barcode: Double?=0.0
 
 )

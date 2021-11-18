@@ -1,8 +1,6 @@
 package com.greencross.lims.data
 
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 data class Request_ (
     val sample: Double,
@@ -14,8 +12,10 @@ data class Request_ (
     val type: String? = "",
     val remark: String? = "",
     val patient: String? = "",
+    val barcode: Double? = 0.0,
     //patient
     val customerName: String? = "",
+    val customerCode: String? = "",
     val mrn: String? = "",
     val name: String? = "",
     val code: String? = "",

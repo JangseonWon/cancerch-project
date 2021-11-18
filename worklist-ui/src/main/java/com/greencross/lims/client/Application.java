@@ -14,7 +14,8 @@ public class Application implements EntryPoint {
            String param = hash.substring(1);
            if("link".equalsIgnoreCase(param)){
                 String[] params = DomGlobal.window.location.search.substring(1).split("#");
-               Elements.body().add(WorklistDetailElement.instance(params[0]));
+                String[] state = params[0].split("&");
+               Elements.body().add(WorklistDetailElement.instance(params[0], state[1]));
            }
        } catch(Exception ignore){
            Elements.body().add(WorklistElement.instance());

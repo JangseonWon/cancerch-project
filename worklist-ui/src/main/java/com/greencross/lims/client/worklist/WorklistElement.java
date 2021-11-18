@@ -116,7 +116,12 @@ public class WorklistElement extends HTMLElementBuilder<HTMLDivElement, Worklist
     }
     private void detail(){
         String id = grid.selection().get().id();
-        DomGlobal.location.assign("worklist.html?"+id+"#Link");
+        if(!grid.selection().get().state().equals("close")) {
+            DomGlobal.location.assign("worklist.html?" + id + "&open#Link");
+        }
+        else{
+            DomGlobal.location.assign("worklist.html?" + id + "&close#Link");
+        }
     }
     //region #1 Override Method
     @Override

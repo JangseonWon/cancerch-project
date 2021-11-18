@@ -11,5 +11,6 @@ class Patient(
     val code: String?=null,
     val sex: String?=null,
     @Column("customer_name") val customerName: String?=null,
+    @Column("customer_code") val customerCode: String?=null,
     val mrn: String?=null
 )

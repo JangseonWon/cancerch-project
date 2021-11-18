@@ -19,9 +19,12 @@ public final class Request {
     private String dateEnd;
     private String type;
     private String remark;
+    private Double barcode;
     private String patient;
     @JsProperty(name = "customer_name")
     private String customerName;
+    @JsProperty(name = "customer_code")
+    private String customerCode;
     private String mrn;
     private String name;
     private String code;

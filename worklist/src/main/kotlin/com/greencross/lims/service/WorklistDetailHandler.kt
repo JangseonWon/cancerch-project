@@ -40,7 +40,9 @@ class WorklistDetailHandler (
                 type = p.t1.type,
                 remark = p.t1.remark,
                 patient = p.t1.patient,
+                barcode = p.t1.barcode,
                 customerName = p.t1.customerName,
+                customerCode = p.t1.customerCode,
                 mrn = p.t1.mrn,
                 name = p.t1.name,
                 code = p.t1.code,
@@ -55,7 +57,9 @@ class WorklistDetailHandler (
                 type = entity.sampleType,
                 remark = entity.remark,
                 patient = entity.patient,
+                barcode = entity.barcode,
                 customerName = p.customerName,
+                customerCode = p.customerCode,
                 mrn = p.mrn,
                 name = p.name,
                 code = p.code,
@@ -65,6 +69,7 @@ class WorklistDetailHandler (
     private fun toDto(entity: com.greencross.lims.entity.Patient): Patient{
         return Patient(
             customerName = entity.customerName,
+            customerCode = entity.customerCode,
             mrn = entity.mrn,
             name = entity.name,
             code = entity.code,

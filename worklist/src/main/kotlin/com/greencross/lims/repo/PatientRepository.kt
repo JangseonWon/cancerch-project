@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono
 
 interface PatientRepository : ReactiveCrudRepository<Patient, String>, ReactiveQuerydslPredicateExecutor<Patient>,
     QuerydslR2dbcFragment<Patient> {
-        @Query("SELECT id, name, code, TEXT(sex) as sex, customer_name, mrn FROM Patient where id=:id")
+        @Query("SELECT id, name, code, TEXT(sex) as sex, customer_name, customer_code, mrn FROM Patient where id=:id")
         override fun findById(id: String): Mono<Patient>
 }
