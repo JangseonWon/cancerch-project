@@ -76,7 +76,7 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
                     Work tmp = new Work();
                     tmp.id(null).no(null).sample(t.sample()).barcode(t.barcode()).testType(t.type()).testCode(t.service()).reqNum(t.mrn()).patientName(t.name())
                             .custermerName(t.customerName()).custermerCode(t.customerCode()).endDt(t.dateEnd());
-                    DomGlobal.console.log(tmp);
+                    botGrid.append(tmp);
                 });
             }catch(Exception ex){
                 DomGlobal.console.log(ex);
