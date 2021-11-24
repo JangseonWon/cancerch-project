@@ -73,9 +73,4 @@ open class WorklistRouter(private val handler: WorklistHandler) {
                 msg -> ServerSentEvent.builder<Worklist>(msg.data).event(msg.type.name).id(msg.data.id()).build()
             }))
    }
-    private fun details(request: ServerRequest): Mono<User> {
-        return request.principal()
-            .cast(SecurityContextRepository.UserAuthentication::class.java)
-            .map { auth->auth.details }
-    }
 }
