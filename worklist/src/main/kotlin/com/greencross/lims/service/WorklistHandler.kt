@@ -159,9 +159,4 @@ class WorklistHandler(
     fun broadcastModel(): Consumer<String> {
         return Consumer { json -> subscriber.tryEmitNext(map(json)) }
     }
-    private fun details(request: ServerRequest): Mono<User> {
-        return request.principal()
-            .cast(SecurityContextRepository.UserAuthentication::class.java)
-            .map { auth->auth.details }
-    }
 }
