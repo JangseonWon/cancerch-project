@@ -20,7 +20,13 @@ import org.jboss.elemento.IsElement;
 import static org.jboss.elemento.Elements.*;
 
 public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> {
-
+    // region # Checker
+    private Boolean backChecker = false;
+    private Boolean viewChecker = false;
+    private String id = "";
+    private Boolean Lock = false;
+    private String iptPrev = null;
+    // endregion
     // region # Title / Breadcumb
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Worklist");
     private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
@@ -30,6 +36,9 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
                 evt.preventDefault();
                 evt.stopPropagation();
             }).add("Worklist", evt->{
+                if(backChecker)
+                    if(!DomGlobal.confirm("변경사항이 반영되지 않습니다. 돌아가시겠습니까?"))
+                        return ;
                 evt.preventDefault();
                 evt.stopPropagation();
                 Router.location("", true);
@@ -41,7 +50,6 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
             "border-top: 1px solid #AAA; border-bottom: 1px solid #AAA; transition: all 200ms;");
     private final WorkDetailBotGridElement botGrid = WorkDetailBotGridElement.instance().style("position: relative; height: 90vh; overflow: hidden;" +
             "border-top: 1px solid #AAA; border-bottom: 1px solid #AAA; transition: all 200ms;");
-    private final ButtonElement Back = ButtonElement.outline().css("button").text("Back").before(IconElement.icon(IconElement.Type.Regular, "fa-backward")).style("height: 4em;");
     private final ButtonElement Add = ButtonElement.outline().css("button").text("Add").before(IconElement.icon(IconElement.Type.Regular, "fa-plus")).style("height: 4em;");
     private final ButtonElement Del = ButtonElement.outline().css("button").text("Delete").before(IconElement.icon(IconElement.Type.Regular, "fa-eraser")).style("height: 4em;");
     private final ButtonElement Save = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save")).style("height: 4em;");
@@ -56,11 +64,6 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
     private final TextFieldElement<JsDate> DateTo = TextFieldElement.dateBox().outlined().text("Date to").value(new JsDate());
     private final IsElement<?>[] appendControls;
     private final IsElement<?>[] listControls;
-    private Boolean backChecker = false;
-    private Boolean viewChecker = false;
-    private String id = "";
-    private Boolean Lock = false;
-    private String iptPrev = null;
     //endregion
 
     // region # Element instance
@@ -68,25 +71,15 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
         super(query);
         initialize();
 
-        listControls = new IsElement[] { controlPanelElements()[0], controlPanelElements()[5] };
-        appendControls = new IsElement[] { controlPanelElements()[1], controlPanelElements()[2], controlPanelElements()[3], controlPanelElements()[4] };
+        listControls = new IsElement[] { controlPanelElements()[4] };
+        appendControls = new IsElement[] { controlPanelElements()[0], controlPanelElements()[1], controlPanelElements()[2], controlPanelElements()[3] };
         hideControls(appendControls);
         readModeUpdate("barcode");
 
         // region # button events
         Search.onClick(evt->{
-            if(viewChecker)
-                if(!DomGlobal.confirm("변경사항은 저장되지 않습니다. 재조회 하시겠습니까?"))
-                    return ;
 
             updateTop(DateFrom.value(), DateTo.value());
-            update();
-        });
-        Back.onClick(evt->{
-            if(backChecker)
-                if(!DomGlobal.confirm("변경사항이 반영되지 않습니다. 돌아가시겠습니까?"))
-                    return ;
-            DomGlobal.location.assign("worklist.html");
         });
         Save.onClick(evt->{ if(backChecker) backChecker = false; });
         Add.onClick(evt->{ addMode(); });
@@ -161,8 +154,10 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
         return yesterday;
     }
     private void updateTop(JsDate yesterday, JsDate today){
+        ProgressApi.open();
         WorklistDTLApi.findSample(yesterday, today).then(sample -> {
             topGrid.value(sample);
+            ProgressApi.close();
             return null;
         });
     }
@@ -220,7 +215,6 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement<?>[][]{
-                new IsElement<?>[]{Back},
                 new IsElement<?>[]{input},
                 new IsElement<?>[]{Toggle},
                 new IsElement<?>[]{DateFrom, DateTo},
@@ -240,8 +234,10 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
 
     @Override
     public void update() {
+        ProgressApi.open();
         WorklistDTLApi.findWork(id).then(work->{
             botGrid.value(work);
+            ProgressApi.close();
             return null;
         });
     }

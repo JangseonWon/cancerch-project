@@ -72,7 +72,6 @@ class WorklistHandler(
                 if(predicate!=null) builder.and(predicate)
             }
         }
-        println(builder)
         return builder
     }
     private fun predicate(key: String?, value: String?): Predicate? {
