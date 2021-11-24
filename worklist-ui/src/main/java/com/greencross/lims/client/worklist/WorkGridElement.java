@@ -5,10 +5,10 @@ import elemental2.dom.*;
 import elemental2.dom.EventListener;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.event.HasSelectionChangeHandlers;
-import net.sayaya.ui.sheet.SheetElement;
-import net.sayaya.ui.sheet.Data;
-import net.sayaya.ui.sheet.SheetElementSelectableSingle;
-import net.sayaya.ui.sheet.column.ColumnBuilder;
+import net.sayaya.ui.chart.SheetElement;
+import net.sayaya.ui.chart.Data;
+import net.sayaya.ui.chart.SheetElementSelectableSingle;
+import net.sayaya.ui.chart.column.ColumnBuilder;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
@@ -41,13 +41,13 @@ class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement
         SheetElementSelectableSingle.header(sheet);
 
         config.columns(
-                ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").align("center").readOnly(true).build(),
+                ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").horizontal("center").readOnly(true).build(),
                 ColumnBuilder.string(COLUMN_KEY.TITLE.name()).width(250).name("Title").build(),
-                ColumnBuilder.string(COLUMN_KEY.CREATOR.name()).width(80).name("Creator").align("center").readOnly(true).build(),
-                ColumnBuilder.string(COLUMN_KEY.SAMPLE.name()).width(80).name("Sample").align("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.STATE.name()).width(80).name("State").align("center").readOnly(true).build(),
+                ColumnBuilder.string(COLUMN_KEY.CREATOR.name()).width(80).name("Creator").horizontal("center").readOnly(true).build(),
+                ColumnBuilder.string(COLUMN_KEY.SAMPLE.name()).width(80).name("Sample").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.STATE.name()).width(80).name("State").horizontal("center").readOnly(true).build(),
                 ColumnBuilder.string(COLUMN_KEY.COMMENT.name()).width(300).name("Comment").build(),
-                ColumnBuilder.string(COLUMN_KEY.CREATED.name()).width(80).name("Created_at").align("center").readOnly(true).build()
+                ColumnBuilder.string(COLUMN_KEY.CREATED.name()).width(80).name("Created_at").horizontal("center").readOnly(true).build()
         ).stretchH("all");
     }
     private void onUpdateSheet() {

@@ -20,6 +20,7 @@ dependencies {
     implementation("com.greencross:lims-service:1.1")
     implementation("com.greencross:lims-service-data:1.0")
     implementation("com.greencross:lims-service-util:1.0")
+    implementation("com.greencross:lims-sheet:1.1")
     implementation("com.greencross:lims-icon:1.1")
     implementation("org.jboss.elemento:elemento-core:1.0.3")
     implementation("com.google.elemental2:elemental2-svg:1.1.0")

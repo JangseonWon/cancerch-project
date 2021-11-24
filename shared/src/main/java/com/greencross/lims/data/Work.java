@@ -10,40 +10,57 @@ import lombok.experimental.Accessors;
 @Getter(onMethod_= {@JsOverlay, @JsIgnore})
 @Accessors(fluent=true)
 public final class Work {
-    private String id;
     private Double no;
-    private String batch;
-    private Double sample;
+    private String id;
     private Double barcode;
+    private String batch;
+    @JsProperty(name = "req_num")
+    private String reqNum;
     @JsProperty(name = "test_type")
     private String testType;
     @JsProperty(name = "test_code")
     private String testCode;
-    private String reqNum;
-    @JsProperty(name = "patient_name")
-    private String patientName;
-    @JsProperty(name = "custermer_name")
-    private String custermerName;
-    @JsProperty(name = "custermer_code")
-    private String custermerCode;
+    @JsProperty(name = "pat_name")
+    private String patName;
+    private Double sample;
+    @JsProperty(name = "cus_name")
+    private String cusName;
+    @JsProperty(name = "cus_code")
+    private String cusCode;
     @JsProperty(name = "end_dt")
     private String endDt;
+    @JsProperty(name = "dna_prep")
+    private String dnaPrep;
+    @JsProperty(name = "dna_method")
+    private String dnaMethod;
+    @JsProperty(name = "ext_dt")
+    private String extDt;
+    @JsProperty(name = "dna_conc")
+    private Double dnaConc;
+    @JsProperty(name = "dna_vol")
+    private Double dnaVol;
+    @JsProperty(name = "dw_vol")
+    private Double dwVol;
+    @JsProperty(name = "tot_amt")
+    private Double totAmt;
+    @JsProperty(name = "lib_prep")
+    private String libPrep;
+    @JsProperty(name = "lib_method")
+    private String libMethod;
+    private Double index;
+    @JsProperty(name = "lib_conc")
+    private Double libConc;
+    @JsProperty(name = "frag_size")
+    private Double fragSize;
+    private Double mol;
+    private Double bps;
+    @JsProperty(name = "lib_pmol")
+    private Double libPmol;
+    private Double multiple;
+    @JsProperty(name = "f_pool_vol")
+    private Double fPoolVol;
+    @JsProperty(name = "elut_vol")
+    private Double elutVol;
 
     public Work(){}
-//    private Double prepKit;
-//    private String method;
-//    private String extractDt;
-//    private Double volume;
-//    private Double totalAmount;
-//    private Double libraryConc;
-//    private Double fragmentSize;
-//    private Double mol;
-//    private Double batchPersample;
-//    private Double pollVol;
-//    private Double multiple;
-//    private Double finalPoolingVol;
-//    private Double elutionVol;
-//    private String result;
-//    private String failReason;
-//    private String comment;
 }

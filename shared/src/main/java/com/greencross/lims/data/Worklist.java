@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent=true)
 public final class Worklist {
     private String id;
-    private Double no;
+    public Double no;
     private String title;
     private Double sample;
     private String comment;

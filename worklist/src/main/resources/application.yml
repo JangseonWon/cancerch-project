@@ -8,16 +8,6 @@ spring:
       connect-string: test:12181
       discovery:
         root: /RnD
-    stream:
-      function:
-        definition: publish-worklist;broadcast-worklist;
-      bindings:
-        publish-worklist-out-0.destination: rnd-worklist
-        broadcast-worklist-in-0.destination: rnd-worklist
-      kafka:
-        binder:
-          brokers: localhost:9092
-          auto-add-partitions: true
   r2dbc:
     url: r2dbc:postgresql://gemini:5432/lims
     username: rnd

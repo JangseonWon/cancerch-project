@@ -2,6 +2,8 @@ package com.greencross.lims.api;
 
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.dto.Promise;
+import com.greencross.lims.dto.Query;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.EventSource;
 import elemental2.dom.RequestInit;
 import elemental2.dom.Response;
@@ -13,8 +15,16 @@ import static elemental2.core.Global.JSON;
 
 @UtilityClass
 public class WorklistApi {
-    public Promise<Worklist[]> findWorklist(boolean chkr){
-        return FetchApi.request("/worklist/list/"+chkr)
+    public Promise<Worklist[]> findWorklist(Query query, boolean chkr){
+        RequestInit request = RequestInit.create();
+        request.setMethod("POST");
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/json"},
+                new String[] {"Accept", "application/json"}
+        });
+        request.setBody(JSON.stringify(query));
+
+        return FetchApi.request("/worklist/list/"+chkr, request)
                 .then(Response::json)
                 .then(r->Promise.resolve((Worklist[]) r));
     }

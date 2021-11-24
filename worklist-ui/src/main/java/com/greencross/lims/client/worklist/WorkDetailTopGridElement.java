@@ -83,6 +83,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
     }
     public WorkDetailTopGridElement value(Request[] sample){
         this.values.clear();
+        No = 0;
         sheet.clear();
         sheet.values(Arrays.stream(sample)
                 .peek(m->this.values.put(m.dateRequest(), m))
@@ -124,6 +125,7 @@ public class WorkDetailTopGridElement extends HTMLElementBuilder<HTMLDivElement,
         sheet.refresh();
         return that();
     }
+
     @Override
     public Stream<Request> selection() {
         return Arrays.stream(Arrays.stream(sheet.values())

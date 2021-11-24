@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class WorklistDTLApi {
     public Promise<Work[]> findWork(String id){
-        return FetchApi.request("/worklist/"+id)
+        return FetchApi.request("/worklist/work/"+id)
                 .then(Response::json)
                 .then(r->Promise.resolve((Work[]) r));
     }

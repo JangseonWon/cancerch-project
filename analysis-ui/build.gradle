@@ -18,7 +18,6 @@ dependencies {
     implementation(project(":shared"))
     implementation("com.greencross:lims-api-gateway-data:1.0")
     implementation("com.greencross:lims-service:1.1")
-    implementation("com.greencross:lims-sheet:1.1")
     implementation("com.greencross:lims-service-data:1.0")
     implementation("com.greencross:lims-service-util:1.0")
     implementation("com.greencross:lims-icon:1.1")
@@ -50,7 +49,7 @@ gwtDev {
     war file("src/main/webapp")
 }
 war {
-    archiveFileName = "referral-classifier-analysis.war"
+    archiveFileName = "rnd-analysis.war"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 clean.doFirst {

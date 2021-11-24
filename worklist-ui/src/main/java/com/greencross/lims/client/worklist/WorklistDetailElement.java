@@ -1,51 +1,86 @@
 package com.greencross.lims.client.worklist;
 
+import com.google.gwt.core.client.Scheduler;
+import com.greencross.lims.api.ProgressApi;
+import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorklistDTLApi;
-import com.greencross.lims.client.ControllerElement;
+import com.greencross.lims.client.AbstractScene;
+import com.greencross.lims.client.Router;
 import com.greencross.lims.data.Work;
+import com.greencross.lims.dto.Query;
+import com.greencross.lims.dto.Request;
 import elemental2.core.JsDate;
-import elemental2.dom.DomGlobal;
-import elemental2.dom.HTMLDivElement;
-import net.sayaya.ui.ButtonElement;
-import net.sayaya.ui.HTMLElementBuilder;
+import elemental2.dom.*;
+import net.sayaya.ui.*;
 import com.greencross.lims.ui.IconElement;
-import net.sayaya.ui.TextFieldElement;
+import org.jboss.elemento.EventType;
 import org.jboss.elemento.HtmlContentBuilder;
+import org.jboss.elemento.IsElement;
 
 import static org.jboss.elemento.Elements.*;
 
-public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, WorklistDetailElement> {
+public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> {
+
+    // region # Title / Breadcumb
+    private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Worklist");
+    private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
+        RouteApi.location("", true, false);
+    }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
+            .add("RnD", evt->{
+                evt.preventDefault();
+                evt.stopPropagation();
+            }).add("Worklist", evt->{
+                evt.preventDefault();
+                evt.stopPropagation();
+                Router.location("", true);
+            });
+    // endregion
+
     //region # variable declare
-    private final ControllerElement controller = ControllerElement.instance().hidden(false).style("height : 5vh");
-    private final ControllerElement centroller = ControllerElement.instance().hidden(false);
-    private final WorkDetailTopGridElement topGrid = WorkDetailTopGridElement.instance();
-    private final WorkDetailBotGridElement botGrid = WorkDetailBotGridElement.instance();
-    private final ButtonElement Back = ButtonElement.outline().css("button").text("Back").before(IconElement.icon(IconElement.Type.Regular, "fa-backward")).style("height: 100%;");
-    private final ButtonElement Add = ButtonElement.outline().css("button").text("Add").before(IconElement.icon(IconElement.Type.Regular, "fa-plus")).style("height: 100%;");
-    private final ButtonElement Del = ButtonElement.outline().css("button").text("Delete").before(IconElement.icon(IconElement.Type.Regular, "fa-eraser")).style("height: 100%;");
-    private final ButtonElement Save = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save")).style("height: 100%;");
-    private final ButtonElement Down = ButtonElement.outline().css("button").text("Down").before(IconElement.icon(IconElement.Type.Regular, "fa-hand-point-down")).style("height: 100%;");
-    private final ButtonElement Up = ButtonElement.outline().css("button").text("Up").before(IconElement.icon(IconElement.Type.Regular, "fa-hand-point-up")).style("height: 100%;");
-    private final ButtonElement Search = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Regular, "fa-search")).style("height: 100%;");
-    private final TextFieldElement<String> Reader = TextFieldElement.textBox().outlined().text("검체바코드").style("margin-left: 10px;");
-    private final TextFieldElement<JsDate> DateFrom = TextFieldElement.dateBox().outlined().text("Date from").value(new JsDate());
-    private final TextFieldElement<JsDate> DateTo = TextFieldElement.dateBox().outlined().text("Date to").value(yesterday());
-    private String mode = "normal";
+    private final WorkDetailTopGridElement topGrid = WorkDetailTopGridElement.instance().style("position: relative; overflow: hidden;" +
+            "border-top: 1px solid #AAA; border-bottom: 1px solid #AAA; transition: all 200ms;");
+    private final WorkDetailBotGridElement botGrid = WorkDetailBotGridElement.instance().style("position: relative; height: 90vh; overflow: hidden;" +
+            "border-top: 1px solid #AAA; border-bottom: 1px solid #AAA; transition: all 200ms;");
+    private final ButtonElement Back = ButtonElement.outline().css("button").text("Back").before(IconElement.icon(IconElement.Type.Regular, "fa-backward")).style("height: 4em;");
+    private final ButtonElement Add = ButtonElement.outline().css("button").text("Add").before(IconElement.icon(IconElement.Type.Regular, "fa-plus")).style("height: 4em;");
+    private final ButtonElement Del = ButtonElement.outline().css("button").text("Delete").before(IconElement.icon(IconElement.Type.Regular, "fa-eraser")).style("height: 4em;");
+    private final ButtonElement Save = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save")).style("height: 4em;");
+    private final ButtonElementToggle Toggle = ButtonElement.toggle().css("button").text("Barcode").before(IconElement.icon(IconElement.Type.Regular, "fa-barcode")).style("height: 4em; width : 14vh;");
+    private final ButtonElement Search = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Regular, "fa-search")).style("height: 4em;");
+    private final ButtonElement Complete = ButtonElement.outline().css("button").text("Complete").before(IconElement.icon(IconElement.Type.Regular, "fa-check")).style("height: 4em;");
+    private final ButtonElement Recept = ButtonElement.outline().css("button").text("접수").before(IconElement.icon(IconElement.Type.Regular, "fa-receipt")).style("height: 4em;");
+    private final HtmlContentBuilder<HTMLDivElement> input = div().style("display: flex;");
+    private final TextFieldElement<String> BarcodeReader = TextFieldElement.textBox().outlined().css("input", "barcode").text("검체바코드").style("margin-left: 10px; width : 20.2em;").required(true);
+    private final TextFieldElement<String> RequestReader = TextFieldElement.textBox().outlined().css("input", "barcode").text("의뢰번호").style("margin-left: 10px;").required(true);
+    private final TextFieldElement<JsDate> DateFrom = TextFieldElement.dateBox().outlined().text("Date from").value(yesterday());
+    private final TextFieldElement<JsDate> DateTo = TextFieldElement.dateBox().outlined().text("Date to").value(new JsDate());
+    private final IsElement<?>[] appendControls;
+    private final IsElement<?>[] listControls;
     private Boolean backChecker = false;
     private Boolean viewChecker = false;
+    private String id = "";
+    private Boolean Lock = false;
+    private String iptPrev = null;
     //endregion
+
     // region # Element instance
-    public static WorklistDetailElement instance(String id, String state) { return new WorklistDetailElement(div(), id, state);}
-    public WorklistDetailElement(HtmlContentBuilder<HTMLDivElement> e, String id, String state) {
-        super(e.css("top"));
+    public WorklistDetailElement(Query query){
+        super(query);
+        initialize();
+
+        listControls = new IsElement[] { controlPanelElements()[0], controlPanelElements()[5] };
+        appendControls = new IsElement[] { controlPanelElements()[1], controlPanelElements()[2], controlPanelElements()[3], controlPanelElements()[4] };
+        hideControls(appendControls);
+        readModeUpdate("barcode");
 
         // region # button events
         Search.onClick(evt->{
             if(viewChecker)
                 if(!DomGlobal.confirm("변경사항은 저장되지 않습니다. 재조회 하시겠습니까?"))
                     return ;
-            updateTop(DateTo.value(), DateFrom.value());
-            updateBot(id);
+
+            updateTop(DateFrom.value(), DateTo.value());
+            update();
         });
         Back.onClick(evt->{
             if(backChecker)
@@ -53,56 +88,71 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
                     return ;
             DomGlobal.location.assign("worklist.html");
         });
-        Save.onClick(evt->{
-            if(backChecker) backChecker = false;
-        });
-        Add.onClick(evt->{
-            mode = "add";
-
-        });
-        Up.onClick(evt->{
-            try{
-
-            }catch(Exception ex){
-                DomGlobal.console.log(ex);
+        Save.onClick(evt->{ if(backChecker) backChecker = false; });
+        Add.onClick(evt->{ addMode(); });
+        Complete.onClick(evt->{listMode();});
+        Toggle.onValueChange(evt ->{
+            if(evt.value()){
+                Toggle.text(" 의 뢰 번 호 ");
+                readModeUpdate("Request");
+            }else{
+                Toggle.text("Barcode");
+                readModeUpdate("barcode");
             }
-            if(!backChecker) backChecker = true;
-            if(!viewChecker) viewChecker = true;
         });
-        Down.onClick(evt->{
-            try{
-                topGrid.selection().forEach(t->{
-                    DomGlobal.console.log(t);
-                    Work tmp = new Work();
-                    tmp.id(null).no(null).sample(t.sample()).barcode(t.barcode()).testType(t.type()).testCode(t.service()).reqNum(t.mrn()).patientName(t.name())
-                            .custermerName(t.customerName()).custermerCode(t.customerCode()).endDt(t.dateEnd());
-                    botGrid.append(tmp);
-                });
-            }catch(Exception ex){
-                DomGlobal.console.log(ex);
-            }
-
-            if(!backChecker) backChecker = true;
-            if(!viewChecker) viewChecker = true;
-        });
-        // endregion
-        // region # layouts
-        e.add(controller
-                .add(div().add(Back))
-                .add(div().add(Reader).add(DateTo).add(DateFrom)).add(div().add(Search))
-                .add(div().add(Save).add(Add).add(Del)))
-         .add(div().css("layout").style("height: calc(94vh - 20px);")
-                .add(topGrid)
-                .add(centroller.add(div().add(Up).add(Down)).style("justify-content:center;"))
-                .add(botGrid));
-        if(state.equals("close")){ Search.enabled(false); Save.enabled(false); Add.enabled(false); Del.enabled(false); Up.enabled(false); Down.enabled(false);}
-        // endregion
-        // region # initialize
-        updateTop(DateTo.value(), DateFrom.value());
-        updateBot(id);
+        BarcodeReader.on(EventType.keydown, evt-> Scheduler.get().scheduleDeferred(this::validation));
+        Recept.onClick(evt->receptBySample());
         // endregion
     }
     // endregion
+
+    // region #User Define
+    private void validation(){
+        String value = BarcodeReader.value();
+        if(value.length() < 11) return ;
+        if(Lock) return ;
+        if(value.trim().equals(iptPrev)){
+            BarcodeReader.select();
+            return;
+        }
+        String barcode = value.substring(0, 11);
+        iptPrev = barcode;
+
+    }
+    private void receptBySample() {
+        String value = RequestReader.value();
+        value = value.replace("-", "");
+        value = value.replace(" ", "");
+        if(value.length() < 15) return;
+        if(Lock) return;
+        if(value.trim().equals(iptPrev)) {
+            RequestReader.select();
+            return;
+        }
+        String sample = value;
+        iptPrev = sample;
+//        if(topGrid.hasValue(Long.parseLong(sample))) {
+//            RequestReader.select();
+//            return;
+//        }
+//
+//        if(!topGrid.hasSample(Long.parseLong(sample)) && !DomGlobal.window.confirm("목록에 없는 의뢰번호입니다. 접수할까요?")) {
+//            RequestReader.value("");
+//            return;
+//        }
+
+    }
+    public WorklistDetailElement parent(String param){
+        this.id = param;
+        while(breadcumb.element().childElementCount > 5) ((HTMLElement)breadcumb.element().childNodes.getAt(5)).remove();
+        breadcumb.add(id, evt->{
+            evt.preventDefault();
+            evt.stopPropagation();
+            Router.location(id, false);
+        });
+        return that();
+    }
+
     private static JsDate yesterday() {
         JsDate today = new JsDate();
         JsDate yesterday = new JsDate(today);
@@ -116,14 +166,84 @@ public class WorklistDetailElement extends HTMLElementBuilder<HTMLDivElement, Wo
             return null;
         });
     }
-    private void updateBot(String id){
-        WorklistDTLApi.findWork(id).then(work->{
-            botGrid.value(work);
-            return null;
-        });
+    private void addMode() {
+        updateTop(DateFrom.value(), DateTo.value());
+        topGrid.element().style.height = CSSProperties.HeightUnionType.of("35vh");
+        botGrid.element().style.height = CSSProperties.HeightUnionType.of("55vh");
+        showControls(appendControls);
+        hideControls(listControls);
+    }
+    private void listMode() {
+        topGrid.element().style.height = CSSProperties.HeightUnionType.of("0");
+        botGrid.element().style.height = CSSProperties.HeightUnionType.of("87vh");
+        showControls(listControls);
+        hideControls(appendControls);
+    }
+    private WorklistDetailElement readModeUpdate(String mode){
+        input.element().innerHTML = "";
+        if(mode.equals("barcode")){
+            input.add(BarcodeReader);
+        }
+        else{
+            input.add(RequestReader).add(Recept);
+        }
+        return this;
+    }
+    // endregion
+
+
+    // region # Control Controller
+    private void showControls(IsElement<?>[] controlPanels) {
+        for(IsElement<?> controlPanel: controlPanels) controlPanel.element().style.display = "flex";
+    }
+    private void hideControls(IsElement<?>[] controlPanels) {
+        for(IsElement<?> controlPanel: controlPanels) controlPanel.element().style.display = "none";
+    }
+    // endregion
+
+    // region # Override
+    @Override
+    protected IconElement icon() {
+        return IconElement.icon(IconElement.Type.Light, "fa-clipboard-list");
+    }
+
+    @Override
+    protected HtmlContentBuilder<HTMLLabelElement> title() {
+        return title;
+    }
+
+    @Override
+    protected BreadcumbElement breadcumb() {
+        return breadcumb;
+    }
+
+    @Override
+    protected IsElement<?>[][] controls() {
+        return new IsElement<?>[][]{
+                new IsElement<?>[]{Back},
+                new IsElement<?>[]{input},
+                new IsElement<?>[]{Toggle},
+                new IsElement<?>[]{DateFrom, DateTo},
+                new IsElement<?>[]{Search, Complete},
+                new IsElement<?>[]{Add, Del, Save}
+        };
+    }
+
+    @Override
+    protected IsElement<?>[] contents() {
+        return new IsElement<?>[] { topGrid, botGrid };
     }
     @Override
     public WorklistDetailElement that() {
         return this;
     }
+
+    @Override
+    public void update() {
+        WorklistDTLApi.findWork(id).then(work->{
+            botGrid.value(work);
+            return null;
+        });
+    }
+    // endregion
 }

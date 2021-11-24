@@ -4,15 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.greencross.lims.data.Sample
 import com.greencross.lims.data.Request_
 import com.greencross.lims.data.Patient
-import com.greencross.lims.repo.PatientRepository
-import com.greencross.lims.repo.RequestRepository
-import com.greencross.lims.repo.SampleRepository
-import com.greencross.lims.repo.ServiceRepository
+import com.greencross.lims.data.Work_
+import com.greencross.lims.repo.*
 import org.springframework.stereotype.Service
 
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.time.LocalDateTime
+import java.util.*
+import kotlin.Comparator
 
 @Service
 class WorklistDetailHandler (
@@ -21,8 +20,12 @@ class WorklistDetailHandler (
     private val SampleRepo: SampleRepository,
     private val RequestRepo: RequestRepository,
     private val PatientRepo: PatientRepository,
+    private val WorkRepo: WorkRepository,
     private val mapper: WorklistDetailToDto
 ) {
+    fun list(id: String): Flux<Work_>{
+        return WorkRepo.findByWorklist(id).map(mapper::toDto).sort(Comparator.comparing { r->r.no })
+    }
     fun sample(yesterday: String, today: String): Flux<Request_> {
         return RequestRepo.findByServiceAndDateRequestBetween("N201", yesterday, today)
             .flatMap(this::toDto).sort(Comparator.comparing { r->r.sample })

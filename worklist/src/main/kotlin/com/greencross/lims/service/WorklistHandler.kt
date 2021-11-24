@@ -2,14 +2,21 @@ package com.greencross.lims.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.greencross.lims.data.MessageWorklist
+import com.greencross.lims.data.PageReactive
 import com.greencross.lims.data.Worklist
 
 import com.greencross.lims.entity.QWorklist.worklist
+import com.greencross.lims.entity.User
+import com.greencross.lims.repo.SecurityContextRepository
 import com.greencross.lims.repo.WorklistRepository
+import com.greencross.lims.data.Query_
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
+import com.querydsl.core.types.Predicate
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.server.ServerRequest
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
@@ -28,9 +35,58 @@ class WorklistHandler(
     private val publisher = Sinks.many().unicast().onBackpressureBuffer<MessageWorklist>()
     private val subscriber = Sinks.many().multicast().directAllOrNothing<MessageWorklist>()
 
-    fun list(chkr: String): Flux<Worklist> {
-        if(chkr.toBoolean()) return repo.findByStateAndActivation("open", "TRUE").map(mapper::toDto).sort(Comparator.comparing<Worklist?, Double?> { r->r.no()}.reversed())
-        else return repo.findByActivation("TRUE").map(mapper::toDto).sort(Comparator.comparing<Worklist?, Double?> { r->r.no()}.reversed())
+    fun list(query: Query_, chkr: String): Mono<PageReactive<Worklist>>{
+        val q : Mono<Query_> = if(chkr.toBoolean()){
+            query.filters.add(Query_.Companion.Filter("state", "open"))
+            query.filters.add(Query_.Companion.Filter("activation", "TRUE"))
+            Mono.just(query)
+
+        }else {
+            query.filters.add(Query_.Companion.Filter("activation", "TRUE"))
+            Mono.just(query)
+        }
+        return q.flatMap(this::total).map { total->PageReactive(total, query.limit, query.page, data(query))}
+    }
+    fun data(query: Query_) :Flux<Worklist> {
+        return repo.query { q->
+            q.select(repo.entityProjection())
+                .from(worklist)
+                .offset(query.page*query.limit.toLong())
+                .limit(query.limit.toLong())
+                .orderBy(sort(query.sortBy, query.asc))
+                .where(predicate(query))
+        }.all().map(mapper::toDto).sort(Comparator.comparing<Worklist?, String?> { r->r.no.toString()}.reversed())
+    }
+    private fun sort(key: String?, asc: Boolean?): OrderSpecifier<*> {
+        val order = if(false == asc) Order.DESC else Order.ASC
+        return OrderSpecifier(order, worklist.no)
+    }
+    private fun total(query: Query_): Mono<Long> {
+        return repo.query { q-> q.select(worklist.id.count()).from(worklist).where(predicate(query))}.first()
+    }
+    private fun predicate(query: Query_): Predicate {
+        val builder = BooleanBuilder()
+        query.filters.forEach { filter->
+            run {
+                val predicate = predicate(filter.key, filter.value)
+                if(predicate!=null) builder.and(predicate)
+            }
+        }
+        println(builder)
+        return builder
+    }
+    private fun predicate(key: String?, value: String?): Predicate? {
+        when {
+            key == null || key.trim().isEmpty() -> {
+                val predicates = listOfNotNull(
+                    predicate("file", value),
+                )
+                return BooleanBuilder().andAnyOf(*predicates.toTypedArray())
+            }
+            "state".contentEquals(key, ignoreCase = true) -> return if(value != null) worklist.state.`in`(value.split(",")) else null
+            "activation".contentEquals(key, ignoreCase = true) -> return if (value != null) worklist.activation.`in`(value.split(",")) else null
+            else -> return null
+        }
     }
     fun getNo(): Mono<Long>{
         return repo.findAll().map(mapper::toDto).count()
@@ -102,5 +158,10 @@ class WorklistHandler(
     @Bean("broadcast-worklist")
     fun broadcastModel(): Consumer<String> {
         return Consumer { json -> subscriber.tryEmitNext(map(json)) }
+    }
+    private fun details(request: ServerRequest): Mono<User> {
+        return request.principal()
+            .cast(SecurityContextRepository.UserAuthentication::class.java)
+            .map { auth->auth.details }
     }
 }
