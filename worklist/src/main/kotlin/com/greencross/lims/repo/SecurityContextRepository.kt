@@ -35,12 +35,12 @@ class SecurityContextRepository(
             TODO("Not yet implemented")
         }
 
-        override fun getDetails(): Any {
-            TODO("Not yet implemented")
+        override fun getDetails(): User {
+            return entity
         }
 
         override fun getPrincipal(): String {
-            return entity.id
+            return entity.email
         }
 
         override fun isAuthenticated(): Boolean {
