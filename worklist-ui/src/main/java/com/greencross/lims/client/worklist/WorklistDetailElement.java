@@ -6,9 +6,7 @@ import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorklistDTLApi;
 import com.greencross.lims.client.AbstractScene;
 import com.greencross.lims.client.Router;
-import com.greencross.lims.data.Work;
 import com.greencross.lims.dto.Query;
-import com.greencross.lims.dto.Request;
 import elemental2.core.JsDate;
 import elemental2.dom.*;
 import net.sayaya.ui.*;
@@ -78,13 +76,12 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
 
         // region # button events
         Search.onClick(evt->{
-
             updateTop(DateFrom.value(), DateTo.value());
         });
         Save.onClick(evt->{ if(backChecker) backChecker = false; });
         Add.onClick(evt->{ addMode(); });
         Complete.onClick(evt->{listMode();});
-        Toggle.onValueChange(evt ->{
+        Toggle.onValueChange(evt -> {
             if(evt.value()){
                 Toggle.text(" 의 뢰 번 호 ");
                 readModeUpdate("Request");
@@ -110,6 +107,8 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
         }
         String barcode = value.substring(0, 11);
         iptPrev = barcode;
+        ProgressApi.open(false);
+        Lock = true;
 
     }
     private void receptBySample() {
@@ -124,16 +123,7 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
         }
         String sample = value;
         iptPrev = sample;
-//        if(topGrid.hasValue(Long.parseLong(sample))) {
-//            RequestReader.select();
-//            return;
-//        }
-//
-//        if(!topGrid.hasSample(Long.parseLong(sample)) && !DomGlobal.window.confirm("목록에 없는 의뢰번호입니다. 접수할까요?")) {
-//            RequestReader.value("");
-//            return;
-//        }
-
+        DomGlobal.console.log(iptPrev);
     }
     public WorklistDetailElement parent(String param){
         this.id = param;
@@ -154,7 +144,7 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
         return yesterday;
     }
     private void updateTop(JsDate yesterday, JsDate today){
-        ProgressApi.open();
+        ProgressApi.open(false);
         WorklistDTLApi.findSample(yesterday, today).then(sample -> {
             topGrid.value(sample);
             ProgressApi.close();
@@ -234,7 +224,7 @@ public class WorklistDetailElement extends AbstractScene<WorklistDetailElement> 
 
     @Override
     public void update() {
-        ProgressApi.open();
+        ProgressApi.open(false);
         WorklistDTLApi.findWork(id).then(work->{
             botGrid.value(work);
             ProgressApi.close();

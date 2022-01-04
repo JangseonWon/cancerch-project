@@ -51,37 +51,38 @@ public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,
 
         config.columns(
                 ColumnBuilder.string(COLUMN_KEY.NO.name()).width(40).name("No").horizontal("center").build(),
-                ColumnBuilder.string(COLUMN_KEY.ID.name()).width(40).name("Id").build(),
+                ColumnBuilder.string(COLUMN_KEY.ID.name()).width(40).name("Id").horizontal("center").build(),
                 ColumnBuilder.string(COLUMN_KEY.BARCODE.name()).width(250).name("barcode").build(),
-                ColumnBuilder.string(COLUMN_KEY.BATCH.name()).width(80).name("batch").build(),
+                ColumnBuilder.string(COLUMN_KEY.BATCH.name()).width(80).name("batch").horizontal("center").build(),
                 ColumnBuilder.string(COLUMN_KEY.SAMPLE.name()).width(80).name("의뢰번호").build(),
                 ColumnBuilder.string(COLUMN_KEY.TEST_TYPE.name()).width(80).name("검사종류").build(),
                 ColumnBuilder.string(COLUMN_KEY.TEST_CODE.name()).width(300).name("검사코드").build(),
                 ColumnBuilder.string(COLUMN_KEY.PAT_NAME.name()).width(80).name("수진자명").build(),
                 ColumnBuilder.string(COLUMN_KEY.CUS_NAME.name()).width(80).name("의뢰기관").build(),
                 ColumnBuilder.string(COLUMN_KEY.CUS_CODE.name()).width(100).name("기관등록번호").build(),
-                ColumnBuilder.string(COLUMN_KEY.END_DT.name()).width(80).name("결과예정일").build(),
+                ColumnBuilder.string(COLUMN_KEY.END_DT.name()).width(80).name("결과예정일").horizontal("center").build(),
                 ColumnBuilder.string(COLUMN_KEY.DNA_PREP.name()).width(80).name("DNA Prep Kit").build(),
                 ColumnBuilder.string(COLUMN_KEY.DNA_METHOD.name()).width(80).name("DNA METHOD").build(),
-                ColumnBuilder.string(COLUMN_KEY.EXT_DT.name()).width(80).name("추출일자").build(),
-                ColumnBuilder.string(COLUMN_KEY.DNA_CONC.name()).width(80).name("DNA Conc").build(),
-                ColumnBuilder.string(COLUMN_KEY.DNA_VOL.name()).width(80).name("DNA VOL.").build(),
-                ColumnBuilder.string(COLUMN_KEY.DW_VOL.name()).width(80).name("DW Vol.").build(),
-                ColumnBuilder.string(COLUMN_KEY.TOT_AMT.name()).width(80).name("Total Amount").build(),
-                ColumnBuilder.string(COLUMN_KEY.LIB_PREP.name()).width(80).name("LIB Prep Kit").build(),
-                ColumnBuilder.string(COLUMN_KEY.LIB_METHOD.name()).width(80).name("LIB Method").build(),
-                ColumnBuilder.string(COLUMN_KEY.INDEX.name()).width(80).name("Index No").build(),
-                ColumnBuilder.string(COLUMN_KEY.LIB_CONC.name()).width(80).name("LIB Conc").build(),
-                ColumnBuilder.string(COLUMN_KEY.FRAG_SIZE.name()).width(80).name("Fragment Size").build(),
-                ColumnBuilder.string(COLUMN_KEY.MOL.name()).width(80).name("1mol of library(ng)").build(),
-                ColumnBuilder.string(COLUMN_KEY.BPS.name()).width(80).name("Batch per sample").build(),
-                ColumnBuilder.string(COLUMN_KEY.LIB_PMOL.name()).width(80).name("LiB pmol").build(),
-                ColumnBuilder.string(COLUMN_KEY.MULTIPLE.name()).width(80).name("Multiple").build(),
-                ColumnBuilder.string(COLUMN_KEY.POOL_VOL.name()).width(80).name("Polling vol").build(),
-                ColumnBuilder.string(COLUMN_KEY.F_POOL_VOL.name()).width(80).name("Final Pooling Vol").build(),
-                ColumnBuilder.string(COLUMN_KEY.ELUT_VOL.name()).width(80).name("Elution vol").build()
+                ColumnBuilder.string(COLUMN_KEY.EXT_DT.name()).width(80).name("추출일자").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.DNA_CONC.name()).width(80).name("DNA Conc").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.DNA_VOL.name()).width(80).name("DNA VOL.").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.DW_VOL.name()).width(80).name("DW Vol.").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.TOT_AMT.name()).width(80).name("Total Amount").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.LIB_PREP.name()).width(80).name("LIB Prep Kit").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.LIB_METHOD.name()).width(80).name("LIB Method").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.INDEX.name()).width(80).name("Index No").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.LIB_CONC.name()).width(80).name("LIB Conc").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.FRAG_SIZE.name()).width(80).name("Fragment Size").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.MOL.name()).width(80).name("1mol of library(ng)").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.BPS.name()).width(80).name("Batch per sample").horizontal("center").build(),
+                ColumnBuilder.string(COLUMN_KEY.LIB_PMOL.name()).width(80).name("LiB pmol").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.MULTIPLE.name()).width(80).name("Multiple").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.POOL_VOL.name()).width(80).name("Polling vol").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.F_POOL_VOL.name()).width(80).name("Final Pooling Vol").horizontal("right").build(),
+                ColumnBuilder.string(COLUMN_KEY.ELUT_VOL.name()).width(80).name("Elution vol").horizontal("right").build()
 
         ).stretchH("all");
+        config.width(2000).stretchH("all");
     }
     //endregion
 
@@ -171,7 +172,7 @@ public class WorkDetailBotGridElement extends HTMLElementBuilder<HTMLDivElement,
                 .put(COLUMN_KEY.END_DT.name(), value.endDt().split("T")[0])
                 .put(COLUMN_KEY.DNA_PREP.name(), value.dnaPrep())
                 .put(COLUMN_KEY.DNA_METHOD.name(), value.dnaMethod())
-                .put(COLUMN_KEY.EXT_DT.name(), value.extDt())
+                .put(COLUMN_KEY.EXT_DT.name(), value.extDt().split("T")[0])
                 .put(COLUMN_KEY.DNA_CONC.name(), String.valueOf(value.dnaConc()))
                 .put(COLUMN_KEY.DNA_VOL.name(), String.valueOf(value.dnaVol()))
                 .put(COLUMN_KEY.DW_VOL.name(), String.valueOf(value.dwVol()))
