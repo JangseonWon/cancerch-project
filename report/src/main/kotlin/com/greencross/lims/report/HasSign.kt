@@ -10,9 +10,9 @@ interface HasSign : Resource{
     fun labels(): Array<SignLabel>
 
     class Person(
-        name:String,
-        license:String,
-        sign:File
+        val name: String = "",
+        val license: String = "",
+        val sign: File
     )
 
     interface SignLabel{

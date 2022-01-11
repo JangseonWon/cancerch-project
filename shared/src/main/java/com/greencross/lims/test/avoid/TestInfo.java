@@ -36,7 +36,6 @@ public class TestInfo implements HasCode, HasGenes, MayBeNationalInsurance {
     private final boolean isNationalInsuranceTest = false;
     public static final TestInfo N201 = TestInfo.builder()
             .code("N201")
-            .name("심장유전자 패널검사 (강북삼성)")
             .interpretationCode("N075440")
             .cores(new com.greencross.lims.test.avoid.TestInfo.Gene[]{
                     com.greencross.lims.test.avoid.TestInfo.Gene.builder().code("N075010").gene("COL3A1").build(),

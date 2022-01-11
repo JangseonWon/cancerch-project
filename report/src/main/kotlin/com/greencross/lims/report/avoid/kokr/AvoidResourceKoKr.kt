@@ -55,4 +55,24 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
             }
         )
     }
+
+    override fun doc(): PDDocument {
+        return doc
+    }
+
+    override fun fontHeader(): PDFont {
+        return fontHeader
+    }
+
+    override fun fontTitle(): PDFont {
+        return fontTitle
+    }
+
+    override fun fontText(): PDFont {
+        return fontText
+    }
+
+    override fun fontScientific(): PDFont {
+        return fontScientific
+    }
 }

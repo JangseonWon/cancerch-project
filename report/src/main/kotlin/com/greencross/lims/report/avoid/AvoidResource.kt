@@ -8,7 +8,7 @@ import java.awt.Color
 import java.io.File
 import java.io.IOException
 
-interface AvoidResource: Resource, HasSign {
+interface AvoidResource : Resource, HasSign {
     fun colorPrimary(): Color
     fun colorPrimaryStroke(): Color
     fun colorGray():    Color { return Color.decode("0xEFEFEF") }
@@ -28,6 +28,7 @@ interface AvoidResource: Resource, HasSign {
     }
 
     companion object {
-        val resource = File("/data/lims/resources")
+        @JvmStatic
+        var resource = File("/data/lims/resources")
     }
 }
