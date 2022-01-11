@@ -1,8 +1,10 @@
 package com.greencross.lims.report.kokr
 
+import com.greencross.lims.report.Resource
 import com.greencross.lims.report.Template
 import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.TextStyle
+import com.greencross.lims.report.avoid.kokr.AvoidResourceKoKr
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.builder.Util
@@ -16,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 
-class SectionHeader<T: Template<out HasHeaderKoKr>, D: AbstractReportDto>: Painter<T, D> {
+class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Painter<T, D> {
     private val DTF: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private val lblMedicalInstitution    = "의뢰기관"
     private val lblMedicalRecordNumber   = "등록번호"

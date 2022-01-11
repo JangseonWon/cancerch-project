@@ -7,5 +7,4 @@ interface AvoidTemplateN201<R: AvoidResource> : AvoidTemplate<R> {
     override fun testInfo(): TestInfo {
         return TestInfo.N201
     }
-
 }

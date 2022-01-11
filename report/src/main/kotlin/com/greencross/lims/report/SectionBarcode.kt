@@ -20,7 +20,7 @@ class SectionBarcode<T : Template<*>, D : AbstractReportDto> :
         template: T,
         dto: D
     ): PDPageContentStreamPageAccessible {
-        if (dto.barcode != null && dto.barcode.trim().isNotEmpty()) {
+        if (dto.barcode != null && dto.barcode!!.trim().isNotEmpty()) {
             stream.saveGraphicsState()
             val barcodeWriter = Code128Writer()
             val bitMatrix = barcodeWriter.encode(dto.barcode, BarcodeFormat.CODE_128, BARCODE_WIDTH, BARCODE_HEIGHT)

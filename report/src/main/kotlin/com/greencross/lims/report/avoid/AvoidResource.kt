@@ -1,14 +1,13 @@
 package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.Resource
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
 import java.io.File
 import java.io.IOException
 
-interface AvoidResource : Resource, HasSign {
+interface AvoidResource : HasSign {
     fun colorPrimary(): Color
     fun colorPrimaryStroke(): Color
     fun colorGray():    Color { return Color.decode("0xEFEFEF") }

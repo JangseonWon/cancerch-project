@@ -50,11 +50,10 @@ class AvoidReportTest {
         return if(TestInfo.N201 == test){
             var resource = AvoidResourceN201KoKr(doc)
             var template = AvoidTemplateN201KoKr(resource, test)
-            val header = SectionHeader<AvoidTemplateN201KoKr, AvoidDto>()
 
             page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return AvoidN201(template, dto, header, sign, footer, page)
+            return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
 
         } else null
     }

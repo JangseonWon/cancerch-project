@@ -16,7 +16,7 @@ import java.io.File
 import javax.imageio.ImageIO
 
 class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : Painter<T, D> {
-    var img = PDImageXObject(null)
+    var img: PDImageXObject? = null
     val resource = File("/data/lims/resources")
     val color1 = Color(0, 54, 105)
     val color2 = Color(230, 0, 33)
@@ -39,7 +39,7 @@ class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : 
         }
 
         stream!!.saveGraphicsState();
-        Util.icon(stream, img, 0f, 64f, 595f, 100f)
+        Util.icon(stream, img!!, 0f, 64f, 595f, 100f)
         stream.setLineWidth(0.01f)
             .setNonStrokingColor(color4).setStrokingColor(color4).moveTo(0f, 0f).lineTo(595f, 0f).lineTo(595f, 21.5f).lineTo(0f, 21.5f).fill()
             .setNonStrokingColor(color3).setStrokingColor(color3).moveTo(0f, 0f).lineTo(481f, 0f).lineTo(496f, 21.5f).lineTo(0f, 21.5f).fill()

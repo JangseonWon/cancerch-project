@@ -5,12 +5,12 @@ import com.greencross.lims.report.func.PageBuilder
 import com.greencross.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.PDDocument
 
-abstract class AvoidPageBuilder<T : AvoidTemplate<AvoidResource>>(
+abstract class AvoidPageBuilder<T : AvoidTemplate<in AvoidResource>>(
     template: T,
     dto: AvoidDto
 ) :
     Page<T>(template) {
-    val builder: PageBuilder<AvoidTemplate<AvoidResource>, AvoidDto> = PageBuilder(template, dto)
+    val builder: PageBuilder<AvoidTemplate<AvoidResource>, AvoidDto>
 
     abstract fun template(): Painter<AvoidTemplate<AvoidResource>, AvoidDto>
     abstract fun pages(): Painter<AvoidTemplate<AvoidResource>, AvoidDto>
@@ -18,7 +18,7 @@ abstract class AvoidPageBuilder<T : AvoidTemplate<AvoidResource>>(
     fun build(): PDDocument {
         return builder.add(pages()).build()
     }
-
-
-
+    init{
+        builder = PageBuilder(template, dto)
+    }
 }
