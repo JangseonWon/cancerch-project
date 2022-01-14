@@ -1,5 +1,6 @@
 package com.greencross.lims.report.avoid.kokr
 
+import com.greencross.lims.report.TextStyle
 import com.greencross.lims.report.avoid.AvoidResource
 import com.greencross.lims.report.avoid.AvoidResourceN201
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -9,9 +10,8 @@ import java.io.File
 
 class AvoidResourceN201KoKr(doc: PDDocument) : AvoidResourceKoKr(doc), AvoidResourceN201 {
     val fontDefault: PDFont
-    val img: File = File(AvoidResource.resource, "img/Avoid/N201/KoKr")
-    val imgTitle = img(File(img, "title.png"))
-    val imgHeaderLogo = img(File(img, "header.png"))
+    val img: File = File(AvoidResource.resource, "img/Avoid/N201/kokr")
+//    val imgHeaderLogo = img(File(img, "header.png"))
 
     init {
         fontDefault = font(File(AvoidResource.resource, "font/NanumBarunGothic.ttf"))
@@ -19,11 +19,8 @@ class AvoidResourceN201KoKr(doc: PDDocument) : AvoidResourceKoKr(doc), AvoidReso
     override fun fontDefault(): PDFont {
         return fontDefault
     }
-    override fun imgTitle(): PDImageXObject {
-        return imgTitle
-    }
-    override fun imgHeaderLogo(): PDImageXObject {
-        return imgHeaderLogo
-    }
+//    override fun imgHeaderLogo(): PDImageXObject {
+//        return imgHeaderLogo
+//    }
 
 }

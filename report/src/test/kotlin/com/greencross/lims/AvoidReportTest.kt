@@ -7,7 +7,6 @@ import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
-import com.greencross.lims.report.kokr.SectionHeader
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.test.avoid.TestInfo
@@ -54,7 +53,6 @@ class AvoidReportTest {
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
-
         } else null
     }
 }

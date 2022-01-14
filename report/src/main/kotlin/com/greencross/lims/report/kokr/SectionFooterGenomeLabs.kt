@@ -47,7 +47,7 @@ class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : 
             .setNonStrokingColor(color1).setStrokingColor(color1).moveTo(0f, 0f).lineTo(449f, 0f).lineTo(464f, 21.5f).lineTo(0f, 21.5f).fill()
         val font = TextStyle().color(Color.WHITE).fontSize(8f).paragraph(false)
         stream.paragraph(30f, 12f, 500f, TextBlock(font, address1))
-        stream.paragraph(565f, 12f, 500f, TextBlock(font, address2))
+        stream.paragraph(515f, 12f, 500f, TextBlock(font, address2))
         stream.restoreGraphicsState()
         return stream
     }

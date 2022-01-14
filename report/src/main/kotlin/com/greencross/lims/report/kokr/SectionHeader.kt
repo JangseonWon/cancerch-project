@@ -28,8 +28,6 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
     private val lblSpecimenTypeDate      = "검체종류/채취일"
     private val lblPatientInfo           = "임상정보/기타"
     private val lblReceiptReportDate     = "접수일/보고일"
-    private val lblInspector             = "검사자 : "
-    private val lblChecker               = "확인자 : "
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,

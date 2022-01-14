@@ -8,6 +8,7 @@ spring:
       connect-string: gemini:2181,pisces:2181,aries:2181,taurus:2181
       discovery:
         root: /RnD
+        register: false
     gateway:
       routes:
         - id: worklist-service

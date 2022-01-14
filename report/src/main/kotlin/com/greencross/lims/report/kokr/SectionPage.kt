@@ -9,7 +9,6 @@ import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.font.PDFont
 import java.awt.Color
-import java.io.IOException
 
 class SectionPage<T : Template<*>, D : AbstractReportDto>(
     private val x: Float,
