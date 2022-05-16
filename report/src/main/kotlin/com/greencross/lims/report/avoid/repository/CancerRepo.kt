@@ -8,10 +8,10 @@ import com.greencross.lims.report.builder.Sex
 import java.util.*
 import java.util.stream.Collectors
 
-abstract class CancerRepo(
+class CancerRepo(
     private val ppv: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>,
     private val asr: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>
-) : AvoidTemplate<AvoidResource>{
+) {
     constructor() : this(
         mapOf(*Arrays.stream(암종.values()).map {
             val map: TreeRangeMap<Int, Map<Sex, Double?>> = TreeRangeMap.create()
@@ -39,7 +39,7 @@ abstract class CancerRepo(
         ppv.get(암종.폐암)?.put(Range.closed(65,69), mapOf(Pair(Sex.M, 39.37), Pair(Sex.F, 24.07)))
         ppv.get(암종.폐암)?.put(Range.closed(70,74), mapOf(Pair(Sex.M, 49.35), Pair(Sex.F, 29.28)))
         ppv.get(암종.폐암)?.put(Range.closed(75,79), mapOf(Pair(Sex.M, 54.33), Pair(Sex.F, 31.15)))
-        ppv.get(암종.폐암)?.put(Range.closed(80,59), mapOf(Pair(Sex.M, 54.28), Pair(Sex.F, 29.81)))
+        ppv.get(암종.폐암)?.put(Range.closed(80,84), mapOf(Pair(Sex.M, 54.28), Pair(Sex.F, 29.81)))
         ppv.get(암종.폐암)?.put(Range.closed(85,100),mapOf(Pair(Sex.M, 50.08), Pair(Sex.F, 24.61)))
 
         ppv.get(암종.대장암)?.put(Range.closed( 0, 4), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
@@ -58,7 +58,7 @@ abstract class CancerRepo(
         ppv.get(암종.대장암)?.put(Range.closed(65,69), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
         ppv.get(암종.대장암)?.put(Range.closed(70,74), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
         ppv.get(암종.대장암)?.put(Range.closed(75,79), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
-        ppv.get(암종.대장암)?.put(Range.closed(80,59), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
+        ppv.get(암종.대장암)?.put(Range.closed(80,84), mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
         ppv.get(암종.대장암)?.put(Range.closed(85,100),mapOf(Pair(Sex.M, null), Pair(Sex.F, null)))
 
         ppv.get(암종.간암)?.put(Range.closed( 0, 4),  mapOf(Pair(Sex.M,  0.21), Pair(Sex.F,  0.16)))
@@ -332,5 +332,11 @@ abstract class CancerRepo(
     }
     enum class 암종 {
         폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암, 모든암
+    }
+    fun findPPVbyAgeAndCancerAndSex(cancer: 암종, age: Int, sex: Sex): Double? {
+        return ppv.get(cancer)?.get(age)?.get(sex)
+    }
+    fun findASRbyAgeAndCancerAndSex(cancer: 암종, age: Int, sex: Sex): Double? {
+        return asr.get(cancer)?.get(age)?.get(sex)
     }
 }

@@ -31,7 +31,7 @@ class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : 
         dto: D
     ): PDPageContentStreamPageAccessible {
         if(img == null){
-            val src: BufferedImage = ImageIO.read(File(resource, "/img/footer3.png"))
+            val src: BufferedImage = ImageIO.read(File(resource, "/img/footer.png"))
             val dest: BufferedImage = src.getSubimage(0, 0, src.width, src.height-80)
             val baos = ByteArrayOutputStream()
             ImageIO.write(dest, "png", baos)

@@ -1,13 +1,32 @@
 package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.TextBlock
+import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.builder.Util
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
 
 import com.greencross.lims.report.func.AlignHorizontal.CENTER
+import com.greencross.lims.report.func.AlignHorizontal.LEFT
+import java.awt.Color
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Period
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 
 
 class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
+    private val DTF: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private val lblMedicalInstitution    = "의뢰기관"
+    private val lblRequestNumber         = "접수번호"
+    private val lblPatientName           = "성명"
+    private val lblAgeSex                = "나이/성별"
+    private val lblMedicalRecordNumber   = "등록번호"
+    private val lblSpecimenType          = "검체종류"
+    private val lblSpecimenDate          = "검체채취일"
+    private val lblReceiptReportDate     = "접수일/보고일"
+
     override fun paint(
         stream: PDPageContentStreamPageAccessible,
         template: AvoidTemplate<AvoidResource>,
@@ -20,30 +39,74 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         var width = img.width * TITLE_HEIGHT / img.height
         stream.drawImage(img, 127f - width/2, y, width, TITLE_HEIGHT)
 
-        var style = template.resource().styleTitle()
-        val block = TextBlock(style, "[Pan-cancer : 주요 암]")
-        stream.paragraph(127f, y-img.height/10, 200f, CENTER, block)
+        var style = template.resource().styleContentRegualar().clone().fontSize(7.4f).color(Color(114,113,113))
+        stream.paragraph(127f, y-img.height/10, 200f, CENTER, TextBlock(style, "[Pan-cancer : 주요 암]"))
         //endregion
 
         //region □ HeaderBox, 내부 내용
         img = template.resource().imgHeaderBox()
         width = img.width * TITLE_HEADERBOX_HEIGHT / img.height
-        stream.drawImage(img, 400f - width/2, y-30, width, TITLE_HEADERBOX_HEIGHT)
+        stream.drawImage(img, 385f - width/2, y-25, width, TITLE_HEADERBOX_HEIGHT)
 
-        style = template.resource().styleHeaderTitle()
-        
+        style = template.resource().styleContentBold()
+        stream.paragraph(235f, y+35, 50f, LEFT, TextBlock(style, lblMedicalInstitution))
+        stream.paragraph(385f, y+35, 50f, LEFT, TextBlock(style, lblRequestNumber))
+        stream.paragraph(235f, y+20, 50f, LEFT, TextBlock(style, lblPatientName))
+        stream.paragraph(385f, y+20, 50f, LEFT, TextBlock(style, lblAgeSex))
+        stream.paragraph(235f,  y+5, 50f, LEFT, TextBlock(style, lblMedicalRecordNumber))
+        stream.paragraph(385f,  y+5, 50f, LEFT, TextBlock(style, lblSpecimenType))
+        stream.paragraph(235f, y-10, 50f, LEFT, TextBlock(style, lblSpecimenDate))
+        stream.paragraph(385f, y-10, 50f, LEFT, TextBlock(style, lblReceiptReportDate))
+
+        style = template.resource().styleContentRegualar()
+        stream.paragraph(285f, y+35, 100f, LEFT, TextBlock(style, dto.medicalInstitution))
+        stream.paragraph(445f, y+35, 100f, LEFT, TextBlock(style, dto.requestNumber))
+        stream.paragraph(285f, y+20, 100f, LEFT, TextBlock(style, dto.patientName))
+        stream.paragraph(445f, y+20, 100f, LEFT,
+            TextBlock(style, Util.dashIfEmpty(age(dto.birthDate, dto.collectionDate))),
+            TextBlock(style, " / "),
+            TextBlock(style, Util.dashIfEmpty(sex(dto.sex)))
+        )
+        stream.paragraph(285f, y+5, 100f, LEFT, TextBlock(style, dto.medicalRecordNumber))
+        stream.paragraph(445f, y+5, 100f, LEFT, TextBlock(style, dto.specimenType))
+        stream.paragraph(285f, y-10, 100f, LEFT, TextBlock(style, Util.dashIfEmpty(date(dto.collectionDate)!!)))
+        stream.paragraph(445f, y-10, 100f, LEFT,
+            TextBlock(style, Util.dashIfEmpty(date(dto.receiptDate)!!)),
+            TextBlock(style, " / "),
+            TextBlock(style, Util.dashIfEmpty(date(dto.reportDate)!!))
+        )
         //endregion
-
-
-
-
 
         stream.restoreGraphicsState()
         return stream.cursorY(y - TITLE_HEIGHT)
     }
 
     companion object {
-        private const val TITLE_HEIGHT = 45f
-        private const val TITLE_HEADERBOX_HEIGHT = 80f
+        private const val TITLE_HEIGHT = 41f
+        private const val TITLE_HEADERBOX_HEIGHT = 78f
+    }
+    fun date(date: LocalDate?): String? {
+        return if (date == null) null else DTF.format(date)
+    }
+
+    fun date(date: LocalDateTime?): String? {
+        return if (date == null) null else DTF.format(date)
+    }
+    fun age(birth: LocalDate?, sampling: LocalDate?): String {
+        if (birth == null) return "-"
+        return if (sampling == null) (Period.between(
+            birth,
+            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1).toString() else (Period.between(
+            birth,
+            sampling.with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1).toString()
+    }
+
+    fun sex(sex: Sex?): String {
+        return if (sex == null) "-" else when (sex) {
+            Sex.M -> "남"
+            Sex.F -> "여"
+        }
     }
 }

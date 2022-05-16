@@ -25,6 +25,7 @@ abstract class AvoidTemplateKoKr<R : AvoidResourceKoKr>(
     val lblReceiptReportDate     = "접수일/보고일"
     val lblInspector             = "검사자 : "
     val lblChecker               = "확인자 : "
+
     val testInfo: TestInfo
 
     init{

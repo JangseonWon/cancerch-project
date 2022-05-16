@@ -1,4 +1,4 @@
-rootProject.name = "RnD"
+rootProject.name = "avoid-project"
 include("service")
 include("gateway")
 include("shared")
@@ -9,7 +9,3 @@ include("analysis-ui")
 include("analysis-crawler")
 include("report")
 include("report-ui")
-include("report")
-include("report")
-include("data")
-include("report")

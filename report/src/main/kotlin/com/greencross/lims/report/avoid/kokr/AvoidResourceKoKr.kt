@@ -16,51 +16,39 @@ import java.io.File
 
 abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, HasHeaderKoKr {
     var doc: PDDocument = PDDocument()
-    val fontHeader:             PDFont
-    val fontTitle:              PDFont
-    val fontValue:              PDFont
-    val fontText:               PDFont
-    val fontScientific:         PDFont
-    val fontHeaderBoxTitle:     PDFont
+    val fontHeader              :       PDFont  = font(File(AvoidResource.resource, "font/SDGothicNeoRound06.ttf"))
+    val fontTitle               :       PDFont  = font(File(AvoidResource.resource, "font/SdGothicNeoRound01.ttf"))
+    val fontValue               :       PDFont  = font(File(AvoidResource.resource, "font/SdGothicNeoRound08.ttf"))
+    val fontText                :       PDFont  = font(File(AvoidResource.resource, "font/SdGothicNeoRound04.ttf"))
+    val fontScientific          :       PDFont  = font(File(AvoidResource.resource, "font/NanumBarunGothic.ttf"))
+    val fontHeaderBoxTitle      :       PDFont  = font(File(AvoidResource.resource, "font/OpenSans-Regular.ttf"))
+    val fontContentRegular      :       PDFont  = font(File(AvoidResource.resource, "font/Sandoll_고딕Neo1_TTF_04_Rg.ttf"))
+    val fontContentBold         :       PDFont  = font(File(AvoidResource.resource, "font/Sandoll_고딕Neo1_TTF_08_Eb.ttf"))
+    val fontSpecial             :       PDFont  = font(File(AvoidResource.resource, "font/Sandoll_격동고딕2_TTF_05_Bd.ttf"))
 
-    val styleTitle:             TextStyle
-    val styleHeaderTitle:       TextStyle
+    val styleContentRegular     :       TextStyle = TextStyle().color(Color(35,24, 21)).fontSize(8f).fonts(fontContentRegular())
+    val styleContentBold        :       TextStyle = TextStyle().color(Color(67,72,142)).fontSize(8f).fonts(fontContentBold())
+    val styleSpecial            :       TextStyle = TextStyle().fonts(fontSpecial())
 
-    val imgHeaderBox:           PDImageXObject
-    val imgTitle:               PDImageXObject
-    val imgContentTitle:        PDImageXObject
-    val imgIntroContent:        PDImageXObject
-    val imgTotalResultContent:  PDImageXObject
-    val imgDoubtSquare:         PDImageXObject
-    val imgDoubtContentBox:     PDImageXObject
-    val imgDoubtCenterLine:     PDImageXObject
-    val imgCancerTypeContent:   PDImageXObject
-
-    init {
-        this.doc = doc
-        initialize()
-        fontHeader          = font(File(AvoidResource.resource, "font/SDGothicNeoRound06.ttf"))
-        fontTitle           = font(File(AvoidResource.resource, "font/SdGothicNeoRound01.ttf"))
-        fontHeaderBoxTitle  = font(File(AvoidResource.resource, "font/SdGothicNeoRound08.ttf"))
-        fontValue           = font(File(AvoidResource.resource, "font/SdGothicNeoRound04.ttf"))
-        fontText            = font(File(AvoidResource.resource, "font/NanumBarunGothic.ttf"))
-        fontScientific      = font(File(AvoidResource.resource, "font/OpenSans-Regular.ttf"))
-
-        styleTitle          = TextStyle().color(Color(72,71,71)).fontSize(7.4f).fonts(fontTitle)
-        styleHeaderTitle    = TextStyle().color(Color(43,48,94)).fontSize(8f).fonts()
-
-        imgTitle            = img(File(AvoidResource.resource, "img/avoid/0_title.png"))
-        imgHeaderBox        = img(File(AvoidResource.resource, "img/avoid/1_headerBox.png"))
-        imgIntroContent     = img(File(AvoidResource.resource, "img/avoid/2_introcontent.png"))
-        imgContentTitle     = img(File(AvoidResource.resource, "img/avoid/C_contentTitle.png"))
-        imgTotalResultContent = img(File(AvoidResource.resource, "img/avoid/3_totalresultcontent.png"))
-        imgDoubtSquare      = img(File(AvoidResource.resource, "img/avoid/4_doubtsquare.png"))
-        imgDoubtContentBox  = img(File(AvoidResource.resource, "img/avoid/5_doubtcontent.png"))
-        imgDoubtCenterLine  = img(File(AvoidResource.resource, "img/avoid/6_doubtcenterline.png"))
-        imgCancerTypeContent= img(File(AvoidResource.resource, "img/avoid/7_cancertypebox.png"))
-
-    }
-
+    val imgTitle                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTitle/0_title.png"))
+    val imgHeaderBox            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTitle/1_headerBox.png"))
+    val imgContentTitle         :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/C_contentTitle.png"))
+    val imgIntroContent         :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionIntro/2_introcontent.png"))
+    val imgTotalResultContent   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/3_totalresultcontent.png"))
+    val imgTotalResultLowRisk   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_1rowrisk.png"))
+    val imgTotalResultHighRisk  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_2highrisk.png"))
+    val imgDoubtSquare          :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/4_doubtsquare.png"))
+    val imgDoubtContentBox      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_doubtcontent.png"))
+    val imgDoubtCenterLine      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_doubtcenterline.png"))
+    val imgRankFirst            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/kokr/C_rankfirst.png"))
+    val imgRankSecond           :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/kokr/C_ranksecond.png"))
+    val imgCancerTypeTitle      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/new_title.png"))
+    val imgCancerTypeContent    :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/content.png"))
+    val imgCaccerReadingGuide   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/guidebox.png"))
+    val imgHuman                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/human.png"))
+    val imgBarNormal            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Normal.png"))
+    val imgBarGray              :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Gray.png"))
+    val imgBarDanger            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Danger.png"))
 
     override fun labels(): Array<SignLabel> {
         return arrayOf(
@@ -79,7 +67,6 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
         )
     }
 
-
     override fun doc(): PDDocument {
         return doc
     }
@@ -90,22 +77,21 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     //endregion
 
     //region #Override Fonts
-    override fun fontHeaderValue():     PDFont  { return fontValue          }
-    override fun fontHeader():          PDFont  { return fontHeader         }
-    override fun fontTitle():           PDFont  { return fontTitle          }
-    override fun fontText():            PDFont  { return fontText           }
-    override fun fontScientific():      PDFont  { return fontScientific     }
-    override fun fontHeaderBoxTitle():  PDFont  { return fontHeaderBoxTitle }
+    override fun fontHeaderValue():         PDFont { return fontValue          }
+    override fun fontHeader():              PDFont { return fontHeader         }
+    override fun fontTitle():               PDFont { return fontTitle          }
+    override fun fontText():                PDFont { return fontText           }
+    override fun fontScientific():          PDFont { return fontScientific     }
+    override fun fontHeaderBoxTitle():      PDFont { return fontHeaderBoxTitle }
+    override fun fontContentRegular():      PDFont { return fontContentRegular }
+    override fun fontContentBold():         PDFont { return fontContentBold    }
+    override fun fontSpecial():             PDFont { return fontSpecial        }
     //endregion
 
     //region #Override Style
-    override fun styleTitle(): TextStyle {
-        return styleTitle
-    }
-
-    override fun styleHeaderTitle(): TextStyle {
-        return styleHeaderTitle
-    }
+    override fun styleContentRegualar():    TextStyle { return styleContentRegular       }
+    override fun styleContentBold():        TextStyle { return styleContentBold          }
+    override fun styleContentSpecial():     TextStyle { return styleSpecial              }
     //endregion
 
     //region #Override img
@@ -114,9 +100,59 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     override fun imgContentTitle():         PDImageXObject { return imgContentTitle         }
     override fun imgIntroContent():         PDImageXObject { return imgIntroContent         }
     override fun imgTotalResultContent():   PDImageXObject { return imgTotalResultContent   }
+    override fun imgTotalResultLowRisk():   PDImageXObject { return imgTotalResultLowRisk   }
+    override fun imgTotalResultHighRisk():  PDImageXObject { return imgTotalResultHighRisk  }
     override fun imgDoubtSquare():          PDImageXObject { return imgDoubtSquare          }
     override fun imgDoubtContentBox():      PDImageXObject { return imgDoubtContentBox      }
     override fun imgDoubtCenterLine():      PDImageXObject { return imgDoubtCenterLine      }
+    override fun imgDoubtCancerPercentages(score: Double): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_"+(score.toInt()/10).toString()+"_per.png"))
+    }
+    override fun imgDoubtCancer(name: String): PDImageXObject{
+        return img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_$name.png"))
+    }
+
+    override fun imgRankFirst():            PDImageXObject { return imgRankFirst            }
+    override fun imgRankSecond():           PDImageXObject { return imgRankSecond           }
+    override fun imgCancerTypeTitle():      PDImageXObject { return imgCancerTypeTitle      }
     override fun imgCancerTypeContent():    PDImageXObject { return imgCancerTypeContent    }
+    override fun imgCancerReadingGuide():   PDImageXObject { return imgCaccerReadingGuide   }
+    override fun imgHuman():                PDImageXObject { return imgHuman                }
+    override fun imgEsop(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/식도암_"+
+            ((first == "식도암") || (second == "식도암"))+".png"))
+    }
+    override fun imgLung(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/폐암_"+
+                ((first == "폐암") || (second == "폐암"))+".png"))
+    }
+    override fun imgLiver(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/간암_"+
+                ((first == "간암") || (second == "간암"))+".png"))
+    }
+    override fun imgPanc(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/췌장암_"+
+                ((first == "췌장암") || (second == "췌장암"))+".png"))
+    }
+    override fun imgColon(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/대장암_"+
+                ((first == "대장암") || (second == "대장암"))+".png"))
+    }
+    override fun imgBreast(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/유방암_"+
+                ((first == "유방암") || (second == "유방암"))+".png"))
+    }
+    override fun imgOvary(first: String, second: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/난소암_"+
+                ((first == "난소암") || (second == "난소암"))+".png"))
+    }
+
+    override fun imgLine(cancer: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/line_"+cancer+".png"))
+    }
+
+    override fun imgBarNormal():            PDImageXObject { return imgBarNormal    }
+    override fun imgBarGray():              PDImageXObject { return imgBarGray      }
+    override fun imgBarDanger():            PDImageXObject { return imgBarDanger    }
     //endregion
 }

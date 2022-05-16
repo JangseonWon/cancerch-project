@@ -10,8 +10,6 @@ import java.io.File
 
 class AvoidResourceN201KoKr(doc: PDDocument) : AvoidResourceKoKr(doc), AvoidResourceN201 {
     val fontDefault: PDFont
-    val img: File = File(AvoidResource.resource, "img/Avoid/N201/kokr")
-//    val imgHeaderLogo = img(File(img, "header.png"))
 
     init {
         fontDefault = font(File(AvoidResource.resource, "font/NanumBarunGothic.ttf"))
@@ -19,8 +17,4 @@ class AvoidResourceN201KoKr(doc: PDDocument) : AvoidResourceKoKr(doc), AvoidReso
     override fun fontDefault(): PDFont {
         return fontDefault
     }
-//    override fun imgHeaderLogo(): PDImageXObject {
-//        return imgHeaderLogo
-//    }
-
 }
