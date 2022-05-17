@@ -1,9 +1,0 @@
-.worklist {
-    flex-grow: 1;
-    border-top: 1px solid #AAA;
-    border-bottom: 1px solid #AAA;
-    overflow: hidden;
-    display: flex;
-    height : 87vh;
-}
-

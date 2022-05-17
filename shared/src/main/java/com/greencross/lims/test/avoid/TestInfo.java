@@ -89,4 +89,8 @@ public class TestInfo implements HasCode, HasGenes, MayBeNationalInsurance {
         private String pos;
         private String[] types;
     }
+
+    public static final TestInfo[] TESTS = new TestInfo[] {
+        N201
+    };
 }

@@ -1,34 +1,53 @@
 package com.greencross.lims.data;
 
 import jsinterop.annotations.*;
+import jsinterop.base.Js;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @JsType(isNative=true, namespace= JsPackage.GLOBAL, name="Object")
-@Setter(onMethod_= {@JsOverlay, @JsIgnore})
-@Getter(onMethod_= {@JsOverlay, @JsIgnore})
+@Getter(onMethod_={@JsOverlay, @JsIgnore})
+@Setter(onMethod_={@JsOverlay, @JsIgnore})
 @Accessors(fluent=true)
 public final class Request {
-    private Double sample;
-    private String info;
-    private String service;
-    @JsProperty(name = "date_request")
-    private String dateRequest;
-    @JsProperty(name = "date_end")
-    private String dateEnd;
-    private String type;
-    private String remark;
-    private Double barcode;
-    private String patient;
-    @JsProperty(name = "customer_name")
-    private String customerName;
-    @JsProperty(name = "customer_code")
-    private String customerCode;
-    private String mrn;
-    private String name;
-    private String code;
-    private String sex;
-    @JsProperty(name = "service_name")
-    private String serviceName;
+	private Sample sample;
+	private String serial;
+	private Service service;
+	@JsProperty(name="date_request")
+	private Double dateRequest;
+	@JsProperty(name="date_start")
+	private Double dateStart;
+	@JsProperty(name="date_sampling")
+	private Double dateSampling;
+	@JsProperty(name="date_due")
+	private Double dateDue;
+	private Boolean registered;
+	private Boolean canceled;
+	private Boolean deleted;
+	private String state;
+	@JsOverlay
+	@JsIgnore
+	public Sample sample() {
+		if(sample == null) return null;
+		return Js.uncheckedCast(sample);
+	}
+	@JsOverlay
+	@JsIgnore
+	public Service service() {
+		if(service == null) return null;
+		return Js.uncheckedCast(service);
+	}
+	@JsOverlay
+	@JsIgnore
+	public Long dateRequest() {
+		if(dateRequest == null) return null;
+		else return dateRequest.longValue();
+	}
+	@JsOverlay
+	@JsIgnore
+	public Long dateDue() {
+		if(dateDue == null) return null;
+		else return dateDue.longValue();
+	}
 }
