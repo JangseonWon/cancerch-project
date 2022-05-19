@@ -49,6 +49,20 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val imgBarNormal            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Normal.png"))
     val imgBarGray              :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Gray.png"))
     val imgBarDanger            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Danger.png"))
+    val imgDetailResultOverview :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultOverview.png"))
+    val imgDetailResultTable    :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultTable.png"))
+    val imgSmallSquareAverage   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_average.png"))
+    val imgSmallSquarePatinet   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_patient.png"))
+    val imgAnalysisContentBox   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/contentBox.png"))
+    val imgGuideLine            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionGuideline/img_table.png"))
+    val imgGuideLineToTalCancer :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionGuideline/img_total.png"))
+    val imgProcess              :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_process.png"))
+    val imgLBxBox               :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_LBXbox.png"))
+    val imgNGS                  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_ngs.png"))
+    val imgLBx                  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_LBx.png"))
+    val imgAIBox                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aibox.png"))
+    val imgAI                   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aiimg.png"))
+
 
     override fun labels(): Array<SignLabel> {
         return arrayOf(
@@ -148,11 +162,38 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     }
 
     override fun imgLine(cancer: String): PDImageXObject {
-        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/line_"+cancer+".png"))
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/line_$cancer.png"))
     }
 
-    override fun imgBarNormal():            PDImageXObject { return imgBarNormal    }
-    override fun imgBarGray():              PDImageXObject { return imgBarGray      }
-    override fun imgBarDanger():            PDImageXObject { return imgBarDanger    }
+    override fun imgDetailResultOverview(): PDImageXObject { return imgDetailResultOverview }
+    override fun imgDetailResultTable()   : PDImageXObject { return imgDetailResultTable }
+
+    override fun imgDetailResultRisk(risk: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_$risk.png"))
+    }
+    override fun imgAnalysisContentBox():   PDImageXObject { return imgAnalysisContentBox }
+
+    override fun imgSmallSquarePatient():   PDImageXObject { return imgSmallSquarePatinet }
+    override fun imgSmallSquareAverage():   PDImageXObject { return imgSmallSquareAverage }
+
+    override fun imgBackgroundCancer(cancer: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/background_$cancer.png"))
+    }
+
+    override fun imgGuideLineTable():       PDImageXObject { return imgGuideLine   }
+    override fun imgGuideLineCancer(cancer: String): PDImageXObject {
+        return img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/cancer_$cancer.png"))
+    }
+    override fun imgGuideLineTotalCancer() : PDImageXObject{ return imgGuideLineToTalCancer }
+    override fun imgProcess():               PDImageXObject{ return imgProcess }
+    override fun imgAi():                    PDImageXObject { return imgAI }
+    override fun imgAiBox():                 PDImageXObject { return imgAIBox }
+    override fun imgLBx():                   PDImageXObject { return imgLBx }
+    override fun imgLBxBox():                PDImageXObject { return imgLBxBox }
+    override fun imgNGS():                   PDImageXObject { return imgNGS }
+    override fun imgBarNormal():             PDImageXObject { return imgBarNormal    }
+    override fun imgBarGray():               PDImageXObject { return imgBarGray      }
+    override fun imgBarDanger():             PDImageXObject { return imgBarDanger    }
+
     //endregion
 }

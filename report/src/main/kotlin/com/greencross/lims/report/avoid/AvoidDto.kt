@@ -9,8 +9,6 @@ data class AvoidDto(
     val first: Cancer,
     val second: Cancer
 ): AbstractReportDto(), HasServiceCode {
-
-
     override fun code(): String? {
         return barcode
     }
@@ -19,7 +17,8 @@ data class AvoidDto(
     }
     data class Cancer(
         val name: String,
-        val morbidity: Double,
+        val ppv: Double,
+        val asr: Double,
         val score: Double? = 0.0
     )
 }

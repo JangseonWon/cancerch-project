@@ -10,6 +10,7 @@ abstract class AbstractReportDto: Dto {
     var patientName : String? = null
     var patientCode : String? = null
     var birthDate : LocalDate? = null
+    var age : String? = null
     var sex : Sex? = null
     var specimenType : String? = null
     var ward : String? = null

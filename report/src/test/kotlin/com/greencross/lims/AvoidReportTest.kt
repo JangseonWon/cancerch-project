@@ -15,6 +15,8 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import java.awt.Desktop
 import java.io.File
 import java.time.LocalDate
+import java.time.Period
+import java.time.temporal.TemporalAdjusters
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class AvoidReportTest {
@@ -32,16 +34,16 @@ class AvoidReportTest {
         return builder(TestInfo.N201, type,
             AvoidDto("TT-5-412",
                 AvoidDto.Results.고위험,
-                AvoidDto.Cancer("유방암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, 95.5),
-                AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, 13.8)))?.build()
+                AvoidDto.Cancer("유방암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, 95.5),
+                AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, 13.8)))?.build()
 //            AvoidDto("TT-5-412",
 //                AvoidDto.Results.기타암종,
-//                AvoidDto.Cancer("기타암종", 87.87, 95.3),
+//                AvoidDto.Cancer("기타암종", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, 57, Sex.F)!!, 95.5),
 //                AvoidDto.Cancer("", 0.0, 0.0)))?.build()
 //        AvoidDto("TT-5-412",
 //            AvoidDto.Results.저위험,
-//            AvoidDto.Cancer("기타암종", 87.87, 95.3),
-//            AvoidDto.Cancer("", 0.0, 0.0)))?.build()
+//            AvoidDto.Cancer("", 0.0,0.0, 95.5),
+//            AvoidDto.Cancer("", 0.0, 0.0, 13.8)))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
         val doc = PDDocument()
@@ -56,6 +58,7 @@ class AvoidReportTest {
         dto.collectionDate = LocalDate.of(2021,7,2)
         dto.receiptDate = LocalDate.of(2021,7,2)
         dto.reportDate = LocalDate.of(2021,7,2)
+        dto.age = age(dto.birthDate, dto.collectionDate)
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
         val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenomeLabs()
@@ -68,6 +71,16 @@ class AvoidReportTest {
 
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
         } else null
+    }
+    private fun age(birth: LocalDate?, sampling: LocalDate?): String {
+        if (birth == null) return "-"
+        return if (sampling == null) (Period.between(
+            birth,
+            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1).toString() else (Period.between(
+            birth,
+            sampling.with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1).toString()
     }
 }
 

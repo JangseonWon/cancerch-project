@@ -62,7 +62,22 @@ interface AvoidResource : HasSign {
     fun imgBarNormal(): PDImageXObject
     fun imgBarGray(): PDImageXObject
     fun imgBarDanger(): PDImageXObject
-
+    fun imgDetailResultOverview(): PDImageXObject
+    fun imgDetailResultTable() : PDImageXObject
+    fun imgDetailResultRisk(risk : String) : PDImageXObject
+    fun imgSmallSquareAverage() : PDImageXObject
+    fun imgSmallSquarePatient() : PDImageXObject
+    fun imgAnalysisContentBox() : PDImageXObject
+    fun imgBackgroundCancer(cancer: String) : PDImageXObject
+    fun imgGuideLineTable() : PDImageXObject
+    fun imgGuideLineCancer(cancer: String) : PDImageXObject
+    fun imgGuideLineTotalCancer() : PDImageXObject
+    fun imgProcess() : PDImageXObject
+    fun imgAiBox() : PDImageXObject
+    fun imgAi() : PDImageXObject
+    fun imgLBx() : PDImageXObject
+    fun imgLBxBox() : PDImageXObject
+    fun imgNGS() : PDImageXObject
     fun styleContentRegualar() : TextStyle
     fun styleContentBold(): TextStyle
     fun styleContentSpecial(): TextStyle

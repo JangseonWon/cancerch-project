@@ -20,7 +20,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
     ): PDPageContentStreamPageAccessible {
         stream!!.saveGraphicsState()
 
-        var repo: CancerRepo = CancerRepo()
+        val repo: CancerRepo = CancerRepo()
         //region □ Cancer's Danger content & images
         var img = template!!.resource().imgCancerTypeTitle()
         var width = img.width * DANGER_CONTENT_RATE / img.height
@@ -28,9 +28,6 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.drawImage(img, 306f - width/2, y-DANGER_CONTENT_RATE, width, DANGER_CONTENT_RATE)
         stream.paragraph(555f-width/2, y-13, 80f, AlignHorizontal.CENTER,
             TextBlock(style, template.lblDangerTitle()))
-//        img = template.resource().imgCancerTypeContent()
-//        val height : Float = width * img.height / img.width
-//        stream.drawImage(img, 307f- width/2, y-DANGER_CONTENT_RATE-DANGER_TITLE_RATE-0.2f, width, height)
 
         img = template.resource().imgCancerReadingGuide()
         width = img.width * DANGER_GUIDE_RATE / img.height
@@ -92,7 +89,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+14,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
 
         style = template.resource().styleContentRegualar().clone().fontSize(7f).color(Color(114,113,113))
-        var age : Int = Period.between(dto.birthDate, LocalDate.now()).years
+        var age : Int = dto.age!!.toInt()
         stream.paragraph(177f-width/2, y- DANGER_CONTENT_RATE+207,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
         stream.paragraph(177f-width/2, y- DANGER_CONTENT_RATE+150,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
         stream.paragraph(177f-width/2, y- DANGER_CONTENT_RATE+92,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
@@ -162,10 +159,10 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+87+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+80, width, height!!.toFloat())
 
-        img = if(dto.first.name == "기타 암종" || dto.second.name == "기타 암종") template.resource().imgBarDanger() else template.resource().imgBarNormal()
-        height = if(dto.first.name == "기타 암종" || dto.second.name == "기타 암종") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "기타 암종" || dto.second.name == "기타 암종") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
-        style =  if(dto.first.name == "기타 암종" || dto.second.name == "기타 암종") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
+        img = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") template.resource().imgBarDanger() else template.resource().imgBarNormal()
+        height = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
+        value = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        style =  if(dto.first.name == "기타암종" || dto.second.name == "기타암종") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+29+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+22, width, height!!.toFloat())
 
@@ -192,13 +189,13 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
 
         img = template.resource().imgLine("유방암")
         width = img.width*20f / img.height
-        stream.drawImage(img, 353f-width/2, y- DANGER_CONTENT_RATE+72, width, 20f)
+        stream.drawImage(img, 373f-width/2, y- DANGER_CONTENT_RATE+132, width, 20f)
 
         img = template.resource().imgLine("난소암")
-        width = img.width*20f / img.height
-        stream.drawImage(img, 353f-width/2, y- DANGER_CONTENT_RATE+168, width, 20f)
+        width = img.width*18f / img.height
+        stream.drawImage(img, 378f-width/2, y- DANGER_CONTENT_RATE+73, width, 20f)
 
-        stream.paragraph(65f-width/2, y-DANGER_CONTENT_RATE-8, 400f, AlignHorizontal.LEFT, TextBlock(style, template.lblDangerTMI()))
+        stream.paragraph(85f-width/2, y-DANGER_CONTENT_RATE-8, 400f, AlignHorizontal.LEFT, TextBlock(style, template.lblDangerTMI()))
 
         stream.restoreGraphicsState()
         return stream

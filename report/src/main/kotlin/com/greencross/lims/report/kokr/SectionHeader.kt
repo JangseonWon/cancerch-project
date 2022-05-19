@@ -77,7 +77,7 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
         stream.paragraph(290f, y, 88f, TextBlock(styleValueTitle, Util.dashIfEmpty(dto.patientCode!!)))
         y = stream.paragraph(
             447f, y, 100f,
-            TextBlock(styleValueTitle, Util.dashIfEmpty(age(dto.birthDate!!, dto.collectionDate!!))),
+            TextBlock(styleValueTitle, Util.dashIfEmpty(dto.age!!)),
             TextBlock(styleValueTitle, " / "),
             TextBlock(styleValueTitle, Util.dashIfEmpty(sex(dto.sex!!)))
         )
@@ -119,17 +119,6 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
 
     fun date(date: LocalDateTime?): String? {
         return if (date == null) null else DTF.format(date)
-    }
-
-    fun age(birth: LocalDate?, sampling: LocalDate?): String {
-        if (birth == null) return "-"
-        return if (sampling == null) (Period.between(
-            birth,
-            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString() else (Period.between(
-            birth,
-            sampling.with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString()
     }
 
     fun sex(sex: Sex?): String {
