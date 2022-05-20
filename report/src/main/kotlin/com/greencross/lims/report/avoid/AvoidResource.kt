@@ -78,6 +78,10 @@ interface AvoidResource : HasSign {
     fun imgLBx() : PDImageXObject
     fun imgLBxBox() : PDImageXObject
     fun imgNGS() : PDImageXObject
+    fun imgMiniSquare() : PDImageXObject
+    fun imgLimitationTableTitle() : PDImageXObject
+    fun imgLimitationTable() : PDImageXObject
+    fun imgReferenceTable() : PDImageXObject
     fun styleContentRegualar() : TextStyle
     fun styleContentBold(): TextStyle
     fun styleContentSpecial(): TextStyle

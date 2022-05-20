@@ -125,4 +125,53 @@ class AvoidTemplateN201KoKr(
                 "차세대염기서열분석기로 분석하여 암의 존재 가능성을\n" +
                 "확인합니다."
     }
+
+    override fun lblLimitation(row: Int): String{
+        return when{
+            row == 0 -> "본 검사는 암세포 유래 cfDNA 특성 분석을 통해 암의 존재 가능성을 예측하는 검사로, 확진 목적으로 사용할 수 없습니다."
+            row == 1 -> "본 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성적이 달라질 수 있습니다."
+            row == 2 -> "본 검사의 데이터는 주요 암종인 폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암을 포함하고 있으며 기타 암종은 정확한 분석이 어렵습니다."
+            row == 3 -> "암종의 위치 및 유전적 특성에 따라 검출민감도가 상이할 수 있습니다."
+            row == 4 -> "본 검사는 내부적으로 축적된 데이터에 따라 검사 대상 암종 확대 및 성능이 변경될 수 있습니다."
+            row == 5 -> "본 검사는 양성질환, 자가면역질환 등에서 위양성으로 보고될 수 있으며, 항암치료, 세포치료 등에 따라서 위음성으로 보고될 수 있습니다."
+            else -> ""
+        }
+    }
+
+    override fun lblLimitationDescription(row: Int): String {
+        return when{
+            row == 0 -> "1) 특이도 : 정상인을 검사했을 때 AVOID Pan-cancer Screen 검사가 저위험군으로 판단한 비율을 의미합니다."
+            row == 1 -> "2) 민감도 : 암환자를 검사했을 때 AVOID Pan-cancer Screen 검사가 고위험군으로 판단한 비율을 의미합니다."
+            row == 2 -> "3) 양성예측도 : AVOID Pan-cancer Screen 검사에서 고위험으로 판단한 수검자가 실제 암환자일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 양성예측도가 계산되었습니다."
+            row == 3 -> "4) 음성예측도 : AVOID Pan-cancer Screen 검사에서 저위험으로 판단한 수검자가 실제 정상인일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 음성예측도가 계산되었습니다."
+            else -> ""
+        }
+    }
+
+    override fun lblReferenceLeft(): String {
+        return "1. Cancer Biol Ther. 2019; 20(8): 1057–1067.\n" +
+                "2. Mutat Res. Jul-Sep 2019;781:100-129."
+    }
+
+    override fun lblReferenceRight(): String {
+        return "3. BMC Cancer. 2017; 17: 697.\n" +
+                "4. Jin Mo, Ahn et al. \"Highly sensitive deep learning algorithm for multi-cancer\n" +
+                "       detection using cf-WGS\". AACR-KCA"
+    }
+
+    override fun lblReferenceDescription(col: Int): String{
+        return when{
+            col == 0 ->"※ 본 검사는 검사 결과가 갖는 임상적 의미가 확립되지 않았으며, 이에 따르는 건강에 관련된 행위가 유용하다는 객관적 타당성이 아직 부족합니다.\n" +
+                    "※ 이 검사는 "
+            col == 1 -> "하였습니다."
+            else -> ""
+        }
+    }
+
+    override fun lblReferenceDescriptionBold(): String {
+        return "GC녹십자지놈에서 자체 개발한 검사(Laboratory-developed Test, LDT)로 적절한 평가를 통해 성능을 확인"
+    }
+    override fun lblPerformance(): String {
+        return "AVOID 검사의 암종별 · 병기별 성능"
+    }
 }

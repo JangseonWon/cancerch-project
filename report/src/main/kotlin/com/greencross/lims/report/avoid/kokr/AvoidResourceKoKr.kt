@@ -62,7 +62,10 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val imgLBx                  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_LBx.png"))
     val imgAIBox                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aibox.png"))
     val imgAI                   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aiimg.png"))
-
+    val imgMiniSquare           :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_square.png"))
+    val imgLimitationTableTitle :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_table_title.png"))
+    val imgLimitationTable      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table.png"))
+    val imgReferenceTableTitle  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_reference_table.png"))
 
     override fun labels(): Array<SignLabel> {
         return arrayOf(
@@ -191,9 +194,13 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     override fun imgLBx():                   PDImageXObject { return imgLBx }
     override fun imgLBxBox():                PDImageXObject { return imgLBxBox }
     override fun imgNGS():                   PDImageXObject { return imgNGS }
+    override fun imgLimitationTableTitle():  PDImageXObject { return imgLimitationTableTitle }
+    override fun imgLimitationTable():       PDImageXObject { return imgLimitationTable }
+    override fun imgReferenceTable():        PDImageXObject { return imgReferenceTableTitle }
     override fun imgBarNormal():             PDImageXObject { return imgBarNormal    }
     override fun imgBarGray():               PDImageXObject { return imgBarGray      }
     override fun imgBarDanger():             PDImageXObject { return imgBarDanger    }
+    override fun imgMiniSquare():            PDImageXObject { return imgMiniSquare  }
 
     //endregion
 }

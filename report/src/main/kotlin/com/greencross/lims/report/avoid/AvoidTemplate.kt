@@ -22,6 +22,13 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblGuideLineComment(cancer: String): String
     fun lblLBx(): String
     fun lblNGS(): String
+    fun lblLimitation(row: Int): String
+    fun lblLimitationDescription(row: Int) : String
+    fun lblPerformance(): String
+    fun lblReferenceLeft(): String
+    fun lblReferenceRight(): String
+    fun lblReferenceDescription(col: Int) : String
+    fun lblReferenceDescriptionBold() : String
     fun lblReferenceSequences(): String { return "Reference Sequence" }
     fun lblReference(): String { return "References" }
 }

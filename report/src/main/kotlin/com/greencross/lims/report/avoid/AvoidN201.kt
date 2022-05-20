@@ -20,6 +20,7 @@ class AvoidN201(
     private val detailResultComment: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionDetailResultComment()
     private val guideLine: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionGuideLine()
     private val detailProcess: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionDetailProcess()
+    private val limitation: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionLimitation()
     override fun template(): Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
         return title.and { stream, template, dto ->
             stream.font(template.resource().fontDefault())
@@ -31,5 +32,6 @@ class AvoidN201(
         return template().and(intro).and(totalResult).and(doubtCancer).and(cancerTypeDanger).and(barcode).and(page)
             .and { s, t, d -> newPage(s) }.and(template()).and(detailResultAnalysis).and(detailResultComment).and(guideLine)
             .and { s, t, d -> newPage(s) }.and(template()).and(detailProcess)
+            .and { s, t, d -> newPage(s) }.and(template()).and(limitation)
     }
 }
