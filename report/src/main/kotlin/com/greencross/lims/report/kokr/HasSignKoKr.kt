@@ -15,7 +15,8 @@ interface HasSignKoKr: HasSign {
             Person("이명근 M.T", "20058", File(resource, "/img/sign/kokr/이명근.png")),
             Person("방성희 M.T", "33995", File(resource, "/img/sign/kokr/방성희.png")),
             Person("김민정 M.T", "37668", File(resource, "/img/sign/kokr/김민정.png")),
-            Person("전수옥 M.T", "49141", File(resource, "/img/sign/kokr/전수옥.png"))
+            Person("전수옥 M.T", "49141", File(resource, "/img/sign/kokr/전수옥.png")),
+            Person("김다솜 M.T", "45102", File(resource, "/img/sign/kokr/김다솜.jpg"))
         )
 
         val MDS: Array<Person> = arrayOf(
@@ -40,6 +41,7 @@ interface HasSignKoKr: HasSign {
         if ("방성희" == name) return MTS[1]
         if ("김민정" == name) return MTS[2]
         if ("전수옥" == name) return MTS[3]
+        if ("김다솜" == name) return MTS[4]
         if ("기창석" == name) return MDS[0]
         if ("조은해" == name) return MDS[1]
         if ("김동일" == name) return MDS[2]

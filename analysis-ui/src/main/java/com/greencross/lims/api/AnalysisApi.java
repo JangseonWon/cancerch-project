@@ -1,8 +1,8 @@
 package com.greencross.lims.api;
 
-import com.greencross.lims.dto.Analysis;
-import com.greencross.lims.dto.Promise;
+import com.greencross.lims.data.*;
 import com.greencross.lims.dto.Query;
+import com.greencross.lims.dto.Promise;
 import com.greencross.lims.dto.Slice;
 import elemental2.dom.Blob;
 import elemental2.dom.RequestInit;

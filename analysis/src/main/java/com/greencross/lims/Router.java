@@ -13,7 +13,7 @@ public class Router {
 	@ResponseStatus(HttpStatus.OK)
 	public Page[] services() {
 		return new Page[] {
-			new Page().icon("fa-diagnoses").title("Analysis").uri("/medichk-service/analysis.html").order("7")
+			new Page().icon("fa-diagnoses").title("Analysis").uri("/avoid-service/analysis.html").order("7")
 		};
 	}
 }

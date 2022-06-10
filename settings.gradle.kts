@@ -2,10 +2,67 @@ rootProject.name = "avoid-project"
 include("service")
 include("gateway")
 include("shared")
-include("worklist")
-include("worklist-ui")
 include("analysis")
 include("analysis-ui")
 include("analysis-crawler")
 include("report")
 include("report-ui")
+include("worklist-ui")
+include("worklist-api")
+include("search")
+include("worklist-info-ui")
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            library("reflect", "org.jetbrains.kotlin", "kotlin-reflect").withoutVersion()
+            library("stdlib-jdk8", "org.jetbrains.kotlin", "kotlin-stdlib-jdk8").withoutVersion()
+            bundle("kotlin", listOf("reflect", "stdlib-jdk8"))
+
+            library("kotlin-reactor", "io.projectreactor.kotlin", "reactor-kotlin-extensions").withoutVersion()
+            library("kotlin-coroutines-reactor", "org.jetbrains.kotlinx", "kotlinx-coroutines-reactor").withoutVersion()
+            library("kotlin-jackson", "com.fasterxml.jackson.module", "jackson-module-kotlin").withoutVersion()
+            library("webflux", "org.springframework.boot", "spring-boot-starter-webflux").withoutVersion()
+            bundle(
+                "kotlin-webflux",
+                listOf(
+                    "reflect",
+                    "stdlib-jdk8",
+                    "kotlin-reactor",
+                    "kotlin-coroutines-reactor",
+                    "kotlin-jackson",
+                    "webflux"
+                )
+            )
+
+            library("r2dbc", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
+            library("r2dbc-postgres", "io.r2dbc", "r2dbc-postgresql").version { require("0.8.12.RELEASE") }
+            bundle("r2dbc-postgres", listOf("r2dbc", "r2dbc-postgres"))
+
+            library("querydsl-core", "com.querydsl", "querydsl-core").withoutVersion()
+            library("querydsl-apt", "com.querydsl", "querydsl-apt").withoutVersion()
+            library("querydsl-r2dbc", "com.infobip", "infobip-spring-data-r2dbc-querydsl-boot-starter").version {
+                require(
+                    "7.0.0"
+                )
+            }
+            bundle("r2dbc-querydsl", listOf("querydsl-core", "querydsl-apt", "querydsl-r2dbc"))
+
+            library("spring-boot-test", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
+            library("mockito-kotlin", "org.mockito.kotlin", "mockito-kotlin").version { require("4.0.0") }
+            library("mockito-inline", "org.mockito", "mockito-inline").withoutVersion()
+            library("reactor-test", "io.projectreactor", "reactor-test").withoutVersion()
+            library("kotlin-test", "org.jetbrains.kotlin", "kotlin-test").withoutVersion()
+            bundle(
+                "test",
+                listOf("spring-boot-test", "mockito-kotlin", "mockito-inline", "reactor-test", "kotlin-test")
+            )
+
+            library(
+                "spring-cloud-bom",
+                "org.springframework.cloud",
+                "spring-cloud-dependencies"
+            ).version { require("2021.0.3") }
+        }
+    }
+}

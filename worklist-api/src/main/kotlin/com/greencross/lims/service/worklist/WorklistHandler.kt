@@ -1,0 +1,19 @@
+package com.greencross.lims.service.worklist
+
+import com.gcgenome.lims.data.Search
+import com.gcgenome.lims.search.PageReactive
+import com.gcgenome.lims.search.SearchParam
+import com.greencross.lims.data.Worklist
+import org.springframework.data.domain.Page
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Mono
+
+@Service
+class WorklistHandler(
+    private val dao: WorklistDao,
+    private val mapper: WorklistMapper
+) {
+    @Transactional(readOnly = true)
+    fun search(query: SearchParam): Mono<PageReactive<Worklist>> = dao.search(query).map { it.map(mapper::toDto) }
+}

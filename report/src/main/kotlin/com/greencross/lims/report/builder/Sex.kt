@@ -1,6 +1,6 @@
 package com.greencross.lims.report.builder
 
-import com.greencross.lims.entity.Patient
+import com.greencross.lims.entity.readonly.Patient
 
 enum class Sex {
     M, F;

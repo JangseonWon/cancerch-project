@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: avoid-service-report
+  main:
+    web-application-type: reactive
+  cloud:
+    zookeeper:
+      connect-string: test:12181
+      discovery:
+        root: /avoid-services
+  datasource:
+    url: jdbc:postgresql://gemini:5432/lims
+    username: avoid
+    password: medi1004
+    driver-class-name: org.postgresql.Driver
+  data:
+    cassandra:
+      contact-points: gemini, pisces, taurus
+      local-datacenter: datacenter1
+      username: cassandra
+      password: snubi1004
+      port: 9042
+      keyspace-name: lims
+      schema-action: NONE
+      connect-timeout-millis: 10000s
+      read-timeout-millis: 10000s
+      connect-timeout: 10000s
+      read-timeout: 10000s
+      pool.pool-timeout: 10000s
+server:
+  port: 0

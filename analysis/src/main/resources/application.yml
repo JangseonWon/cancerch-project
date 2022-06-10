@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: avoid-analysis
+  cloud:
+    zookeeper:
+      connect-string: test:12181
+      discovery:
+        root: /avoid-services
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://gemini:5432/lims
+    username: medicheck
+    password: medi1004
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 0
+

@@ -2,12 +2,12 @@ package com.greencross.lims.report.avoid.repository
 
 import com.google.common.collect.Range
 import com.google.common.collect.TreeRangeMap
-import com.greencross.lims.report.avoid.AvoidResource
-import com.greencross.lims.report.avoid.AvoidTemplate
 import com.greencross.lims.report.builder.Sex
+import org.springframework.stereotype.Repository
 import java.util.*
 import java.util.stream.Collectors
 
+@Repository
 class CancerRepo(
     private val ppv: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>,
     private val asr: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>
@@ -156,24 +156,24 @@ class CancerRepo(
         ppv.get(암종.난소암)?.put(Range.closed(80,84),  mapOf(Pair(Sex.M, 0.00), Pair(Sex.F,  7.59)))
         ppv.get(암종.난소암)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F,  5.98)))
 
-        ppv.get(암종.모든암)?.put(Range.closed(0,   4), mapOf(Pair(Sex.M,  4.55), Pair(Sex.F,  3.92)))
-        ppv.get(암종.모든암)?.put(Range.closed(5,   9), mapOf(Pair(Sex.M,  9.29), Pair(Sex.F,  8.06)))
-        ppv.get(암종.모든암)?.put(Range.closed(10, 14), mapOf(Pair(Sex.M, 11.95), Pair(Sex.F, 10.35)))
-        ppv.get(암종.모든암)?.put(Range.closed(15, 19), mapOf(Pair(Sex.M, 14.73), Pair(Sex.F, 13.52)))
-        ppv.get(암종.모든암)?.put(Range.closed(20, 24), mapOf(Pair(Sex.M, 16.56), Pair(Sex.F, 19.78)))
-        ppv.get(암종.모든암)?.put(Range.closed(25, 29), mapOf(Pair(Sex.M, 20.74), Pair(Sex.F, 33.54)))
-        ppv.get(암종.모든암)?.put(Range.closed(30, 34), mapOf(Pair(Sex.M, 29.66), Pair(Sex.F, 50.97)))
-        ppv.get(암종.모든암)?.put(Range.closed(35, 39), mapOf(Pair(Sex.M, 40.77), Pair(Sex.F, 65.78)))
-        ppv.get(암종.모든암)?.put(Range.closed(40, 44), mapOf(Pair(Sex.M, 51.06), Pair(Sex.F, 75.45)))
-        ppv.get(암종.모든암)?.put(Range.closed(45, 49), mapOf(Pair(Sex.M, 60.26), Pair(Sex.F, 81.46)))
-        ppv.get(암종.모든암)?.put(Range.closed(50, 54), mapOf(Pair(Sex.M, 70.75), Pair(Sex.F, 85.50)))
-        ppv.get(암종.모든암)?.put(Range.closed(55, 59), mapOf(Pair(Sex.M, 79.85), Pair(Sex.F, 87.72)))
-        ppv.get(암종.모든암)?.put(Range.closed(60, 64), mapOf(Pair(Sex.M, 87.12), Pair(Sex.F, 89.32)))
-        ppv.get(암종.모든암)?.put(Range.closed(65, 69), mapOf(Pair(Sex.M, 91.22), Pair(Sex.F, 89.71)))
-        ppv.get(암종.모든암)?.put(Range.closed(70, 74), mapOf(Pair(Sex.M, 94.04), Pair(Sex.F, 90.40)))
-        ppv.get(암종.모든암)?.put(Range.closed(75, 79), mapOf(Pair(Sex.M, 95.25), Pair(Sex.F, 90.40)))
-        ppv.get(암종.모든암)?.put(Range.closed(80, 84), mapOf(Pair(Sex.M, 95.99), Pair(Sex.F, 90.39)))
-        ppv.get(암종.모든암)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 95.91), Pair(Sex.F, 88.82)))
+        ppv.get(암종.기타암종)?.put(Range.closed(0,   4), mapOf(Pair(Sex.M,  4.55), Pair(Sex.F,  3.92)))
+        ppv.get(암종.기타암종)?.put(Range.closed(5,   9), mapOf(Pair(Sex.M,  9.29), Pair(Sex.F,  8.06)))
+        ppv.get(암종.기타암종)?.put(Range.closed(10, 14), mapOf(Pair(Sex.M, 11.95), Pair(Sex.F, 10.35)))
+        ppv.get(암종.기타암종)?.put(Range.closed(15, 19), mapOf(Pair(Sex.M, 14.73), Pair(Sex.F, 13.52)))
+        ppv.get(암종.기타암종)?.put(Range.closed(20, 24), mapOf(Pair(Sex.M, 16.56), Pair(Sex.F, 19.78)))
+        ppv.get(암종.기타암종)?.put(Range.closed(25, 29), mapOf(Pair(Sex.M, 20.74), Pair(Sex.F, 33.54)))
+        ppv.get(암종.기타암종)?.put(Range.closed(30, 34), mapOf(Pair(Sex.M, 29.66), Pair(Sex.F, 50.97)))
+        ppv.get(암종.기타암종)?.put(Range.closed(35, 39), mapOf(Pair(Sex.M, 40.77), Pair(Sex.F, 65.78)))
+        ppv.get(암종.기타암종)?.put(Range.closed(40, 44), mapOf(Pair(Sex.M, 51.06), Pair(Sex.F, 75.45)))
+        ppv.get(암종.기타암종)?.put(Range.closed(45, 49), mapOf(Pair(Sex.M, 60.26), Pair(Sex.F, 81.46)))
+        ppv.get(암종.기타암종)?.put(Range.closed(50, 54), mapOf(Pair(Sex.M, 70.75), Pair(Sex.F, 85.50)))
+        ppv.get(암종.기타암종)?.put(Range.closed(55, 59), mapOf(Pair(Sex.M, 79.85), Pair(Sex.F, 87.72)))
+        ppv.get(암종.기타암종)?.put(Range.closed(60, 64), mapOf(Pair(Sex.M, 87.12), Pair(Sex.F, 89.32)))
+        ppv.get(암종.기타암종)?.put(Range.closed(65, 69), mapOf(Pair(Sex.M, 91.22), Pair(Sex.F, 89.71)))
+        ppv.get(암종.기타암종)?.put(Range.closed(70, 74), mapOf(Pair(Sex.M, 94.04), Pair(Sex.F, 90.40)))
+        ppv.get(암종.기타암종)?.put(Range.closed(75, 79), mapOf(Pair(Sex.M, 95.25), Pair(Sex.F, 90.40)))
+        ppv.get(암종.기타암종)?.put(Range.closed(80, 84), mapOf(Pair(Sex.M, 95.99), Pair(Sex.F, 90.39)))
+        ppv.get(암종.기타암종)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 95.91), Pair(Sex.F, 88.82)))
         //endregion
         //region #asr
         asr.get(암종.폐암)?.put(Range.closed( 0,  4), mapOf(Pair(Sex.M,    0.1), Pair(Sex.F,   0.1)))
@@ -309,29 +309,29 @@ class CancerRepo(
         asr.get(암종.난소암)?.put(Range.closed(80, 84), mapOf(Pair(Sex.M, 0.0), Pair(Sex.F,  98.5)))
         asr.get(암종.난소암)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 0.0), Pair(Sex.F,  76.3)))
 
-        asr.get(암종.모든암)?.put(Range.closed( 0,  4), mapOf(Pair(Sex.M,    56.3), Pair(Sex.F,    48.2)))
-        asr.get(암종.모든암)?.put(Range.closed( 5,  9), mapOf(Pair(Sex.M,   120.9), Pair(Sex.F,   103.5)))
-        asr.get(암종.모든암)?.put(Range.closed(10, 14), mapOf(Pair(Sex.M,   160.1), Pair(Sex.F,   136.3)))
-        asr.get(암종.모든암)?.put(Range.closed(15, 19), mapOf(Pair(Sex.M,   203.8), Pair(Sex.F,   184.5)))
-        asr.get(암종.모든암)?.put(Range.closed(20, 24), mapOf(Pair(Sex.M,   234.0), Pair(Sex.F,   290.6)))
-        asr.get(암종.모든암)?.put(Range.closed(25, 29), mapOf(Pair(Sex.M,   308.4), Pair(Sex.F,   593.0)))
-        asr.get(암종.모든암)?.put(Range.closed(30, 34), mapOf(Pair(Sex.M,   495.9), Pair(Sex.F,  1214.1)))
-        asr.get(암종.모든암)?.put(Range.closed(35, 39), mapOf(Pair(Sex.M,   807.1), Pair(Sex.F,  2221.5)))
-        asr.get(암종.모든암)?.put(Range.closed(40, 44), mapOf(Pair(Sex.M,  1218.4), Pair(Sex.F,  3505.3)))
-        asr.get(암종.모든암)?.put(Range.closed(45, 49), mapOf(Pair(Sex.M,  1761.0), Pair(Sex.F,  4938.4)))
-        asr.get(암종.모든암)?.put(Range.closed(50, 54), mapOf(Pair(Sex.M,  2779.0), Pair(Sex.F,  6518.1)))
-        asr.get(암종.모든암)?.put(Range.closed(55, 59), mapOf(Pair(Sex.M,  4473.3), Pair(Sex.F,  7787.1)))
-        asr.get(암종.모든암)?.put(Range.closed(60, 64), mapOf(Pair(Sex.M,  7405.8), Pair(Sex.F,  8998.6)))
-        asr.get(암종.모든암)?.put(Range.closed(65, 69), mapOf(Pair(Sex.M, 10933.0), Pair(Sex.F,  9339.1)))
-        asr.get(암종.모든암)?.put(Range.closed(70, 74), mapOf(Pair(Sex.M, 15709.0), Pair(Sex.F, 10015.0)))
-        asr.get(암종.모든암)?.put(Range.closed(75, 79), mapOf(Pair(Sex.M, 19148.0), Pair(Sex.F, 10019.0)))
-        asr.get(암종.모든암)?.put(Range.closed(80, 84), mapOf(Pair(Sex.M, 22052.0), Pair(Sex.F, 10002.0)))
-        asr.get(암종.모든암)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 21703.0), Pair(Sex.F,  8585.7)))
+        asr.get(암종.기타암종)?.put(Range.closed( 0,  4), mapOf(Pair(Sex.M,    56.3), Pair(Sex.F,    48.2)))
+        asr.get(암종.기타암종)?.put(Range.closed( 5,  9), mapOf(Pair(Sex.M,   120.9), Pair(Sex.F,   103.5)))
+        asr.get(암종.기타암종)?.put(Range.closed(10, 14), mapOf(Pair(Sex.M,   160.1), Pair(Sex.F,   136.3)))
+        asr.get(암종.기타암종)?.put(Range.closed(15, 19), mapOf(Pair(Sex.M,   203.8), Pair(Sex.F,   184.5)))
+        asr.get(암종.기타암종)?.put(Range.closed(20, 24), mapOf(Pair(Sex.M,   234.0), Pair(Sex.F,   290.6)))
+        asr.get(암종.기타암종)?.put(Range.closed(25, 29), mapOf(Pair(Sex.M,   308.4), Pair(Sex.F,   593.0)))
+        asr.get(암종.기타암종)?.put(Range.closed(30, 34), mapOf(Pair(Sex.M,   495.9), Pair(Sex.F,  1214.1)))
+        asr.get(암종.기타암종)?.put(Range.closed(35, 39), mapOf(Pair(Sex.M,   807.1), Pair(Sex.F,  2221.5)))
+        asr.get(암종.기타암종)?.put(Range.closed(40, 44), mapOf(Pair(Sex.M,  1218.4), Pair(Sex.F,  3505.3)))
+        asr.get(암종.기타암종)?.put(Range.closed(45, 49), mapOf(Pair(Sex.M,  1761.0), Pair(Sex.F,  4938.4)))
+        asr.get(암종.기타암종)?.put(Range.closed(50, 54), mapOf(Pair(Sex.M,  2779.0), Pair(Sex.F,  6518.1)))
+        asr.get(암종.기타암종)?.put(Range.closed(55, 59), mapOf(Pair(Sex.M,  4473.3), Pair(Sex.F,  7787.1)))
+        asr.get(암종.기타암종)?.put(Range.closed(60, 64), mapOf(Pair(Sex.M,  7405.8), Pair(Sex.F,  8998.6)))
+        asr.get(암종.기타암종)?.put(Range.closed(65, 69), mapOf(Pair(Sex.M, 10933.0), Pair(Sex.F,  9339.1)))
+        asr.get(암종.기타암종)?.put(Range.closed(70, 74), mapOf(Pair(Sex.M, 15709.0), Pair(Sex.F, 10015.0)))
+        asr.get(암종.기타암종)?.put(Range.closed(75, 79), mapOf(Pair(Sex.M, 19148.0), Pair(Sex.F, 10019.0)))
+        asr.get(암종.기타암종)?.put(Range.closed(80, 84), mapOf(Pair(Sex.M, 22052.0), Pair(Sex.F, 10002.0)))
+        asr.get(암종.기타암종)?.put(Range.closed(85,100), mapOf(Pair(Sex.M, 21703.0), Pair(Sex.F,  8585.7)))
 
         //endregion
     }
     enum class 암종 {
-        폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암, 모든암
+        폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암, 기타암종
     }
     fun findPPVbyAgeAndCancerAndSex(cancer: 암종, age: Int, sex: Sex): Double? {
         return ppv.get(cancer)?.get(age)?.get(sex)

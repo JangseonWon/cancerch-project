@@ -16,6 +16,6 @@ public class Main extends AbstractEntryPoint {
 	}
 	@Override
 	protected String toParentUrl(String param) {
-		return "건강검진/Analysis";
+		return "액체생검/Analysis";
 	}
 }

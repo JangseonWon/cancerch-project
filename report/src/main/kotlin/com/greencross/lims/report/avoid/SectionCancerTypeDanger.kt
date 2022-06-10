@@ -2,6 +2,7 @@ package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.avoid.repository.CancerRepo
+import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
@@ -84,8 +85,10 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.paragraph(189f-width/2, y- DANGER_CONTENT_RATE+72,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
         stream.paragraph(189f-width/2, y- DANGER_CONTENT_RATE+14,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
         stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+187, 100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
-        stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+130, 100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
-        stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+72,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
+        if(dto.sex == Sex.F) {
+            stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+130, 100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
+            stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+72,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
+        }
         stream.paragraph(508f-width/2, y- DANGER_CONTENT_RATE+14,  100f, AlignHorizontal.CENTER, TextBlock(style, "평균 위험도    수검자"))
 
         style = template.resource().styleContentRegualar().clone().fontSize(7f).color(Color(114,113,113))
@@ -95,9 +98,11 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.paragraph(177f-width/2, y- DANGER_CONTENT_RATE+92,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
         stream.paragraph(177f-width/2, y- DANGER_CONTENT_RATE+34,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
         stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+207,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
-        stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+150,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
-        stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+92,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
-        stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+34,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
+        if(dto.sex == Sex.F) {
+            stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+150,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
+            stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+92,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
+        }
+        stream.paragraph(495f-width/2, y- DANGER_CONTENT_RATE+34,   100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.기타암종, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
 
         img = template.resource().imgBarGray()
         width = img.width * DANGER_BAR_RATE / img.height
@@ -106,62 +111,69 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.drawImage(img, 157f-width/2, y- DANGER_CONTENT_RATE+80,  width, DANGER_BAR_RATE)
         stream.drawImage(img, 157f-width/2, y- DANGER_CONTENT_RATE+22,  width, DANGER_BAR_RATE)
         stream.drawImage(img, 475f-width/2, y- DANGER_CONTENT_RATE+195, width, DANGER_BAR_RATE)
-        stream.drawImage(img, 475f-width/2, y- DANGER_CONTENT_RATE+138, width, DANGER_BAR_RATE)
-        stream.drawImage(img, 475f-width/2, y- DANGER_CONTENT_RATE+80,  width, DANGER_BAR_RATE)
+        if(dto.sex == Sex.F) {
+            stream.drawImage(img, 475f - width / 2, y - DANGER_CONTENT_RATE + 138, width, DANGER_BAR_RATE)
+            stream.drawImage(img, 475f - width / 2, y - DANGER_CONTENT_RATE + 80, width, DANGER_BAR_RATE)
+        }
         stream.drawImage(img, 475f-width/2, y- DANGER_CONTENT_RATE+22,  width, DANGER_BAR_RATE)
 
         img = if(dto.first.name == "폐암" || dto.second.name == "폐암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
         var height = if(dto.first.name == "폐암" || dto.second.name == "폐암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        var value = if(dto.first.name == "폐암" || dto.second.name == "폐암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        var value = if(dto.first.name == "폐암" || dto.second.name == "폐암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.폐암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "폐암" || dto.second.name == "폐암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(195f-width/2, y- DANGER_CONTENT_RATE+202+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 187f-width/2, y- DANGER_CONTENT_RATE+195, width, height!!.toFloat())
 
         img = if(dto.first.name == "대장암" || dto.second.name == "대장암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
         height = if(dto.first.name == "대장암" || dto.second.name == "대장암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "대장암" || dto.second.name == "대장암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        value = if(dto.first.name == "대장암" || dto.second.name == "대장암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.대장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "대장암" || dto.second.name == "대장암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(195f-width/2, y- DANGER_CONTENT_RATE+145+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 187f-width/2, y- DANGER_CONTENT_RATE+138, width, height!!.toFloat())
 
         img = if(dto.first.name == "간암" || dto.second.name == "간암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
         height = if(dto.first.name == "간암" || dto.second.name == "간암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "간암" || dto.second.name == "간암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        value = if(dto.first.name == "간암" || dto.second.name == "간암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "간암" || dto.second.name == "간암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(195f-width/2, y- DANGER_CONTENT_RATE+87+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 187f-width/2, y- DANGER_CONTENT_RATE+80, width, height!!.toFloat())
 
         img = if(dto.first.name == "췌장암" || dto.second.name == "췌장암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
         height = if(dto.first.name == "췌장암" || dto.second.name == "췌장암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "췌장암" || dto.second.name == "췌장암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        value = if(dto.first.name == "췌장암" || dto.second.name == "췌장암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.췌장암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "췌장암" || dto.second.name == "췌장암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(195f-width/2, y- DANGER_CONTENT_RATE+29+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 187f-width/2, y- DANGER_CONTENT_RATE+22, width,  height!!.toFloat())
 
         img = if(dto.first.name == "식도암" || dto.second.name == "식도암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
         height = if(dto.first.name == "식도암" || dto.second.name == "식도암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "식도암" || dto.second.name == "식도암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        value = if(dto.first.name == "식도암" || dto.second.name == "식도암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.식도암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "식도암" || dto.second.name == "식도암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+202+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+195, width, height!!.toFloat())
 
-        img = if(dto.first.name == "유방암" || dto.second.name == "유방암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
-        height = if(dto.first.name == "유방암" || dto.second.name == "유방암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "유방암" || dto.second.name == "유방암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
-        style =  if(dto.first.name == "유방암" || dto.second.name == "유방암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
-        stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+145+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
-        stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+138, width, height!!.toFloat())
+        if(dto.sex == Sex.F) {
+            img = if(dto.first.name == "유방암" || dto.second.name == "유방암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
+            height = if(dto.first.name == "유방암" || dto.second.name == "유방암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
+            value = if(dto.first.name == "유방암" || dto.second.name == "유방암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+            style =  if(dto.first.name == "유방암" || dto.second.name == "유방암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
+            stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+145+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
+            stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+138, width, height!!.toFloat())
 
-        img = if(dto.first.name == "난소암" || dto.second.name == "난소암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
-        height = if(dto.first.name == "난소암" || dto.second.name == "난소암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "난소암" || dto.second.name == "난소암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
-        style =  if(dto.first.name == "난소암" || dto.second.name == "난소암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
-        stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+87+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
-        stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+80, width, height!!.toFloat())
-
+            img = if(dto.first.name == "난소암" || dto.second.name == "난소암") template.resource().imgBarDanger() else template.resource().imgBarNormal()
+            height = if(dto.first.name == "난소암" || dto.second.name == "난소암") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
+            value = if(dto.first.name == "난소암" || dto.second.name == "난소암") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.난소암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+            style =  if(dto.first.name == "난소암" || dto.second.name == "난소암") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
+            stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+87+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
+            stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+80, width, height!!.toFloat())
+        }else{
+            val styleBold    = template.resource().styleContentBold().clone().fontSize(26f)
+            stream.paragraph(488f, y- DANGER_CONTENT_RATE+145+height, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
+            stream.paragraph(488f, y- DANGER_CONTENT_RATE+87+height, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
+        }
         img = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") template.resource().imgBarDanger() else template.resource().imgBarNormal()
-        height = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
-        value = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)}%" else "> ${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
+        height = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") if(repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.기타암종, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
+        value = if(dto.first.name == "기타암종" || dto.second.name == "기타암종") "${repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.기타암종, age, dto.sex!!)}%" else "<${round(repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.기타암종, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
         style =  if(dto.first.name == "기타암종" || dto.second.name == "기타암종") template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f)
         stream.paragraph(513f-width/2, y- DANGER_CONTENT_RATE+29+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
         stream.drawImage(img, 505f-width/2, y- DANGER_CONTENT_RATE+22, width, height!!.toFloat())

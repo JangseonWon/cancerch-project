@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(schema="medicheck", name = "analysis", indexes = {
+@Table(schema="avoid", name = "analysis", indexes = {
 	@Index(columnList="sample")
 }) @Data
 @Accessors(fluent = true)

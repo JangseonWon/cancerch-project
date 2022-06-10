@@ -3,7 +3,7 @@ package com.greencross.lims.client;
 import com.greencross.lims.api.AnalysisApi;
 import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
-import com.greencross.lims.dto.Analysis;
+import com.greencross.lims.data.Analysis;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
 import elemental2.core.JsDate;
@@ -25,7 +25,7 @@ public class AnalysisElement extends AbstractScenePageable<AnalysisElement> {
 	private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
 		RouteApi.location("", true, false);
 	}).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
-	.add("건강검진", evt->{
+	.add("액체생검", evt->{
 		evt.preventDefault();
 		evt.stopPropagation();
 	}).add("Analysis", evt->{

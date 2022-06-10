@@ -1,6 +1,6 @@
 package com.greencross.lims
 
-import com.greencross.lims.repo.SecurityContextRepository
+import com.greencross.lims.SecurityContextRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order

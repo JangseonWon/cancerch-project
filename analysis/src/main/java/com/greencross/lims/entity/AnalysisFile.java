@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(schema="medicheck",name = "analysis_file")
+@Table(schema="avoid",name = "analysis_file")
 @Data
 @Accessors(fluent = true)
 public class AnalysisFile {

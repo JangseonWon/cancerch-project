@@ -19,12 +19,23 @@ import java.time.Period
 import java.time.temporal.TemporalAdjusters
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
+
 class AvoidReportTest {
+    var code = "451"
+    val patient: String = "김승전"
+    val birth: Int = 1961
+    val collection: LocalDate = LocalDate.of(2022,3,25)
+    val sex: Sex = Sex.M
+//    val sex: Sex = Sex.F
+    val receipt: LocalDate = collection
+
+    val barcode: String = "CR3-$code"
+    val request: String = "2021109-971-0$code"
     fun test() {
         val doc: PDDocument? = build(null, "ko-kr");
         if (doc != null) {
-            doc.save("avoid.pdf")
-            Desktop.getDesktop().open(File("avoid.pdf"))
+            doc.save("./err_preout/" + this.barcode + ".pdf")
+//            Desktop.getDesktop().open(File("./RE_preout/" + this.barcode + ".pdf"))
         }
     }
 
@@ -32,32 +43,36 @@ class AvoidReportTest {
         val type: LogoType = LogoType.DEPENDENT
         val repo: CancerRepo = CancerRepo()
         return builder(TestInfo.N201, type,
-            AvoidDto("TT-5-412",
-                AvoidDto.Results.고위험,
-                AvoidDto.Cancer("유방암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, 95.5),
-                AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, 13.8)))?.build()
+//            AvoidDto("TT-5-412",
+//                AvoidDto.Results.고위험,
+//                AvoidDto.Cancer("유방암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.유방암, 57, Sex.F)!!, 95.5),
+//                AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, 13.8)))?.build()
 //            AvoidDto("TT-5-412",
 //                AvoidDto.Results.기타암종,
 //                AvoidDto.Cancer("기타암종", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.모든암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.모든암, 57, Sex.F)!!, 95.5),
 //                AvoidDto.Cancer("", 0.0, 0.0)))?.build()
-//        AvoidDto("TT-5-412",
-//            AvoidDto.Results.저위험,
-//            AvoidDto.Cancer("", 0.0,0.0, 95.5),
-//            AvoidDto.Cancer("", 0.0, 0.0, 13.8)))?.build()
+        AvoidDto(this.barcode,
+            AvoidDto.Results.저위험,
+            AvoidDto.Cancer("", 0.0,0.0, 95.5),
+            AvoidDto.Cancer("", 0.0, 0.0, 13.8)))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
         val doc = PDDocument()
-        dto.barcode = test.code()
-        dto.medicalInstitution = "아이메드 강남의원"
-        dto.requestNumber = "20210702-171-5002"
-        dto.patientName = "홍길동"
-        dto.birthDate = LocalDate.of(1966,4,29)
-        dto.sex = Sex.F
+
+        //변경점
+        dto.patientName = this.patient
+        dto.birthDate = LocalDate.of(this.birth,1,1)
+        dto.sex = this.sex
+        dto.requestNumber = this.request
+        dto.collectionDate = this.collection
+        dto.receiptDate = this.receipt
+
+        dto.barcode = dto.barcode
+        dto.medicalInstitution = "GC지놈"
         dto.medicalRecordNumber = "-"
         dto.specimenType = "Whole Blood"
-        dto.collectionDate = LocalDate.of(2021,7,2)
-        dto.receiptDate = LocalDate.of(2021,7,2)
-        dto.reportDate = LocalDate.of(2021,7,2)
+
+        dto.reportDate = LocalDate.of(2022,5,26)
         dto.age = age(dto.birthDate, dto.collectionDate)
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
