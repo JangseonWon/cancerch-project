@@ -21,9 +21,8 @@ spring:
     password: avoid1004
 logging:
   level:
-    io.r2dbc.postgresql.QUERY: DEBUG # for queries
-    io.r2dbc.postgresql.PARAM: DEBUG # for parameters
-    org.springframework.r2dbc: DEBUG
+    io.r2dbc.postgresql.QUERY: TRACE
+    io.r2dbc.postgresql.PARAM: TRACE
 
 
 server:

@@ -82,7 +82,6 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-# Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
 .idea/misc.xml
@@ -99,5 +98,4 @@ gradlew.bat
 /src/main/webapp/js/
 /src/main/webapp/sound/
 /war
-/src/main/webapp/worklistInfo/clear.cache.gif
-/src/main/webapp/worklistInfo/worklistInfo.nocache.js
+/src/main/webapp/worklist/

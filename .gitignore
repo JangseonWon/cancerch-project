@@ -100,5 +100,20 @@ gradlew.bat
 /src/main/webapp/sound/
 /war
 
+### SAYAYA WEB PROJECT ###
+!**/src/main/**/generated/
+!**/src/main/**/resources/static/
+!**/src/test/**/resources/
+src/main/resources/bootstrap.yml
 
 
+!/gradle/wrapper/gradle-wrapper.jar
+
+!/gradle/wrapper/gradle-wrapper.properties
+
+### war ###
+**/war/**
+
+
+
+/worklist-api/src/main/resources/static/

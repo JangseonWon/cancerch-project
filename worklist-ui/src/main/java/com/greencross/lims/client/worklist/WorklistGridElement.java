@@ -3,6 +3,7 @@ package com.greencross.lims.client.worklist;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.greencross.lims.api.WindowApi;
+import com.greencross.lims.client.Router;
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.HTMLDivElement;
@@ -26,20 +27,18 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
         return ColumnBuilder.string(name).name(name).readOnly(true).horizontal("center");
     }
     private final SheetElement.SheetConfiguration config = SheetElement.builder()
-            .rowHeaders(false)
+            .rowHeaders(true)
             .autoColSize(true)
             .autoRowSize(false)
             .manualColumnMove(true)
             .manualColumnResize(true)
             .stretchH("all")
             .columns(
-                    column("작성일").horizontal("center").font("Nanum Gothic Coding").build(),
-                    column("워크리스트 종류").build(),
-                    ColumnBuilder.link("워크리스트 명", data->"#"+data.idx()).name("워크리스트 세부정보").readOnly(true)
-                            .onClick(data-> WindowApi.open("avoid.html#" + data.idx(), "_blank", null, false)).build(),
-                    column("작성자").horizontal("center").build(),
-                    column("검체 수").horizontal("center").build(),
-                    column("Comment").build()
+                    column("추출일").horizontal("center").font("Nanum Gothic Coding").build(),
+                    column("상태").build(),
+                    ColumnBuilder.link("워크리스트 명", data->"#"+data.idx()).name("워크리스트 명").readOnly(true)
+                            .onClick(data-> Router.location(data.idx(), true)).build(),
+                    column("Comment").horizontal("left").build()
             ).data(new Data[10]);
     private final SheetElement elemSheet = config.build();
     private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
@@ -53,7 +52,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
 
     private WorklistGridElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.style("width: 100%;"));
-        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 78vh; border-bottom: 1px solid #AAA;")
+        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 86vh; border-bottom: 1px solid #AAA;")
                 .add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
         e.add(table);
         menu._for(element());

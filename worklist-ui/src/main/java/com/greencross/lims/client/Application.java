@@ -22,7 +22,7 @@ public class Application extends AbstractEntryPoint {
             worklist.update();
             return worklist;
         } else if(!param.endsWith("Worklist")) {
-            work.update();
+            work.parent(param).update();
             return work;
         } else {
             worklist.update();

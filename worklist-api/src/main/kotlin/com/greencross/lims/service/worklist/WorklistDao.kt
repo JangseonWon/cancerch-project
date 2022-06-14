@@ -9,6 +9,9 @@ import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.ComparablePath
 import com.querydsl.sql.RelationalPathBase
 import org.springframework.stereotype.Component
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 @Component
@@ -32,7 +35,8 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
                predicate("title", value),
                predicate("id", value),
                predicate("status", value),
-               predicate("remark", value)
+               predicate("remark", value),
+               predicate("domain", value)
             )
             BooleanBuilder().andAnyOf(*predicates.toTypedArray())
          }
@@ -41,6 +45,15 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
          "status".contentEquals(key, ignoreCase = true)  -> return if(value!=null) worklist.status.stringValue().likeIgnoreCase("%$value%").or(
             worklist.status.stringValue().likeIgnoreCase("%${statusMap[value]}%")) else null
          "remark".contentEquals(key, ignoreCase = true)  -> return if(value!=null) worklist.remark.likeIgnoreCase("%$value%") else null
+         "domain".contentEquals(key, ignoreCase = true)  -> return if(value!=null) worklist.domain.eq(value) else null
+         "to".contentEquals(key, ignoreCase = true)      -> return if(value!=null){
+            val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
+            return worklist.createAt.loe(date)
+         } else null
+         "from".contentEquals(key, ignoreCase = true)      -> return if(value!=null){
+            val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
+            return worklist.createAt.goe(date)
+         } else null
          else -> null;
       }
    }

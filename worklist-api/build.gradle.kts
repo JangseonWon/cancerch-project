@@ -31,7 +31,6 @@ configurations {
 }
 kapt {
     keepJavacAnnotationProcessors = true
-    includeCompileClasspath = false
 }
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

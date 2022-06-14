@@ -2,6 +2,7 @@ package com.greencross.lims.client.worklist;
 
 import com.google.gwt.core.client.Scheduler;
 import com.greencross.lims.api.ProgressApi;
+import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorklistApi;
 import com.greencross.lims.client.AbstractScenePageable;
 import com.greencross.lims.client.BreadcrumbElement;
@@ -13,6 +14,7 @@ import elemental2.core.JsDate;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
 import elemental2.promise.Promise;
+import net.sayaya.ui.BreadcumbElement;
 import net.sayaya.ui.ButtonElement;
 import net.sayaya.ui.TextFieldElement;
 import org.jboss.elemento.HtmlContentBuilder;
@@ -30,7 +32,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     private static JsDate yesterday() {
         JsDate today = new JsDate();
         JsDate yesterday = new JsDate(today);
-        yesterday.setDate(yesterday.getDate()-14);
+        yesterday.setDate(yesterday.getDate()-7);
         yesterday.setHours(0, 0, 0, 0);
         return yesterday;
     }
@@ -39,9 +41,10 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 155px;border-right: 0px !important;").text("from").value(yesterday());
     private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 155px;").text("to").value(new JsDate());
     private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("검색").before(IconElement.icon(IconElement.Type.Light, "fa-search")).style("display: inline-block;");
-    private final BreadcrumbElement breadcumb = BreadcrumbElement.build()
-            .splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
-            .add("Avoid", evt->{
+    private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
+                RouteApi.location("", true, false);
+            }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
+            .add("Worklist", evt->{
                 evt.preventDefault();
                 evt.stopPropagation();
                 Router.location("", true);
@@ -52,7 +55,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
 
     public WorklistScene(Query query) {
         super(query);
-        this.sortable("작성일", "워크리스트 명").sort("작성일", false);
+        this.sortable("작성일", "워크리스트 명", "상태").sort("작성일", false);
         this.query = query;
         initialize();
         Scheduler.get().scheduleFixedDelay(()->{
@@ -67,21 +70,22 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         Query proxy = new Query().asc(this.isAsc());
         List<Query.Filter> filters = new LinkedList<>();
         if(query.filters()!=null) Collections.addAll(filters, query.filters());
+//        filters.add(new Query.Filter().key("domain").value("avoid"));
         filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
         filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
         if(this.sort()!=null){
-            if("워크리스트 명".equalsIgnoreCase(this.sort())) proxy.sortBy("title");
-            else if("검체 수".equalsIgnoreCase(this.sort())) proxy.sortBy("workCnt");
-        }else proxy.sortBy("createdAt").asc(false);
+            if("워크리스트 명".equalsIgnoreCase(this.sort())) proxy.sortBy("워크리스트 명");
+            else if("작성일".equalsIgnoreCase(this.sort())) proxy.sortBy("작성일");
+        }else proxy.sortBy("워크리스트 명").asc(false);
+        proxy.limit(show()).page((int) page());
+        proxy.filters(filters.stream().toArray(Query.Filter[]::new));
         ProgressApi.open(false);
-        WorklistApi.search(proxy.filters(filters.toArray(new Query.Filter[0])).page((int) page()).limit(show()).sortBy(sort()).asc(isAsc()))
+        WorklistApi.search(proxy)
                 .then(this::updateTotal)
                 .then(Response::text)
                 .then(this::map)
-                .last(r-> {
-                    grid.update(r);
-                    ProgressApi.close();
-                });
+                .last(grid::update)
+                .finally_(ProgressApi::close);
     }
     private Promise<Response> updateTotal(Response response) {
         total(Long.parseLong(response.headers.get("X-TOTAL-COUNT")));
