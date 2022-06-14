@@ -41,7 +41,7 @@ class ServiceHandler(
                         svc.children(pages.toTypedArray())
                     }
                 }
-            ).map { svc: Service -> svc.title("RnD").order("C").prefix("/RnD-service") }
+            ).map { svc: Service -> svc.title("액체생검").order("C").prefix("/avoid-service") }
             .doOnNext{
                 Log.info(it.toString())
             }

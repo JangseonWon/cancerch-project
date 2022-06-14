@@ -24,6 +24,5 @@ logging:
     io.r2dbc.postgresql.QUERY: TRACE
     io.r2dbc.postgresql.PARAM: TRACE
 
-
 server:
   port: 0
