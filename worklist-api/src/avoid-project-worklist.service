@@ -1,9 +1,9 @@
 [Unit]
-Description=GCGenome RnD Service
+Description=GCGenome Avoid Service: Worklist
 
 [Service]
 WorkingDirectory=/usr/local/bin
-ExecStart=java -jar /var/lib/lims/avoid-project-service.jar --spring.config.location=/etc/lims/avoid-project.service.yml
+ExecStart=java -jar /var/lib/lims/avoid-project-worklist.jar --spring.config.location=/etc/lims/avoid-gateway.yml
 ExecReload=/bin/kill -INT
 KillMode=control-group
 Restart=on-failure

@@ -31,7 +31,7 @@ tasks {
     processResources {
         if(project.gradle.startParameter.taskNames.contains("build")) exclude("application.yml")
     }
-    jar {
+    bootJar {
         archiveFileName.set("avoid-service.jar")
     }
     getByName<Jar>("jar") {

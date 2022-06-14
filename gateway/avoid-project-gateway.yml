@@ -7,17 +7,21 @@ spring:
     zookeeper:
       connect-string: gemini:2181,pisces:2181,aries:2181,taurus:2181
       discovery:
-        root: /RnD
+        root: /avoid-project
         register: false
     gateway:
       routes:
-        - id: worklist-service
-          uri: lb://worklist-service
+        - id: worklist-api
+          uri: lb://worklist-api
           predicates:
             - Path=/worklist/**, /worklist.html, /worklist/*.js, /css/worklist.css
-        - id: analysis-service
-          uri: lb://analysis-service
+        - id: analysis-api
+          uri: lb://analysis-api
           predicates:
             - Path=/analysis/**, /analysis.html, /analysis/*.js, /css/analysis.css
 server:
+  compression:
+    enabled: true
+    mime-types: text/javascript,application/javascript
+    min-response-size: 2048
   port: 26040
