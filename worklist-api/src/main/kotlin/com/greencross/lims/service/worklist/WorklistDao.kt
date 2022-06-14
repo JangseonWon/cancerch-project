@@ -54,6 +54,7 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
             val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
             return worklist.createAt.goe(date)
          } else null
+         "confirmed".contentEquals(key, ignoreCase = true) -> return if(value!=null) worklist.status.stringValue().eq("NORMAL") else null
          else -> null;
       }
    }
@@ -66,14 +67,6 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
    }
    companion object {
       val statusMap : Map<String, String> = mapOf(
-         "폐기" to "DISPOSAL",
-         "Worklist 폐기" to "DISPOSAL",
-         "Worklist" to "PRE_CREATE",
-         "Worklist 생성" to "PRE_CREATE",
-         "Worklist 생성 완료" to "PRE_CREATE",
-         "Plate" to "POST_CREATE",
-         "Plate 생성" to "POST_CREATE",
-         "Plate 생성 완료" to "POST_CREATE",
          "검증" to "Normal",
          "Plate 검증" to "Normal",
          "Plate 검증 완료" to "Normal"

@@ -3,16 +3,17 @@ package com.greencross.lims.projection
 import com.greencross.lims.entity.User
 import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDateTime
+import java.util.*
 
 data class Work(
     val worklist:       String,
     val index:          Int,
-    val samples:        String,
-    val services:       String,
+    val samples:        String?,
+    val services:       String?,
     val patientName:    String?,
     val mrns:           String?,
     val gid:            String,
-    val json:           String?,
+    val json:           String? = "",
     val createBy:       User,
     val createAt:       LocalDateTime,
     val lastModifyBy:   User?,
@@ -22,8 +23,8 @@ data class Work(
         data class WorkBuilder(
             val worklist:       String,
             val index:          Int,
-            val samples:        String,
-            val services:       String,
+            val samples:        String?,
+            val services:       String?,
             val patientName:    String?,
             val mrns:           String?,
             val gid:            String,

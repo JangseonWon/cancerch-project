@@ -12,13 +12,9 @@ import com.greencross.lims.client.worklist.WorklistScene;
 import com.greencross.lims.data.Work;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
-import elemental2.dom.DomGlobal;
-import elemental2.dom.HTMLElement;
-import elemental2.dom.HTMLLabelElement;
-import elemental2.dom.Response;
+import elemental2.dom.*;
 import elemental2.promise.Promise;
-import net.sayaya.ui.BreadcumbElement;
-import net.sayaya.ui.ButtonElement;
+import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
@@ -26,13 +22,19 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.jboss.elemento.Elements.body;
 import static org.jboss.elemento.Elements.label;
 
 public class WorkScene extends AbstractScene<WorkScene> {
     public static WorkScene build(Query query) { return new WorkScene(query);}
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
     private final WorkGridElement grid = WorkGridElement.build();
-    private final ButtonElement btnSequencing = ButtonElement.outline().css("button");
+    private final ButtonElement btnSequencing = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
+    private final ButtonElement btnAccept = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
+    private final ButtonElement btnSave = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
+    private final ButtonElement btnBack = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
+    private final TextFieldElement<Double> iptAssuming = TextFieldElement.<Double>numberBox().outlined().css("button").text("Assuming a Mr");
+    private final TextFieldElement<Double> iptnMOfDilution = TextFieldElement.<Double>numberBox().outlined().css("button").text("nM of dilution");
     private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("Worklist", true, false);
             }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
@@ -47,11 +49,43 @@ public class WorkScene extends AbstractScene<WorkScene> {
         super(query);
         this.query = query;
         initialize();
-        btnSequencing.onClick(evt->{});
+        btnSequencing.onClick(this::sequence);
+        btnBack.onClick(this::back);
+        btnAccept.onClick(this::accept);
     }
+
+    private void sequence(Event event) {
+    }
+
+    private void accept(Event event) {
+        ButtonElementText ok = ButtonElement.outline().text("적용");
+        ButtonElementText cancel = ButtonElement.outline().text("취소");
+        Dialog dialog = Dialog.alert("기존 입력 값이 초기화 됩니다. 진행합니까?", ok, cancel);
+        body().add(dialog);
+
+        ok.onClick(evt->{
+            dialog.close();
+            dialog.element().remove();
+            grid.calculate(iptAssuming.value(), iptnMOfDilution.value());
+        });
+        cancel.onClick(evt->{
+            dialog.close();
+            dialog.element().remove();
+        });
+
+        dialog.open();
+    }
+
+    private void back(Event event) {
+        Router.location("", true);
+    }
+
     private void update(Query query){
         ProgressApi.open(false);
         WorkApi.works(hash).then(Response::json).then(json-> Promise.resolve((Work[]) json))
+                .then(json->{
+                    return Promise.resolve(json);
+                })
                 .last(grid::update)
                 .finally_(ProgressApi::close);
     }
@@ -74,7 +108,9 @@ public class WorkScene extends AbstractScene<WorkScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] { btnSequencing }
+                new IsElement<?>[] { iptAssuming, iptnMOfDilution, btnAccept },
+                new IsElement<?>[] { btnSequencing },
+                new IsElement<?>[] { btnSave, btnBack }
         };
     }
 

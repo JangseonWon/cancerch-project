@@ -7,6 +7,7 @@ import com.greencross.lims.projection.Work
 import com.querydsl.sql.SQLQuery
 import com.querydsl.core.types.Projections.constructor
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import java.util.*
@@ -23,7 +24,7 @@ class WorkDao(private val repo: WorkRepository) {
                 work.index,
                 work.samples,
                 work.services,
-                work.patientName,
+                work.patientName.`as`("patientName"),
                 work.mrns,
                 work.gid,
                 preprocessing.json.`as`("json"),
@@ -39,10 +40,9 @@ class WorkDao(private val repo: WorkRepository) {
             .leftJoin(createBy).on(createBy.id.eq(work.createBy))
             .leftJoin(modifyBy).on(modifyBy.id.eq(preprocessing.lastModifyBy))
     }
-    fun findByWorklist(worklist: String): Mono<Work> {
+    fun findByWorklist(worklist: String): Flux<Work> {
         return repo.query{
-            select(it).where(work.worklist.eq(worklist))
-        }.all().map(Work.Companion.WorkBuilder::build).toMono()
-
+            select(it).where(work.worklist.eq(worklist)/*.and(work.samples.isNotNull)*/)
+        }.all().map(Work.Companion.WorkBuilder::build)
     }
 }

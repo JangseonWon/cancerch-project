@@ -1,11 +1,16 @@
 package com.greencross.lims.client.work;
 
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.greencross.lims.data.Patient;
 import com.greencross.lims.data.Request;
 import com.greencross.lims.data.Service;
 import com.greencross.lims.data.Work;
 import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
+import elemental2.promise.Promise;
+import jsinterop.annotations.JsProperty;
+import jsinterop.base.JsPropertyMap;
 import net.sayaya.ui.*;
 import net.sayaya.ui.chart.CellCoord;
 import net.sayaya.ui.chart.Data;
@@ -40,8 +45,10 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             .manualColumnResize(true)
             .stretchH("all")
             .columns(
-                    column("IDX").readOnly(true).build(),
+                    column("index").readOnly(true).build(),
                     column("G-ID").readOnly(true).build(),
+                    column("수진자명").readOnly(true).build(),
+                    column("MRN").readOnly(true).build(),
                     columnNum("Na Conc.(pg/ul)").build(),
                     columnNum("input Conc.(ng)").build(),
                     columnNum("Library Prep").build(),
@@ -81,6 +88,9 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         this.works = Arrays.stream(values).collect(Collectors.toList());
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
     }
+    public void calculate(Double assum, Double nM){
+
+    }
     private WorkGridElement update(Data[] data){
         try {
             elemSheet.values(data).refresh();
@@ -91,24 +101,15 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     private Data map(Work value){
         if(value == null) return null;
+        JSONObject json = (JSONObject) JSONParser.parseStrict(value.json());
+        DomGlobal.console.log(json);
         return new Data(value.worklist()+"$"+value.index())
                 .put("index",                   String.valueOf(value.index()))
                 .put("G-ID",                    value.gid())
-                .put("Na Conc.(pg/ul)",         String.valueOf(value.NAConc()))
-                .put("input Conc.(ng)",         String.valueOf(value.inputConc()))
-                .put("Library Prep",            value.libraryPrep())
-                .put("Lib conc.(ng/ul) Qubit",  String.valueOf(value.libraryConc()))
-                .put("fragment size (bp)",      String.valueOf(value.fragmentSize()))
-                .put("convert to nM",           String.valueOf(value.convertToNm()))
-                .put("Assuming a Mr",           String.valueOf(value.assumingAMR()))
-                .put("nM of dilution",          String.valueOf(value.nmOfDilution()))
-                .put("Total Vol(ul)",           String.valueOf(value.totalVol()))
-                .put("Library volume",          String.valueOf(value.libraryVolume()))
-                .put("TE buffer (ul)",          String.valueOf(value.teBuffer()))
-                .put("I7 Index ID",             value.i7IndexId())
-                .put("I7 Sequence",             value.i7Sequence())
-                .put("I5 Index ID",             value.i5IndexId())
-                .put("I5 Sequence",             value.i5Sequence());
+                .put("의뢰번호",                value.samples())
+                .put("수진자명",                value.patientName())
+                .put("MRN",                     value.mrns());
+
     }
     @Override
     public WorkGridElement that() {

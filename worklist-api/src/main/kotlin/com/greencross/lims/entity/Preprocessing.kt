@@ -7,6 +7,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
+import java.util.*
 import kotlin.jvm.Transient
 
 @Schema("avoid")

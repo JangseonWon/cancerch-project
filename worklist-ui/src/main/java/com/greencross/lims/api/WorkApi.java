@@ -16,7 +16,7 @@ public class WorkApi {
         request.setMethod("GET");
 
         return FetchApi.request("/worklist/"+worklist+"/works", request).then(response->{
-            if(response.ok) return response.text().then(msg->{
+            if(!response.ok) return response.text().then(msg->{
                 DomGlobal.alert(msg);
                 return Promise.reject(msg);
             }); else return Promise.resolve(response);

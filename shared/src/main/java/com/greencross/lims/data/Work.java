@@ -1,9 +1,6 @@
 package com.greencross.lims.data;
 
-import jsinterop.annotations.JsIgnore;
-import jsinterop.annotations.JsOverlay;
-import jsinterop.annotations.JsPackage;
-import jsinterop.annotations.JsType;
+import jsinterop.annotations.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,26 +11,19 @@ import lombok.experimental.Accessors;
 @Accessors(fluent=true)
 public final class Work {
     private String worklist;
+    @JsProperty(name="index")
     private Double index;
-    private String sample;
-    private String patient_name;
-    private String mrn;
+    private String samples;
+    private String services;
+    private String mrns;
+    @JsProperty(name = "patient_name")
+    private String patientName;
     private String gid;
-    private Double NAConc;
-    private Double inputConc;
-    private String libraryPrep;
-    private Double libraryConc;
-    private Double fragmentSize;
-    private Double convertToNm;
-    private Double assumingAMR;
-    private Double nmOfDilution;
-    private Double totalVol;
-    private Double libraryVolume;
-    private Double teBuffer;
-    private String i7IndexId;
-    private String i7Sequence;
-    private String i5IndexId;
-    private String i5Sequence;
+    private String json;
+    @JsProperty(name = "last_modify_by")
+    private User lastModifyBy;
+    @JsProperty(name = "created_by")
+    private User createdBy;
 
     @JsOverlay
     @JsIgnore
@@ -42,30 +32,8 @@ public final class Work {
         return index.intValue();
     }
 
-    @JsOverlay
-    @JsIgnore
-    public Double convertToNm(){
-        if(libraryConc == null || fragmentSize == null || assumingAMR == null) return 0.0;
-        return libraryConc/(fragmentSize*assumingAMR)*1000000;
-    }
-
-    @JsOverlay
-    @JsIgnore
-    public void convertToNm(Double libraryConc, Double fragmentSize, Double assumingAMR){
-        this.convertToNm = libraryConc/(fragmentSize*assumingAMR)*1000000;
-    }
-
-    @JsOverlay
-    @JsIgnore
-    public Double totalVol(){
-        if(nmOfDilution == null) return 0.0;
-        return libraryVolume*(convertToNm()/nmOfDilution);
-    }
-
-    @JsOverlay
-    @JsIgnore
-    public Double teBuffer(){
-        if(libraryVolume == null) return 0.0;
-        return totalVol()-libraryVolume;
+    private class User{
+        private String id;
+        private String name;
     }
 }
