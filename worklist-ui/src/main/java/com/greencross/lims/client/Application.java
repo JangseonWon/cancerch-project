@@ -32,7 +32,7 @@ public class Application extends AbstractEntryPoint {
 
     @Override
     protected String toParentUrl(String param) {
-        if(param == null || param.isEmpty() || param.endsWith(".html")) return "Avoid/Worklist";
-        else return "Avoid/Worklist/" + param;
+        if(param == null || param.isEmpty() || param.endsWith(".html")) return "액체생검/Worklist";
+        else return "액체생검/Worklist/" + param;
     }
 }

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: avoid-project-service
+    name: avoid-service
   main:
     web-application-type: reactive
   cloud:
@@ -36,4 +36,4 @@ spring:
           predicates:
             - Path=/**
 server:
-  port: 0
+  port: 26041

@@ -3,7 +3,7 @@ Description=GCGenome Avoid Service: Gateway
 
 [Service]
 WorkingDirectory=/usr/local/bin
-ExecStart=java -jar /var/lib/lims/avoid-project-gateway.jar --spring.config.location=/etc/lims/avoid-gateway.yml
+ExecStart=/usr/lib/jvm/jre-17/bin/java -jar /data/lims/avoid-project-gateway.jar --spring.config.location=/etc/lims/avoid-project-gateway.yml
 ExecReload=/bin/kill -INT 
 KillMode=control-group
 Restart=on-failure
