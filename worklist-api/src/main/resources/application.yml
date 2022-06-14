@@ -4,7 +4,7 @@ spring:
   cloud:
     zookeeper:
       connect-string: test:12181
-      discovery.root: /avoid-project
+      discovery.root: /avoid-service
     stream:
       bindings:
         broadcast-worklist-events-in-0:

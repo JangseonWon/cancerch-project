@@ -1,5 +1,5 @@
 spring:
-  application.name: avoid-worklist-api
+  application.name: worklist-api
   main.web-application-type: reactive
   cloud:
     zookeeper:

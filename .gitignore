@@ -117,3 +117,11 @@ src/main/resources/bootstrap.yml
 
 
 /worklist-api/src/main/resources/static/
+/worklist-api/build/
+/shared/build/
+/service/build/
+/search/build/
+/report/build/generated/source/kapt/main/com/
+/report/build/
+/.idea/
+/java_pid33736.hprof
