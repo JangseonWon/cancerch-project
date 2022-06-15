@@ -42,7 +42,7 @@ class WorkDao(private val repo: WorkRepository) {
     }
     fun findByWorklist(worklist: String): Flux<Work> {
         return repo.query{
-            select(it).where(work.worklist.eq(worklist)/*.and(work.samples.isNotNull)*/)
+            select(it).where(work.worklist.eq(worklist)/*.and(work.samples.isNotNull)*/).orderBy(work.index.asc())
         }.all().map(Work.Companion.WorkBuilder::build)
     }
 }

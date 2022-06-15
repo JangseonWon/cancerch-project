@@ -26,9 +26,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     private static ColumnString column(String name) {
         return ColumnBuilder.string(name).name(name).horizontal("center");
     }
-    private static ColumnNumber columnNum(String name){
-        return ColumnBuilder.number(name).name(name).horizontal("right");
-    }
     private final SheetElement.SheetConfiguration config = SheetElement.builder()
             .rowHeaders(false)
             .autoColSize(true)
@@ -41,17 +38,17 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column("G-ID").readOnly(true).build(),
                     column("수진자명").readOnly(true).build(),
                     column("MRN").readOnly(true).build(),
-                    columnNum("Na Conc.(pg/ul)").build(),
-                    columnNum("input Conc.(ng)").build(),
-                    columnNum("Library Prep").build(),
-                    columnNum("Lib conc.(ng/ul) Qubit").build(),
-                    columnNum("fragment size (bp)").build(),
-                    columnNum("convert to nM").readOnly(true).build(),
+                    column("Na Conc.(pg/ul)").horizontal("right").build(),
+                    column("input Conc.(ng)").horizontal("right").build(),
+                    column("Library Prep").horizontal("right").build(),
+                    column("Lib conc.(ng/ul) Qubit").horizontal("right").build(),
+                    column("fragment size (bp)").horizontal("right").build(),
+                    column("convert to nM").horizontal("right").readOnly(true).build(),
                     column("Assuming a Mr").build(),
                     column("nM of dilution").build(),
-                    columnNum("Total Vol(ul)").readOnly(true).build(),
+                    column("Total Vol(ul)").horizontal("right").readOnly(true).build(),
                     column("Library volume(ul)").build(),
-                    columnNum("TE buffer (ul)").readOnly(true).build(),
+                    column("TE buffer (ul)").horizontal("right").readOnly(true).build(),
                     column("I7 Index ID").build(),
                     column("I7 Sequence").build(),
                     column("I5 Index ID").build(),
@@ -80,12 +77,12 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         this.works = Arrays.stream(values).collect(Collectors.toList());
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
     }
-    public void calculate(Double assum, Double nM){
-
+    public WorkGridElement calculate(){
+        return that();
     }
     private WorkGridElement update(Data[] data){
         try {
-            elemSheet.values(data).refresh();
+            elemSheet.values(data);
             return that();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
@@ -94,33 +91,59 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     private Data map(Work value){
         if(value == null) return null;
         String[] values = new String[15];
-        if(value.json() != null){
+        if(value.json() != null) {
             JSONArray arrValue = (JSONArray) JSONParser.parseStrict(value.json());
             JSONObject json = (JSONObject) arrValue.get(0);
-            values[0] = String.valueOf(json.get("naConc")) == null? String.valueOf(json.get("naConc")) : "";
-            values[1] = String.valueOf(json.get("inputConc")) == null ? String.valueOf(json.get("inputConc")) : "";
-            values[2] = String.valueOf(json.get("libPrep"));
-            values[3] = String.valueOf(json.get("libConc"));
-            values[4] = String.valueOf(json.get("fragSize"));
-            values[5] = String.valueOf(json.get("convNm"));
-            values[6] = String.valueOf(json.get("assuming"));
-            values[7] = String.valueOf(json.get("Na Conc"));
-            values[8] = String.valueOf(json.get("Na Conc"));
-            values[9] = String.valueOf(json.get("Na Conc"));
-            values[10] = String.valueOf(json.get("Na Conc"));
-            values[11] = String.valueOf(json.get("Na Conc"));
-            values[12] = String.valueOf(json.get("Na Conc"));
-            values[13] = String.valueOf(json.get("Na Conc"));
-            values[14] = String.valueOf(json.get("Na Conc"));
+            values[0] = json.containsKey("naConc")      ? String.valueOf(json.get("naConc"))    : "";
+            values[1] = json.containsKey("inputConc")   ? String.valueOf(json.get("inputConc")) : "";
+            values[2] = json.containsKey("libPrep")     ? String.valueOf(json.get("libPrep"))   : "";
+            values[3] = json.containsKey("libConc")     ? String.valueOf(json.get("libConc"))   : "";
+            values[4] = json.containsKey("fragSize")    ? String.valueOf(json.get("fragSize"))  : "";
+            values[5] = json.containsKey("convert")     ? String.valueOf(json.get("convert"))   : "";
+            values[6] = json.containsKey("assuming")    ? String.valueOf(json.get("assuming"))  : "";
+            values[7] = json.containsKey("dilution")    ? String.valueOf(json.get("dilution"))  : "";
+            values[8] = json.containsKey("totalVol")    ? String.valueOf(json.get("totalVol"))  : "";
+            values[9] = json.containsKey("libVol")      ? String.valueOf(json.get("libVol"))    : "";
+            values[10] =json.containsKey("teBuffer")    ? String.valueOf(json.get("teBuffer"))  : "";
+            values[11] =json.containsKey("i7Index")     ? String.valueOf(json.get("i7Index"))   : "";
+            values[12] =json.containsKey("i7Seq")       ? String.valueOf(json.get("i7Seq"))     : "";
+            values[13] =json.containsKey("i5Index")     ? String.valueOf(json.get("i5Index"))   : "";
+            values[14] =json.containsKey("i5Seq")       ? String.valueOf(json.get("i5Seq"))     : "";
+            return new Data(value.worklist() + "$" + value.index())
+                    .put("index", String.valueOf(value.index()))
+                    .put("G-ID", value.gid())
+                    .put("의뢰번호", value.samples())
+                    .put("수진자명", value.patientName())
+                    .put("MRN", value.mrns())
+                    .put("Na Conc.(pg/ul)", values[0])
+                    .put("input Conc.(ng)", values[1])
+                    .put("Library Prep", values[2])
+                    .put("Lib conc.(ng/ul)", values[3])
+                    .put("fragment size (bp)", values[4])
+                    .put("convert to nM", values[5])
+                    .put("Assuming a Mr", values[6])
+                    .put("nM of dilution", values[7])
+                    .put("Total Vol(ul)", values[8])
+                    .put("Library Volume(ul)", values[9])
+                    .put("TE buffer (ul)", values[10])
+                    .put("I7 Index ID", values[11])
+                    .put("I7 Sequence", values[12])
+                    .put("I5 Index ID", values[13])
+                    .put("I5 Sequence", values[14]);
+        }else{
+            return new Data(value.worklist() + "$" + value.index())
+                    .put("index", String.valueOf(value.index()))
+                    .put("G-ID", value.gid())
+                    .put("의뢰번호", value.samples())
+                    .put("수진자명", value.patientName())
+                    .put("MRN", value.mrns());
         }
-        return new Data(value.worklist()+"$"+value.index())
-                .put("index",                   String.valueOf(value.index()))
-                .put("G-ID",                    value.gid())
-                .put("의뢰번호",                value.samples())
-                .put("수진자명",                value.patientName())
-                .put("MRN",                     value.mrns())
-                .put("Na Conc.(pg/ul)",         values[0]);
-
+    }
+    public WorkGridElement updateDilut(Double value){
+        return that();
+    }
+    public WorkGridElement updateAssum(Double value){
+        return that();
     }
     @Override
     public WorkGridElement that() {

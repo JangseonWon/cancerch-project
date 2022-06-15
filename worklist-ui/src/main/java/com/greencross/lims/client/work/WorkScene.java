@@ -3,17 +3,13 @@ package com.greencross.lims.client.work;
 import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorkApi;
-import com.greencross.lims.api.WorklistApi;
 import com.greencross.lims.client.AbstractScene;
-import com.greencross.lims.client.AbstractScenePageable;
-import com.greencross.lims.client.BreadcrumbElement;
 import com.greencross.lims.client.Router;
-import com.greencross.lims.client.worklist.WorklistScene;
 import com.greencross.lims.data.Work;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
 import elemental2.dom.*;
-import elemental2.promise.Promise;
+import com.greencross.lims.dto.Promise;
 import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
@@ -27,15 +23,17 @@ import static org.jboss.elemento.Elements.label;
 
 public class WorkScene extends AbstractScene<WorkScene> {
     public static WorkScene build(Query query) { return new WorkScene(query);}
-    private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
-    private final WorkGridElement grid = WorkGridElement.build();
-    private final ButtonElement btnSequencing = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
-    private final ButtonElement btnAccept = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
-    private final ButtonElement btnSave = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
-    private final ButtonElement btnBack = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
-    private final TextFieldElement<Double> iptAssuming = TextFieldElement.<Double>numberBox().outlined().css("button").text("Assuming a Mr");
-    private final TextFieldElement<Double> iptnMOfDilution = TextFieldElement.<Double>numberBox().outlined().css("button").text("nM of dilution");
-    private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
+    private final HtmlContentBuilder<HTMLLabelElement> title    = label().add("Avoid");
+    private final WorkGridElement grid                          = WorkGridElement.build();
+    private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
+    private final ButtonElement btnAcceptAssuming               = ButtonElement.outline().css("button").text("적용");
+    private final ButtonElement btnAcceptDilution               = ButtonElement.outline().css("button").text("적용");
+    private final ButtonElement btnCalc                         = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
+    private final ButtonElement btnSave                         = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
+    private final ButtonElement btnBack                         = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
+    private final TextFieldElement<Double> iptAssuming          = TextFieldElement.numberBox().outlined().css("button").text("Assuming a Mr");
+    private final TextFieldElement<Double> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button").text("nM of dilution");
+    private final BreadcumbElement breadcumb                    = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("Worklist", true, false);
             }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
             .add("Worklist", evt->{
@@ -51,41 +49,80 @@ public class WorkScene extends AbstractScene<WorkScene> {
         initialize();
         btnSequencing.onClick(this::sequence);
         btnBack.onClick(this::back);
-        btnAccept.onClick(this::accept);
+        btnCalc.onClick(this::calc);
+        btnSave.onClick(this::save);
+        btnAcceptAssuming.onClick(this::acceptAssum);
+        btnAcceptDilution.onClick(this::acceptDilut);
     }
 
     private void sequence(Event event) {
+        this.dialog("시퀀싱을 수행합니다.").last(result->{
+            if(result){
+                //TODO: NOT YET
+            }
+        });
     }
 
-    private void accept(Event event) {
-        ButtonElementText ok = ButtonElement.outline().text("적용");
-        ButtonElementText cancel = ButtonElement.outline().text("취소");
-        Dialog dialog = Dialog.alert("기존 입력 값이 초기화 됩니다. 진행합니까?", ok, cancel);
+    private void acceptAssum(Event event) {
+        this.dialog("기존 정보가 모두 지워집니다.").last(result->{
+            if(result){
+                grid.updateAssum(iptAssuming.value());
+            }
+        });
+    }
+    private void acceptDilut(Event event) {
+        this.dialog("기존 정보가 모두 지워집니다.").last(result->{
+            if(result){
+                grid.updateDilut(iptnMOfDilution.value());
+            }
+        });
+    }
+    private void calc(Event event){
+        this.dialog("기존 정보가 모두 지워집니다.").last(result->{
+            if(result){
+                grid.calculate();
+            }
+        });
+    }
+    private void save(Event event){
+        this.dialog("기존 정보가 모두 지워집니다.").last(result->{
+            if(result){
+                //TODO : not yet
+            }
+        });
+    }
+    private void back(Event event) {
+        this.dialog("저장하지 않은 정보는 초기화됩니다.").last(result->{
+            if(result){
+                Router.location("", true);
+            }
+        });
+    }
+    private Promise<Boolean> dialog(String title){
+        ButtonElementText ok = ButtonElement.outline().text("OK");
+        ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
+        Dialog dialog = Dialog.alert(title, ok, cancel);
         body().add(dialog);
 
-        ok.onClick(evt->{
-            dialog.close();
-            dialog.element().remove();
-            grid.calculate(iptAssuming.value(), iptnMOfDilution.value());
-        });
-        cancel.onClick(evt->{
-            dialog.close();
-            dialog.element().remove();
-        });
+        return new Promise<>((resolve, reject)-> {
+            ok.onClick(evt -> {
+                dialog.close();
+                dialog.element().remove();
+                resolve.onInvoke(true);
+            });
+            cancel.onClick(evt -> {
+                dialog.close();
+                dialog.element().remove();
+                reject.onInvoke(false);
+            });
 
-        dialog.open();
-    }
-
-    private void back(Event event) {
-        Router.location("", true);
+            dialog.open();
+        });
     }
 
     private void update(Query query){
         ProgressApi.open(false);
         WorkApi.works(hash).then(Response::json).then(json-> Promise.resolve((Work[]) json))
-                .then(json->{
-                    return Promise.resolve(json);
-                })
                 .last(grid::update)
                 .finally_(ProgressApi::close);
     }
@@ -108,7 +145,9 @@ public class WorkScene extends AbstractScene<WorkScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] { iptAssuming, iptnMOfDilution, btnAccept },
+                new IsElement<?>[] { iptAssuming,     btnAcceptAssuming },
+                new IsElement<?>[] { iptnMOfDilution, btnAcceptDilution },
+                new IsElement<?>[] { btnCalc },
                 new IsElement<?>[] { btnSequencing },
                 new IsElement<?>[] { btnSave, btnBack }
         };
