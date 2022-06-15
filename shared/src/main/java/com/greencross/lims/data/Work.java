@@ -32,7 +32,7 @@ public final class Work {
         return index.intValue();
     }
 
-    private class User{
+    private static class User{
         private String id;
         private String name;
     }
