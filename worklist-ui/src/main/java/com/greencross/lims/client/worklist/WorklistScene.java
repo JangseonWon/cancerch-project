@@ -5,7 +5,6 @@ import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorklistApi;
 import com.greencross.lims.client.AbstractScenePageable;
-import com.greencross.lims.client.BreadcrumbElement;
 import com.greencross.lims.client.Router;
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.dto.Query;

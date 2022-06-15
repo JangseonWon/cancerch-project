@@ -2,10 +2,10 @@ package com.greencross.lims.client.worklist;
 
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.greencross.lims.api.WindowApi;
 import com.greencross.lims.client.Router;
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.util.DataTransformUtil;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.ListElement;
@@ -52,7 +52,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
 
     private WorklistGridElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.style("width: 100%;"));
-        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 86vh; border-bottom: 1px solid #AAA;")
+        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 85vh; border-bottom: 1px solid #AAA;")
                 .add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
         e.add(table);
         menu._for(element());
@@ -63,7 +63,8 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
     }
     private WorklistGridElement update(Data[] data){
         try {
-            elemSheet.values(data).refresh();
+            Arrays.stream(data).forEach(DomGlobal.console::log);
+            elemSheet.values(data)/*.refresh()*/;
             return that();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
