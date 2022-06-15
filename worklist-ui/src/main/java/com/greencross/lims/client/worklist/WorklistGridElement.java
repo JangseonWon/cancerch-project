@@ -63,8 +63,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
     }
     private WorklistGridElement update(Data[] data){
         try {
-            Arrays.stream(data).forEach(DomGlobal.console::log);
-            elemSheet.values(data)/*.refresh()*/;
+            elemSheet.values(data);
             return that();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
