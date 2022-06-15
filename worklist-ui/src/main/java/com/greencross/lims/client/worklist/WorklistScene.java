@@ -71,10 +71,10 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         Query proxy = new Query().asc(this.isAsc());
         List<Query.Filter> filters = new LinkedList<>();
         if(query.filters()!=null){
-            Arrays.stream(query.filters()).forEach(filter->filter.key(""));
+            Arrays.stream(query.filters()).forEach(filter->filter.key(" "));
             Collections.addAll(filters, query.filters());
         }
-        filters.add(new Query.Filter().key("domain").value("AVOID"));
+//        filters.add(new Query.Filter().key("domain").value("AVOID"));
         filters.add(new Query.Filter().key("confirmed").value(String.valueOf(true)));
         filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
         filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
