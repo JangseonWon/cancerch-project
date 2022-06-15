@@ -41,29 +41,19 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
                     column("Comment").horizontal("left").build()
             ).data(new Data[10]);
     private final SheetElement elemSheet = config.build();
-    private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
-    private final ListElement.SingleLineItem lblPhone = ListElement.singleLine().label("연락처");
-    private final ListElement.SingleLineItem lblRemark = ListElement.singleLine().label("비고입력");
-    private final MenuElement menu = MenuElement.build(ListElement.singleLineList()
-            .add(lblRemark)
-            .divider()
-            .add(lblManager)
-            .add(lblPhone)).css("menu");
 
     private WorklistGridElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.style("width: 100%;"));
         HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 85vh; border-bottom: 1px solid #AAA;")
                 .add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
         e.add(table);
-        menu._for(element());
-        menu.on(EventType.mouseleave, evt->menu.close());
     }
     public WorklistGridElement update(Worklist[] values){
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
     }
     private WorklistGridElement update(Data[] data){
         try {
-            elemSheet.values(data);
+            elemSheet.values(data).refresh();
             return that();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);

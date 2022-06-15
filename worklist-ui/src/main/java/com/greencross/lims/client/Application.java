@@ -21,12 +21,9 @@ public class Application extends AbstractEntryPoint {
         if(param == null || param.isEmpty() || param.endsWith(".html")) {
             worklist.update();
             return worklist;
-        } else if(!param.endsWith("Worklist")) {
+        } else {
             work.parent(param).update();
             return work;
-        } else {
-            worklist.update();
-            return worklist;
         }
     }
 

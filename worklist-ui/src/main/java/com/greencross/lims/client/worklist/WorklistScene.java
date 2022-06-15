@@ -51,20 +51,19 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
             });
     private final Query query;
 
-    boolean initiailized = false;
-
     public WorklistScene(Query query) {
         super(query);
         this.sortable("작성일", "워크리스트 명", "상태").sort("작성일", false);
         this.query = query;
         initialize();
+        btnSearch.onClick(evt->update());
         Scheduler.get().scheduleFixedDelay(()->{
             initiailized = true;
             update();
             return false;
-        }, 100);
-        btnSearch.onClick(evt->update());
+        }, 1000);
     }
+    boolean initiailized = false;
     private void update(Query query){
         if(!initiailized) return;
         Query proxy = new Query().asc(this.isAsc());
