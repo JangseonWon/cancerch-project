@@ -1,18 +1,11 @@
 package com.greencross.lims.client.work;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.greencross.lims.data.Patient;
-import com.greencross.lims.data.Request;
-import com.greencross.lims.data.Service;
 import com.greencross.lims.data.Work;
-import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
-import elemental2.promise.Promise;
-import jsinterop.annotations.JsProperty;
-import jsinterop.base.JsPropertyMap;
 import net.sayaya.ui.*;
-import net.sayaya.ui.chart.CellCoord;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
 import net.sayaya.ui.chart.column.ColumnBuilder;
@@ -24,7 +17,6 @@ import org.jboss.elemento.HtmlContentBuilder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.jboss.elemento.Elements.*;
@@ -101,14 +93,33 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     private Data map(Work value){
         if(value == null) return null;
-        JSONObject json = (JSONObject) JSONParser.parseStrict(value.json());
-        DomGlobal.console.log(json);
+        String[] values = new String[15];
+        if(value.json() != null){
+            JSONArray arrValue = (JSONArray) JSONParser.parseStrict(value.json());
+            JSONObject json = (JSONObject) arrValue.get(0);
+            values[0] = String.valueOf(json.get("naConc")) == null? String.valueOf(json.get("naConc")) : "";
+            values[1] = String.valueOf(json.get("inputConc")) == null ? String.valueOf(json.get("inputConc")) : "";
+            values[2] = String.valueOf(json.get("libPrep"));
+            values[3] = String.valueOf(json.get("libConc"));
+            values[4] = String.valueOf(json.get("fragSize"));
+            values[5] = String.valueOf(json.get("convNm"));
+            values[6] = String.valueOf(json.get("assuming"));
+            values[7] = String.valueOf(json.get("Na Conc"));
+            values[8] = String.valueOf(json.get("Na Conc"));
+            values[9] = String.valueOf(json.get("Na Conc"));
+            values[10] = String.valueOf(json.get("Na Conc"));
+            values[11] = String.valueOf(json.get("Na Conc"));
+            values[12] = String.valueOf(json.get("Na Conc"));
+            values[13] = String.valueOf(json.get("Na Conc"));
+            values[14] = String.valueOf(json.get("Na Conc"));
+        }
         return new Data(value.worklist()+"$"+value.index())
                 .put("index",                   String.valueOf(value.index()))
                 .put("G-ID",                    value.gid())
                 .put("의뢰번호",                value.samples())
                 .put("수진자명",                value.patientName())
-                .put("MRN",                     value.mrns());
+                .put("MRN",                     value.mrns())
+                .put("Na Conc.(pg/ul)",         values[0]);
 
     }
     @Override

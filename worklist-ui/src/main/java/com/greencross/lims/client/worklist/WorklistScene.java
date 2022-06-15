@@ -20,6 +20,7 @@ import net.sayaya.ui.TextFieldElement;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,8 +70,11 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         if(!initiailized) return;
         Query proxy = new Query().asc(this.isAsc());
         List<Query.Filter> filters = new LinkedList<>();
-        if(query.filters()!=null) Collections.addAll(filters, query.filters());
-//        filters.add(new Query.Filter().key("domain").value("avoid"));
+        if(query.filters()!=null){
+            Arrays.stream(query.filters()).forEach(filter->filter.key(""));
+            Collections.addAll(filters, query.filters());
+        }
+        filters.add(new Query.Filter().key("domain").value("AVOID"));
         filters.add(new Query.Filter().key("confirmed").value(String.valueOf(true)));
         filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
         filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));

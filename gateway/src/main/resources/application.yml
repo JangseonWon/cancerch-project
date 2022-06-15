@@ -7,7 +7,7 @@ spring:
     zookeeper:
       connect-string: test:12181
       discovery:
-        root: /avoid-project
+        root: /avoid-service
         register: false
     gateway:
       routes:

@@ -35,8 +35,7 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
                predicate("title", value),
                predicate("id", value),
                predicate("status", value),
-               predicate("remark", value),
-               predicate("domain", value)
+               predicate("remark", value)
             )
             BooleanBuilder().andAnyOf(*predicates.toTypedArray())
          }
