@@ -1,5 +1,5 @@
 plugins {
-    id "org.springframework.boot" version "2.6.6"
+    id "org.springframework.boot" version "2.7.0"
 }
 apply plugin: "java"
 apply plugin: "io.spring.dependency-management"
@@ -21,8 +21,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-json')
     implementation('org.postgresql:postgresql')
     implementation('org.jsoup:jsoup:1.13.1')
-    implementation('com.fasterxml.jackson.core:jackson-core:2.11.2')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.11.2')
+    implementation('com.fasterxml.jackson.core:jackson-core:2.13.3')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.13.3')
     implementation('org.projectlombok:lombok:1.18.12')
     annotationProcessor('org.projectlombok:lombok:1.18.12')
     implementation('com.google.guava:guava:30.0-jre')

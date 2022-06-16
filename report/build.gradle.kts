@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("org.springframework.boot") version "2.6.1"
+    id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 configurations {
@@ -33,7 +33,7 @@ dependencies {
     implementation("com.querydsl:querydsl-core:5.0.0")
     implementation("com.querydsl:querydsl-apt:5.0.0")
     implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:7.0.0")
-    implementation("io.r2dbc:r2dbc-postgresql")
+    implementation("org.postgresql:r2dbc-postgresql")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka") {
         exclude("org.springframework.cloud", "spring-cloud-function-dependencies")
     }
@@ -46,10 +46,10 @@ dependencies {
         exclude("org.apache.logging.log4j", "log4j-jul")
         exclude("org.apache.logging.log4j", "log4j-api")
     }
-    implementation("org.apache.logging.log4j:log4j-core:2.17.0")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.17.0")
-    implementation("org.apache.logging.log4j:log4j-jul:2.17.0")
-    implementation("org.apache.logging.log4j:log4j-api:2.17.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.17.2")
+    implementation("org.apache.logging.log4j:log4j-jul:2.17.2")
+    implementation("org.apache.logging.log4j:log4j-api:2.17.2")
     implementation("org.apache.pdfbox:pdfbox:2.+")
     implementation("com.google.zxing:core:3.4.0")
     implementation("com.google.zxing:javase:3.4.0")

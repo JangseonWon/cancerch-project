@@ -20,9 +20,9 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.1")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.3")
     compileOnly("org.springframework.boot:spring-boot-starter:2.6.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 }
 val lombok = project.configurations.annotationProcessor.get().filter { it.name.startsWith("lombok") }.single()
 tasks {

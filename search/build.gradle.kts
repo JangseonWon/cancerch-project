@@ -9,7 +9,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:6.2.2")
+    implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:7.0.0")
     implementation("com.querydsl:querydsl-core:5.0.0")
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

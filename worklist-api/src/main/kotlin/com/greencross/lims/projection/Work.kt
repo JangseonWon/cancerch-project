@@ -28,7 +28,7 @@ data class Work(
             val patientName:    String?,
             val mrns:           String?,
             val gid:            String,
-            var json:           Json?,
+            var json:           String?,
             val createAt:       LocalDateTime,
             val createById:     String,
             val createBy:       String,
@@ -36,7 +36,7 @@ data class Work(
             val lastModifyById: String?,
             val lastModifyBy:   String?
         ){
-            fun build() = Work(worklist, index, samples, services, patientName, mrns, gid, json?.asString(), User(createById, createBy), createAt, User(lastModifyById, lastModifyBy), lastModifyAt)
+            fun build() = Work(worklist, index, samples, services, patientName, mrns, gid, json, User(createById, createBy), createAt, User(lastModifyById, lastModifyBy), lastModifyAt)
         }
     }
 }

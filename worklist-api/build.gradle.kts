@@ -5,7 +5,6 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.spring") version "1.6.21"
 }
-extra["springCloudVersion"] = "2021.0.1"
 dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()) } }
 dependencies {
     implementation(project(":shared"))
