@@ -3,6 +3,7 @@ package com.greencross.lims.client.work;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.data.Work;
 import elemental2.dom.*;
 import net.sayaya.ui.*;
@@ -87,6 +88,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
     }
     public WorkGridElement calculate(){
+        ProgressApi.open(false);
         Data[] datas = Arrays.stream(elemSheet.values()).peek(data->{
             data.delete("convert to nM").put("convert to nM", "");
             data.delete("Total Vol(ul)").put("Total Vol(ul)", "");
@@ -108,6 +110,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             }
         }).toArray(Data[]::new);
         update(datas);
+        ProgressApi.close();
         return that();
     }
     private WorkGridElement update(Data[] data){
@@ -188,30 +191,36 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         }
     }
     public WorkGridElement updateDilut(Double value){
+        ProgressApi.open(false);
         Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
             data.delete("nM of dilution");
             data.put("nM of dilution", value.toString());
             return data;
         }).toArray(Data[]::new);
         update(datas);
+        ProgressApi.close();
         return that();
     }
     public WorkGridElement updateAssum(Double value){
+        ProgressApi.open(false);
         Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
             data.delete("Assuming a Mr");
             data.put("Assuming a Mr", value.toString());
             return data;
         }).toArray(Data[]::new);
         update(datas);
+        ProgressApi.close();
         return that();
     }
     public WorkGridElement updateLibrary(Double value){
+        ProgressApi.open(false);
         Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
             data.delete("Library Volume(ul)");
             data.put("Library Volume(ul)", value.toString());
             return data;
         }).toArray(Data[]::new);
         update(datas);
+        ProgressApi.close();
         return that();
     }
     @Override
