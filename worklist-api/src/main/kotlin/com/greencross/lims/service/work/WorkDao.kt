@@ -6,14 +6,15 @@ import com.greencross.lims.entity.QWork.work
 import com.greencross.lims.projection.Work
 import com.querydsl.sql.SQLQuery
 import com.querydsl.core.types.Projections.constructor
+import io.r2dbc.postgresql.codec.Json
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
-import java.util.*
 
 @Component
-class WorkDao(private val repo: WorkRepository) {
+class WorkDao(
+    private val repo: WorkRepository
+    ) {
     private val createBy = QUser("Creator")
     private val modifyBy = QUser("Modifier")
     private fun select(query: SQLQuery<*>): SQLQuery<Work.Companion.WorkBuilder>{

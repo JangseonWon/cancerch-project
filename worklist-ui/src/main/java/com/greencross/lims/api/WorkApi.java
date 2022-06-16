@@ -1,5 +1,6 @@
 package com.greencross.lims.api;
 
+import com.greencross.lims.data.Preprocessing;
 import com.greencross.lims.data.Work;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.RequestInit;
@@ -25,7 +26,7 @@ public class WorkApi {
             }); else return Promise.resolve(response);
         });
     }
-    public Promise<Response> merge(String worklistId, Work[] works){
+    public Promise<Response> merge(String worklistId, Preprocessing[] works){
         RequestInit request = RequestInit.create();
         request.setHeaders(new String[][]{
                 new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}

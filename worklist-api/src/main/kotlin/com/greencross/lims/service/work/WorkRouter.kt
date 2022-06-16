@@ -1,5 +1,6 @@
 package com.greencross.lims.service.work
 
+import com.greencross.lims.data.Work
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType

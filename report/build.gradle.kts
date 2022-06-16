@@ -32,7 +32,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("com.querydsl:querydsl-core:5.0.0")
     implementation("com.querydsl:querydsl-apt:5.0.0")
-    implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:6.1.3")
+    implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:7.0.0")
     implementation("io.r2dbc:r2dbc-postgresql")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka") {
         exclude("org.springframework.cloud", "spring-cloud-function-dependencies")

@@ -37,6 +37,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             .columns(
                     column("index").readOnly(true).build(),
                     column("G-ID").readOnly(true).build(),
+                    column("의뢰번호").readOnly(true).build(),
                     column("수진자명").readOnly(true).build(),
                     column("MRN").readOnly(true).build(),
                     column("Na Conc(pg/ul)").horizontal("right").build(),
@@ -97,8 +98,8 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             if(!data[i].get("I5 Sequence").isEmpty())                    json += "\"i5Seq\":\""      +data[i].get("I5 Sequence")+"\",";
             json = json.substring(0, json.length()-1);
             json += "}]";
-//            works[i].json(json.substring(0, json.length()-1));
-            DomGlobal.console.log(json/*.substring(0, json.length()-1)*/);
+            works[i].json(json);
+
         }
         return works;
     }

@@ -5,6 +5,7 @@ import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorkApi;
 import com.greencross.lims.client.AbstractScene;
 import com.greencross.lims.client.Router;
+import com.greencross.lims.data.Preprocessing;
 import com.greencross.lims.data.Work;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
@@ -87,7 +88,13 @@ public class WorkScene extends AbstractScene<WorkScene> {
     private void save(Event event){
         this.dialog("현재 상태를 저장합니다.").last(result->{
             if(result){
-                grid.values();
+                Preprocessing[] datas = Arrays.stream(grid.values()).map(data->{
+                    Preprocessing tmp = new Preprocessing();
+                    tmp.id(data.worklist()+"$"+data.index()).json(data.json());
+                    return tmp;
+                }).toArray(Preprocessing[]::new);
+
+                WorkApi.merge(hash, datas);
             }
         });
     }

@@ -32,6 +32,8 @@ public final class Work {
         return index.intValue();
     }
 
+    @Setter(onMethod_= {@JsOverlay, @JsIgnore})
+    @Getter(onMethod_= {@JsOverlay, @JsIgnore})
     private static class User{
         private String id;
         private String name;
