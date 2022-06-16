@@ -14,8 +14,7 @@ import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
-import static org.jboss.elemento.Elements.body;
-import static org.jboss.elemento.Elements.label;
+import static org.jboss.elemento.Elements.*;
 
 public class WorkScene extends AbstractScene<WorkScene> {
     public static WorkScene build(Query query) { return new WorkScene(query);}
@@ -142,9 +141,9 @@ public class WorkScene extends AbstractScene<WorkScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] { iptAssuming,     btnAcceptAssuming   },
-                new IsElement<?>[] { iptnMOfDilution, btnAcceptDilution   },
-                new IsElement<?>[] { iptLibraryVol  , btnAcceptLibraryVol },
+                new IsElement<?>[] { div().add(iptAssuming).add(btnAcceptAssuming).style("display:flex;") },
+                new IsElement<?>[] { div().add(iptnMOfDilution).add(btnAcceptDilution).style("display:flex;")},
+                new IsElement<?>[] { div().add(iptLibraryVol).add(btnAcceptLibraryVol).style("display:flex;")},
                 new IsElement<?>[] { btnCalc },
                 new IsElement<?>[] { btnSequencing },
                 new IsElement<?>[] { btnSave, btnBack }

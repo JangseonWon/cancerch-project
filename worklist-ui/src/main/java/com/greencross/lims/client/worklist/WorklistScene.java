@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static elemental2.core.Global.JSON;
+import static org.jboss.elemento.Elements.div;
 import static org.jboss.elemento.Elements.label;
 
 public class WorklistScene extends AbstractScenePageable<WorklistScene> {
@@ -38,8 +39,8 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     }
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
     private final WorklistGridElement grid = WorklistGridElement.build();
-    private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 155px;border-right: 0px !important;").text("from").value(yesterday());
-    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 155px;").text("to").value(new JsDate());
+    private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("from").value(yesterday());
+    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;").text("to").value(new JsDate());
     private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("검색").before(IconElement.icon(IconElement.Type.Light, "fa-search")).style("display: inline-block;");
     private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("", true, false);
@@ -72,7 +73,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
             Arrays.stream(query.filters()).forEach(filter->filter.key(" "));
             Collections.addAll(filters, query.filters());
         }
-//        filters.add(new Query.Filter().key("domain").value("AVOID"));
+        filters.add(new Query.Filter().key("domain").value("AVOID"));
         filters.add(new Query.Filter().key("confirmed").value(String.valueOf(true)));
         filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
         filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
@@ -121,9 +122,9 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] {iptDateFrom},
-                new IsElement<?>[] {label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;")},
-                new IsElement<?>[] {iptDateTo, btnSearch}
+                new IsElement<?>[] { iptDateFrom },
+                new IsElement<?>[] { label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;")},
+                new IsElement<?>[] { div().add(iptDateTo).add(btnSearch).style("display:flex;") }
         };
     }
     @Override
