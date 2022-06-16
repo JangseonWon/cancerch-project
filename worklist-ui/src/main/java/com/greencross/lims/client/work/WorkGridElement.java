@@ -159,7 +159,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put("Assuming a Mr",                   values[7])
                     .put("nM of dilution",                  values[8])
                     .put("Total Vol(ul)",                   values[9])
-                    .put("Library Volume(ul)",              values[10])
+                    .put("Library volume(ul)",              values[10])
                     .put("TE buffer (ul)",                  values[11])
                     .put("I7 Index ID",                     values[12])
                     .put("I7 Sequence",                     values[13])
@@ -182,7 +182,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put("Assuming a Mr",                   "")
                     .put("nM of dilution",                  "")
                     .put("Total Vol(ul)",                   "")
-                    .put("Library Volume(ul)",              "")
+                    .put("Library volume(ul)",              "")
                     .put("TE buffer (ul)",                  "")
                     .put("I7 Index ID",                     "")
                     .put("I7 Sequence",                     "")
@@ -215,8 +215,8 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     public WorkGridElement updateLibrary(Double value){
         ProgressApi.open(false);
         Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
-            data.delete("Library Volume(ul)");
-            data.put("Library Volume(ul)", value.toString());
+            data.delete("Library volume(ul)");
+            data.put("Library volume(ul)", value.toString());
             return data;
         }).toArray(Data[]::new);
         update(datas);
