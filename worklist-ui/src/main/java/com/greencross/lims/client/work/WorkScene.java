@@ -14,6 +14,8 @@ import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
+import java.util.Arrays;
+
 import static org.jboss.elemento.Elements.*;
 
 public class WorkScene extends AbstractScene<WorkScene> {
@@ -85,7 +87,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
     private void save(Event event){
         this.dialog("현재 상태를 저장합니다.").last(result->{
             if(result){
-//                dialog.values()
+                grid.values();
             }
         });
     }

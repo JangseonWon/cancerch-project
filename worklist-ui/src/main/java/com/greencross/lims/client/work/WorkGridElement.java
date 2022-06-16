@@ -70,19 +70,38 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
 
     private WorkGridElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.style("width: 100%;"));
-        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 60vh; border-bottom: 1px solid #AAA;").add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
+        HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; height: 85vh; width: 100%; height: 60vh; border-bottom: 1px solid #AAA;").add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
         e.add(table);
         menu._for(element());
         menu.on(EventType.mouseleave, evt->menu.close());
     }
-//    public List<Work> values(){
-//        for(int i = 0; i < works.length; i++){
-//            Data[] datas = elemSheet.values();
-//            JSONObject naConc = JSONParser.parseStrict()
-//            works[i].json();
-//        }
-//        return works.toArray(new Work[0]);
-//    }
+    public Work[] values(){
+        Data[] data = elemSheet.values();
+        for(int i = 0; i < works.length; i++){
+            String json = "[{";
+            if(!data[i].get("Na Conc(pg/ul)").isEmpty())                 json += "\"naConc\":"       +data[i].get("Na Conc(pg/ul)")+",";
+            if(!data[i].get("input Conc(ng)").isEmpty())                 json += "\"inputConc\":"    +data[i].get("input Conc(ng)")+",";
+            if(!data[i].get("Library Prep").isEmpty())                   json += "\"libPrep\":\""    +data[i].get("Library Prep")+"\",";
+            if(!data[i].get("Lib conc(ng/ul) Tapestation").isEmpty())    json += "\"libConcT\":"     +data[i].get("Lib conc(ng/ul) Tapestation")+",";
+            if(!data[i].get("Lib conc(ng/ul) Qubit").isEmpty())          json += "\"libConc\":"      +data[i].get("Lib conc(ng/ul) Qubit")+",";
+            if(!data[i].get("fragment size (bp)").isEmpty())             json += "\"fragSize\":"     +data[i].get("fragment size (bp)")+",";
+            if(!data[i].get("convert to nM").isEmpty())                  json += "\"convert\":"      +data[i].get("convert to nM")+",";
+            if(!data[i].get("Assuming a Mr").isEmpty())                  json += "\"assuming\":"     +data[i].get("Assuming a Mr")+",";
+            if(!data[i].get("nM of dilution").isEmpty())                 json += "\"dilution\":"     +data[i].get("nM of dilution")+",";
+            if(!data[i].get("Total Vol(ul)").isEmpty())                  json += "\"totalVol\":"     +data[i].get("Total Vol(ul)")+",";
+            if(!data[i].get("Library volume(ul)").isEmpty())             json += "\"libVol\":"       +data[i].get("Library volume(ul)")+",";
+            if(!data[i].get("TE buffer (ul)").isEmpty())                 json += "\"teBuffer\":"     +data[i].get("TE buffer (ul)")+",";
+            if(!data[i].get("I7 Index ID").isEmpty())                    json += "\"i7Index\":\""    +data[i].get("I7 Index ID")+"\",";
+            if(!data[i].get("I7 Sequence").isEmpty())                    json += "\"i7Seq\":\""      +data[i].get("I7 Sequence")+"\",";
+            if(!data[i].get("I5 Index ID").isEmpty())                    json += "\"i5Index\":\""    +data[i].get("I5 Index ID")+"\",";
+            if(!data[i].get("I5 Sequence").isEmpty())                    json += "\"i5Seq\":\""      +data[i].get("I5 Sequence")+"\",";
+            json = json.substring(0, json.length()-1);
+            json += "}]";
+//            works[i].json(json.substring(0, json.length()-1));
+            DomGlobal.console.log(json/*.substring(0, json.length()-1)*/);
+        }
+        return works;
+    }
     public WorkGridElement update(Work[] values){
         this.works = Arrays.stream(values).toArray(Work[]::new);
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
@@ -127,22 +146,22 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         if(value.json() != null) {
             JSONArray arrValue = (JSONArray) JSONParser.parseStrict(value.json());
             JSONObject json = (JSONObject) arrValue.get(0);
-            values[0]   = json.containsKey("naConc")      ? String.valueOf(json.get("naConc"))    : "";
-            values[1]   = json.containsKey("inputConc")   ? String.valueOf(json.get("inputConc")) : "";
-            values[2]   = json.containsKey("libPrep")     ? String.valueOf(json.get("libPrep"))   : "";
-            values[3]   = json.containsKey("libConcT")    ? String.valueOf(json.get("libConcT"))  : "";
-            values[4]   = json.containsKey("libConc")     ? String.valueOf(json.get("libConc"))   : "";
-            values[5]   = json.containsKey("fragSize")    ? String.valueOf(json.get("fragSize"))  : "";
-            values[6]   = json.containsKey("convert")     ? String.valueOf(json.get("convert"))   : "";
-            values[7]   = json.containsKey("assuming")    ? String.valueOf(json.get("assuming"))  : "";
-            values[8]   = json.containsKey("dilution")    ? String.valueOf(json.get("dilution"))  : "";
-            values[9]   = json.containsKey("totalVol")    ? String.valueOf(json.get("totalVol"))  : "";
-            values[10]  = json.containsKey("libVol")      ? String.valueOf(json.get("libVol"))    : "";
-            values[11]  = json.containsKey("teBuffer")    ? String.valueOf(json.get("teBuffer"))  : "";
-            values[12]  = json.containsKey("i7Index")     ? String.valueOf(json.get("i7Index"))   : "";
-            values[13]  = json.containsKey("i7Seq")       ? String.valueOf(json.get("i7Seq"))     : "";
-            values[14]  = json.containsKey("i5Index")     ? String.valueOf(json.get("i5Index"))   : "";
-            values[15]  = json.containsKey("i5Seq")       ? String.valueOf(json.get("i5Seq"))     : "";
+            values[0]   = json.containsKey("naConc")      ? String.valueOf(json.get("naConc"))                                          : "";
+            values[1]   = json.containsKey("inputConc")   ? String.valueOf(json.get("inputConc"))                                       : "";
+            values[2]   = json.containsKey("libPrep")     ? String.valueOf(json.get("libPrep")).replace("\"", ""): "";
+            values[3]   = json.containsKey("libConcT")    ? String.valueOf(json.get("libConcT"))                                        : "";
+            values[4]   = json.containsKey("libConc")     ? String.valueOf(json.get("libConc"))                                         : "";
+            values[5]   = json.containsKey("fragSize")    ? String.valueOf(json.get("fragSize"))                                        : "";
+            values[6]   = json.containsKey("convert")     ? String.valueOf(json.get("convert"))                                         : "";
+            values[7]   = json.containsKey("assuming")    ? String.valueOf(json.get("assuming"))                                        : "";
+            values[8]   = json.containsKey("dilution")    ? String.valueOf(json.get("dilution"))                                        : "";
+            values[9]   = json.containsKey("totalVol")    ? String.valueOf(json.get("totalVol"))                                        : "";
+            values[10]  = json.containsKey("libVol")      ? String.valueOf(json.get("libVol"))                                          : "";
+            values[11]  = json.containsKey("teBuffer")    ? String.valueOf(json.get("teBuffer"))                                        : "";
+            values[12]  = json.containsKey("i7Index")     ? String.valueOf(json.get("i7Index")).replace("\"", ""): "";
+            values[13]  = json.containsKey("i7Seq")       ? String.valueOf(json.get("i7Seq")).replace("\"", "")  : "";
+            values[14]  = json.containsKey("i5Index")     ? String.valueOf(json.get("i5Index")).replace("\"", ""): "";
+            values[15]  = json.containsKey("i5Seq")       ? String.valueOf(json.get("i5Seq")).replace("\"", "")  : "";
             return new Data(value.worklist() + "$" + value.index())
                     .put("index",                           String.valueOf(value.index()))
                     .put("G-ID",                            value.gid())
