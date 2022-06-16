@@ -40,7 +40,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
     private final WorklistGridElement grid = WorklistGridElement.build();
     private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("from").value(yesterday());
-    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;").text("to").value(new JsDate());
+    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("to").value(new JsDate());
     private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("검색").before(IconElement.icon(IconElement.Type.Light, "fa-search")).style("display: inline-block;");
     private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("", true, false);

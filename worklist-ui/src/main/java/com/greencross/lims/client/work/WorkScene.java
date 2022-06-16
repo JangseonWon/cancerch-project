@@ -27,9 +27,9 @@ public class WorkScene extends AbstractScene<WorkScene> {
     private final ButtonElement btnCalc                         = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
     private final ButtonElement btnSave                         = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
     private final ButtonElement btnBack                         = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
-    private final TextFieldElement<Double> iptAssuming          = TextFieldElement.numberBox().outlined().css("button").text("Assuming a Mr");
-    private final TextFieldElement<Double> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button").text("nM of dilution");
-    private final TextFieldElement<Double> iptLibraryVol        = TextFieldElement.numberBox().outlined().css("button").text("Library Volume");
+    private final TextFieldElement<Double> iptAssuming          = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("Assuming a Mr");
+    private final TextFieldElement<Double> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("nM of dilution");
+    private final TextFieldElement<Double> iptLibraryVol        = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("Library Volume");
     private final BreadcumbElement breadcumb                    = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("Worklist", true, false);
             }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
