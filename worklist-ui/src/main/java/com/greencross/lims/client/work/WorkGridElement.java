@@ -70,7 +70,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     private Work[] works;
 
     private WorkGridElement(HtmlContentBuilder<HTMLDivElement> e) {
-        super(e.style("width: 100%;"));
+        super(e.style("width: 100%; height:88vh;"));
         HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; height: 85vh; width: 100%; height: 60vh; border-bottom: 1px solid #AAA;").add(div().style("border-top: 1px solid #AAA;").add(elemSheet));
         e.add(table);
         menu._for(element());
