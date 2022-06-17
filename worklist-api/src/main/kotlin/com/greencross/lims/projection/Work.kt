@@ -3,7 +3,6 @@ package com.greencross.lims.projection
 import com.greencross.lims.entity.User
 import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDateTime
-import java.util.*
 
 data class Work(
     val worklist:       String,
@@ -28,7 +27,7 @@ data class Work(
             val patientName:    String?,
             val mrns:           String?,
             val gid:            String,
-            var json:           String?,
+            val json:           String?,
             val createAt:       LocalDateTime,
             val createById:     String,
             val createBy:       String,

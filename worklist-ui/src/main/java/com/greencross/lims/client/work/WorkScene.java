@@ -94,7 +94,9 @@ public class WorkScene extends AbstractScene<WorkScene> {
                     return tmp;
                 }).toArray(Preprocessing[]::new);
 
-                WorkApi.merge(hash, datas);
+                WorkApi.merge(hash, datas).last(result2-> {
+                            if (result2.ok) DomGlobal.alert("저장이 완료됬습니다.");
+                        });
             }
         });
     }

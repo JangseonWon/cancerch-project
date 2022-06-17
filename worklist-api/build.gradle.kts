@@ -10,8 +10,6 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
     implementation("com.greencross:lims-api-gateway-data:1.0")
-    implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib-jdk8"))
     implementation("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("org.springframework.boot:spring-boot-starter-security")
