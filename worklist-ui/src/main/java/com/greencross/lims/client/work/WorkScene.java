@@ -93,10 +93,15 @@ public class WorkScene extends AbstractScene<WorkScene> {
                     tmp.id(data.worklist()+"$"+data.index()).json(data.json());
                     return tmp;
                 }).toArray(Preprocessing[]::new);
-
-                WorkApi.merge(hash, datas).last(result2-> {
-                            if (result2.ok) DomGlobal.alert("저장이 완료됬습니다.");
-                        });
+                ProgressApi.open(false);
+                WorkApi.merge(hash, datas).then(result2-> {
+                            if (result2.ok) {
+                                DomGlobal.alert("저장이 완료됬습니다.");
+                                WorkApi.works(hash).then(Response::json).then(json-> Promise.resolve((Work[]) json))
+                                        .last(grid::update);
+                            }
+                            return null;
+                        }).finally_(ProgressApi::close);
             }
         });
     }

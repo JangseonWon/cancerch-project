@@ -24,7 +24,7 @@ class SecurityContextRepository(
             .map { u->SecurityContextImpl(UserAuthentication(u)) }
     }
     class UserAuthentication(private val entity: User): Authentication {
-        override fun getName(): String? = entity.name
+        override fun getName (): String? = entity.name
         override fun getAuthorities(): Collection<GrantedAuthority> = emptyList()
         override fun getCredentials(): Any = TODO("Not yet implemented")
         override fun getDetails(): Any = TODO("Not yet implemented")
