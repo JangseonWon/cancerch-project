@@ -3,10 +3,10 @@ package com.greencross.lims.client;
 import com.greencross.lims.dto.Query;
 
 public class Main extends AbstractEntryPoint {
-	private AnalysisElement elem;
+	private AnalysisScene elem;
 	@Override
 	public AbstractScene<?>[] elements(Query query) {
-		elem = new AnalysisElement(query);
+		elem = new AnalysisScene(query);
 		return new AbstractScene[] {elem};
 	}
 	@Override
