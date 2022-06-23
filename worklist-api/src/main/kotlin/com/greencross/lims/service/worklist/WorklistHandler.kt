@@ -1,11 +1,8 @@
 package com.greencross.lims.service.worklist
 
-import com.gcgenome.lims.data.Search
 import com.gcgenome.lims.search.PageReactive
 import com.gcgenome.lims.search.SearchParam
-import com.greencross.lims.data.Work
 import com.greencross.lims.data.Worklist
-import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Mono

@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
-@Schema("worklist")
+@Schema("avoid")
 @Table("worklist")
 data class Worklist(
     @Id                                  val id:        UUID,

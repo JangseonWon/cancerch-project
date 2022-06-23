@@ -54,7 +54,7 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
             return worklist.createAt.goe(date)
          } else null
          "confirmed".contentEquals(key, ignoreCase = true) -> return if(value!=null) worklist.status.stringValue().eq("NORMAL") else null
-         else -> null;
+         else -> null
       }
    }
    private fun parseToUUID(value: String): Predicate? {
