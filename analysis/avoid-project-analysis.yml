@@ -1,0 +1,29 @@
+spring:
+  application.name: analysis-api
+  main.web-application-type: reactive
+  cloud:
+    zookeeper:
+      connect-string: gemini:2181,pisces:2181,aries:2181,taurus:2181
+      discovery.root: /avoid-service
+    stream:
+      bindings:
+        broadcast-worklist-events-in-0:
+          destination: avoid-analysis-events
+          group: broadcast-analysis-events
+        publish-worklist-events-out-0.destination: avoid-analysis-events
+      kafka:
+        binder:
+          brokers: gemini, pisces, aries, taurus, libra
+          auto-add-partitions: true
+  r2dbc:
+    url: r2dbc:postgresql://gemini:5432/lims
+    compatibility-mode : true
+    username: avoid
+    password: avoid1004
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: TRACE
+    io.r2dbc.postgresql.PARAM: TRACE
+
+server:
+  port: 0

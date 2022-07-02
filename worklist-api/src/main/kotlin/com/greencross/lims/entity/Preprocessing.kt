@@ -2,7 +2,6 @@ package com.greencross.lims.entity
 
 
 import com.infobip.spring.data.jdbc.annotation.processor.Schema
-import io.r2dbc.postgresql.codec.Json
 import org.springframework.data.annotation.*
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
@@ -12,21 +11,20 @@ import java.time.LocalDateTime
 @Schema("avoid")
 @Table("preprocessing")
 data class Preprocessing(
-    @Column("worklist")                      val worklist: String,
-    @Column("index")                         val index: Int
+    @Column("worklist")                      val worklist:      String,
+    @Column("index")                         val index:         Int
 ): Persistable<Preprocessing.Companion.PreprocessingPK> {
     @CreatedBy
-    @Column("create_by")            lateinit var createBy: String
+    @Column("create_by")            lateinit var createBy:      String
     @CreatedDate
-    @Column("create_at")            lateinit var createAt: LocalDateTime
+    @Column("create_at")            lateinit var createAt:      LocalDateTime
     @LastModifiedBy
-    @Column("last_modify_by")       lateinit var lastModifyBy: String
+    @Column("last_modify_by")       lateinit var lastModifyBy:  String
     @LastModifiedDate
-    @Column("last_modify_at")       lateinit var lastModifyAt: LocalDateTime
-    @Column("value")                         var json: String? = null
+    @Column("last_modify_at")       lateinit var lastModifyAt:  LocalDateTime
+    @Column("value")                         var json:          String? = null
     @Id
-    @Transient                      lateinit var _id: PreprocessingPK
-
+    @Transient                      lateinit var _id:           PreprocessingPK
 
     constructor(worklist: String, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String): this(worklist, index){
         this.createBy = createBy

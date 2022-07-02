@@ -16,7 +16,8 @@ spring:
           brokers: gemini, pisces, aries, taurus, libra
           auto-add-partitions: true
   r2dbc:
-    url: r2dbc:postgresql://gemini:5432/lims
+    url: r2dbc:postgresql://aries:5432/lims
+    compatibility-mode : true
     username: avoid
     password: avoid1004
 logging:

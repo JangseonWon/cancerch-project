@@ -20,21 +20,17 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         var width = img.width * CONTENT_TITLE_RATE / img.height
         val style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(12f)
         stream.drawImage(img, 305f - width / 2, y, width, CONTENT_TITLE_RATE)
-        stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, dto!!.patientName+"님의 상세 결과 해석"))
+        stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblDetailResultAnalysisHeader(dto!!.patientName!!)))
 
         y = y-RESULT_CONTENT_RATE-10
-        img = template.resource().imgDetailResultOverview()
+        img = template.resource().imgDetailResultTable(dto.result)
         width = img.width * RESULT_CONTENT_RATE / img.height
-        stream.drawImage(img, 160f - width / 2, y, width, RESULT_CONTENT_RATE)
+        stream.drawImage(img, 305f - width / 2, y, width, RESULT_CONTENT_RATE)
 
-        img = template.resource().imgDetailResultTable()
-        width = img.width * RESULT_CONTENT_RATE / img.height
-        stream.drawImage(img, 413f - width / 2, y, width, RESULT_CONTENT_RATE)
-
-        img = when{
-            dto.result == AvoidDto.Results.고위험 || dto.result == AvoidDto.Results.기타암종 -> template.resource().imgDetailResultRisk("고위험")
-            dto.result == AvoidDto.Results.저위험 -> template.resource().imgDetailResultRisk("저위험")
-            else ->  template.resource().imgDetailResultRisk("저위험")
+        img = when (dto.result) {
+            AvoidDto.Results.ATTENTION -> template.resource().imgDetailResultRisk("관심관리")
+            AvoidDto.Results.CONCENT -> template.resource().imgDetailResultRisk("위험관리")
+            else -> template.resource().imgDetailResultRisk("일반관리")
         }
         width = img.width * RESULT_IMAGE_LOW_RATE / img.height
         stream.drawImage(img, 165 - width/2, y+40, width, RESULT_IMAGE_LOW_RATE)
@@ -42,117 +38,129 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         val styleRegular = template.resource().styleContentRegualar().clone().fontSize(6f)
         val styleBold    = template.resource().styleContentBold().clone().fontSize(26f)
 
-        stream.paragraph(154f,y+28, 80f, AlignHorizontal.RIGHT, TextBlock(styleRegular, template.lblResultAnalysis(dto.patientName!!)))
-        stream.paragraph(158f, y+15, 80f, AlignHorizontal.LEFT, TextBlock(
-            if(dto.result == AvoidDto.Results.고위험 || dto.result == AvoidDto.Results.기타암종) styleBold.clone().color(Color(217, 52, 29)) else styleBold.clone().color(Color(128,128,128)),
-            if(dto.result == AvoidDto.Results.고위험 || dto.result == AvoidDto.Results.기타암종) "고위험" else "저위험"))
-
-        stream.paragraph(410f, y+82, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(255,255,255)).fontSize(10f), "1순위"))
-        stream.paragraph(505f, y+82, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(255,255,255)).fontSize(10f), "2순위"))
-        stream.paragraph(320f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), "의심 암종"))
-        if(dto.result != AvoidDto.Results.저위험){
-            stream.paragraph(410f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(8f), dto.first.name))
-            stream.paragraph(505f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(8f), dto.second.name))
-        } else {
-            stream.paragraph(410f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
-            stream.paragraph(505f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
+        val colors = when(dto.result){
+            AvoidDto.Results.NORMAL     -> Color(141, 197, 86)
+            AvoidDto.Results.ATTENTION  -> Color(239, 167, 24)
+            else                        -> Color(217,  52, 29)
         }
-        stream.paragraph(320f, y+43, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), "위험도 비교"))
-        img = template.resource().imgSmallSquarePatient()
-        width = img.width * CONTENT_SQUARE_RATE / img.height
-        stream.drawImage(img, 293f - width / 2, y+20, width, CONTENT_SQUARE_RATE)
-        img = template.resource().imgSmallSquareAverage()
-        stream.drawImage(img, 293f - width / 2, y+10, width, CONTENT_SQUARE_RATE)
 
-        stream.paragraph(300f, y+21, 50f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), "${dto.patientName}님"))
-        stream.paragraph(300f, y+11, 60f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), patientInfo(dto.age!!, dto.sex!!)))
+        stream.paragraph(147f,y+28, 80f, AlignHorizontal.RIGHT, TextBlock(styleRegular, template.lblDetailResultAnalysis(dto.patientName!!)))
+        stream.paragraph(151f, y+15, 80f, AlignHorizontal.LEFT, TextBlock(styleBold.clone().color(colors), template.lblResultToWord(dto.result)))
 
-        if(dto.result != AvoidDto.Results.저위험) {
+        stream.paragraph(312f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHeaderTop()))
+        if(dto.result == AvoidDto.Results.CONCENT){
+            stream.paragraph(403f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), dto.first.name))
+            stream.paragraph(498f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), dto.second.name))
+        } else {
+            val results = when(dto.result){
+                AvoidDto.Results.NORMAL -> template.lblDetailResultAnalysisTableNone1()
+                else                    -> template.lblDetailResultAnalysisTableMidRisk1()
+            }
+            stream.paragraph(441f, y+79, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(67, 72, 142)).clone().fontSize(8f), results))
+        }
+
+
+        if(dto.result != AvoidDto.Results.NORMAL){
+            stream.paragraph(291f, y+24, 50f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientSir(dto.patientName!!)))
+            stream.paragraph(291f, y+14, 60f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientInfo(dto.age!!, dto.sex!!)))
+            stream.paragraph(313f, y+48, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHedaerBot()))
+        }
+
+        if(dto.result == AvoidDto.Results.NORMAL) {
+            stream.paragraph(400f, y+35, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), template.lblDetailResultAnalysisTableNone1()))
+            stream.paragraph(495f, y+35, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), template.lblDetailResultAnalysisTableNone2()))
+            stream.paragraph(313f, y+35, 200f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHedaerBot()))
+        }
+        else if(dto.result == AvoidDto.Results.ATTENTION){
             img = template.resource().imgBackgroundCancer(dto.first.name)
             width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-            stream.drawImage(img, 410 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
+            stream.drawImage(img, 400 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
 
             img = template.resource().imgBarGray()
             width = img.width * CONTENT_SQUARE_RATE / img.height
 
-            var asr = round(dto.first.asr.div(1000) * 100) / 100
-            var height = if (asr >= 50) CONTENT_SQUARE_RATE * 10 else CONTENT_SQUARE_RATE
-            stream.drawImage(img, 395 - width / 2, y, width, height)
+            var height = CONTENT_SQUARE_RATE *2f
+            stream.drawImage(img, 385 - width / 2, y, width, height)
             stream.paragraph(
-                395f,
+                384f,
                 y + height + 5,
                 60f,
                 AlignHorizontal.CENTER,
-                TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), asr.toString() + "%")
+                TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), template.lblDetailResultAnlaysisTableContentCom())
+            )
+
+            img = template.resource().imgBarMiddle()
+            height = CONTENT_SQUARE_RATE *4f
+            stream.drawImage(img, 415 - width / 2, y, width, height)
+            stream.paragraph(
+                415f,
+                y + height + 5,
+                60f,
+                AlignHorizontal.CENTER,
+                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentMID())
+            )
+            stream.paragraph(495f, y+38, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11,11,11)).clone().fontSize(6f), template.lblDetailResultAnalysisTableMidRisk2()))
+        }
+        else{
+            img = template.resource().imgBackgroundCancer(dto.first.name)
+            width = img.width * RESULT_IMAGE_LOW_RATE / img.height
+            stream.drawImage(img, 403 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
+
+            img = template.resource().imgBarGray()
+            width = img.width * CONTENT_SQUARE_RATE / img.height
+
+            var height = CONTENT_SQUARE_RATE
+            stream.drawImage(img, 388 - width / 2, y, width, height)
+            stream.paragraph(
+                387f,
+                y + height + 5,
+                60f,
+                AlignHorizontal.CENTER,
+                TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), template.lblDetailResultAnlaysisTableContentCom())
             )
 
             img = template.resource().imgBarDanger()
-            height = if (dto.first.ppv >= 50) CONTENT_SQUARE_RATE * 7 else CONTENT_SQUARE_RATE * 3.5f
-            stream.drawImage(img, 425 - width / 2, y, width, height)
+            height = CONTENT_SQUARE_RATE * 6f
+            stream.drawImage(img, 418 - width / 2, y, width, height)
             stream.paragraph(
-                425f,
+                418f,
                 y + height + 5,
                 60f,
                 AlignHorizontal.CENTER,
-                TextBlock(styleBold.clone().color(Color(217, 52, 29)).fontSize(8f), dto.first.ppv.toString() + "%")
+                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG())
             )
 
-            if(dto.result != AvoidDto.Results.기타암종) {
-                img = template.resource().imgBackgroundCancer(dto.second.name)
-                width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-                stream.drawImage(img, 505 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
+            img = template.resource().imgBackgroundCancer(dto.second.name)
+            width = img.width * RESULT_IMAGE_LOW_RATE / img.height
+            stream.drawImage(img, 498 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
 
-                img = template.resource().imgBarGray()
-                width = img.width * CONTENT_SQUARE_RATE / img.height
+            img = template.resource().imgBarGray()
+            width = img.width * CONTENT_SQUARE_RATE / img.height
 
-                asr = round(dto.second.asr.div(1000) * 100) / 100
-                height = if (asr >= 50) CONTENT_SQUARE_RATE * 10 else CONTENT_SQUARE_RATE
-                stream.drawImage(img, 490 - width / 2, y, width, height)
-                stream.paragraph(
-                    490f,
-                    y + height + 5,
-                    60f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), asr.toString() + "%")
-                )
+            height = CONTENT_SQUARE_RATE
+            stream.drawImage(img, 483 - width / 2, y, width, height)
+            stream.paragraph(
+                483f,
+                y + height + 5,
+                60f,
+                AlignHorizontal.CENTER,
+                TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), template.lblDetailResultAnlaysisTableContentCom())
+            )
 
-                img = template.resource().imgBarDanger()
-                height = if (dto.second.ppv >= 50) CONTENT_SQUARE_RATE * 7 else CONTENT_SQUARE_RATE * 3.5f
-                stream.drawImage(img, 520 - width / 2, y, width, height)
-                stream.paragraph(
-                    520f,
-                    y + height + 5,
-                    60f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(
-                        styleBold.clone().color(Color(217, 52, 29)).fontSize(8f),
-                        dto.second.ppv.toString() + "%"
-                    )
-                )
-            }
-            else {
-                stream.paragraph(505f, y+66, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
-                stream.paragraph(505f, y+30, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
-            }
-        } else {
-            stream.paragraph(410f, y+30, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
-            stream.paragraph(505f, y+30, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(128,128,128)).clone().fontSize(8f), "해당 없음"))
+            img = template.resource().imgBarDanger()
+            height = CONTENT_SQUARE_RATE * 6f
+            stream.drawImage(img, 513 - width / 2, y, width, height)
+            stream.paragraph(
+                513f,
+                y + height + 5,
+                60f,
+                AlignHorizontal.CENTER,
+                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG())
+            )
         }
-
         return stream
     }
-    private fun patientInfo(age: String, sex: Sex) : String{
-        val ageStream: String = (age.toInt()/10*10).toString()
-        val cut: String = when{
-            age.substring(age.length-1, age.length).toInt() >= 5 -> "후반"
-            else -> "초반"
-        }
-        val sexStr: String = when{
-            sex == Sex.F -> "여성"
-            else -> "남성"
-        }
-        return ageStream+"대 "+cut+" "+sexStr+" 평균"
-    }
+
     companion object {
         private const val CONTENT_SQUARE_RATE = 6f
         private const val CONTENT_TITLE_RATE = 21f

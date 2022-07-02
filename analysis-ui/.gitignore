@@ -99,4 +99,4 @@ gradlew.bat
 /src/main/webapp/sound/
 /war
 /src/main/webapp/analysis/clear.cache.gif
-/src/main/webapp/analysis/worklist.nocache.js
+/src/main/webapp/analysis/analysis.nocache.js

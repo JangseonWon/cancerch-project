@@ -53,7 +53,6 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
     }
     private WorklistGridElement update(Data[] data){
         try {
-            elemSheet.clear();
             elemSheet.values(data).refresh();
             return that();
         } catch(Exception e){

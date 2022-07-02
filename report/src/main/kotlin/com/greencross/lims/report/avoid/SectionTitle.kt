@@ -18,14 +18,6 @@ import java.time.temporal.TemporalAdjusters
 
 class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
     private val DTF: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    private val lblMedicalInstitution    = "의뢰기관"
-    private val lblRequestNumber         = "접수번호"
-    private val lblPatientName           = "성명"
-    private val lblAgeSex                = "나이/성별"
-    private val lblMedicalRecordNumber   = "등록번호"
-    private val lblSpecimenType          = "검체종류"
-    private val lblSpecimenDate          = "검체채취일"
-    private val lblReceiptReportDate     = "접수일/보고일"
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible,
@@ -40,7 +32,7 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         stream.drawImage(img, 127f - width/2, y, width, TITLE_HEIGHT)
 
         var style = template.resource().styleContentRegualar().clone().fontSize(7.4f).color(Color(114,113,113))
-        stream.paragraph(127f, y-img.height/10, 200f, CENTER, TextBlock(style, "[Pan-cancer : 주요 암]"))
+        stream.paragraph(127f, y-img.height/10, 200f, CENTER, TextBlock(style, template.lblTitleSmallLogo()))
         //endregion
 
         //region □ HeaderBox, 내부 내용
@@ -49,14 +41,14 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         stream.drawImage(img, 385f - width/2, y-25, width, TITLE_HEADERBOX_HEIGHT)
 
         style = template.resource().styleContentBold()
-        stream.paragraph(235f, y+35, 50f, LEFT, TextBlock(style, lblMedicalInstitution))
-        stream.paragraph(385f, y+35, 50f, LEFT, TextBlock(style, lblRequestNumber))
-        stream.paragraph(235f, y+20, 50f, LEFT, TextBlock(style, lblPatientName))
-        stream.paragraph(385f, y+20, 50f, LEFT, TextBlock(style, lblAgeSex))
-        stream.paragraph(235f,  y+5, 50f, LEFT, TextBlock(style, lblMedicalRecordNumber))
-        stream.paragraph(385f,  y+5, 50f, LEFT, TextBlock(style, lblSpecimenType))
-        stream.paragraph(235f, y-10, 50f, LEFT, TextBlock(style, lblSpecimenDate))
-        stream.paragraph(385f, y-10, 50f, LEFT, TextBlock(style, lblReceiptReportDate))
+        stream.paragraph(235f, y+35, 50f, LEFT, TextBlock(style, template.lblMedicalInstitution()))
+        stream.paragraph(385f, y+35, 50f, LEFT, TextBlock(style, template.lblRequestNumber()))
+        stream.paragraph(235f, y+20, 50f, LEFT, TextBlock(style, template.lblPatientName()))
+        stream.paragraph(385f, y+20, 50f, LEFT, TextBlock(style, template.lblAgeSex()))
+        stream.paragraph(235f,  y+5, 50f, LEFT, TextBlock(style, template.lblMedicalRecordNumber()))
+        stream.paragraph(385f,  y+5, 50f, LEFT, TextBlock(style, template.lblSpecimenType()))
+        stream.paragraph(235f, y-10, 50f, LEFT, TextBlock(style, template.lblSpecimenDate()))
+        stream.paragraph(385f, y-10, 50f, LEFT, TextBlock(style, template.lblReceiptReportDate()))
 
         style = template.resource().styleContentRegualar()
         stream.paragraph(285f, y+35, 100f, LEFT, TextBlock(style, dto.medicalInstitution))

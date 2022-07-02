@@ -15,13 +15,13 @@ public final class Request {
 	private String serial;
 	private Service service;
 	@JsProperty(name="date_request")
-	private Double dateRequest;
+	private String dateRequest;
 	@JsProperty(name="date_start")
-	private Double dateStart;
+	private String dateStart;
 	@JsProperty(name="date_sampling")
-	private Double dateSampling;
+	private String dateSampling;
 	@JsProperty(name="date_due")
-	private Double dateDue;
+	private String dateDue;
 	private Boolean registered;
 	private Boolean canceled;
 	private Boolean deleted;
@@ -37,17 +37,5 @@ public final class Request {
 	public Service service() {
 		if(service == null) return null;
 		return Js.uncheckedCast(service);
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long dateRequest() {
-		if(dateRequest == null) return null;
-		else return dateRequest.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long dateDue() {
-		if(dateDue == null) return null;
-		else return dateDue.longValue();
 	}
 }

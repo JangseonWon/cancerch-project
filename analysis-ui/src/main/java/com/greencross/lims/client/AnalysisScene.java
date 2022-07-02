@@ -1,15 +1,29 @@
 package com.greencross.lims.client;
 
+import com.google.gwt.core.client.Scheduler;
+import com.greencross.lims.api.AnalysisApi;
+import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
+import com.greencross.lims.data.Analysis;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
 import elemental2.core.JsDate;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLLabelElement;
+import elemental2.dom.Response;
+import elemental2.promise.Promise;
 import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static elemental2.core.Global.JSON;
 import static org.jboss.elemento.Elements.label;
 
 public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
@@ -27,14 +41,15 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	});
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("Analyzed").value(true);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("Not complete only").value(true);
-	private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").text("Date from").value(prevday()).required(true);
-	private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").text("Date to").value(new JsDate()).required(true);
+	private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
+	private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
-	private final ButtonElement btnSave = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Light, "fa-save"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
 	private final Query query;
+	boolean initiailized = false;
+
 	public AnalysisScene(Query query) {
 		super(query);
 		this.query = query;
@@ -47,22 +62,54 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			btnPdf.enabled(selected);
 			btnPublish.enabled(selected);
 		});
-		btnProgressOnly.onValueChange(evt->{
-			update();
-		});
-		btnAnalysisComplete.onValueChange(evt->{
-			update();
-		});
 		btnSearch.onClick(evt->{
 			update();
 		});
-		btnSave.onClick(evt->save());
-		btnPdf.onClick(evt->pdf());
+		btnPdf.onClick(evt->print());
 		btnPublish.onClick(evt->publish());
 		btnPdf.enabled(false);
 		btnPublish.enabled(false);
+		Scheduler.get().scheduleFixedDelay(()->{
+			initiailized = true;
+			update();
+			return false;
+		}, 1000);
 	}
 
+	private void update(Query query){
+		if(!initiailized) return;
+		Query proxy = new Query().asc(this.isAsc());
+		List<Query.Filter> filters = new LinkedList<>();
+		if(query.filters()!=null){
+			Arrays.stream(query.filters()).forEach(filter->filter.key(" "));
+			Collections.addAll(filters, query.filters());
+		}
+		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
+		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
+		if(this.sort()!=null){
+			if("워크리스트 명".equalsIgnoreCase(this.sort())) proxy.sortBy("워크리스트 명");
+			else if("작성일".equalsIgnoreCase(this.sort())) proxy.sortBy("작성일");
+		}else proxy.sortBy("워크리스트 명").asc(false);
+		if(!this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
+		proxy.limit(show()).page((int) page());
+		proxy.filters(filters.stream().toArray(Query.Filter[]::new));
+		ProgressApi.open(false);
+		AnalysisApi.search(proxy)
+				.then(this::updateTotal)
+				.then(Response::text)
+				.then(this::map)
+				.last(grid::update)
+				.finally_(ProgressApi::close);
+	}
+	private Promise<Response> updateTotal(Response response) {
+		total(Long.parseLong(response.headers.get("X-TOTAL-COUNT")));
+		return Promise.resolve(response);
+	}
+
+	private Promise<Analysis[]> map(String json) {
+		if(json!=null && !json.trim().isEmpty()) return Promise.resolve((Analysis[])JSON.parse(json));
+		else return Promise.resolve((Analysis[])null);
+	}
 	@Override
 	protected IsElement<?> grid() {
 		return grid;
@@ -92,18 +139,22 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		return new IsElement<?>[][]{
 			new IsElement[] { btnProgressOnly, btnAnalysisComplete },
 			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch},
-			new IsElement[] {btnSave, btnPdf, btnPublish}
+			new IsElement[] {btnPdf, btnPublish}
 		};
 	}
 	@Override
 	public void update() {
-
+		update(query);
 	}
-	private void save() {
-
-	}
-	private void pdf() {
-
+	private void print() {
+		Analysis[] selection = grid.selection();
+		if(selection.length <= 0) return;
+		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
+		ProgressApi.open(true);
+		AtomicInteger complete = new AtomicInteger(0);
+		for (Analysis analysis: selection) {
+//		AnalysisApi.
+		}
 	}
 	private void publish() {
 

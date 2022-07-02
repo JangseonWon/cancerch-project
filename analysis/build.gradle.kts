@@ -39,7 +39,7 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         delete(files("src/main/resources/static"))
         dependsOn(":analysis-ui:build")
-        from(zipTree("../worklist-ui/build/libs/analysis-ui.war")) {
+        from(zipTree("../analysis-ui/build/libs/analysis-ui.war")) {
             include("**/*.js")
             include("**/*.css")
             include("**/*.png")

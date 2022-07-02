@@ -16,6 +16,8 @@ interface AbstractReportTemplate<R: Resource>: Template<R> {
     fun lblPatientName(): String
     fun lblAgeSex(): String
     fun lblSpecimenTypeDate(): String
+    fun lblSpecimenType(): String
+    fun lblSpecimenDate(): String
     fun lblPatientInfo(): String
     fun lblReceiptReportDate(): String
     fun lblInspector(): String

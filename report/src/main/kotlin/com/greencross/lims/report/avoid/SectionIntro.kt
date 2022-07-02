@@ -20,7 +20,6 @@ class SectionIntro (private val y: Float = 685f)  : Painter<AvoidTemplate<AvoidR
         var style = template.resource().styleContentSpecial().clone().color(Color(255,255,255)).fontSize(12f)
         stream.drawImage(img, 305f-width/2, y, width, CONTENT_TITLE_RATE)
         stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblIntroHeader()))
-
         //endregion
 
         //region □ Intro Content

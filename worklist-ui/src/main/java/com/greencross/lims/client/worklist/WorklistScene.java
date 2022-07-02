@@ -1,6 +1,5 @@
 package com.greencross.lims.client.worklist;
 
-import com.google.gwt.core.client.Scheduler;
 import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
 import com.greencross.lims.api.WorklistApi;
@@ -37,10 +36,15 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         yesterday.setHours(0, 0, 0, 0);
         return yesterday;
     }
+    private static JsDate today(){
+        JsDate today = new JsDate();
+        today.setHours(23, 59, 59);
+        return today;
+    }
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
     private final WorklistGridElement grid = WorklistGridElement.build();
     private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("from").value(yesterday());
-    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("to").value(new JsDate());
+    private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("to").value(today());
     private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("검색").before(IconElement.icon(IconElement.Type.Light, "fa-search")).style("display: inline-block;");
     private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("", true, false);
@@ -58,15 +62,9 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         this.query = query;
         initialize();
         btnSearch.onClick(evt->update());
-        Scheduler.get().scheduleFixedDelay(()->{
-            initiailized = true;
-            update();
-            return false;
-        }, 1000);
+        update();
     }
-    boolean initiailized = false;
     private void update(Query query){
-        if(!initiailized) return;
         Query proxy = new Query().asc(this.isAsc());
         List<Query.Filter> filters = new LinkedList<>();
         if(query.filters()!=null){

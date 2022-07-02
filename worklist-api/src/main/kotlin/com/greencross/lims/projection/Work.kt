@@ -1,7 +1,6 @@
 package com.greencross.lims.projection
 
 import com.greencross.lims.entity.User
-import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDateTime
 
 data class Work(

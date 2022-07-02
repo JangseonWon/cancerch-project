@@ -4,6 +4,7 @@ import com.greencross.lims.report.HasSign.Person
 import com.greencross.lims.report.HasSign.SignLabel
 import com.greencross.lims.report.Template
 import com.greencross.lims.report.TextStyle
+import com.greencross.lims.report.avoid.AvoidDto
 import com.greencross.lims.report.avoid.AvoidResource
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.kokr.HasHeaderKoKr
@@ -30,27 +31,10 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val styleContentBold        :       TextStyle = TextStyle().color(Color(67,72,142)).fontSize(8f).fonts(fontContentBold())
     val styleSpecial            :       TextStyle = TextStyle().fonts(fontSpecial())
 
-    val imgTitle                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTitle/0_title.png"))
-    val imgHeaderBox            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTitle/1_headerBox.png"))
-    val imgContentTitle         :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/C_contentTitle.png"))
-    val imgIntroContent         :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionIntro/2_introcontent.png"))
-    val imgTotalResultContent   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/3_totalresultcontent.png"))
-    val imgTotalResultLowRisk   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_1rowrisk.png"))
-    val imgTotalResultHighRisk  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_2highrisk.png"))
-    val imgDoubtSquare          :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/4_doubtsquare.png"))
-    val imgDoubtContentBox      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_doubtcontent.png"))
-    val imgDoubtCenterLine      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_doubtcenterline.png"))
-    val imgRankFirst            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/kokr/C_rankfirst.png"))
-    val imgRankSecond           :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/kokr/C_ranksecond.png"))
-    val imgCancerTypeTitle      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/new_title.png"))
-    val imgCancerTypeContent    :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/content.png"))
-    val imgCaccerReadingGuide   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/guidebox.png"))
-    val imgHuman                :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/human.png"))
     val imgBarNormal            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Normal.png"))
     val imgBarGray              :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Gray.png"))
     val imgBarDanger            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Danger.png"))
     val imgDetailResultOverview :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultOverview.png"))
-    val imgDetailResultTable    :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultTable.png"))
     val imgSmallSquareAverage   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_average.png"))
     val imgSmallSquarePatinet   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_patient.png"))
     val imgAnalysisContentBox   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/contentBox.png"))
@@ -64,7 +48,6 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val imgAI                   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aiimg.png"))
     val imgMiniSquare           :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_square.png"))
     val imgLimitationTableTitle :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_table_title.png"))
-    val imgLimitationTable      :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table.png"))
     val imgReferenceTableTitle  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_reference_table.png"))
 
     override fun labels(): Array<SignLabel> {
@@ -112,29 +95,28 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     //endregion
 
     //region #Override img
-    override fun imgTitle():                PDImageXObject { return imgTitle                }
-    override fun imgHeaderBox():            PDImageXObject { return imgHeaderBox            }
-    override fun imgContentTitle():         PDImageXObject { return imgContentTitle         }
-    override fun imgIntroContent():         PDImageXObject { return imgIntroContent         }
-    override fun imgTotalResultContent():   PDImageXObject { return imgTotalResultContent   }
-    override fun imgTotalResultLowRisk():   PDImageXObject { return imgTotalResultLowRisk   }
-    override fun imgTotalResultHighRisk():  PDImageXObject { return imgTotalResultHighRisk  }
-    override fun imgDoubtSquare():          PDImageXObject { return imgDoubtSquare          }
-    override fun imgDoubtContentBox():      PDImageXObject { return imgDoubtContentBox      }
-    override fun imgDoubtCenterLine():      PDImageXObject { return imgDoubtCenterLine      }
-    override fun imgDoubtCancerPercentages(score: Double): PDImageXObject {
-        return img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_"+(score.toInt()/10).toString()+"_per.png"))
-    }
-    override fun imgDoubtCancer(name: String): PDImageXObject{
-        return img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_$name.png"))
-    }
+    override fun imgTitle()       :          PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTitle/0_title.png"))
+    override fun imgHeaderBox()   :          PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTitle/1_headerBox.png"))
+    override fun imgContentTitle():          PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/C_contentTitle.png"))
+    override fun imgIntroContent():          PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionIntro/2_introcontent.png"))
 
-    override fun imgRankFirst():            PDImageXObject { return imgRankFirst            }
-    override fun imgRankSecond():           PDImageXObject { return imgRankSecond           }
-    override fun imgCancerTypeTitle():      PDImageXObject { return imgCancerTypeTitle      }
-    override fun imgCancerTypeContent():    PDImageXObject { return imgCancerTypeContent    }
-    override fun imgCancerReadingGuide():   PDImageXObject { return imgCaccerReadingGuide   }
-    override fun imgHuman():                PDImageXObject { return imgHuman                }
+    override fun imgTotalResultContent():    PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/3_totalresultcontent.png"))
+    override fun imgTotalResultLowRisk():    PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_1rowrisk.png"))
+    override fun imgTotalResultMiddleRisk(): PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_2middlerisk.png"))
+    override fun imgTotalResultHighRisk():   PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionTotalResult/KoKr/3_3highrisk.png"))
+    override fun imgDoubtSquare():           PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/4_doubtsquare.png"))
+    override fun imgDoubtContentBox():       PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_doubtcontent.png"))
+    override fun imgDoubtCenterLine():       PDImageXObject    = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_doubtcenterline.png"))
+    override fun imgDoubtCancerPercentages(score: Double): PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/5_"+(score.toInt()/10).toString()+"_per.png"))
+    override fun imgDoubtCancer(name: String): PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDoubtCancer/6_$name.png"))
+
+    override fun imgRankFirst():            PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/kokr/C_rankfirst.png"))
+    override fun imgRankSecond():           PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/kokr/C_ranksecond.png"))
+
+    override fun imgCancerTypeTitle():      PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/new_title.png"))
+    override fun imgCancerTypeContent():    PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/content.png"))
+    override fun imgCancerReadingGuide():   PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/guidebox.png"))
+    override fun imgHuman():                PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/human.png"))
     override fun imgEsop(first: String, second: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/식도암_"+
             ((first == "식도암") || (second == "식도암"))+".png"))
@@ -169,7 +151,11 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     }
 
     override fun imgDetailResultOverview(): PDImageXObject { return imgDetailResultOverview }
-    override fun imgDetailResultTable()   : PDImageXObject { return imgDetailResultTable }
+    override fun imgDetailResultTable(result: AvoidDto.Results): PDImageXObject = when(result){
+        AvoidDto.Results.CONCENT    -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_CONCENT.png"))
+        AvoidDto.Results.ATTENTION  -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_ATTENTION.png"))
+        else                        -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_NORMAL.png"))
+    }
 
     override fun imgDetailResultRisk(risk: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_$risk.png"))
@@ -195,10 +181,12 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     override fun imgLBxBox():                PDImageXObject { return imgLBxBox }
     override fun imgNGS():                   PDImageXObject { return imgNGS }
     override fun imgLimitationTableTitle():  PDImageXObject { return imgLimitationTableTitle }
-    override fun imgLimitationTable():       PDImageXObject { return imgLimitationTable }
+    override fun imgLimitationTable1():      PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table1.png"))
+    override fun imgLimitationTable2():      PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table2.png"))
     override fun imgReferenceTable():        PDImageXObject { return imgReferenceTableTitle }
     override fun imgBarNormal():             PDImageXObject { return imgBarNormal    }
     override fun imgBarGray():               PDImageXObject { return imgBarGray      }
+    override fun imgBarMiddle():             PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Middle.png"))
     override fun imgBarDanger():             PDImageXObject { return imgBarDanger    }
     override fun imgMiniSquare():            PDImageXObject { return imgMiniSquare  }
 

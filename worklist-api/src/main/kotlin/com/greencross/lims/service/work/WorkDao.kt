@@ -6,10 +6,8 @@ import com.greencross.lims.entity.QWork.work
 import com.greencross.lims.projection.Work
 import com.querydsl.sql.SQLQuery
 import com.querydsl.core.types.Projections.constructor
-import io.r2dbc.postgresql.codec.Json
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 
 @Component
 class WorkDao(

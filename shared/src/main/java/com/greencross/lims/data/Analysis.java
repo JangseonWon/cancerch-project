@@ -14,11 +14,13 @@ public final class Analysis {
 	private String batch;
 	private Double row;
 	private Request request;
-	private String id;
-	@JsProperty(name="create_at")
-	private Double createAt;
+	private String sample;
+	@JsProperty(name="created_at")
+	private String createAt;
+	private User createBy;
 	@JsProperty(name="last_modify_at")
-	private Double lastModifyAt;
+	private String lastModifyAt;
+	private User lastModifyBy;
 	private String etc;
 	private Report report;
 	@JsOverlay
@@ -32,17 +34,5 @@ public final class Analysis {
 	public Request request() {
 		if(request == null) return null;
 		return Js.uncheckedCast(request);
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long createAt() {
-		if(createAt == null) return null;
-		else return createAt.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long lastModifyAt() {
-		if(lastModifyAt == null) return null;
-		else return lastModifyAt.longValue();
 	}
 }

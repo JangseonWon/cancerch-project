@@ -13,12 +13,12 @@ data class AvoidDto(
         return barcode
     }
     enum class Results{
-        저위험, 고위험, 기타암종
+        NORMAL, ATTENTION, CONCENT
     }
     data class Cancer(
-        val name: String,
-        val ppv: Double,
-        val asr: Double,
+        val name: String = "",
+        val ppv: Double = 0.0,
+        val asr: Double = 0.0,
         val score: Double? = 0.0
     )
 }

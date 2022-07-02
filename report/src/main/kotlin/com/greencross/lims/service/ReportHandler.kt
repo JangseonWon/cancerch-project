@@ -25,7 +25,7 @@ import java.time.Period
 import java.time.temporal.TemporalAdjusters
 
 class ReportHandler(
-    private val analysisDao: AnalysisDao,
+//    private val analysisDao: AnalysisDao,
     private val reportDao : ReportDao,
     private val patientDao : PatientDao,
     private val cancerRepo: CancerRepo,
@@ -37,43 +37,44 @@ class ReportHandler(
         return reportDao.findBySampleAndService(sample, service)
     }
 
-    @Transactional
-    fun print(sample: Long, service: String) : Mono<Report>{
-        return analysisDao.findById(sample, service).map{
-            analysisToAvoidDto(it)
-        }
-    }
-    fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
-        val patient = patientDao.findBySample(analysis.sample).block()!!
-        val valueMap : Map<String, String> =  om.readValue<Map<String, String>>(analysis.value!!)
-        val barcode = valueMap["barcode"]
-        val result = AvoidDto.Results.valueOf(valueMap["result"]!!)
-        val cancer1 = AvoidDto.Cancer(valueMap["first"]!!,
-            cancerRepo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["first"]!!), age(patient.birth), sex(patient.sex!!))!!,
-            cancerRepo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["first"]!!), age(patient.birth), sex(patient.sex!!))!!,
-            valueMap["firstScore"]!!.toDouble())
-        val cancer2 = AvoidDto.Cancer(valueMap["second"]!!,
-            cancerRepo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["second"]!!), age(patient.birth), sex(patient.sex!!))!!,
-            cancerRepo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["second"]!!), age(patient.birth), sex(patient.sex!!))!!,
-            valueMap["secondScore"]!!.toDouble()
-            )
-        val avoidDto = AvoidDto(barcode, result, cancer1, cancer2)
-        avoidDto.barcode = barcode
-        avoidDto.patientName = patient.name
-        avoidDto.birthDate = patient.birth
-        avoidDto.age = age(patient.birth).toString()
-        avoidDto.sex = sex(patient.sex!!)
-        avoidDto.requestNumber = analysis.sample.toString()
-        avoidDto.medicalRecordNumber = patient.mrn
-        avoidDto.barcode = barcode
-        avoidDto.medicalInstitution = patient.customerName
-        avoidDto.medicalRecordNumber = patient.code
-        avoidDto.specimenType = analysis.type.sampleType
-        val doc: PDDocument? = builder(TestInfo.N201, LogoType.DEPENDENT, avoidDto)?.build()
-        val os : OutputStream? = null
-        builder(TestInfo.N201, LogoType.DEPENDENT, avoidDto)?.build()!!.save(os)
-
-    }
+//    @Transactional
+//    fun print(sample: Long, service: String) : Mono<Report>{
+//        return analysisDao.findById(sample, service).map{
+//            analysisToAvoidDto(it)
+//        }
+//        return null
+//    }
+//    fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
+//        val patient = patientDao.findBySample(analysis.sample).block()!!
+//        val valueMap : Map<String, String> =  om.readValue<Map<String, String>>(analysis.value!!)
+//        val barcode = valueMap["barcode"]
+//        val result = AvoidDto.Results.valueOf(valueMap["result"]!!)
+//        val cancer1 = AvoidDto.Cancer(valueMap["first"]!!,
+//            cancerRepo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["first"]!!), age(patient.birth), sex(patient.sex!!))!!,
+//            cancerRepo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["first"]!!), age(patient.birth), sex(patient.sex!!))!!,
+//            valueMap["firstScore"]!!.toDouble())
+//        val cancer2 = AvoidDto.Cancer(valueMap["second"]!!,
+//            cancerRepo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["second"]!!), age(patient.birth), sex(patient.sex!!))!!,
+//            cancerRepo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.valueOf(valueMap["second"]!!), age(patient.birth), sex(patient.sex!!))!!,
+//            valueMap["secondScore"]!!.toDouble()
+//            )
+//        val avoidDto = AvoidDto(barcode, result, cancer1, cancer2)
+//        avoidDto.barcode = barcode
+//        avoidDto.patientName = patient.name
+//        avoidDto.birthDate = patient.birth
+//        avoidDto.age = age(patient.birth).toString()
+//        avoidDto.sex = sex(patient.sex!!)
+//        avoidDto.requestNumber = analysis.sample.toString()
+//        avoidDto.medicalRecordNumber = patient.mrn
+//        avoidDto.barcode = barcode
+//        avoidDto.medicalInstitution = patient.customerName
+//        avoidDto.medicalRecordNumber = patient.code
+//        avoidDto.specimenType = analysis.type.sampleType
+//        val doc: PDDocument? = builder(TestInfo.N201, LogoType.DEPENDENT, avoidDto)?.build()
+//        val os : OutputStream? = null
+//        builder(TestInfo.N201, LogoType.DEPENDENT, avoidDto)?.build()!!.save(os)
+//
+//    }
 
     private fun age(birth: LocalDate?) : Int {
         return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years+1

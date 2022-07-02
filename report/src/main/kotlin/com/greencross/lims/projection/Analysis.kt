@@ -35,7 +35,7 @@ data class Analysis (
             val file: String,
             val value: Json?
         ){
-            fun build() = Analysis(service, batch, row, Sample(sample), Patient(), createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), file,  value?.asString())
+//            fun build() = Analysis(service, batch, row, Sample(sample), Patient(), createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), file,  value?.asString())
         }
     }
 }

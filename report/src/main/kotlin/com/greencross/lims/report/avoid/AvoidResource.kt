@@ -31,14 +31,12 @@ interface AvoidResource : HasSign {
     fun fontSpecial():          PDFont
 
     fun imgTitle(): PDImageXObject
-//    fun img(): Supplier<PDImageXObject> {
-//        return Supplier<PDImageXObject> { img(File(AvoidResource.resource, "img/avoid/SectionTitle/0_title.png")) }
-//    }
     fun imgHeaderBox(): PDImageXObject
     fun imgContentTitle(): PDImageXObject
     fun imgIntroContent(): PDImageXObject
     fun imgTotalResultContent(): PDImageXObject
     fun imgTotalResultLowRisk(): PDImageXObject
+    fun imgTotalResultMiddleRisk(): PDImageXObject
     fun imgTotalResultHighRisk():PDImageXObject
     fun imgDoubtSquare(): PDImageXObject
     fun imgDoubtContentBox(): PDImageXObject
@@ -61,10 +59,11 @@ interface AvoidResource : HasSign {
     fun imgLine(cancer: String): PDImageXObject
     fun imgBarNormal(): PDImageXObject
     fun imgBarGray(): PDImageXObject
+    fun imgBarMiddle(): PDImageXObject
     fun imgBarDanger(): PDImageXObject
     fun imgDetailResultOverview(): PDImageXObject
-    fun imgDetailResultTable() : PDImageXObject
     fun imgDetailResultRisk(risk : String) : PDImageXObject
+    fun imgDetailResultTable(result: AvoidDto.Results): PDImageXObject
     fun imgSmallSquareAverage() : PDImageXObject
     fun imgSmallSquarePatient() : PDImageXObject
     fun imgAnalysisContentBox() : PDImageXObject
@@ -80,7 +79,8 @@ interface AvoidResource : HasSign {
     fun imgNGS() : PDImageXObject
     fun imgMiniSquare() : PDImageXObject
     fun imgLimitationTableTitle() : PDImageXObject
-    fun imgLimitationTable() : PDImageXObject
+    fun imgLimitationTable1() : PDImageXObject
+    fun imgLimitationTable2() : PDImageXObject
     fun imgReferenceTable() : PDImageXObject
     fun styleContentRegualar() : TextStyle
     fun styleContentBold(): TextStyle

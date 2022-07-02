@@ -24,7 +24,7 @@ public final class Report {
 	@JsProperty(name="creator")
 	private String creator;
 	@JsProperty(name="publish_at")
-	private Double publishAt;
+	private String publishAt;
 	@JsProperty(name="publisher")
 	private String publisher;
 	@JsOverlay
@@ -48,25 +48,6 @@ public final class Report {
 	}
 	@JsOverlay
 	@JsIgnore
-	public Long createAt() {
-		if(createAt == null) return null;
-		else return createAt.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Report publishAt(Long publishAt) {
-		if(publishAt == null) this.publishAt = null;
-		else this.publishAt = publishAt.doubleValue();
-		return this;
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long publishAt() {
-		if(publishAt == null) return null;
-		else return publishAt.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
 	public Report fileSize(Integer fileSize) {
 		if(fileSize == null) this.fileSize = null;
 		else this.fileSize = fileSize.doubleValue();
@@ -79,3 +60,5 @@ public final class Report {
 		else return fileSize.intValue();
 	}
 }
+
+

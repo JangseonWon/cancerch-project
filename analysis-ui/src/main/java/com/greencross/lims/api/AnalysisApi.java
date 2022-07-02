@@ -5,71 +5,57 @@ import com.greencross.lims.dto.Query;
 import com.greencross.lims.dto.Promise;
 import com.greencross.lims.dto.Slice;
 import elemental2.dom.Blob;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.RequestInit;
 import elemental2.dom.Response;
 import lombok.experimental.UtilityClass;
 
 import static elemental2.core.Global.JSON;
+import static elemental2.core.Global.encodeURI;
 
 @UtilityClass
 public class AnalysisApi {
-	public Promise<Slice<Analysis>> analysis(Query query) {
+	public Promise<Response> search(Query query){
 		RequestInit request = RequestInit.create();
-		request.setMethod("POST");
 		request.setHeaders(new String[][] {
-				new String[] {"Accept", "application/json"},
-				new String[] {"Content-Type", "application/json"}
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
 		});
-		ProgressApi.open(false);
-		request.setBody(JSON.stringify(query));
-		return FetchApi.request("/analysis", request)
-					   .then(Response::text)
-					   .then(r->{
-						   ProgressApi.close();
-						   if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Slice<Analysis>)JSON.parse(r));
-						   else return Promise.resolve((Slice<Analysis>)null);
-					   });
+		request.setMethod("GET");
+
+		StringBuilder urlBuilder = new StringBuilder("/analysis/search");
+		urlBuilder.append("?page=").append(query.page())
+				.append("&limit=").append(query.limit())
+				.append("&sort_by=").append(query.sortBy())
+				.append("&asc=").append(query.asc());
+
+		if(query.filters()!=null && query.filters().length > 0) urlBuilder.append("&filters=").append(encodeURI(JSON.stringify(query.filters())));
+
+		return FetchApi.request(urlBuilder.toString(), request).then(response -> {
+			if (!response.ok) return response.text().then(msg -> {
+				DomGlobal.alert(msg);
+				return Promise.reject(msg);
+			}); else return Promise.resolve(response);
+		});
 	}
-	public Promise<Analysis> save(long sample, String service, String info) {
-		RequestInit request = RequestInit.create();
-		request.setMethod("PATCH");
-		request.setHeaders(new String[][] {new String[] {"Accept", "application/json"}});
-		request.setBody(info);
-		return FetchApi.request("/analysis/samples/" + sample + "/" + service + "/etc", request)
-					   .then(Response::text)
-					   .then(r->{
-						   if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Analysis)JSON.parse(r));
-						   else return Promise.resolve((Analysis)null);
-					   });
-	}
-	public Promise<Analysis> pdf(long sample, String service) {
-		RequestInit request = RequestInit.create();
-		request.setMethod("PUT");
-		request.setHeaders(new String[][] {new String[] {"Accept", "application/json"}});
-		return FetchApi.request("/samples/" + sample + "/services/" + service + "/print", request)
-					   .then(Response::text)
-					   .then(r->{
-						   if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Analysis)JSON.parse(r));
-						   else return Promise.resolve((Analysis)null);
-					   });
-	}
-	public Promise<Analysis> publish(long sample, String service) {
-		RequestInit request = RequestInit.create();
-		request.setMethod("PUT");
-		request.setHeaders(new String[][] {new String[] {"Accept", "application/json"}});
-		return FetchApi.request("/samples/" + sample + "/services/" + service + "/publish", request)
-					   .then(Response::text)
-					   .then(r->{
-						   if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Analysis)JSON.parse(r));
-						   else return Promise.resolve((Analysis)null);
-					   });
-	}
-	public Promise<Blob> download(long sample, String service, long report) {
+	public Promise<Blob> download(String sample, String service, String report) {
 		return download("/samples/" + sample + "/services/" + service + "/reports/" + report);
 	}
 	public Promise<Blob> download(String url) {
 		return FetchApi.request(url, null)
-					   .then(Response::blob)
-					   .then(blob->Promise.resolve(blob.slice(0, blob.size, "application/pdf")));
+				.then(Response::blob)
+				.then(blob->Promise.resolve(blob.slice(0, blob.size, "application/pdf")));
+	}
+	public Promise<Analysis> pdf(String sample, String service){
+		RequestInit request = RequestInit.create();
+		request.setMethod("PUT");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		return FetchApi.request("/samples/"+sample+"/services/"+service+"/print", request)
+				.then(Response::text)
+				.then(r->{
+					if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Analysis)JSON.parse(r));
+					else return Promise.resolve((Analysis)null);
+				});
 	}
 }
