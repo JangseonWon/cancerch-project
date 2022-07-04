@@ -19,29 +19,28 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 Analysis.Companion.AnalysisBuilder::class.java,
                 analysis.sample,
                 analysis.service,
-                analysis.file.`as`("file"),
                 analysis.value.`as`("value"),
-
+                request.dateRequest.`as`("dateRequest"),
+                request.dateSampling.`as`("dateSampling"),
+                request.dateDue.`as`("dateDue"),
+                sample.sampleType.`as`("sampleType"),
+                sample.barcode,
+                patient.id_SET.`as`("patient"),
+                patient.name.`as`("patientName"),
+                patient.sex,
+                patient.birth,
+                patient.customerName.`as`("customerName"),
+                patient.mrn
             )
         ).from(analysis)
             .leftJoin(sample).on(sample.id.eq(analysis.sample).and(sample.service.eq(analysis.service)))
             .leftJoin(request).on(request.sample.eq(analysis.sample).and(request.service.eq(analysis.service)))
-            .leftJoin(patient).on()
+            .leftJoin(patient).on(patient.id.eq(sample.patient))
     }
     fun findById(sample: Long, service: String) : Mono<Analysis> {
         return repo.query{
             select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)))
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
-    }
-    fun deleteById(sample: Long, service: String) : Mono<Boolean>{
-        return repo.deleteWhere(analysis.sample.eq(sample).and(analysis.service.eq(service)))
-            .flatMap {
-                when(it){
-                    0 -> Mono.empty()
-                    1 -> Mono.just(true)
-                    else -> Mono.error(RuntimeException())
-                }
-            }
     }
 //    fun merge(sample: Long, service: String, batch: String, row: Long, json: String): Mono<Any>{
 //        return repo.query { it.select(

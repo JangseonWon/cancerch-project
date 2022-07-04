@@ -10,20 +10,20 @@ import java.time.LocalDateTime
 @Table("Patient")
 data class Patient(
     @Id
-    @Column val id_SET: String,
-    @Column val name: String,
-    @Column val sex: String = "-",
-    @Column val birth: LocalDateTime?,
-    @Column val customerName: String = "",
-    @Column val mrn: String?
+    @Column("id") val id_SET: String,
+    @Column("name") val name: String,
+    @Column("sex") val sex: String = "-",
+    @Column("birth") val birth: LocalDateTime?,
+    @Column("customer_name") val customerName: String = "",
+    @Column("mrn") val mrn: String?
 ){
-    @Column val customerCode: String? = null
-    @Column val code: String = "-"
-    @Column val customerCode2: String? = null
-    @Column val customerName2: String? = null
-    @Column val customerDeptName: String? = null
-    @Column val ward: String? = null
-    @Column val physician: String? = null
+    @Column("customer_code") val customerCode: String? = null
+    @Column("code") val code: String = "-"
+    @Column("customer_code2") val customerCode2: String? = null
+    @Column("customer_name2") val customerName2: String? = null
+    @Column("customer_dept_name") val customerDeptName: String? = null
+    @Column("ward") val ward: String? = null
+    @Column("physician") val physician: String? = null
 
     enum class Sex{
         M, F
