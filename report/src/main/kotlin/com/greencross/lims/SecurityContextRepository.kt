@@ -1,6 +1,6 @@
 package com.greencross.lims
 
-import com.gcgenome.lims.entity.User
+import com.greencross.lims.entity.readonly.User
 import com.greencross.lims.service.user.UserDao
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority

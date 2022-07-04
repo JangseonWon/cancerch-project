@@ -1,6 +1,5 @@
 package com.greencross.lims
 
-import com.greencross.lims.SecurityContextRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -27,11 +26,11 @@ import java.time.Duration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 @EnableR2dbcAuditing
-open class SecurityConfig (
+class SecurityConfig(
     private val securityContextRepository: SecurityContextRepository
 ) {
     @Bean
-    open fun resourceFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+    fun resourceFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http.cors().and()
             .httpBasic().disable()
             .formLogin().disable()
@@ -50,7 +49,7 @@ open class SecurityConfig (
     }
 
     @Bean
-    open fun auditorProvider(): ReactiveAuditorAware<String> {
+    fun auditorProvider(): ReactiveAuditorAware<String> {
         return ReactiveAuditorAware {
             ReactiveSecurityContextHolder.getContext()
                 .timeout(Duration.ofSeconds(1))

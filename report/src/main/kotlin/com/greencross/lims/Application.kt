@@ -10,7 +10,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import java.util.concurrent.Executor
 
 @SpringBootApplication
-// @EnableFeignClients
 @EnableDiscoveryClient
 open class Application : AsyncConfigurer {
     override fun getAsyncExecutor(): Executor {

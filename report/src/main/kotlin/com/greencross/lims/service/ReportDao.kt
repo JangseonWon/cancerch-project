@@ -1,6 +1,6 @@
 package com.greencross.lims.service
 
-import com.gcgenome.lims.entity.QUser
+import com.greencross.lims.entity.readonly.QUser
 import com.greencross.lims.entity.QReport.report
 import com.greencross.lims.projection.Report
 import com.greencross.lims.repo.ReportRepository

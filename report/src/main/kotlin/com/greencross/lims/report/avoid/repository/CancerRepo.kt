@@ -27,6 +27,14 @@ class CancerRepo(
         }.collect(Collectors.toList()).toTypedArray())
     ) {
         //region #ppv
+        ppv[결과.NORMAL]?.get(암종.폐암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.대장암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.간암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.식도암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.난소암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.췌장암)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+        ppv[결과.NORMAL]?.get(암종.기타암종)?.put(Range.closed(0, 100), mapOf(Pair(Sex.M, 0.00), Pair(Sex.F, 0.00)))
+
         ppv[결과.CONCENT]?.get(암종.폐암)?.put(Range.closed( 0, 4), mapOf(Pair(Sex.M,  0.00), Pair(Sex.F,  0.00)))
         ppv[결과.CONCENT]?.get(암종.폐암)?.put(Range.closed( 5, 9), mapOf(Pair(Sex.M,  0.01), Pair(Sex.F,  0.01)))
         ppv[결과.CONCENT]?.get(암종.폐암)?.put(Range.closed(10,14), mapOf(Pair(Sex.M,  0.01), Pair(Sex.F,  0.01)))
@@ -471,7 +479,7 @@ class CancerRepo(
         폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암, 기타암종
     }
     enum class 결과 {
-        ATTENTION, CONCENT
+        NORMAL, ATTENTION, CONCENT
     }
     fun findPPVbyAgeAndCancerAndSex(result: 결과, cancer: 암종, age: Int, sex: Sex): Double? {
         return ppv.get(result)?.get(cancer)?.get(age)?.get(sex)

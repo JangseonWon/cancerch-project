@@ -1,5 +1,6 @@
 package com.greencross.lims.entity
 
+import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import io.r2dbc.postgresql.codec.Json
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
@@ -8,7 +9,8 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("avoid.analysis")
+@Schema("avoid")
+@Table("analysis")
 data class Analysis(
     @Column("sample")           val sample:         Long,
     @Column("service")          val service:        String
@@ -36,7 +38,7 @@ data class Analysis(
         return AnalysisPK(sample, service)
     }
     override fun isNew(): Boolean{
-        return createAt == null
+        return false
     }
    companion object {
        data class AnalysisPK(

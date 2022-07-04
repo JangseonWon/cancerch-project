@@ -1,4 +1,4 @@
-package com.gcgenome.lims.entity;
+package com.greencross.lims.entity.readonly;
 
 import com.infobip.spring.data.jdbc.annotation.processor.Schema;
 import org.springframework.data.annotation.Id;

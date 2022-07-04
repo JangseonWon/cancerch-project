@@ -1,6 +1,6 @@
 package com.greencross.lims.projection
 
-import com.gcgenome.lims.entity.User
+import com.greencross.lims.entity.readonly.User
 import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDateTime
 import java.util.*
