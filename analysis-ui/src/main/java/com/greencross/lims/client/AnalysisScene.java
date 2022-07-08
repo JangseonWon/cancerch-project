@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static elemental2.core.Global.JSON;
 import static org.jboss.elemento.Elements.label;
@@ -150,10 +149,14 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		Analysis[] selection = grid.selection();
 		if(selection.length <= 0) return;
 		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
-		ProgressApi.open(true);
-		AtomicInteger complete = new AtomicInteger(0);
+		ProgressApi.open(false);
 		for (Analysis analysis: selection) {
-//		AnalysisApi.
+			AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
+				.last(result-> {
+					DomGlobal.alert("완료되었습니다.");
+					update();
+				})
+				.finally_(ProgressApi::close);
 		}
 	}
 	private void publish() {

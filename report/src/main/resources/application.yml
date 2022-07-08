@@ -1,18 +1,18 @@
 spring:
   application:
-    name: avoid-service-report
+    name: report-api
   main:
     web-application-type: reactive
   cloud:
     zookeeper:
       connect-string: test:12181
       discovery:
-        root: /avoid-services
-  datasource:
-    url: jdbc:postgresql://gemini:5432/lims
+        root: /avoid-service
+  r2dbc:
+    url: r2dbc:postgresql://gemini:5432/lims
+    compatibility-mode : true
     username: avoid
-    password: medi1004
-    driver-class-name: org.postgresql.Driver
+    password: avoid1004
   data:
     cassandra:
       contact-points: gemini, pisces, taurus
@@ -29,3 +29,8 @@ spring:
       pool.pool-timeout: 10000s
 server:
   port: 0
+
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: DEBUG # for queries
+    io.r2dbc.postgresql.PARAM: DEBUG # for parameters

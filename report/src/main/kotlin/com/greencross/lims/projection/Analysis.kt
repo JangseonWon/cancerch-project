@@ -2,6 +2,7 @@ package com.greencross.lims.projection
 
 import com.greencross.lims.entity.readonly.Patient
 import io.r2dbc.postgresql.codec.Json
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Analysis (
@@ -13,7 +14,7 @@ data class Analysis (
     val dateDue: LocalDateTime,
     val sampleType: String,
     val patient: Patient,
-    val barcode: Int
+    val barcode: Long
 ) {
     companion object {
         data class AnalysisBuilder(
@@ -24,15 +25,15 @@ data class Analysis (
             val dateSampling: LocalDateTime,
             val dateDue: LocalDateTime,
             val sampleType: String,
-            val barcode: Int,
+            val barcode: Long,
             val patient: String,
             val patientName: String,
             val sex: String,
-            val birth: LocalDateTime,
+            val birth: LocalDate,
             val customerName: String,
-            val mrn: String,
+            val mrn: String?,
         ){
-            fun build() = Analysis(sample, service, value.toString(), dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode)
+            fun build() = Analysis(sample, service, value?.asString(), dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode)
         }
     }
 }

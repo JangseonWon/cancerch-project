@@ -37,11 +37,32 @@ public class AnalysisApi {
 			}); else return Promise.resolve(response);
 		});
 	}
+	public Promise<Response> print(String sample, String service, String lang){
+		RequestInit request = RequestInit.create();
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		request.setMethod("PUT");
+
+		return FetchApi.request("/samples/"+sample+"/services/"+service+"/print/"+lang, request)
+				.then(response -> {
+					if (!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert(msg);
+						return Promise.reject(msg);
+					}); else return Promise.resolve(response);
+				});
+	}
 	public Promise<Blob> download(String sample, String service, String report) {
 		return download("/samples/" + sample + "/services/" + service + "/reports/" + report);
 	}
 	public Promise<Blob> download(String url) {
-		return FetchApi.request(url, null)
+		RequestInit request = RequestInit.create();
+		request.setMethod("GET");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
+		});
+
+		return FetchApi.request(url, request)
 				.then(Response::blob)
 				.then(blob->Promise.resolve(blob.slice(0, blob.size, "application/pdf")));
 	}

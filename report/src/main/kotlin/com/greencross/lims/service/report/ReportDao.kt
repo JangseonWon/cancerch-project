@@ -1,16 +1,17 @@
-package com.greencross.lims.service
+package com.greencross.lims.service.report
 
 import com.greencross.lims.entity.readonly.QUser
 import com.greencross.lims.entity.QReport.report
 import com.greencross.lims.projection.Report
-import com.greencross.lims.repo.ReportRepository
+import com.greencross.lims.service.reportfile.ReportFileRepository
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
-import io.r2dbc.postgresql.codec.Json
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 
+@Component
 class ReportDao(private val repo: ReportRepository) {
     private val createBy = QUser("Creator")
     private val modifyBy = QUser("Modifier")
@@ -22,30 +23,39 @@ class ReportDao(private val repo: ReportRepository) {
                 report.sample,
                 report.service,
                 report.file,
-                report.createAt,
-                createBy.id.`as`("creatorId"),
-                createBy.name.`as`("creator"),
-                report.lastModifyAt.`as`("lastModifyAt"),
+                createBy.id.`as`("createId"),
+                report.createAt.`as`("createAt"),
+                createBy.name.`as`("createBy"),
                 report.lastModifyBy.`as`("lastModifyId"),
-                modifyBy.name.`as`("lastModifier"),
+                report.lastModifyAt.`as`("lastModifyAt"),
+                modifyBy.name.`as`("lastModifyBy"),
                 report.name,
                 report.size,
+                report.publishBy.`as`("publishId"),
                 report.publishAt.`as`("publishAt"),
-                report.publishBy.`as`("publisherId"),
                 publishBy.name.`as`("publisher"),
                 report.publishLog.`as`("publishLog")
             )
         ).from(report)
             .leftJoin(createBy).on(createBy.id.eq(report.createBy))
-            .leftJoin(modifyBy).on(createBy.id.eq(report.lastModifyBy))
-            .leftJoin(publishBy).on(createBy.id.eq(report.publishBy))
+            .leftJoin(modifyBy).on(modifyBy.id.eq(report.lastModifyBy))
+            .leftJoin(publishBy).on(publishBy.id.eq(report.publishBy))
     }
     fun findBySampleAndService(sample: Long, service: String) : Flux<Report> {
         return repo.query{
             select(it).where(report.sample.eq(sample).and(report.service.eq(service)))
         }.all().map(Report.Companion.ReportBuilder::build)
     }
-    fun merge(sample: Long, service: String, createdAt: LocalDateTime, json: String) : Mono<Any>{
+    fun findForCassandraReport(sample: Long, service: String, createdAt: LocalDateTime): Mono<Report>{
+        print(createdAt)
+        return repo.query{
+            select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
+        }.one().map(Report.Companion.ReportBuilder::build)
+    }
+    fun create(new: com.greencross.lims.entity.Report): Mono<com.greencross.lims.entity.Report> {
+        return repo.save(new)
+    }
+    fun merge(sample: Long, service: String, createdAt: LocalDateTime) : Mono<Any>{
         return repo.query { it.select(
             constructor(
                 com.greencross.lims.entity.Report::class.java,
@@ -62,8 +72,11 @@ class ReportDao(private val repo: ReportRepository) {
                 report.publishBy,
                 report.publishLog
                 )
-        ).from(report).where()}.one().switchIfEmpty(Mono.just(com.greencross.lims.entity.Report(sample, service, createdAt)))
-            .map { it.apply { it.publishLog = Json.of(json) }}
+            ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)))
+        }.one().switchIfEmpty(Mono.just(com.greencross.lims.entity.Report(sample, service, createdAt)))
+            .map { it.apply {
+                it.publishLog = publishLog
+            }}
             .flatMap { repo.save(it) }
     }
 

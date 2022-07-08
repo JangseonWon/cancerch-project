@@ -1,11 +1,10 @@
-package com.greencross.lims.service
+package com.greencross.lims.service.analysis
 
 import com.greencross.lims.entity.QAnalysis.analysis
 import com.greencross.lims.entity.readonly.QSample.sample
 import com.greencross.lims.entity.readonly.QPatient.patient
 import com.greencross.lims.entity.readonly.QRequest.request
 import com.greencross.lims.projection.Analysis
-import com.greencross.lims.repo.AnalysisRepository
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Repository
@@ -33,9 +32,9 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 patient.mrn
             )
         ).from(analysis)
-            .leftJoin(sample).on(sample.id.eq(analysis.sample).and(sample.service.eq(analysis.service)))
+            .leftJoin(sample).on(sample.id.eq(analysis.sample))
             .leftJoin(request).on(request.sample.eq(analysis.sample).and(request.service.eq(analysis.service)))
-            .leftJoin(patient).on(patient.id.eq(sample.patient))
+            .leftJoin(patient).on(patient.id_SET.eq(sample.patient))
     }
     fun findById(sample: Long, service: String) : Mono<Analysis> {
         return repo.query{

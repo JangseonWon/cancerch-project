@@ -14,9 +14,9 @@ data class Report(
     val lastModifyAt: LocalDateTime,
     val lastModifyBy: User,
     val name: String,
-    val size: String,
-    val publishAt: LocalDateTime,
-    val publishBy: User,
+    val size: Long,
+    val publishAt: LocalDateTime?,
+    val publishBy: User?,
     val publishLog: String?
 ) {
     companion object{
@@ -31,13 +31,17 @@ data class Report(
             val lastModifyAt:   LocalDateTime,
             val lastModifyBy:   String,
             val name:           String,
-            val size:           String,
-            val publishId:      String,
-            val publishAt:      LocalDateTime,
-            val publishBy:      String,
-            val publishLog:     Json
+            val size:           Long,
+            val publishId:      String?,
+            val publishAt:      LocalDateTime?,
+            val publishBy:      String?,
+            val publishLog:     Json?
         ){
-            fun build() = Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, User(publishId, publishBy), publishLog.asString())
+            fun build() : Report{
+                val publishUser : User? = if(publishId == null || publishBy == null) null else User(publishId, publishBy)
+                val log : String? = if(publishLog == null) "" else publishLog.asString()
+                return Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, publishUser, log)
+            }
         }
     }
 }

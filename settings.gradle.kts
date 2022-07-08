@@ -67,3 +67,4 @@ dependencyResolutionManagement {
     }
 }
 include("analysis")
+include("publish")

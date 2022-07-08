@@ -4,7 +4,7 @@ import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Schema("public")
 @Table("Patient")
@@ -13,7 +13,7 @@ data class Patient(
     @Column("id") val id_SET: String,
     @Column("name") val name: String,
     @Column("sex") val sex: String = "-",
-    @Column("birth") val birth: LocalDateTime?,
+    @Column("birth") val birth: LocalDate,
     @Column("customer_name") val customerName: String = "",
     @Column("mrn") val mrn: String?
 ){

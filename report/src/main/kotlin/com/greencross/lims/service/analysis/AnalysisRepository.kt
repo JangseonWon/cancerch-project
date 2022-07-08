@@ -1,4 +1,4 @@
-package com.greencross.lims.repo
+package com.greencross.lims.service.analysis
 
 import com.greencross.lims.entity.Analysis
 import com.infobip.spring.data.r2dbc.QuerydslR2dbcRepository

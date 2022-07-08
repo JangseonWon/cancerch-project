@@ -1,0 +1,168 @@
+package com.greencross.lims.service.report
+
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.greencross.lims.entity.ReportFile
+import com.greencross.lims.projection.Analysis
+import com.greencross.lims.projection.Report
+import com.greencross.lims.report.avoid.*
+import com.greencross.lims.report.avoid.kokr.AvoidResourceN201KoKr
+import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
+import com.greencross.lims.report.avoid.repository.CancerRepo
+import com.greencross.lims.report.builder.LogoType
+import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.func.Painter
+import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
+import com.greencross.lims.report.kokr.SectionPage
+import com.greencross.lims.report.kokr.SectionSign
+import com.greencross.lims.service.analysis.AnalysisDao
+import com.greencross.lims.service.reportfile.ReportFileRepository
+import com.greencross.lims.test.avoid.TestInfo
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
+import java.util.*
+
+@Service
+class ReportHandler(
+    private val analysisDao: AnalysisDao,
+    private val reportDao : ReportDao,
+    private val cancerRepo: CancerRepo,
+    private val fileRepo: ReportFileRepository,
+    private val mapper: ReportMapper,
+    private val om : ObjectMapper
+) {
+    @Transactional
+    fun reports(sample: Long, service: String): Flux<Report> {
+        return reportDao.findBySampleAndService(sample, service)
+    }
+
+    @Transactional
+    fun print(sample: Long, service: String, lang: String) : Mono<com.greencross.lims.data.Report>{
+        return analysisDao.findById(sample, service).flatMap{
+            val dto = analysisToAvoidDto(it)
+            val baos = ByteArrayOutputStream()
+            val doc = build(lang, dto)
+            val createTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()), ZoneId.systemDefault()
+            )
+            doc?.save(baos)
+            val fileName = "${it.sample}_${it.service}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))}.pdf"
+            val reportFile = ReportFile(UUID.randomUUID()).apply {
+                this.createTime = createTime
+                this.data = ByteBuffer.wrap(baos.toByteArray())
+                this.extension = "pdf"
+                this.name = fileName
+                this.size = baos.toByteArray().size.toLong()
+            }
+            fileRepo.save(reportFile)
+            val entity = com.greencross.lims.entity.Report(it.sample, it.service, createTime).apply{
+                this.file = reportFile.id
+                this.name = reportFile.name!!
+                this.size = reportFile.size
+            }
+            reportDao.create(entity).map(mapper::toDto)
+        }
+    }
+    @Transactional
+    fun preview(sample: Long, service: String, createAt: Long): Mono<ByteArray>{
+        return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
+            .map {
+                fileRepo.findById(it.file)
+            }
+            .map {it.get().data!!.array()}
+    }
+    private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
+        val patient = analysis.patient
+        val valueMap : Map<String, String> =  om.readValue(analysis.value!!, object : TypeReference<List<Map<String, String>>>(){})[0]
+
+        val barcode = analysis.barcode.toString()
+        val result = stringToEnum(valueMap["result"]!!)
+        val cancer1 = when(result){
+            CancerRepo.결과.NORMAL        -> AvoidDto.Cancer()
+            CancerRepo.결과.ATTENTION     -> AvoidDto.Cancer("기타암종")
+            else                          -> AvoidDto.Cancer(valueMap["first"]!!,
+                cancerRepo.findPPVbyAgeAndCancerAndSex(result, stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
+                cancerRepo.findASRbyAgeAndCancerAndSex(stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
+                valueMap["firstScore"]!!.toDouble())
+        }
+        val cancer2 = when(result){
+            CancerRepo.결과.CONCENT       -> AvoidDto.Cancer(valueMap["second"]!!,
+            cancerRepo.findPPVbyAgeAndCancerAndSex(result, stringToCancer(valueMap["second"]!!), age(patient.birth), sex(patient.sex))!!,
+            cancerRepo.findASRbyAgeAndCancerAndSex(stringToCancer(valueMap["second"]!!), age(patient.birth), sex(patient.sex))!!,
+            valueMap["secondScore"]!!.toDouble())
+            else                          -> AvoidDto.Cancer()
+        }
+        val avoidDto = AvoidDto(barcode, stringToResult(valueMap["result"]!!), cancer1, cancer2)
+        avoidDto.barcode = barcode
+        avoidDto.patientName = patient.name
+        avoidDto.birthDate = patient.birth
+        avoidDto.age = age(avoidDto.birthDate).toString()
+        avoidDto.sex = sex(patient.sex)
+        avoidDto.requestNumber = analysis.sample.toString()
+        avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
+        avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
+        avoidDto.reportDate = analysis.dateDue.toLocalDate()
+        avoidDto.medicalRecordNumber = patient.mrn
+        avoidDto.barcode = barcode
+        avoidDto.medicalInstitution = patient.customerName
+        avoidDto.medicalRecordNumber = patient.code
+        avoidDto.specimenType = analysis.sampleType
+
+        return avoidDto
+    }
+
+    private fun age(birth: LocalDate?) : Int {
+        return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years+1
+    }
+    private fun sex(sex: String) : Sex{
+        return Sex.valueOf(sex)
+    }
+    private fun build(lang: String, dto: AvoidDto): PDDocument? {
+        return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
+    }
+
+    private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
+        val doc = PDDocument()
+
+        val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
+        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenomeLabs()
+        val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
+        return if(TestInfo.N201 == test){
+            var resource = AvoidResourceN201KoKr(doc)
+            var template = AvoidTemplateN201KoKr(resource, test)
+
+            page = SectionPage(547f, 65f, resource.fontDefault())
+
+            return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
+        } else null
+    }
+    private fun stringToEnum(result: String) = when(result){
+        "일반관리" -> CancerRepo.결과.NORMAL
+        "관심관리" -> CancerRepo.결과.ATTENTION
+        else       -> CancerRepo.결과.CONCENT
+    }
+    private fun stringToCancer(result: String) = when(result){
+        "폐암"     -> CancerRepo.암종.폐암
+        "췌장암"   -> CancerRepo.암종.췌장암
+        "간암"     -> CancerRepo.암종.간암
+        "대장암"   -> CancerRepo.암종.대장암
+        "기타암종" -> CancerRepo.암종.기타암종
+        "식도암"   -> CancerRepo.암종.식도암
+        else       -> CancerRepo.암종.유방암
+    }
+    private fun stringToResult(result:String) = when(result){
+        "일반관리" -> AvoidDto.Results.NORMAL
+        "관심관리" -> AvoidDto.Results.ATTENTION
+        else       -> AvoidDto.Results.CONCENT
+    }
+}

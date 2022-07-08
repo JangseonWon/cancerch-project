@@ -14,7 +14,7 @@ public final class Report {
 	private String service;
 	private String type;
 	@JsProperty(name="create_at")
-	private Double createAt;
+	private String createAt;
 	@JsProperty(name="file_name")
 	private String fileName;
 	@JsProperty(name="file_size")
@@ -39,13 +39,6 @@ public final class Report {
 		return sample.longValue();
 	}
 
-	@JsOverlay
-	@JsIgnore
-	public Report createAt(Long createAt) {
-		if(createAt == null) this.createAt = null;
-		else this.createAt = createAt.doubleValue();
-		return this;
-	}
 	@JsOverlay
 	@JsIgnore
 	public Report fileSize(Integer fileSize) {

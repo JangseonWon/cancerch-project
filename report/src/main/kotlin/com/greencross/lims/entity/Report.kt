@@ -1,23 +1,29 @@
 package com.greencross.lims.entity
 
+import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import io.r2dbc.postgresql.codec.Json
-import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.*
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
-import java.io.Serializable
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
-@Table("avoid.report")
+@Schema("avoid")
+@Table("report")
 data class Report(
     @Column("sample")                 val sample:        Long,
     @Column("service")                val service:       String,
     @Column("create_at")              val createAt:      LocalDateTime
 ): Persistable<Report.Companion.ReportPK> {
     @Column("file")          lateinit var file:          UUID
+    @CreatedBy
     @Column("create_by")     lateinit var createBy:      String
+    @LastModifiedDate
     @Column("last_modify_at")lateinit var lastModifyAt:  LocalDateTime
+    @LastModifiedBy
     @Column("last_modify_by")lateinit var lastModifyBy:  String
     @Column("name")          lateinit var name:          String
     @Column("size")                   var size:          Long? = null

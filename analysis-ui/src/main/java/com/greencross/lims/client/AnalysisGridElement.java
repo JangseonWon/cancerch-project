@@ -1,6 +1,7 @@
 package com.greencross.lims.client;
 
 import com.google.gwt.core.client.JsDate;
+import com.greencross.lims.api.AnalysisApi;
 import com.greencross.lims.data.*;
 import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
@@ -47,7 +48,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("분석일").build(),
 					column("Batch").build(),
 					column("Row").build(),
-					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
+					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
 					column("비고").build()
@@ -56,13 +57,13 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	private void preview(Data data) {
 		String sample = data.get("ID");
 		String service = data.get("검사코드");
-		String report = data.get("결과지");
-		DomGlobal.console.log(sample, service, report);
-//		AnalysisApi.download(sample, service, report).last(blob->{
-//			String url = URL.createObjectURL(blob);
-//			DomGlobal.window.open(url);
-//			URL.revokeObjectURL(url);
-//		});
+		String report = data.get("reportCreated");
+		AnalysisApi.download(sample, service, report)
+				.last(blob->{
+					String url = URL.createObjectURL(blob);
+					DomGlobal.window.open(url);
+					URL.revokeObjectURL(url);
+				});
 	}
 
 	private final SheetElement elemSheet = config.build();
@@ -106,11 +107,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("분석일", DataTransformUtil.formatDate((long) JsDate.parse(value.createAt())))
 				.put("Batch", value.batch())
 				.put("Row", String.valueOf(value.row()))
+				.put("reportCreated", String.valueOf((long) JsDate.parse(value.report().createAt())))
 				.put("결과지", value.report().fileName())
 				.put("결과발송일", publishDt);
-	}
-	public Analysis[] values() {
-		return Arrays.stream(wrapper.selection()).map(d->d.get("ID") + "/" + d.get("service")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public AnalysisGridElement that() {
@@ -119,7 +118,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 
 	@Override
 	public Analysis[] selection() {
-		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID") + "/" + d.get("service")).map(values::get).toArray(Analysis[]::new);
+		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
