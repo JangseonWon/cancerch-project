@@ -14,7 +14,7 @@ class ServiceRouter {
     }
     private fun services(request: ServerRequest): Mono<ServerResponse> {
         return ServerResponse.ok().bodyValue(
-            Page().icon("fa-braille")
+            Page().icon("fa-chart-bar")
             .title("Analysis")
             .uri("/avoid-service/analysis.html").order("2"))
     }

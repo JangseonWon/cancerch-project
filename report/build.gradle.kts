@@ -47,7 +47,7 @@ tasks {
         if(project.gradle.startParameter.taskNames.contains("build")) exclude("application.yml")
     }
     bootJar {
-        archiveFileName.set("avoid-service-report.jar")
+        archiveFileName.set("avoid-project-report.jar")
     }
     test {
         useJUnitPlatform()
