@@ -1,4 +1,40 @@
 package com.gcgenome
 
-class Application {
+import com.gcgenome.lims.service.reportfile.CassandraRepositoryExtendedImpl
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
+import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories
+import org.springframework.scheduling.annotation.AsyncConfigurer
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import java.util.concurrent.Executor
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableCassandraRepositories(
+    basePackages = ["com.gcgenome.lims.service.reportfile"],
+    repositoryBaseClass = CassandraRepositoryExtendedImpl::class
+)
+class Application : AsyncConfigurer {
+    override fun getAsyncExecutor(): Executor {
+        val executor = ThreadPoolTaskExecutor()
+        executor.corePoolSize = 5
+        executor.maxPoolSize = 30
+        executor.setQueueCapacity(10)
+        executor.initialize()
+        return executor
+    }
+
+    override fun getAsyncUncaughtExceptionHandler(): AsyncUncaughtExceptionHandler? {
+        return SimpleAsyncUncaughtExceptionHandler()
+    }
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            runApplication<Application>(*args)
+        }
+    }
 }

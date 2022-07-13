@@ -15,6 +15,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     implementation("org.apache.pdfbox:pdfbox:2.+")
+    implementation("org.jsoup:jsoup:1.+")
+    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc:9.2.0.jre11")
     implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)
@@ -41,7 +43,7 @@ tasks {
         if(project.gradle.startParameter.taskNames.contains("build")) exclude("application.yml")
     }
     bootJar {
-        archiveFileName.set("avoid-project-publish.jar")
+        archiveFileName.set("avoid-project-alis.jar")
     }
     jar {
         enabled = false

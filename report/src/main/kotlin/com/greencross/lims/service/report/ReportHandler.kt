@@ -2,7 +2,6 @@ package com.greencross.lims.service.report
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
 import com.greencross.lims.projection.Report
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.time.*

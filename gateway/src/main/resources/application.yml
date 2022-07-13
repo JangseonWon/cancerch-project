@@ -19,10 +19,15 @@ spring:
           uri: lb://analysis-api
           predicates:
             - Path=/analysis/**, /analysis.html, /analysis/*.js, /css/analysis.css
+        - id: publish-api
+          uri: lb://publish-api
+          predicates:
+            - Path=/samples/*/services/*/reports/*/publish
         - id: report-api
           uri: lb://report-api
           predicates:
             - Path=/samples/**
+
 server:
   compression:
     enabled: true

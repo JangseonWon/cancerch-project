@@ -68,3 +68,4 @@ dependencyResolutionManagement {
 }
 include("analysis")
 include("publish")
+include("alis")

@@ -160,7 +160,18 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		}
 	}
 	private void publish() {
-
+		Analysis[] selection = grid.selection();
+		if(selection.length <= 0) return;
+		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 전송합니다.")) return;
+		ProgressApi.open(false);
+		for (Analysis analysis: selection) {
+			AnalysisApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), String.valueOf((long) JsDate.parse(analysis.report().createAt())))
+					.last(result-> {
+						DomGlobal.alert("완료되었습니다.");
+						update();
+					})
+					.finally_(ProgressApi::close);
+		}
 	}
 	@Override
 	public AnalysisScene that() {

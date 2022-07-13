@@ -79,4 +79,19 @@ public class AnalysisApi {
 					else return Promise.resolve((Analysis)null);
 				});
 	}
+	public Promise<Response> publish(String sample, String service, String createAt){
+		RequestInit request = RequestInit.create();
+		request.setMethod("PUT");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		return FetchApi.request("/samples/"+sample+"/services/"+service+"/reports/"+createAt+"/publish", request)
+				.then(response-> {
+					if (!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert(msg);
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
 }
