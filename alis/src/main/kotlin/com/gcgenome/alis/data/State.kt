@@ -7,5 +7,4 @@ data class State(
     val state: String,
     val member: String?,
     val machine: String?
-) : Serializable {
-}
+) : Serializable

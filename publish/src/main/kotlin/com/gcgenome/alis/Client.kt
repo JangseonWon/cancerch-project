@@ -1,12 +1,14 @@
 package com.gcgenome.alis
 
+import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
-class Client(private val webClientBuilder: WebClient.Builder) {
+@Service
+class Client(webClientBuilder: WebClient.Builder) {
     val uri = "http://alis/"
-    val webClient = webClientBuilder.build()
+    val webClient: WebClient = webClientBuilder.build()
     fun fileUpload(fileUpload: FileUpload) : Boolean{
         return webClient.put().uri(uri+"fileUpload")
             .headers{ it.add("Content-Type", "application/json") }

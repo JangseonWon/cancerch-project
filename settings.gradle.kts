@@ -11,6 +11,7 @@ include("worklist-ui")
 include("worklist-api")
 include("search")
 include("worklist-info-ui")
+include("alis")
 
 dependencyResolutionManagement {
     versionCatalogs {

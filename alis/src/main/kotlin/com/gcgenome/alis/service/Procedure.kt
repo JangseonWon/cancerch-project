@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
-@Service("ALIS-API")
+@Service
 class Procedure(private val databaseClient: DatabaseClient) {
     val log: Logger = LoggerFactory.getLogger(javaClass)
     private val API_SET_UPLOAD_LAB_REGFILE_TEMPLATE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
@@ -145,7 +145,7 @@ class Procedure(private val databaseClient: DatabaseClient) {
         val result: Boolean = OM.readValue<Boolean>(values, Boolean::class.java)
         log.info(
             request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + request.requestNo
-                .toString() + ", " + request.itemCode.toString() + ": FileUpload(" + type.toString() + ")=>" + result
+                .toString() + ", " + request.itemCode + ": FileUpload(" + type.toString() + ")=>" + result
         )
         return result
     }
@@ -207,7 +207,7 @@ class Procedure(private val databaseClient: DatabaseClient) {
     }
 
 
-    fun state(request: Request, state: String, member: String?, machine: String?): Mono<Boolean> {
+    fun state(request: Request, state: LocalDate, member: Long, machine: String): Mono<Boolean> {
         val query = "exec Interface_SetPatientTestState :1 :2 :3 :4 :5 :6 :7"
         return databaseClient.sql(query)
             .bind("1", request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))

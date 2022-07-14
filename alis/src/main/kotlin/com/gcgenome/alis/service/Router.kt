@@ -2,13 +2,13 @@ package com.gcgenome.alis.service
 
 import com.gcgenome.alis.data.FileUpload
 import com.gcgenome.alis.data.Request
-import jdk.jfr.ContentType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import java.time.LocalDate
 
 @Configuration
@@ -22,28 +22,35 @@ class Router(private val handler: Handler) {
     }
 
     private fun state(request: ServerRequest): Mono<ServerResponse>{
-        val state = LocalDate.parse(request.pathVariable("state"))
-        val member = request.pathVariable("member").toInt()
+        val state = request.pathVariable("state")
+        val member = request.pathVariable("member")
         val machine = request.pathVariable("machine")
-
         return request.bodyToMono(Request::class.java)
-            .map(handler::state)
-            .
+            .flatMap { handler.state(it, state, member, machine) }
+            .flatMap { if(it) ServerResponse.ok().build() else ServerResponse.badRequest().build()}
     }
 
     private fun fileUpload(request: ServerRequest): Mono<ServerResponse>{
-
         return request.bodyToMono(FileUpload::class.java)
+            .publishOn(Schedulers.boundedElastic())
             .map(handler::fileUpload)
-
+            .publishOn(Schedulers.parallel())
+            .flatMap { if(it) ServerResponse.ok().build() else ServerResponse.badRequest().build()}
     }
 
     private fun cancelPublish(request: ServerRequest): Mono<ServerResponse>{
         return request.bodyToMono(Request::class.java)
+            .publishOn(Schedulers.boundedElastic())
             .map(handler::cancelPublish)
+            .publishOn(Schedulers.parallel())
+            .flatMap { if(it) ServerResponse.ok().build() else ServerResponse.badRequest().build()}
     }
 
     private fun chkWorklist(request: ServerRequest): Mono<ServerResponse>{
-
+        return request.bodyToMono(Request::class.java)
+            .publishOn(Schedulers.boundedElastic())
+            .map(handler::chkWorklist)
+            .publishOn(Schedulers.parallel())
+            .flatMap { if(it) ServerResponse.ok().build() else ServerResponse.badRequest().build()}
     }
 }

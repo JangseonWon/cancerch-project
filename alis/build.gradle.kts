@@ -8,26 +8,19 @@ plugins {
 dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()) } }
 dependencies {
     implementation(project(":shared"))
-    implementation(project(":search"))
     implementation("com.greencross:lims-api-gateway-data:1.0")
     implementation("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     implementation("org.apache.pdfbox:pdfbox:2.+")
     implementation("org.jsoup:jsoup:1.+")
-    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc:9.2.0.jre11")
-    implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
+    runtimeOnly("io.r2dbc:r2dbc-mssql:0.9.0.RELEASE")
     implementation(libs.bundles.kotlin.webflux)
-    implementation(libs.bundles.r2dbc.postgres)
-    implementation(libs.bundles.r2dbc.querydsl)
-    kapt(libs.bundles.r2dbc.querydsl)
     testImplementation(libs.bundles.test)
 }
 configurations {
     all {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-        exclude(group = "org.eclipse.jetty", module = "jetty-server")
     }
 }
 kapt {

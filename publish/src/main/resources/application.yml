@@ -26,7 +26,6 @@ spring:
       read-timeout-millis: 10000s
       connect-timeout: 10000s
       read-timeout: 10000s
-      pool.pool-timeout: 10000s
 server:
   port: 0
 
@@ -34,10 +33,3 @@ logging:
   level:
     io.r2dbc.postgresql.QUERY: DEBUG # for queries
     io.r2dbc.postgresql.PARAM: DEBUG # for parameters
-
-alis:
-  api:
-    url: http://gcgenome.labcenter.kr/LabInterfaceService.asmx
-    content-type: application/soap+xml; charset=utf-8
-    username: interface32
-    password: gcpmc9347!$*

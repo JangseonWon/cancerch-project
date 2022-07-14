@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.spring") version "1.6.21"
 }
+
 configurations {
     all {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
@@ -53,7 +54,6 @@ tasks {
         useJUnitPlatform()
     }
 }
-
 
 kapt {
     keepJavacAnnotationProcessors = true
