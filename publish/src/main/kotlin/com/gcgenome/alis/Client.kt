@@ -7,10 +7,9 @@ import reactor.core.publisher.Mono
 
 @Service
 class Client(webClientBuilder: WebClient.Builder) {
-    val uri = "http://alis/"
-    val webClient: WebClient = webClientBuilder.build()
+    val webClient: WebClient = webClientBuilder.baseUrl("http://alis/").build()
     fun fileUpload(fileUpload: FileUpload) : Boolean{
-        return webClient.put().uri(uri+"fileUpload")
+        return webClient.put().uri("fileUpload")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(fileUpload))
             .exchangeToMono{
@@ -19,7 +18,7 @@ class Client(webClientBuilder: WebClient.Builder) {
             }.block()!!
     }
     fun state(request: Request, state: String, member: String?, machine: String?): Mono<Boolean> {
-        return webClient.put().uri(uri+"state/${state}/member/${member}/machine/${machine}/state")
+        return webClient.put().uri("state/${state}/member/${member}/machine/${machine}/state")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{
@@ -28,7 +27,7 @@ class Client(webClientBuilder: WebClient.Builder) {
             }
     }
     fun chkWorklist(request: Request) : Boolean {
-       return webClient.put().uri(uri+"chkWorklist")
+       return webClient.put().uri("chkWorklist")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{
@@ -37,7 +36,7 @@ class Client(webClientBuilder: WebClient.Builder) {
             }.block()!!
     }
     fun cancelPublish(request: Request) : Boolean {
-        return webClient.put().uri(uri+"cancelPublish")
+        return webClient.put().uri("cancelPublish")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{

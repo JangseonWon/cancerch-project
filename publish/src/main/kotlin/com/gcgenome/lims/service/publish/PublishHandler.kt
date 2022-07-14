@@ -13,8 +13,8 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.time.Instant
@@ -33,6 +33,7 @@ class PublishHandler(
     @Transactional
     fun publish(sample: Long, service: String, createAt: Long) : Mono<Boolean> {
         return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
+            .publishOn(Schedulers.boundedElastic())
             .flatMap {
                 val sampleId = it.sample
                 val requestNum = (it.sample % 10000000).toInt()
