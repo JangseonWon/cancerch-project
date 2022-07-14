@@ -59,11 +59,13 @@ class PublishHandler(
                 .map { tuple -> sendToAlis(tuple.t2.authentication.principal.toString(), data, requestAlis, "pdf", "") }
                 .filter{result -> result}
                 .zipWith(getUser())
-                .map { tuple ->
+                .flatMap { tuple ->
                     client.state(requestAlis, "I", tuple.t2.authentication.principal.toString(), "LIMS")
+                }.flatMap{ _ ->
                     reportDao.merge(it.sample, it.service, it.createAt, jsonObject.toString())
-                }.then(Mono.just(true))
-                    .switchIfEmpty(Mono.just(false))
+                }
+                .then(Mono.just(true))
+                .switchIfEmpty(Mono.just(false))
             }
 
     }

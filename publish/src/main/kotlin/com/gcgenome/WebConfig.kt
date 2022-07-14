@@ -10,6 +10,7 @@ import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.scheduling.annotation.EnableAsync
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.EnableWebFlux
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
@@ -33,6 +34,13 @@ class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
                     configurer.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
                 }.build())
     }
+
+    @Bean
+    @LoadBalanced
+    fun restTemplate() : RestTemplate{
+        return RestTemplate()
+    }
+
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("*") // any host or put domain(s) here
