@@ -51,6 +51,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
+					column("발송자").build(),
 					column("비고").build()
 			).data(new Data[10]);
 
@@ -109,6 +110,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("Row", String.valueOf(value.row()))
 				.put("reportCreated", String.valueOf((long) JsDate.parse(value.report().createAt())))
 				.put("결과지", value.report().fileName())
+				.put("발송자", value.report().publisher())
 				.put("결과발송일", publishDt);
 	}
 	@Override

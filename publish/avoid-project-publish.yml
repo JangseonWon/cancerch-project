@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: publish-api
+  main:
+    web-application-type: reactive
+  cloud:
+    zookeeper:
+      connect-string: gemini:2181,pisces:2181,aries:2181,taurus:2181
+      discovery:
+        root: /avoid-service
+  r2dbc:
+    url: r2dbc:postgresql://gemini:5432/lims
+    compatibility-mode : true
+    username: avoid
+    password: avoid1004
+  data:
+    cassandra:
+      contact-points: gemini, pisces, taurus
+      local-datacenter: datacenter1
+      username: cassandra
+      password: snubi1004
+      port: 9042
+      keyspace-name: lims
+      schema-action: NONE
+      connect-timeout-millis: 10000s
+      read-timeout-millis: 10000s
+      connect-timeout: 10000s
+      read-timeout: 10000s
+      pool.pool-timeout: 10000s
+server:
+  port: 0
