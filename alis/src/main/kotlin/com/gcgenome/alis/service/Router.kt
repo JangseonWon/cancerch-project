@@ -9,8 +9,6 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
-import java.time.LocalDate
-
 @Configuration
 class Router(private val handler: Handler) {
     @Bean("com.gcgenome.lims.service.alis.ProcedureRouter")
@@ -22,15 +20,20 @@ class Router(private val handler: Handler) {
     }
 
     private fun state(request: ServerRequest): Mono<ServerResponse>{
+        println("State")
         val state = request.pathVariable("state")
         val member = request.pathVariable("member")
         val machine = request.pathVariable("machine")
         return request.bodyToMono(Request::class.java)
-            .flatMap { handler.state(it, state, member, machine) }
+            .flatMap {
+                handler.state(it, state, member, machine)
+            }
             .flatMap { if(it) ServerResponse.ok().build() else ServerResponse.badRequest().build()}
+
     }
 
     private fun fileUpload(request: ServerRequest): Mono<ServerResponse>{
+        println("fileUpload")
         return request.bodyToMono(FileUpload::class.java)
             .publishOn(Schedulers.boundedElastic())
             .map(handler::fileUpload)
@@ -39,6 +42,7 @@ class Router(private val handler: Handler) {
     }
 
     private fun cancelPublish(request: ServerRequest): Mono<ServerResponse>{
+        println("cancelPublish")
         return request.bodyToMono(Request::class.java)
             .publishOn(Schedulers.boundedElastic())
             .map(handler::cancelPublish)
@@ -47,6 +51,7 @@ class Router(private val handler: Handler) {
     }
 
     private fun chkWorklist(request: ServerRequest): Mono<ServerResponse>{
+        println("chkWorklist")
         return request.bodyToMono(Request::class.java)
             .publishOn(Schedulers.boundedElastic())
             .map(handler::chkWorklist)

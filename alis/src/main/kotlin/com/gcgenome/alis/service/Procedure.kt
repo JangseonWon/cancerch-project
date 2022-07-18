@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
 @Service
-class Procedure(private val databaseClient: DatabaseClient) {
+class Procedure(private val databaseClient: DatabaseClient, private val OM: ObjectMapper) {
     val log: Logger = LoggerFactory.getLogger(javaClass)
     private val API_SET_UPLOAD_LAB_REGFILE_TEMPLATE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
             "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">" +
@@ -98,9 +98,6 @@ class Procedure(private val databaseClient: DatabaseClient) {
 
     @Value("\${alis.api.password}")
     private val password: String = ""
-    private val OM = ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-        .setLocale(Locale.KOREA)
-        .registerModule(JavaTimeModule())
 
     enum class FileType {
         GENERAL, PDF, JPG, JPG_PER_PAGE, ETC, TEXT_SHORTER, TEXT, JSON
@@ -125,8 +122,8 @@ class Procedure(private val databaseClient: DatabaseClient) {
                 .replace("{:password}", password)
                 .replace("{:date}",  DTF.format(request.requestDate))
                 .replace("{:reqno}", java.lang.String.valueOf(request.requestNo))
-                .replace("{:code}", request.itemCode)
-                .replace("{:code}", request.itemCode)
+                .replace("{:code}", request.service)
+                .replace("{:code}", request.service)
                 .replace("{:file-name}", fileName)
                 .replace("{:file-ext}", ext)
                 .replace("{:file-size}", size.toString())
@@ -144,8 +141,8 @@ class Procedure(private val databaseClient: DatabaseClient) {
         val values: String = response.select("SetUploadLabRegFileResult").text().replace("\"\"", "null")
         val result: Boolean = OM.readValue<Boolean>(values, Boolean::class.java)
         log.info(
-            request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + request.requestNo
-                .toString() + ", " + request.itemCode + ": FileUpload(" + type.toString() + ")=>" + result
+            size.toString()+" "+request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + request.requestNo
+                .toString() + ", " + request.service + ": FileUpload(" + type.toString() + ")=>" + result
         )
         return result
     }
@@ -182,7 +179,7 @@ class Procedure(private val databaseClient: DatabaseClient) {
             .replace("{:password}", password)
             .replace("{:date}", DTF.format(request.requestDate))
             .replace("{:reqno}", java.lang.String.valueOf(request.requestNo))
-            .replace("{:code}", request.itemCode)
+            .replace("{:code}", request.service)
         val response: Document = Jsoup.connect(url).maxBodySize(0)
             .method(Connection.Method.POST)
             .header("content-type", contentType)
@@ -207,16 +204,16 @@ class Procedure(private val databaseClient: DatabaseClient) {
     }
 
 
-    fun state(request: Request, state: LocalDate, member: Long, machine: String): Mono<Boolean> {
-        val query = "exec Interface_SetPatientTestState :1 :2 :3 :4 :5 :6 :7"
+    fun state(request: Request, state: String, member: Long, machine: String): Mono<Boolean> {
+        var query = "exec Interface_SetPatientTestState ':1', :2, ':3', ':4', ':5', ':6', ':7'"
+        query = query.replace(":1", request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+            .replace(":2", request.requestNo.toString())
+            .replace(":3", request.service)
+            .replace(":4", request.service)
+            .replace(":5", state)
+            .replace(":6", member.toString())
+            .replace(":7", machine)
         return databaseClient.sql(query)
-            .bind("1", request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-            .bind("2", request.requestNo)
-            .bind("3", request.itemCode)
-            .bind("4", request.itemCode)
-            .bind("5", state)
-            .bind("6", member)
-            .bind("7", machine)
-            .fetch().first().map { it.values.toList().first() as Boolean }
+            .fetch().first().map { it.values.first() == 1 }
     }
 }

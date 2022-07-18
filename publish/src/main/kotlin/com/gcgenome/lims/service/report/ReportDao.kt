@@ -1,12 +1,16 @@
 package com.gcgenome.lims.service.report
 
+import com.gcgenome.SecurityContextRepository
 import com.gcgenome.lims.entity.QUser
 import com.gcgenome.lims.entity.QReport.report
+import com.gcgenome.lims.entity.User
 import com.gcgenome.lims.projection.Report
 
 import com.querydsl.core.types.Projections.constructor
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.sql.SQLQuery
 import io.r2dbc.postgresql.codec.Json
+import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import java.time.LocalDateTime
@@ -52,8 +56,8 @@ class ReportDao(private val repo: ReportRepository) {
                 com.gcgenome.lims.entity.Report::class.java,
                 report.sample,
                 report.service,
-                report.file,
                 report.createAt,
+                report.file,
                 report.createBy,
                 report.lastModifyAt,
                 report.lastModifyBy,
@@ -63,13 +67,22 @@ class ReportDao(private val repo: ReportRepository) {
                 report.publishBy,
                 report.publishLog
             )
-        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)))
+        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.eq(createdAt)))
         }.one().switchIfEmpty(Mono.just(com.gcgenome.lims.entity.Report(sample, service, createdAt)))
-            .map { it.apply {
-                it.publishLog = Json.of(publishLog)
-                it.publishAt = LocalDateTime.now()
-            }}
-            .flatMap { repo.save(it) }
+            .zipWith(ReactiveSecurityContextHolder.getContext())
+            .flatMap { repo.merge(it.t1, publishLog, it.t2.authentication.principal.toString()) }
     }
-
+    private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, json: String?, user : String): Mono<Void>{
+        println(entity)
+        return if(entity.isNew) repo.save(entity.apply { if(json!=null) entity.publishLog = Json.of(json)}).then()
+        else update {
+            if(json!=null) {
+                it.set(report.publishLog, Json.of(json))
+                    .set(report.publishAt, LocalDateTime.now())
+                    .set(report.publishBy, user)
+            } else {
+                it.setNull(report.publishLog)
+            }.where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.eq(entity.createAt)))
+        }.then()
+    }
 }

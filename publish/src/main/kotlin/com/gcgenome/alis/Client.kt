@@ -4,44 +4,41 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 
 @Service
 class Client(webClientBuilder: WebClient.Builder) {
-    val webClient: WebClient = webClientBuilder.baseUrl("http://alis/").build()
-    fun fileUpload(fileUpload: FileUpload) : Boolean{
+    val webClient: WebClient = webClientBuilder.baseUrl("http://alis-api/alis/").build()
+    fun fileUpload(fileUpload: FileUpload) : Mono<Boolean>{
         return webClient.put().uri("fileUpload")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(fileUpload))
             .exchangeToMono{
-                if(it.statusCode().is2xxSuccessful) Mono.just(true)
-            else Mono.just(false)
-            }.block()!!
+                Mono.just(it.statusCode().is2xxSuccessful)
+            }
     }
     fun state(request: Request, state: String, member: String?, machine: String?): Mono<Boolean> {
         return webClient.put().uri("state/${state}/member/${member}/machine/${machine}/state")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{
-                if(it.statusCode().is2xxSuccessful) Mono.just(true)
-                else Mono.just(false)
+                Mono.just(it.statusCode().is2xxSuccessful)
             }
     }
-    fun chkWorklist(request: Request) : Boolean {
+    fun chkWorklist(request: Request) : Mono<Boolean>{
        return webClient.put().uri("chkWorklist")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{
-                if(it.statusCode().is2xxSuccessful) Mono.just(true)
-                else Mono.just(false)
-            }.block()!!
+                Mono.just(it.statusCode().is2xxSuccessful)
+            }
     }
-    fun cancelPublish(request: Request) : Boolean {
+    fun cancelPublish(request: Request) : Mono<Boolean> {
         return webClient.put().uri("cancelPublish")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
             .exchangeToMono{
-                if(it.statusCode().is2xxSuccessful) Mono.just(true)
-                else Mono.just(false)
-            }.block()!!
+                Mono.just(it.statusCode().is2xxSuccessful)
+            }
     }
 }

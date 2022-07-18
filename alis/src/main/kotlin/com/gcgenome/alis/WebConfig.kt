@@ -37,6 +37,7 @@ class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
             .resourceChain(false)
     }
     override fun configureHttpMessageCodecs(configurer: ServerCodecConfigurer) {
+        configurer.defaultCodecs().maxInMemorySize(1024*1024*8)
         configurer.defaultCodecs().jackson2JsonEncoder(Jackson2JsonEncoder(objectMapper))
         configurer.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
     }

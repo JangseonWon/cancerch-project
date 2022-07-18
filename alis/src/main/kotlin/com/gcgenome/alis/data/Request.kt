@@ -6,5 +6,5 @@ import java.time.LocalDate
 data class Request(
     val requestDate: LocalDate = LocalDate.now(),
     val requestNo: Int = 0,
-    val itemCode: String = ""
+    val service: String = ""
 ) : Serializable

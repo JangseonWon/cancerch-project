@@ -11,12 +11,12 @@ dependencies {
     implementation("com.greencross:lims-api-gateway-data:1.0")
     implementation("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.apache.pdfbox:pdfbox:2.+")
     implementation("org.jsoup:jsoup:1.+")
     runtimeOnly("io.r2dbc:r2dbc-mssql:0.9.0.RELEASE")
     implementation(libs.bundles.kotlin.webflux)
     testImplementation(libs.bundles.test)
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 }
 configurations {
     all {

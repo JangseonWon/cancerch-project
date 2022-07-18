@@ -7,6 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 
 @Configuration
 class PublishRouter(private val handler: PublishHandler) {
@@ -20,8 +21,8 @@ class PublishRouter(private val handler: PublishHandler) {
         val service = request.pathVariable("service")
         val createAt = request.pathVariable("createAt").toLong()
         return handler.publish(sample, service, createAt).flatMap{
-            if(it) ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).build()
-            else ServerResponse.status(HttpStatus.NO_CONTENT).build()
-        }
+                if(it) ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).build()
+                else ServerResponse.status(HttpStatus.NO_CONTENT).build()
+            }
     }
 }
