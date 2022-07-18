@@ -110,7 +110,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("Row", String.valueOf(value.row()))
 				.put("reportCreated", String.valueOf((long) JsDate.parse(value.report().createAt())))
 				.put("결과지", value.report().fileName())
-				.put("발송자", value.report().publisher())
+				.put("발송자", value.report().publisher().name())
 				.put("결과발송일", publishDt);
 	}
 	@Override
