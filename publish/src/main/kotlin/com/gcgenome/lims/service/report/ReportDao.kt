@@ -73,13 +73,16 @@ class ReportDao(private val repo: ReportRepository) {
             .flatMap { repo.merge(it.t1, publishLog, it.t2.authentication.principal.toString()) }
     }
     private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, json: String?, user : String): Mono<Void>{
+        val now = LocalDateTime.now()
         return if(entity.isNew) repo.save(entity.apply { if(json!=null) entity.publishLog = Json.of(json)}).then()
         else update {
             Expressions.stringPath(report.publishLog.metadata)
             if(json!=null) {
                 it.set(Expressions.stringPath(report.publishLog.metadata),json)
-                    .set(report.publishAt, LocalDateTime.now())
+                    .set(report.publishAt, now)
                     .set(report.publishBy, user)
+                    .set(report.lastModifyAt, now)
+                    .set(report.lastModifyBy, user)
             } else {
                 it.setNull(report.publishLog)
             }.where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.stringValue().eq(entity.createAt.toString().replace("T", " "))))
