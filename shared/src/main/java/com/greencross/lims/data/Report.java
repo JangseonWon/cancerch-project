@@ -26,7 +26,7 @@ public final class Report {
 	@JsProperty(name="publish_at")
 	private String publishAt;
 	@JsProperty(name="publisher")
-	private String publisher;
+	private User publisher;
 	@JsOverlay
 	@JsIgnore
 	public Report sample(long sample) {
