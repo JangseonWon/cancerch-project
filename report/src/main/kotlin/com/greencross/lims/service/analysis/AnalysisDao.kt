@@ -41,23 +41,4 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)))
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
     }
-//    fun merge(sample: Long, service: String, batch: String, row: Long, json: String): Mono<Any>{
-//        return repo.query { it.select(
-//            constructor(com.greencross.lims.entity.Analysis::class.java,
-//                analysis.sample,
-//                analysis.service,
-//                analysis.batch,
-//                analysis.row,
-//                analysis.createAt,
-//                analysis.createBy,
-//                analysis.lastModifyAt,
-//                analysis.lastModifyBy,
-//                analysis.file,
-//                analysis.value
-//            )
-//        ).from(analysis).where(analysis.sample.eq(sample).and(analysis.service.eq(service)))}
-//            .one().switchIfEmpty(Mono.just(com.greencross.lims.entity.Analysis(sample, service)))
-//            .map { it.apply { it.value = Json.of(json) }}
-//            .flatMap { repo.save(it) }
-//    }
 }

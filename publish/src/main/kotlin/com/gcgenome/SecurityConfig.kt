@@ -56,7 +56,7 @@ class SecurityConfig(
                 .map { obj: SecurityContext -> obj.authentication }
                 .filter { obj: Authentication -> obj.isAuthenticated }
                 .map { obj: Authentication -> obj.principal }
-                .cast(String::class.java)
+                .map { obj: Any? -> String::class.java.cast(obj) }
         }
     }
 }

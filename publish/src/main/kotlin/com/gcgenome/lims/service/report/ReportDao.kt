@@ -67,22 +67,22 @@ class ReportDao(private val repo: ReportRepository) {
                 report.publishBy,
                 report.publishLog
             )
-        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.eq(createdAt)))
+        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
         }.one().switchIfEmpty(Mono.just(com.gcgenome.lims.entity.Report(sample, service, createdAt)))
             .zipWith(ReactiveSecurityContextHolder.getContext())
             .flatMap { repo.merge(it.t1, publishLog, it.t2.authentication.principal.toString()) }
     }
     private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, json: String?, user : String): Mono<Void>{
-        println(entity)
         return if(entity.isNew) repo.save(entity.apply { if(json!=null) entity.publishLog = Json.of(json)}).then()
         else update {
+            Expressions.stringPath(report.publishLog.metadata)
             if(json!=null) {
-                it.set(report.publishLog, Json.of(json))
+                it.set(Expressions.stringPath(report.publishLog.metadata),json)
                     .set(report.publishAt, LocalDateTime.now())
                     .set(report.publishBy, user)
             } else {
                 it.setNull(report.publishLog)
-            }.where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.eq(entity.createAt)))
+            }.where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.stringValue().eq(entity.createAt.toString().replace("T", " "))))
         }.then()
     }
 }

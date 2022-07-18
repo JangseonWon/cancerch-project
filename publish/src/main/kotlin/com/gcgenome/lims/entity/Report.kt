@@ -55,6 +55,7 @@ data class Report(
         this.publishAt = publishAt
         this.publishBy = publishBy
         this.publishLog = publishLog
+        println(createBy)
     }
 
     companion object{
