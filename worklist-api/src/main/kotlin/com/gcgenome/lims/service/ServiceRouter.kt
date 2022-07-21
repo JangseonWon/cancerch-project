@@ -13,11 +13,11 @@ class ServiceRouter {
         return RouterFunctions.route(RequestPredicates.GET("/services"), this::services)
     }
     private fun services(request: ServerRequest): Mono<ServerResponse> {
-        return ServerResponse.ok().bodyValue(Page().apply {
+        return ServerResponse.ok().bodyValue(listOf( Page().apply {
             icon = "fa-braille"
             title = "Worklist"
             uri = "/avoid-service/worklist.html"
             order = "1"
-        })
+        }))
     }
 }
