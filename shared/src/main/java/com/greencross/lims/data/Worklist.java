@@ -16,6 +16,7 @@ public final class Worklist {
     private String created;
     private String status;
     private String remark;
+    private String serial;
 
     @JsOverlay
     @JsIgnore

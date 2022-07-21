@@ -5,16 +5,12 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.greencross.lims.client.Router;
 import com.greencross.lims.data.Worklist;
 import com.greencross.lims.util.DataTransformUtil;
-import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.HTMLElementBuilder;
-import net.sayaya.ui.ListElement;
-import net.sayaya.ui.MenuElement;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
 import net.sayaya.ui.chart.column.ColumnBuilder;
 import net.sayaya.ui.chart.column.ColumnString;
-import org.jboss.elemento.EventType;
 import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Arrays;
@@ -27,13 +23,14 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
         return ColumnBuilder.string(name).name(name).readOnly(true).horizontal("center");
     }
     private final SheetElement.SheetConfiguration config = SheetElement.builder()
-            .rowHeaders(true)
+            .rowHeaders(false)
             .autoColSize(true)
             .autoRowSize(false)
             .manualColumnMove(true)
             .manualColumnResize(true)
             .stretchH("all")
             .columns(
+                    column("Batch#").horizontal("center").font("Nanum Gothic Coding").build(),
                     column("추출일").horizontal("center").font("Nanum Gothic Coding").build(),
                     column("상태").build(),
                     ColumnBuilder.link("워크리스트 명", data->"#"+data.idx()).name("워크리스트 명").readOnly(true)
@@ -63,6 +60,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
         if(value == null) return null;
         NumberFormat NF = NumberFormat.getFormat("#");
         return new Data(value.id())
+                .put("Batch#", value.serial())
                 .put("워크리스트 명", value.title())
                 .put("추출일", DataTransformUtil.formatDateTime((long) JsDate.parse(value.created())))
                 .put("상태", toString(value.status()))
