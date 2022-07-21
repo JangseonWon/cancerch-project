@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
+    implementation("com.gcgenome:gateway-page:1.0")
     implementation(libs.bundles.spring.client)
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)
