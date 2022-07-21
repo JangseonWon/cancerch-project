@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.6.21" apply false
-    kotlin("kapt") version "1.6.21" apply false
+    kotlin("jvm") version "1.7.10" apply false
+    kotlin("kapt") version "1.7.10" apply false
 }
 
 subprojects {
@@ -8,6 +8,6 @@ subprojects {
         mavenCentral()
         mavenLocal()
     }
-    group = "com.greencross"
+    group = "com.gcgenome"
     version = "1.0"
 }
