@@ -5,7 +5,6 @@ plugins {
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
 }
 dependencies {
-    implementation("com.gcgenome:gateway-page:1.0")
     implementation(libs.spring.gateway)
     implementation(libs.spring.discovery)
     implementation(libs.spring.log4j2)

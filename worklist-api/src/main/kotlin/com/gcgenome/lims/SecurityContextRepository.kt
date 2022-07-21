@@ -15,9 +15,7 @@ import reactor.core.publisher.Mono
 class SecurityContextRepository(
     private val repo: UserDao
 ) : ServerSecurityContextRepository {
-    override fun save(exchange: ServerWebExchange, context: SecurityContext): Mono<Void> {
-        return Mono.empty()
-    }
+    override fun save(exchange: ServerWebExchange, context: SecurityContext): Mono<Void> = Mono.empty()
     override fun load(exchange: ServerWebExchange): Mono<SecurityContext> {
         return Mono.justOrEmpty(exchange.request.headers.getFirst("X-USER-ID"))
             .flatMap ( repo::findById )

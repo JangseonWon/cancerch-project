@@ -1,7 +1,7 @@
 package com.greencross.lims.service
 
-import com.gcgenome.lims.dto.Menu
-import com.gcgenome.lims.dto.Page
+import com.gcgenome.lims.service.Menu
+import com.gcgenome.lims.service.Page
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.client.discovery.DiscoveryClient
@@ -13,8 +13,6 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.Duration
 import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 @Component
 class ServiceHandler(
@@ -25,39 +23,21 @@ class ServiceHandler(
     fun list(request: ServerRequest): Mono<Menu> {
         return Flux.fromStream(discoveryClient.services.stream())
             .filter(Objects::nonNull)
-            .flatMap { svc -> routes(request, svc) }
+            .flatMap { svc -> routes(request, svc).flatMapMany { Flux.fromArray(it) } }
             .filter(Objects::nonNull)
             .collect(
-                { Menu() },
-                { svc: Menu, page: Page ->
-                    if (svc.children == null) svc.children = arrayOf(page)
-                    else {
-                        Log.info(page.toString())
-                        val pages: List<Page> = Stream.concat(
-                            Arrays.stream(svc.children),
-                            Stream.of(page))
-                            .sorted(Comparator.comparing(Page::order, Comparator.nullsLast(Comparator.naturalOrder())))
-                            .collect(Collectors.toList())
-                        svc.children = pages.toTypedArray()
-                    }
-                }
-            ).map { svc: Menu -> svc.apply {
-                title = "액체생검"
-                order = "C"
-                prefix = "/avoid-service"
-            } }
-            .doOnNext{
-                Log.info(it.toString())
-            }
+                { Menu("액체생검", "C", "/avoid-service", mutableListOf()) },
+                { svc, page -> svc.children.add(page) }
+            ).map { it.apply { it.children.sortWith(compareBy(nullsLast()){ order })} }
     }
-    private fun routes(request: ServerRequest, service: String): Mono<Page> {
+    private fun routes(request: ServerRequest, service: String): Mono<Array<Page>> {
         Log.info("http://$service")
         return client.baseUrl("http://$service").build().get()
             .uri("/services")
             .headers{h->request.headers().asHttpHeaders().forEach(h::addAll)}
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .bodyToMono(Page::class.java)
+            .bodyToMono(Array<Page>::class.java)
             .timeout(Duration.ofMillis(500))
             .onErrorResume { Mono.empty()}
     }

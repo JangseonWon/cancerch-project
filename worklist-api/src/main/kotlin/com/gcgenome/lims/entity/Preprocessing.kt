@@ -23,8 +23,7 @@ data class Preprocessing(
     @LastModifiedDate
     @Column("last_modify_at")       lateinit var lastModifyAt:  LocalDateTime
     @Column("value")                         var json:          String? = null
-    @Id
-    @Transient                      lateinit var _id: PreprocessingPK
+    @Id @Transient                  lateinit var _id: PreprocessingPK
 
     constructor(worklist: String, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String): this(worklist, index){
         this.createBy = createBy
@@ -33,19 +32,12 @@ data class Preprocessing(
         this.lastModifyAt = lastModifyAt
         this.json = json
     }
-
+    override fun getId(): PreprocessingPK = PreprocessingPK(worklist, index)
+    override fun isNew(): Boolean = this::createAt.isInitialized.not()
     companion object {
         data class PreprocessingPK(
             val worklist: String,
             val index: Int
         )
-    }
-
-    override fun getId(): PreprocessingPK {
-        return PreprocessingPK(worklist, index)
-    }
-
-    override fun isNew(): Boolean {
-        return this::createAt.isInitialized.not()
     }
 }

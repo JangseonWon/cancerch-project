@@ -11,7 +11,7 @@ import java.util.concurrent.Executor
 
 @SpringBootApplication
 @EnableDiscoveryClient
-open class Application : AsyncConfigurer {
+class Application : AsyncConfigurer {
     override fun getAsyncExecutor(): Executor {
         val executor = ThreadPoolTaskExecutor()
         executor.corePoolSize = 2
