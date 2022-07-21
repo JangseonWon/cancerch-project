@@ -8,9 +8,7 @@ import org.springframework.web.reactive.function.server.*
 import reactor.core.publisher.Mono
 
 @Configuration
-open class ServiceRouter(
-    private var handler: ServiceHandler
-) {
+open class ServiceRouter(private var handler: ServiceHandler) {
     @Bean
     open fun serviceRouterInstance(): RouterFunction<ServerResponse> {
         return RouterFunctions.route(RequestPredicates.GET("/services"), this::services)

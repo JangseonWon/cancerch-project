@@ -1,27 +1,16 @@
 plugins {
     kotlin("jvm")
-    id("org.springframework.boot") version "2.7.0"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.6.21"
-}
-configurations {
-    all {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-    }
-}
-extra["springCloudVersion"] = "2021.0.1"
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+    id("org.springframework.boot") version "2.7.1"
+    id("io.spring.dependency-management") version "1.0.12.RELEASE"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.7.10"
 }
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
-    implementation("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation(libs.spring.gateway)
+    implementation(libs.spring.discovery)
+    implementation(libs.spring.log4j2)
 }
+configurations { all { exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging") } }
+dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()) } }
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {

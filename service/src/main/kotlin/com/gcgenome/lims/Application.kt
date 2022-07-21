@@ -1,4 +1,4 @@
-package com.greencross.lims
+package com.gcgenome.lims
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler
