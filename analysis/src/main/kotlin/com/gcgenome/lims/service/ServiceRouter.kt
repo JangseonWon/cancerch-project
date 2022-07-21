@@ -1,6 +1,6 @@
 package com.gcgenome.lims.service
 
-import com.greencross.lims.dto.Page
+import com.gcgenome.lims.dto.Page
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.server.*
@@ -14,8 +14,13 @@ class ServiceRouter {
     }
     private fun services(request: ServerRequest): Mono<ServerResponse> {
         return ServerResponse.ok().bodyValue(
-            Page().icon("fa-chart-bar")
-            .title("Analysis")
-            .uri("/avoid-service/analysis.html").order("2"))
+            listOf(
+                Page().apply {
+                    icon = "fa-chart-bar"
+                    title = "Analysis"
+                    uri = "/avoid-service/analysis.html"
+                    order = "2"
+                })
+        )
     }
 }

@@ -9,7 +9,7 @@ dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()
 dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
-    implementation("com.greencross:lims-api-gateway-data:1.0")
+    implementation("com.gcgenome:gateway-page:1.0")
     implementation("org.springframework.cloud:spring-cloud-starter-zookeeper-discovery")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("org.springframework.boot:spring-boot-starter-security")
