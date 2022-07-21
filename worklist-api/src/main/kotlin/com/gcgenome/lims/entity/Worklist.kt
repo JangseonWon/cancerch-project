@@ -13,11 +13,14 @@ import java.util.*
 @Table("worklist")
 data class Worklist(
     @Id                                  val id:        UUID,
-    var title:     String? = null,
+    val title:     String? = null,
     @CreatedDate @Column("create_at")    var createAt:  LocalDateTime? = null,
-    var status:    Status? = null,
-    var remark:    String? = null,
-    var domain:    String? = null
+    val status:    Status? = null,
+    val remark:    String? = null,
+    val domain:    String? = null,
+    val prefix:    String? = null,
+    val idx:       Int? = null,
+    val serial:    String? = null
 ) : Serializable {
     companion object {
         enum class Status{

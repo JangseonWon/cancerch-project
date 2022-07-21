@@ -23,7 +23,7 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
          key.trim().isEmpty()                -> worklist.createAt
          "작성일".contentEquals(key)         -> worklist.createAt
          "상태".contentEquals(key)           -> worklist.status
-         "워크리스트 명".contentEquals(key)  -> worklist.title
+         "워크리스트 명".contentEquals(key)   -> worklist.title
          else                                -> worklist.createAt
       }
    }

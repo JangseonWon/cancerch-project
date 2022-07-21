@@ -2,9 +2,14 @@ package com.gcgenome.lims.data
 
 import com.gcgenome.lims.entity.Worklist
 
-data class Worklist(val id: String?) {
-    var title: String? = ""
-    var createdAt: String? = ""
-    var status: Worklist.Companion.Status? = null
-    var remark: String? = ""
+data class Worklist (
+    val id: String,
+    val title: String,
+    val createdAt: String,
+    val status: Worklist.Companion.Status?,
+    val prefix: String?,
+    val idx: Int?,
+    val serial: String?
+) {
+    var remark: String? = null
 }

@@ -6,11 +6,16 @@ import org.springframework.stereotype.Component
 @Component
 class WorklistMapper {
     fun toDto(entity: com.gcgenome.lims.entity.Worklist): Worklist {
-        return Worklist(entity.id.toString()).apply {
-            title = entity.title
+        return Worklist(
+            id=entity.id.toString(),
+            title= if(entity.title!=null) entity.title!! else "",
+            createdAt = entity.createAt.toString(),
+            status = entity.status,
+            prefix = entity.prefix,
+            idx = entity.idx,
+            serial = entity.serial
+        ).apply {
             remark = entity.remark
-            status = entity.status
-            createdAt = entity.createAt.toString()
         }
     }
 }
