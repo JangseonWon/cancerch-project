@@ -1,8 +1,8 @@
 package com.greencross.lims.report.avoid
 
+import com.gcgenome.lims.avoid.TestInfo
 import com.greencross.lims.report.builder.AbstractReportTemplate
 import com.greencross.lims.report.builder.Sex
-import com.greencross.lims.test.avoid.TestInfo
 
 interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun testInfo(): TestInfo

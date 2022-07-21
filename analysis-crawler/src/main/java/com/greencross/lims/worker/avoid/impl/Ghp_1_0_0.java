@@ -1,10 +1,10 @@
 package com.greencross.lims.worker.avoid.impl;
 
+import com.gcgenome.lims.avoid.TestInfo;
 import com.greencross.lims.dao.RequestDAO;
 import com.greencross.lims.entity.Analysis;
 import com.greencross.lims.entity.AnalysisFile;
 import com.greencross.lims.entity.readonly.Request;
-import com.greencross.lims.test.avoid.TestInfo;
 import com.greencross.lims.worker.Worker;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;

@@ -1,11 +1,10 @@
 package com.greencross.lims.client;
 
+import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import com.greencross.lims.api.AnalysisApi;
-import com.greencross.lims.data.*;
 import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
-import elemental2.dom.EventListener;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
@@ -16,7 +15,8 @@ import net.sayaya.ui.event.HasSelectionChangeHandlers;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.jboss.elemento.Elements.div;

@@ -2,6 +2,7 @@ package com.greencross.lims.service.report
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.gcgenome.lims.avoid.TestInfo
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
 import com.greencross.lims.projection.Report
@@ -17,7 +18,6 @@ import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
 import com.greencross.lims.service.reportfile.ReportFileRepository
-import com.greencross.lims.test.avoid.TestInfo
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

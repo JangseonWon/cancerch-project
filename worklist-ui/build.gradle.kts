@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.wisepersist.gwt") version "1.1.15"
+    id("org.wisepersist.gwt") version "1.1.18"
     id("java")
     id("war")
 }
@@ -12,20 +12,17 @@ java.targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     implementation(project(":shared"))
-    implementation("com.greencross:lims-api-gateway-data:1.0")
-    implementation("com.greencross:lims-service:1.1")
-    implementation("com.greencross:lims-service-data:1.0")
-    implementation("com.greencross:lims-service-util:1.0")
-    implementation("com.greencross:lims-icon:1.1")
-    implementation("org.jboss.elemento:elemento-core:1.0.3")
-    implementation("com.google.elemental2:elemental2-svg:1.1.0")
-    implementation("com.google.gwt:gwt-user:2.9.0")
-    implementation("com.google.gwt:gwt-dev:2.9.0")
-    implementation("net.sayaya:ui:3.1")
-    implementation("net.sayaya:chart:1.0")
+    implementation("com.gcgenome:gateway-api:1.0")
+    implementation("com.gcgenome:gateway-service:1.0")
+    implementation("com.gcgenome:lims-icon:2.0")
+
+    implementation(libs.bundles.gwt)
+    compileOnly(libs.gwt.dev)
+    implementation("net.sayaya:ui:4.0")
+    implementation("net.sayaya:chart:2.0")
     implementation("net.sayaya:calculator:1.0")
-    implementation("org.projectlombok:lombok:1.18.22")
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
+    implementation(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 val lombok = project.configurations.annotationProcessor.get().filter { it.name.startsWith("lombok") }.single()

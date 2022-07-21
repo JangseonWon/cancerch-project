@@ -1,10 +1,10 @@
 package com.greencross.lims.client;
 
+import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.Scheduler;
 import com.greencross.lims.api.AnalysisApi;
 import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
-import com.greencross.lims.data.Analysis;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
 import elemental2.core.JsDate;
@@ -13,7 +13,10 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
 import elemental2.promise.Promise;
-import net.sayaya.ui.*;
+import net.sayaya.ui.BreadcumbElement;
+import net.sayaya.ui.ButtonElement;
+import net.sayaya.ui.ButtonElementToggle;
+import net.sayaya.ui.TextFieldElement;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
