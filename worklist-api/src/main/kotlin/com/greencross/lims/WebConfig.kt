@@ -1,6 +1,7 @@
 package com.greencross.lims
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.CacheControl
 import org.springframework.http.codec.ServerCodecConfigurer
@@ -16,7 +17,10 @@ import java.util.concurrent.TimeUnit
 @Configuration
 @EnableAsync
 @EnableWebFlux
-class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
+class WebConfig(
+    @Value("\${server.resources}")
+    private val resources: String,
+    private val objectMapper: ObjectMapper) : WebFluxConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("*") // any host or put domain(s) here
@@ -27,7 +31,7 @@ class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/**")
-            .addResourceLocations("classpath:/static/")
+            .addResourceLocations("classpath:/static/", resources)
             .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
             .resourceChain(false)
     }
