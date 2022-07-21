@@ -1,8 +1,8 @@
 package com.gcgenome.lims.service.worklist
 
+import com.gcgenome.lims.entity.QWorklist.worklist
 import com.gcgenome.lims.entity.Worklist
 import com.gcgenome.lims.service.Searchable
-import com.greencross.lims.entity.QWorklist.worklist
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression

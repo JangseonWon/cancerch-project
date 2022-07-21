@@ -1,9 +1,9 @@
 package com.gcgenome.lims.service.work
 
+import com.gcgenome.lims.entity.QPreprocessing.preprocessing
+import com.gcgenome.lims.entity.QUser
+import com.gcgenome.lims.entity.QWork.work
 import com.gcgenome.lims.projection.Work
-import com.greencross.lims.entity.QPreprocessing.preprocessing
-import com.greencross.lims.entity.QUser
-import com.greencross.lims.entity.QWork.work
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Component

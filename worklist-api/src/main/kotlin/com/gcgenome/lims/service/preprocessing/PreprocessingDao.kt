@@ -1,7 +1,7 @@
 package com.gcgenome.lims.service.preprocessing
 
 import com.gcgenome.lims.entity.Preprocessing
-import com.greencross.lims.entity.QPreprocessing.preprocessing
+import com.gcgenome.lims.entity.QPreprocessing.preprocessing
 import com.querydsl.core.types.Projections.constructor
 import io.r2dbc.postgresql.codec.Json
 import org.springframework.r2dbc.core.DatabaseClient

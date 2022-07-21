@@ -1,7 +1,7 @@
 package com.gcgenome.lims.service.user
 
+import com.gcgenome.lims.entity.QUser
 import com.gcgenome.lims.entity.User
-import com.greencross.lims.entity.QUser
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
