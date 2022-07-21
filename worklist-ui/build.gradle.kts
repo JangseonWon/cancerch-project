@@ -5,15 +5,10 @@ plugins {
     id("war")
 }
 
-group = "com.greencross"
+group = "com.gcgenome"
 version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
 
 dependencies {
     implementation(project(":shared"))
@@ -53,8 +48,26 @@ tasks {
         codeServerPort = 9666
         war = file("src/main/webapp")
     }
+    register<Copy>("copyWebResources") {
+        dependsOn(build)
+        from(zipTree("build/libs/avoid-service-worklist-ui.war")) {
+            include("**/*.js")
+            include("**/*.css")
+            include("**/*.png")
+            include("**/*.gif")
+            include("**/*.svg")
+            include("**/*.ttf")
+            include("**/*.woff")
+            include("**/*.woff2")
+            include("**/*.eot")
+            include("*.ico")
+            include("*.html")
+            includeEmptyDirs = false
+        }
+        into("build/static")
+    }
     withType<War> {
-        archiveFileName.set("worklist-ui.war")
+        archiveFileName.set("avoid-service-worklist-ui.war")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
