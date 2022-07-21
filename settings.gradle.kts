@@ -26,17 +26,7 @@ dependencyResolutionManagement {
             library("kotlin-coroutines-reactor", "org.jetbrains.kotlinx", "kotlinx-coroutines-reactor").withoutVersion()
             library("kotlin-jackson", "com.fasterxml.jackson.module", "jackson-module-kotlin").withoutVersion()
             library("webflux", "org.springframework.boot", "spring-boot-starter-webflux").withoutVersion()
-            bundle(
-                "kotlin-webflux",
-                listOf(
-                    "reflect",
-                    "stdlib-jdk8",
-                    "kotlin-reactor",
-                    "kotlin-coroutines-reactor",
-                    "kotlin-jackson",
-                    "webflux"
-                )
-            )
+            bundle("kotlin-webflux", listOf("reflect", "stdlib-jdk8", "kotlin-reactor", "kotlin-coroutines-reactor", "kotlin-jackson", "webflux"))
 
             library("spring-gateway", "org.springframework.cloud", "spring-cloud-starter-gateway").withoutVersion()
             library("spring-discovery", "org.springframework.cloud", "spring-cloud-starter-zookeeper-discovery").withoutVersion()
@@ -61,6 +51,14 @@ dependencyResolutionManagement {
             bundle("test", listOf("spring-boot-test", "mockito-kotlin", "mockito-inline", "reactor-test", "kotlin-test"))
 
             library("spring-cloud-bom", "org.springframework.cloud", "spring-cloud-dependencies").version { require("2021.0.3") }
+
+            library("elemento-core", "org.jboss.elemento", "elemento-core").version { require("1.0.10") }
+            library("elemental2-svg", "com.google.elemental2", "elemental2-svg").version { require("1.1.0") }
+            library("gwt-user", "org.gwtproject", "gwt-user").version { require("2.10.0") }
+            library("gwt-dev", "org.gwtproject", "gwt-dev").version { require("2.10.0") }
+            bundle("gwt", listOf("elemento-core", "elemental2-svg", "gwt-user"))
+            library("lombok", "org.projectlombok", "lombok").version { require("1.18.24") }
+            library("jackson-annotations", "com.fasterxml.jackson.core", "jackson-annotations").version { require("2.13.3") }
         }
     }
 }

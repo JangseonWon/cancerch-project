@@ -1,28 +1,19 @@
 plugins {
     kotlin("jvm")
-    id("org.wisepersist.gwt") version "1.1.15"
+    id("org.wisepersist.gwt") version "1.1.18"
     id("java")
 }
 
-group = "com.greencross"
+group = "com.gcgenome"
 version = "1.0"
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-    implementation("org.jboss.elemento:elemento-core:1.0.3")
-    implementation("com.google.gwt:gwt-user:2.9.0")
-    implementation("org.projectlombok:lombok:1.18.22")
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
-
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.3")
-    compileOnly("org.springframework.boot:spring-boot-starter:2.6.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+    implementation(libs.elemento.core)
+    implementation(libs.jackson.annotations)
+    implementation(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 val lombok = project.configurations.annotationProcessor.get().filter { it.name.startsWith("lombok") }.single()
 tasks {
@@ -46,7 +37,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
+        jvmTarget = "auto"
     }
 }
 tasks.withType<Jar> {
