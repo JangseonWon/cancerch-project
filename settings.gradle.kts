@@ -1,6 +1,7 @@
 rootProject.name = "avoid-project"
 include("service")
 include("gateway")
+include("entity")
 include("shared")
 include("analysis")
 include("analysis-ui")

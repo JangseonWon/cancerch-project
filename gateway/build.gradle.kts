@@ -6,8 +6,9 @@ plugins {
 }
 dependencies {
     implementation("com.gcgenome:gateway-page:1.0")
-    implementation(libs.bundles.spring.client)
-    implementation(libs.bundles.kotlin.webflux)
+    implementation(libs.spring.gateway)
+    implementation(libs.spring.discovery)
+    implementation(libs.spring.log4j2)
 }
 configurations { all { exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging") } }
 dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()) } }
