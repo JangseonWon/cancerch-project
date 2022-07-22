@@ -1,6 +1,7 @@
 package com.greencross.lims
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +22,11 @@ import java.util.concurrent.TimeUnit
 @Configuration
 @EnableAsync
 @EnableWebFlux
-open class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
+open class WebConfig(
+    @Value("\${server.resources}")
+    private val resources: String,
+    private val objectMapper: ObjectMapper
+    ) : WebFluxConfigurer {
     @Bean
     @LoadBalanced
     open fun clientBuilder(): WebClient.Builder {
@@ -34,8 +39,7 @@ open class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer
     }
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/**")
-            .addResourceLocations("file:/data/lims/static/avoid-service/")
-//            .addResourceLocations("classpath:/static/")
+            .addResourceLocations("classpath:/static/", resources)
             .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
             .resourceChain(false)
     }
