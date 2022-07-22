@@ -30,7 +30,6 @@ spring:
 
 
 server:
-  resources : file:/data/lims/static/avoid-service/
   compression:
     enabled: true
     mime-types: text/javascript,application/javascript
