@@ -17,12 +17,21 @@ public final class Worklist {
     private String status;
     private String remark;
     private String serial;
+    private String prefix;
+    private Double idx;
 
     @JsOverlay
     @JsIgnore
     public Status status() {
         if (status == null) return null;
         return Status.valueOf(status);
+    }
+    @JsOverlay
+    @JsIgnore
+    public Worklist idx(Integer idx) {
+        if (idx == null) this.idx = null;
+        else this.idx = idx.doubleValue();
+        return this;
     }
 
     public enum Status{

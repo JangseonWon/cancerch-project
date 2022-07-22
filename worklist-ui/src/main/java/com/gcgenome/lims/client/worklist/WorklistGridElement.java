@@ -3,7 +3,6 @@ package com.gcgenome.lims.client.worklist;
 import com.gcgenome.lims.client.Router;
 import com.gcgenome.lims.data.Worklist;
 import com.google.gwt.core.client.JsDate;
-import com.google.gwt.i18n.client.NumberFormat;
 import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
@@ -29,11 +28,23 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
             .manualColumnResize(true)
             .stretchH("all")
             .columns(
-                    column("Batch#").horizontal("center").font("Nanum Gothic Coding").build(),
+                    ColumnBuilder.link("Batch#", data->{
+                                if(data.get("serial") == null || data.get("serial").trim().isEmpty()) return "#Create";
+                                else return "#"+data.get("serial");
+                            }).name("Batch#").readOnly(true)
+                            .onClick(data->{
+                                if(data.get("serial") == null || data.get("serial").trim().isEmpty()) {
+                                    CreateBatchDialog.build(data.idx()).onSubmit().then(worklist->{
+                                        // 1. API 의 PUT 호출
+                                        // 2. data에 serial, prefix, idx 업데이트
+                                        return null;
+                                    });
+                                }
+                                else Router.location(data.idx(), true);
+                            }).font("Nanum Gothic Coding").build(),
                     column("추출일").horizontal("center").font("Nanum Gothic Coding").build(),
                     column("상태").build(),
-                    ColumnBuilder.link("워크리스트 명", data->"#"+data.idx()).name("워크리스트 명").readOnly(true)
-                            .onClick(data-> Router.location(data.idx(), true)).build(),
+                    column("워크리스트 명").build(),
                     column("Comment").horizontal("left").build()
             ).data(new Data[10]);
     private final SheetElement elemSheet = config.build();
@@ -57,9 +68,10 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
     }
     private Data map(Worklist value){
         if(value == null) return null;
-        NumberFormat NF = NumberFormat.getFormat("#");
-        return new Data(value.id())
-                .put("Batch#", value.serial())
+        String serial = value.serial();
+        if(value.serial() == null || value.serial().trim().isEmpty()) serial = "Create";
+        return new Data(value.id()).put("serial", value.serial())
+                .put("Batch#", serial)
                 .put("워크리스트 명", value.title())
                 .put("추출일", DataTransformUtil.formatDateTime((long) JsDate.parse(value.created())))
                 .put("상태", toString(value.status()))
