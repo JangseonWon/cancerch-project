@@ -11,11 +11,8 @@ public class Application extends AbstractEntryPoint {
     public AbstractScene<?>[] elements(Query query) {
         worklist = WorklistScene.build(query);
         work = WorkScene.build(query);
-        return new AbstractScene[] {
-                worklist, work
-        };
+        return new AbstractScene[] { worklist, work };
     }
-
     @Override
     protected AbstractScene<?> prepare(String param) {
         if(param == null || param.isEmpty() || param.endsWith(".html")) {
@@ -26,7 +23,6 @@ public class Application extends AbstractEntryPoint {
             return work;
         }
     }
-
     @Override
     protected String toParentUrl(String param) {
         if(param == null || param.isEmpty() || param.endsWith(".html")) return "액체생검/Worklist";

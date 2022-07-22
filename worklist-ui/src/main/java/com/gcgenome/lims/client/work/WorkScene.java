@@ -5,18 +5,17 @@ import com.gcgenome.lims.api.RouteApi;
 import com.gcgenome.lims.api.WorkApi;
 import com.gcgenome.lims.client.AbstractScene;
 import com.gcgenome.lims.client.Router;
-import com.gcgenome.lims.data.Preprocessing;
-import com.gcgenome.lims.data.Work;
 import com.gcgenome.lims.dto.Query;
 import com.gcgenome.lims.ui.IconElement;
-import elemental2.dom.*;
+import elemental2.dom.DomGlobal;
+import elemental2.dom.Event;
+import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLLabelElement;
 import elemental2.promise.Promise;
 import net.sayaya.ui.*;
 import net.sayaya.ui.TextFieldElement.TextFieldOutlined;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
-
-import java.util.Arrays;
 
 import static org.jboss.elemento.Elements.*;
 
@@ -45,7 +44,6 @@ public class WorkScene extends AbstractScene<WorkScene> {
     public WorkScene(Query query) {
         super(query);
         this.query = query;
-        initialize();
         btnSequencing.onClick(this::sequence);
         btnBack.onClick(this::back);
         btnCalc.onClick(this::calc);
@@ -76,20 +74,13 @@ public class WorkScene extends AbstractScene<WorkScene> {
         this.dialog("현재 상태를 저장합니다.")
                 .then(result->{
                     if(!result) return Promise.reject(false);
-                    Preprocessing[] data = Arrays.stream(grid.values()).map(datum->{
-                        Preprocessing tmp = new Preprocessing();
-                        tmp.id(datum.worklist()+"$"+datum.index()).json(datum.json());
-                        return tmp;
-                    }).toArray(Preprocessing[]::new);
                     ProgressApi.open(false);
-                    return WorkApi.merge(hash, data);
+                    return WorkApi.merge(hash, grid.values());
                 }).then(result2-> {
                     if (!result2.ok) return Promise.reject(false);
                     DomGlobal.alert("저장이 완료됬습니다.");
                     return WorkApi.works(hash);
-                }).then(Response::json)
-                .then(json-> Promise.resolve((Work[]) json))
-                .then(works->Promise.resolve(grid.update(works)))
+                }).then(works->Promise.resolve(grid.update(works)))
                 .finally_(ProgressApi::close);
     }
     private void back(Event event) {
@@ -103,7 +94,6 @@ public class WorkScene extends AbstractScene<WorkScene> {
         ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
         Dialog dialog = Dialog.alert(title, ok, cancel);
         body().add(dialog);
-
         return new Promise<>((resolve, reject)-> {
             ok.onClick(evt -> {
                 dialog.close();
@@ -115,20 +105,14 @@ public class WorkScene extends AbstractScene<WorkScene> {
                 dialog.element().remove();
                 reject.onInvoke(false);
             });
-
             dialog.open();
         });
     }
-
     private void update(Query query){
         ProgressApi.open(false);
-        WorkApi.works(hash).then(Response::json).then(json-> Promise.resolve((Work[]) json))
-                .then(works->{
-                    grid.update(works);
-                    return null;
-                }).finally_(ProgressApi::close);
+        WorkApi.works(hash).then(grid::update)
+                .finally_(ProgressApi::close);
     }
-
     @Override
     protected IconElement icon() {
         return IconElement.icon(IconElement.Type.Light, "fa-clipboard-list");

@@ -10,8 +10,7 @@ import static com.gcgenome.lims.client.work.WorkModel.*;
 public class WorkCalculator {
     public Promise<Data[]> initialize(Data[] data, Double assuming, Double dilution, Double volume) {
         for(Data datum: data) {
-            datum.delete(Assuming.id).delete(Dilution.id).delete(LibraryVolume.id);
-            if(assuming!=null)  datum.put(Assuming.id, assuming.toString());
+            datum.delete(Dilution.id).delete(LibraryVolume.id);
             if(dilution!=null)  datum.put(Dilution.id, dilution.toString());
             if(volume!=null)    datum.put(LibraryVolume.id, volume.toString());
         }
@@ -20,10 +19,10 @@ public class WorkCalculator {
     public Promise<Data[]> calculate(Data[] data) {
         for(Data datum: data) {
             datum.delete(NM.id).delete(Volume.id).delete(TEBuffer.id);
-            if(datum.get(ConcQubit.id).isEmpty() || datum.get(FragSize.id).isEmpty() || datum.get(Assuming.id).isEmpty()) continue;
+            if(datum.get(ConcQubit.id).isEmpty() || datum.get(FragSize.id).isEmpty()) continue;
             double libConc = Double.parseDouble(datum.get(ConcQubit.id));
             double fragSize = Double.parseDouble(datum.get(FragSize.id));
-            double assuming = Double.parseDouble(datum.get(Assuming.id));
+            double assuming = 650;
             double nm = libConc / (fragSize * assuming) * 1000000;
             datum.put(NM.id, String.valueOf(Math.round(nm*100)/100.0));
 

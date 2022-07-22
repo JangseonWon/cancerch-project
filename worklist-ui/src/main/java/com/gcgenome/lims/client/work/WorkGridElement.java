@@ -4,7 +4,6 @@ import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.data.Work;
 import elemental2.dom.HTMLDivElement;
 import elemental2.promise.Promise;
-import jsinterop.base.Js;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.ListElement;
 import net.sayaya.ui.MenuElement;
@@ -17,7 +16,6 @@ import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Arrays;
 
-import static elemental2.core.Global.JSON;
 import static org.jboss.elemento.Elements.div;
 
 public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement>{
@@ -45,7 +43,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column(WorkModel.ConcQubit.id).horizontal("right").build(),
                     column(WorkModel.FragSize.id).horizontal("right").build(),
                     column(WorkModel.NM.id).horizontal("right").readOnly(true).build(),
-                    column(WorkModel.Assuming.id).name(WorkModel.Assuming.label).build(),
                     column(WorkModel.Dilution.id).name(WorkModel.Dilution.label).build(),
                     column(WorkModel.Volume.id).horizontal("right").readOnly(true).build(),
                     column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).build(),
@@ -77,7 +74,9 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     public Work[] values(){
         Data[] data = elemSheet.values();
         for(int i = 0; i < works.length; i++){
-            String json = "{";
+            works[i].libConcTape(toDouble(data[i].get(WorkModel.ConcTape.id)));
+            works[i].fragmentSize(toDouble(data[i].get(WorkModel.FragSize.id)));
+            /*String json = "{";
             if(!data[i].get("Na Conc(pg/ul)").isEmpty())                 json += "\"naConc\":"       +data[i].get("Na Conc(pg/ul)")+",";
             if(!data[i].get("input Conc(ng)").isEmpty())                 json += "\"inputConc\":"    +data[i].get("input Conc(ng)")+",";
             if(!data[i].get("Library Prep").isEmpty())                   json += "\"libPrep\":\""    +data[i].get("Library Prep")+"\",";
@@ -85,7 +84,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             if(!data[i].get(WorkModel.ConcQubit.id).isEmpty())           json += "\"libConc\":"      +data[i].get(WorkModel.ConcQubit.id)+",";
             if(!data[i].get(WorkModel.FragSize.id).isEmpty())             json += "\"fragSize\":"     +data[i].get(WorkModel.FragSize.id)+",";
             if(!data[i].get(WorkModel.NM.id).isEmpty())                  json += "\"convert\":"      +data[i].get(WorkModel.NM.id)+",";
-            if(!data[i].get(WorkModel.Assuming.id).isEmpty())                  json += "\"assuming\":"     +data[i].get(WorkModel.Assuming.id)+",";
             if(!data[i].get(WorkModel.Dilution.id).isEmpty())                 json += "\"dilution\":"     +data[i].get(WorkModel.Dilution.id)+",";
             if(!data[i].get(WorkModel.Volume.id).isEmpty())                  json += "\"totalVol\":"     +data[i].get(WorkModel.Volume.id)+",";
             if(!data[i].get(WorkModel.LibraryVolume.id).isEmpty())             json += "\"libVol\":"       +data[i].get(WorkModel.LibraryVolume.id)+",";
@@ -96,14 +94,13 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             if(!data[i].get("I5 Sequence").isEmpty())                    json += "\"i5Seq\":\""      +data[i].get("I5 Sequence")+"\",";
             json = json.substring(0, json.length()-1);
             json += "}";
-            works[i].json(json);
-
+            works[i].json(json);*/
         }
         return works;
     }
-    public WorkGridElement update(Work[] values){
+    public Promise<WorkGridElement> update(Work[] values){
         this.works = Arrays.stream(values).toArray(Work[]::new);
-        return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
+        return Promise.resolve(update(Arrays.stream(values).map(this::map).toArray(Data[]::new)));
     }
     Promise<Void> initialize(Double assuming, Double dilution, Double volume) {
         ProgressApi.open(false);
@@ -127,9 +124,32 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+    private Double toDouble(String text) {
+        if(text == null || text.trim().isEmpty()) return null;
+        return Double.parseDouble(text);
+    }
+    private String toString(Object value) {
+        if(value==null) return "";
+        else return String.valueOf(value);
+    }
     private Data map(Work value){
         if(value == null) return null;
-        String[] values = new String[16];
+        return new Data(value.worklist() + "$" + value.index())
+                .put("index",                           String.valueOf(value.index()))
+                .put("G-ID",                            value.gid())
+                .put("의뢰번호",                         value.samples())
+                .put("수진자명",                         value.patientName())
+                .put("MRN",                             value.mrns())
+                .put(WorkModel.ConcTape.id,             toString(value.libConcTape()))
+                .put(WorkModel.ConcQubit.id,            toString(value.libConcQubit()))
+                .put(WorkModel.FragSize.id,             toString(value.fragmentSize()))
+                .put(WorkModel.NM.id,                   toString(value.amount()))
+                .put(WorkModel.Dilution.id,             toString(value.dilution()))
+                .put(WorkModel.Volume.id,               toString(value.volume()))
+                .put(WorkModel.LibraryVolume.id,        toString(value.libVolume()))
+                .put(WorkModel.TEBuffer.id,             toString(value.bufferVolume()));
+
+        /*String[] values = new String[16];
         if(value.json() != null) {
             var json = Js.asPropertyMap(JSON.parse(value.json()));
             values[0]   = json.has("naConc")      ? String.valueOf(json.get("naConc"))                                          : "";
@@ -161,7 +181,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put(WorkModel.ConcQubit.id,            values[4])
                     .put(WorkModel.FragSize.id,             values[5])
                     .put(WorkModel.NM.id,                   values[6])
-                    .put(WorkModel.Assuming.id,             values[7])
                     .put(WorkModel.Dilution.id,             values[8])
                     .put(WorkModel.Volume.id,               values[9])
                     .put(WorkModel.LibraryVolume.id,        values[10])
@@ -184,7 +203,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put(WorkModel.ConcQubit.id,           "")
                     .put(WorkModel.FragSize.id,              "")
                     .put(WorkModel.NM.id,                   "")
-                    .put(WorkModel.Assuming.id,                   "")
                     .put(WorkModel.Dilution.id,                  "")
                     .put(WorkModel.Volume.id,                   "")
                     .put(WorkModel.LibraryVolume.id,              "")
@@ -193,7 +211,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put("I7 Sequence",                     "")
                     .put("I5 Index ID",                     "")
                     .put("I5 Sequence",                     "");
-        }
+        }*/
     }
 
     @Override

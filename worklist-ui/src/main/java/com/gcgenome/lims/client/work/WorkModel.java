@@ -5,7 +5,6 @@ public enum WorkModel {
     ConcQubit("conc_qubit", "Lib conc(ng/ul) Qubit"),
     FragSize("frag_size", "fragment size (bp)"),
     NM("nm", "convert to nM"),
-    Assuming("assuming", "Assuming a Mr"),
     Dilution("dilution", "nM of dilution"),
     Volume("volume", "Total Vol(ul)"),
     LibraryVolume("library_volume", "Library volume(ul)"),

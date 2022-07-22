@@ -61,9 +61,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         super(query);
         this.sortable("작성일", "워크리스트 명", "상태").sort("작성일", false);
         this.query = query;
-        initialize();
         btnSearch.onClick(evt->update());
-        update();
     }
     private void update(Query query){
         Query proxy = new Query().asc(this.isAsc());

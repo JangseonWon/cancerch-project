@@ -1,6 +1,6 @@
 package com.gcgenome.lims.api;
 
-import com.gcgenome.lims.data.Preprocessing;
+import com.gcgenome.lims.data.Work;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.RequestInit;
 import elemental2.dom.Response;
@@ -11,7 +11,7 @@ import static elemental2.core.Global.JSON;
 
 @UtilityClass
 public class WorkApi {
-    public Promise<Response> works(String worklist){
+    public Promise<Work[]> works(String worklist){
         RequestInit request = RequestInit.create();
         request.setHeaders(new String[][]{
                 new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
@@ -23,9 +23,10 @@ public class WorkApi {
                 DomGlobal.alert(msg);
                 return Promise.reject(msg);
             }); else return Promise.resolve(response);
-        });
+        }).then(Response::json)
+        .then(json-> Promise.resolve((Work[]) json));
     }
-    public Promise<Response> merge(String worklistId, Preprocessing[] works){
+    public Promise<Response> merge(String worklistId, Work[] works){
         RequestInit request = RequestInit.create();
         request.setHeaders(new String[][]{
                 new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}

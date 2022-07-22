@@ -17,7 +17,7 @@ class PreprocessingDao(
     private val repo: PreprocessingRepository,
     private val databaseClient: DatabaseClient
 ) {
-    fun merge(worklist: String, index: String, json: String): Mono<Any> {
+    fun merge(worklist: String, index: Int, json: com.gcgenome.lims.data.Preprocessing): Mono<Any> {
         return repo.query{ it.select(
             constructor(
                 Preprocessing::class.java,
@@ -39,10 +39,20 @@ class PreprocessingDao(
                 preprocessing.indexI5,
                 preprocessing.sequenceI5
             )
-        ).from(preprocessing).where(preprocessing.worklist.eq(worklist).and(preprocessing.index.eq(index.toInt())))}
-            .one().switchIfEmpty(Mono.just(Preprocessing(worklist, index.toInt())))
-            .map { it.apply { it.json = json }}
-            .flatMap { save(it) }
+        ).from(preprocessing).where(preprocessing.worklist.eq(worklist).and(preprocessing.index.eq(index)))}
+            .one().switchIfEmpty(Mono.just(Preprocessing(worklist, index)))
+            .map { it.apply {
+                it.fragmentSize = json.fragmentSize
+                it.amount = json.amount
+                it.dilution = json.dilution
+                it.volume = json.volume
+                it.libVolume = json.libVolume
+                it.bufferVolume = json.bufferVolume
+                it.indexI7 = json.indexI7
+                it.sequenceI7 = json.sequenceI7
+                it.indexI5 = json.indexI5
+                it.sequenceI5 = json.sequenceI5
+            }}.flatMap { save(it) }
     }
 
     fun save(entity: Preprocessing) : Mono<Void> {
@@ -61,7 +71,11 @@ class PreprocessingDao(
             }.then()
         } else {
             return repo.update {
-                it.set(preprocessing.json, entity.json)
+                it.set(preprocessing.fragmentSize, entity.fragmentSize)
+                    .set(preprocessing.amount, entity.amount)
+                    .set(preprocessing.dilution, entity.dilution)
+                    .set(preprocessing.volume, entity.volume)
+                    .set(preprocessing.libVolume, entity.libVolume)
                     .where(preprocessing.worklist.eq(entity.worklist).and(preprocessing.index.eq(entity.index)))
             }.then(Mono.empty())
         }

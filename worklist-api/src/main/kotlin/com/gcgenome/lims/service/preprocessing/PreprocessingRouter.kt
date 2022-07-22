@@ -20,5 +20,8 @@ class PreprocessingRouter(private val handler: PreprocessingHandler) {
             .flatMapMany { handler.saveMany(it) }
             .collectList()
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
+            .doOnError(Exception::class.java) {
+                it.printStackTrace()
+            }
     }
 }
