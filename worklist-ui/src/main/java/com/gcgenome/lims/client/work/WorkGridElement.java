@@ -2,10 +2,9 @@ package com.gcgenome.lims.client.work;
 
 import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.data.Work;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import elemental2.dom.HTMLDivElement;
+import elemental2.promise.Promise;
+import jsinterop.base.Js;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.ListElement;
 import net.sayaya.ui.MenuElement;
@@ -18,6 +17,7 @@ import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Arrays;
 
+import static elemental2.core.Global.JSON;
 import static org.jboss.elemento.Elements.div;
 
 public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGridElement>{
@@ -41,15 +41,15 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column("Na Conc(pg/ul)").horizontal("right").build(),
                     column("input Conc(ng)").horizontal("right").build(),
                     column("Library Prep").build(),
-                    column("Lib conc(ng/ul) Tapestation").horizontal("right").build(),
-                    column("Lib conc(ng/ul) Qubit").horizontal("right").build(),
-                    column("fragment size (bp)").horizontal("right").build(),
-                    column("convert to nM").horizontal("right").readOnly(true).build(),
-                    column("Assuming a Mr").build(),
-                    column("nM of dilution").build(),
-                    column("Total Vol(ul)").horizontal("right").readOnly(true).build(),
-                    column("Library volume(ul)").build(),
-                    column("TE buffer (ul)").horizontal("right").readOnly(true).build(),
+                    column(WorkModel.ConcTape.id).horizontal("right").build(),
+                    column(WorkModel.ConcQubit.id).horizontal("right").build(),
+                    column(WorkModel.FragSize.id).horizontal("right").build(),
+                    column(WorkModel.NM.id).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.Assuming.id).name(WorkModel.Assuming.label).build(),
+                    column(WorkModel.Dilution.id).name(WorkModel.Dilution.label).build(),
+                    column(WorkModel.Volume.id).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).build(),
+                    column(WorkModel.TEBuffer.id).horizontal("right").readOnly(true).build(),
                     column("I7 Index ID").build(),
                     column("I7 Sequence").build(),
                     column("I5 Index ID").build(),
@@ -77,25 +77,25 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     public Work[] values(){
         Data[] data = elemSheet.values();
         for(int i = 0; i < works.length; i++){
-            String json = "[{";
+            String json = "{";
             if(!data[i].get("Na Conc(pg/ul)").isEmpty())                 json += "\"naConc\":"       +data[i].get("Na Conc(pg/ul)")+",";
             if(!data[i].get("input Conc(ng)").isEmpty())                 json += "\"inputConc\":"    +data[i].get("input Conc(ng)")+",";
             if(!data[i].get("Library Prep").isEmpty())                   json += "\"libPrep\":\""    +data[i].get("Library Prep")+"\",";
-            if(!data[i].get("Lib conc(ng/ul) Tapestation").isEmpty())    json += "\"libConcT\":"     +data[i].get("Lib conc(ng/ul) Tapestation")+",";
-            if(!data[i].get("Lib conc(ng/ul) Qubit").isEmpty())          json += "\"libConc\":"      +data[i].get("Lib conc(ng/ul) Qubit")+",";
-            if(!data[i].get("fragment size (bp)").isEmpty())             json += "\"fragSize\":"     +data[i].get("fragment size (bp)")+",";
-            if(!data[i].get("convert to nM").isEmpty())                  json += "\"convert\":"      +data[i].get("convert to nM")+",";
-            if(!data[i].get("Assuming a Mr").isEmpty())                  json += "\"assuming\":"     +data[i].get("Assuming a Mr")+",";
-            if(!data[i].get("nM of dilution").isEmpty())                 json += "\"dilution\":"     +data[i].get("nM of dilution")+",";
-            if(!data[i].get("Total Vol(ul)").isEmpty())                  json += "\"totalVol\":"     +data[i].get("Total Vol(ul)")+",";
-            if(!data[i].get("Library volume(ul)").isEmpty())             json += "\"libVol\":"       +data[i].get("Library volume(ul)")+",";
-            if(!data[i].get("TE buffer (ul)").isEmpty())                 json += "\"teBuffer\":"     +data[i].get("TE buffer (ul)")+",";
+            if(!data[i].get(WorkModel.ConcTape.id).isEmpty())            json += "\"libConcT\":"     +data[i].get(WorkModel.ConcTape.id)+",";
+            if(!data[i].get(WorkModel.ConcQubit.id).isEmpty())           json += "\"libConc\":"      +data[i].get(WorkModel.ConcQubit.id)+",";
+            if(!data[i].get(WorkModel.FragSize.id).isEmpty())             json += "\"fragSize\":"     +data[i].get(WorkModel.FragSize.id)+",";
+            if(!data[i].get(WorkModel.NM.id).isEmpty())                  json += "\"convert\":"      +data[i].get(WorkModel.NM.id)+",";
+            if(!data[i].get(WorkModel.Assuming.id).isEmpty())                  json += "\"assuming\":"     +data[i].get(WorkModel.Assuming.id)+",";
+            if(!data[i].get(WorkModel.Dilution.id).isEmpty())                 json += "\"dilution\":"     +data[i].get(WorkModel.Dilution.id)+",";
+            if(!data[i].get(WorkModel.Volume.id).isEmpty())                  json += "\"totalVol\":"     +data[i].get(WorkModel.Volume.id)+",";
+            if(!data[i].get(WorkModel.LibraryVolume.id).isEmpty())             json += "\"libVol\":"       +data[i].get(WorkModel.LibraryVolume.id)+",";
+            if(!data[i].get(WorkModel.TEBuffer.id).isEmpty())                 json += "\"teBuffer\":"     +data[i].get(WorkModel.TEBuffer.id)+",";
             if(!data[i].get("I7 Index ID").isEmpty())                    json += "\"i7Index\":\""    +data[i].get("I7 Index ID")+"\",";
             if(!data[i].get("I7 Sequence").isEmpty())                    json += "\"i7Seq\":\""      +data[i].get("I7 Sequence")+"\",";
             if(!data[i].get("I5 Index ID").isEmpty())                    json += "\"i5Index\":\""    +data[i].get("I5 Index ID")+"\",";
             if(!data[i].get("I5 Sequence").isEmpty())                    json += "\"i5Seq\":\""      +data[i].get("I5 Sequence")+"\",";
             json = json.substring(0, json.length()-1);
-            json += "}]";
+            json += "}";
             works[i].json(json);
 
         }
@@ -105,31 +105,19 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         this.works = Arrays.stream(values).toArray(Work[]::new);
         return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
     }
-    public WorkGridElement calculate(){
+    Promise<Void> initialize(Double assuming, Double dilution, Double volume) {
         ProgressApi.open(false);
-        Data[] datas = Arrays.stream(elemSheet.values()).peek(data->{
-            data.delete("convert to nM").put("convert to nM", "");
-            data.delete("Total Vol(ul)").put("Total Vol(ul)", "");
-            data.delete("TE buffer (ul)").put("TE buffer (ul)", "");
-            if(!data.get("Lib conc(ng/ul) Qubit").isEmpty() && !data.get("fragment size (bp)").isEmpty() && !data.get("Assuming a Mr").isEmpty()) {
-                Double libConc  = Double.parseDouble(data.get("Lib conc(ng/ul) Qubit"));
-                Double fragSize = Double.parseDouble(data.get("fragment size (bp)"));
-                Double assuming = Double.parseDouble(data.get("Assuming a Mr"));
-                Double result = libConc / (fragSize * assuming) * 1000000;
-                data.put("convert to nM", String.valueOf(Math.round(result*100)/100.0));
-                if(!data.get("Library volume(ul)").isEmpty() && !data.get("nM of dilution").isEmpty()){
-                    Double libVol = Double.parseDouble(data.get("Library volume(ul)"));
-                    Double nMDil  = Double.parseDouble(data.get("nM of dilution"));
-                    result = libVol*(result/nMDil);
-                    data.put("Total Vol(ul)", String.valueOf(Math.round(result*10)/10.0));
-                    result = result - libVol;
-                    data.put("TE buffer (ul)", String.valueOf(Math.round(result*10)/10.0));
-                }
-            }
-        }).toArray(Data[]::new);
-        update(datas);
-        ProgressApi.close();
-        return that();
+        return WorkCalculator.initialize(elemSheet.values(), assuming, dilution, volume)
+                .then(data->Promise.resolve(update(data)))
+                .then(s->Promise.resolve((Void)null))
+                .finally_(ProgressApi::close);
+    }
+    Promise<Void> calculate() {
+        ProgressApi.open(false);
+        return WorkCalculator.calculate(elemSheet.values())
+                .then(data->Promise.resolve(update(data)))
+                .then(s->Promise.resolve((Void)null))
+                .finally_(ProgressApi::close);
     }
     private WorkGridElement update(Data[] data){
         try {
@@ -143,24 +131,23 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         if(value == null) return null;
         String[] values = new String[16];
         if(value.json() != null) {
-            JSONArray arrValue = (JSONArray) JSONParser.parseStrict(value.json());
-            JSONObject json = (JSONObject) arrValue.get(0);
-            values[0]   = json.containsKey("naConc")      ? String.valueOf(json.get("naConc"))                                          : "";
-            values[1]   = json.containsKey("inputConc")   ? String.valueOf(json.get("inputConc"))                                       : "";
-            values[2]   = json.containsKey("libPrep")     ? String.valueOf(json.get("libPrep")).replace("\"", ""): "";
-            values[3]   = json.containsKey("libConcT")    ? String.valueOf(json.get("libConcT"))                                        : "";
-            values[4]   = json.containsKey("libConc")     ? String.valueOf(json.get("libConc"))                                         : "";
-            values[5]   = json.containsKey("fragSize")    ? String.valueOf(json.get("fragSize"))                                        : "";
-            values[6]   = json.containsKey("convert")     ? String.valueOf(json.get("convert"))                                         : "";
-            values[7]   = json.containsKey("assuming")    ? String.valueOf(json.get("assuming"))                                        : "";
-            values[8]   = json.containsKey("dilution")    ? String.valueOf(json.get("dilution"))                                        : "";
-            values[9]   = json.containsKey("totalVol")    ? String.valueOf(json.get("totalVol"))                                        : "";
-            values[10]  = json.containsKey("libVol")      ? String.valueOf(json.get("libVol"))                                          : "";
-            values[11]  = json.containsKey("teBuffer")    ? String.valueOf(json.get("teBuffer"))                                        : "";
-            values[12]  = json.containsKey("i7Index")     ? String.valueOf(json.get("i7Index")).replace("\"", ""): "";
-            values[13]  = json.containsKey("i7Seq")       ? String.valueOf(json.get("i7Seq")).replace("\"", "")  : "";
-            values[14]  = json.containsKey("i5Index")     ? String.valueOf(json.get("i5Index")).replace("\"", ""): "";
-            values[15]  = json.containsKey("i5Seq")       ? String.valueOf(json.get("i5Seq")).replace("\"", "")  : "";
+            var json = Js.asPropertyMap(JSON.parse(value.json()));
+            values[0]   = json.has("naConc")      ? String.valueOf(json.get("naConc"))                                          : "";
+            values[1]   = json.has("inputConc")   ? String.valueOf(json.get("inputConc"))                                       : "";
+            values[2]   = json.has("libPrep")     ? String.valueOf(json.get("libPrep")).replace("\"", ""): "";
+            values[3]   = json.has("libConcT")    ? String.valueOf(json.get("libConcT"))                                        : "";
+            values[4]   = json.has("libConc")     ? String.valueOf(json.get("libConc"))                                         : "";
+            values[5]   = json.has("fragSize")    ? String.valueOf(json.get("fragSize"))                                        : "";
+            values[6]   = json.has("convert")     ? String.valueOf(json.get("convert"))                                         : "";
+            values[7]   = json.has("assuming")    ? String.valueOf(json.get("assuming"))                                        : "";
+            values[8]   = json.has("dilution")    ? String.valueOf(json.get("dilution"))                                        : "";
+            values[9]   = json.has("totalVol")    ? String.valueOf(json.get("totalVol"))                                        : "";
+            values[10]  = json.has("libVol")      ? String.valueOf(json.get("libVol"))                                          : "";
+            values[11]  = json.has("teBuffer")    ? String.valueOf(json.get("teBuffer"))                                        : "";
+            values[12]  = json.has("i7Index")     ? String.valueOf(json.get("i7Index")).replace("\"", ""): "";
+            values[13]  = json.has("i7Seq")       ? String.valueOf(json.get("i7Seq")).replace("\"", "")  : "";
+            values[14]  = json.has("i5Index")     ? String.valueOf(json.get("i5Index")).replace("\"", ""): "";
+            values[15]  = json.has("i5Seq")       ? String.valueOf(json.get("i5Seq")).replace("\"", "")  : "";
             return new Data(value.worklist() + "$" + value.index())
                     .put("index",                           String.valueOf(value.index()))
                     .put("G-ID",                            value.gid())
@@ -170,15 +157,15 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put("Na Conc(pg/ul)",                  values[0])
                     .put("input Conc(ng)",                  values[1])
                     .put("Library Prep",                    values[2])
-                    .put("Lib conc(ng/ul) Tapestation",     values[3])
-                    .put("Lib conc(ng/ul) Qubit",           values[4])
-                    .put("fragment size (bp)",              values[5])
-                    .put("convert to nM",                   values[6])
-                    .put("Assuming a Mr",                   values[7])
-                    .put("nM of dilution",                  values[8])
-                    .put("Total Vol(ul)",                   values[9])
-                    .put("Library volume(ul)",              values[10])
-                    .put("TE buffer (ul)",                  values[11])
+                    .put(WorkModel.ConcTape.id,             values[3])
+                    .put(WorkModel.ConcQubit.id,            values[4])
+                    .put(WorkModel.FragSize.id,             values[5])
+                    .put(WorkModel.NM.id,                   values[6])
+                    .put(WorkModel.Assuming.id,             values[7])
+                    .put(WorkModel.Dilution.id,             values[8])
+                    .put(WorkModel.Volume.id,               values[9])
+                    .put(WorkModel.LibraryVolume.id,        values[10])
+                    .put(WorkModel.TEBuffer.id,             values[11])
                     .put("I7 Index ID",                     values[12])
                     .put("I7 Sequence",                     values[13])
                     .put("I5 Index ID",                     values[14])
@@ -193,54 +180,22 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     .put("Na Conc(pg/ul)",                  "")
                     .put("input Conc(ng)",                  "")
                     .put("Library Prep",                    "")
-                    .put("Lib conc(ng/ul) Tapestation",     "")
-                    .put("Lib conc(ng/ul) Qubit",           "")
-                    .put("fragment size (bp)",              "")
-                    .put("convert to nM",                   "")
-                    .put("Assuming a Mr",                   "")
-                    .put("nM of dilution",                  "")
-                    .put("Total Vol(ul)",                   "")
-                    .put("Library volume(ul)",              "")
-                    .put("TE buffer (ul)",                  "")
+                    .put(WorkModel.ConcTape.id,     "")
+                    .put(WorkModel.ConcQubit.id,           "")
+                    .put(WorkModel.FragSize.id,              "")
+                    .put(WorkModel.NM.id,                   "")
+                    .put(WorkModel.Assuming.id,                   "")
+                    .put(WorkModel.Dilution.id,                  "")
+                    .put(WorkModel.Volume.id,                   "")
+                    .put(WorkModel.LibraryVolume.id,              "")
+                    .put(WorkModel.TEBuffer.id,                  "")
                     .put("I7 Index ID",                     "")
                     .put("I7 Sequence",                     "")
                     .put("I5 Index ID",                     "")
                     .put("I5 Sequence",                     "");
         }
     }
-    public WorkGridElement updateDilut(Double value){
-        ProgressApi.open(false);
-        Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
-            data.delete("nM of dilution");
-            data.put("nM of dilution", value.toString());
-            return data;
-        }).toArray(Data[]::new);
-        update(datas);
-        ProgressApi.close();
-        return that();
-    }
-    public WorkGridElement updateAssum(Double value){
-        ProgressApi.open(false);
-        Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
-            data.delete("Assuming a Mr");
-            data.put("Assuming a Mr", value.toString());
-            return data;
-        }).toArray(Data[]::new);
-        update(datas);
-        ProgressApi.close();
-        return that();
-    }
-    public WorkGridElement updateLibrary(Double value){
-        ProgressApi.open(false);
-        Data[] datas = Arrays.stream(elemSheet.values()).map(data->{
-            data.delete("Library volume(ul)");
-            data.put("Library volume(ul)", value.toString());
-            return data;
-        }).toArray(Data[]::new);
-        update(datas);
-        ProgressApi.close();
-        return that();
-    }
+
     @Override
     public WorkGridElement that() {
         return this;

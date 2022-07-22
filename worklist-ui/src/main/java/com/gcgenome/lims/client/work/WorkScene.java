@@ -25,15 +25,13 @@ public class WorkScene extends AbstractScene<WorkScene> {
     private final HtmlContentBuilder<HTMLLabelElement> title    = label().add("Avoid");
     private final WorkGridElement grid                          = WorkGridElement.build();
     private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
-    private final ButtonElement btnAcceptAssuming               = ButtonElement.outline().css("button").text("적용");
-    private final ButtonElement btnAcceptDilution               = ButtonElement.outline().css("button").text("적용");
-    private final ButtonElement btnAcceptLibraryVol             = ButtonElement.outline().css("button").text("적용");
+    private final ButtonElement btnAccept                       = ButtonElement.outline().css("button").text("적용");
     private final ButtonElement btnCalc                         = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
     private final ButtonElement btnSave                         = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
     private final ButtonElement btnBack                         = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
-    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptAssuming          = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("Assuming a Mr");
-    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("nM of dilution");
-    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptLibraryVol        = TextFieldElement.numberBox().outlined().css("button").style("height:36px;").text("Library Volume");
+    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptAssuming          = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("Assuming a Mr");
+    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("nM of dilution");
+    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptLibraryVol        = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("Library Volume");
     private final BreadcrumbElement breadcumb                    = BreadcrumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
                 RouteApi.location("Worklist", true, false);
             }).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
@@ -52,9 +50,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
         btnBack.onClick(this::back);
         btnCalc.onClick(this::calc);
         btnSave.onClick(this::save);
-        btnAcceptAssuming.onClick(this::acceptAssum);
-        btnAcceptDilution.onClick(this::acceptDilut);
-        btnAcceptLibraryVol.onClick(this::acceptLibrary);
+        btnAccept.onClick(this::accept);
     }
 
     private void sequence(Event event) {
@@ -63,57 +59,38 @@ public class WorkScene extends AbstractScene<WorkScene> {
             return null;
         });
     }
-
-    private void acceptAssum(Event event) {
+    private void accept(Event event) {
         if(iptAssuming.value() <= 0 || iptAssuming.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
-        else this.dialog("기존 정보가 모두 지워집니다.").then(result->{
-            if(result){ grid.updateAssum(iptAssuming.value()); }
-            return null;
-        });
-    }
-    private void acceptLibrary(Event event) {
-        if(iptLibraryVol.value() <= 0 || iptLibraryVol.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
-        else this.dialog("기존 정보가 모두 지워집니다.").then(result->{
-            if(result){ grid.updateLibrary(iptLibraryVol.value()); }
-            return null;
-        });
-    }
-    private void acceptDilut(Event event) {
-        if(iptnMOfDilution.value() <= 0 || iptnMOfDilution.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
-        else this.dialog("기존 정보가 모두 지워집니다.").then(result->{
-            if(result){ grid.updateDilut(iptnMOfDilution.value()); }
-            return null;
+        else this.dialog("기존 정보가 모두 지워집니다.").then(result-> {
+            if (result) return grid.initialize(iptAssuming.value(), iptnMOfDilution.value(), iptLibraryVol.value());
+            else return Promise.reject(false);
         });
     }
     private void calc(Event event){
         this.dialog("기존 정보가 모두 지워집니다.").then(result->{
-            if(result){ grid.calculate(); }
-            return null;
+            if(result) return grid.calculate();
+            else return Promise.reject(false);
         });
     }
     private void save(Event event){
-        this.dialog("현재 상태를 저장합니다.").then(result->{
-            if(result){
-                Preprocessing[] datas = Arrays.stream(grid.values()).map(data->{
-                    Preprocessing tmp = new Preprocessing();
-                    tmp.id(data.worklist()+"$"+data.index()).json(data.json());
-                    return tmp;
-                }).toArray(Preprocessing[]::new);
-                ProgressApi.open(false);
-                return WorkApi.merge(hash, datas).then(result2-> {
-                            if (result2.ok) {
-                                DomGlobal.alert("저장이 완료됬습니다.");
-                                WorkApi.works(hash).then(Response::json).then(json-> Promise.resolve((Work[]) json))
-                                        .then(works->{
-                                            grid.update(works);
-                                            return null;
-                                        });
-                            }
-                            return null;
-                        }).finally_(ProgressApi::close);
-            }
-            return null;
-        });
+        this.dialog("현재 상태를 저장합니다.")
+                .then(result->{
+                    if(!result) return Promise.reject(false);
+                    Preprocessing[] data = Arrays.stream(grid.values()).map(datum->{
+                        Preprocessing tmp = new Preprocessing();
+                        tmp.id(datum.worklist()+"$"+datum.index()).json(datum.json());
+                        return tmp;
+                    }).toArray(Preprocessing[]::new);
+                    ProgressApi.open(false);
+                    return WorkApi.merge(hash, data);
+                }).then(result2-> {
+                    if (!result2.ok) return Promise.reject(false);
+                    DomGlobal.alert("저장이 완료됬습니다.");
+                    return WorkApi.works(hash);
+                }).then(Response::json)
+                .then(json-> Promise.resolve((Work[]) json))
+                .then(works->Promise.resolve(grid.update(works)))
+                .finally_(ProgressApi::close);
     }
     private void back(Event event) {
         this.dialog("저장하지 않은 정보는 초기화됩니다.").then(result->{
@@ -156,34 +133,27 @@ public class WorkScene extends AbstractScene<WorkScene> {
     protected IconElement icon() {
         return IconElement.icon(IconElement.Type.Light, "fa-clipboard-list");
     }
-
     @Override
     protected HtmlContentBuilder<HTMLLabelElement> title() {
         return title;
     }
-
     @Override
     protected BreadcrumbElement breadcrumb() {
         return breadcumb.that();
     }
-
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] { div().add(iptAssuming).add(btnAcceptAssuming).style("display:flex;") },
-                new IsElement<?>[] { div().add(iptnMOfDilution).add(btnAcceptDilution).style("display:flex;")},
-                new IsElement<?>[] { div().add(iptLibraryVol).add(btnAcceptLibraryVol).style("display:flex;")},
+                new IsElement<?>[] { div().add(iptAssuming).add(iptnMOfDilution).add(iptLibraryVol).add(btnAccept).style("display:flex;")},
                 new IsElement<?>[] { btnCalc },
                 new IsElement<?>[] { btnSequencing },
                 new IsElement<?>[] { btnSave, btnBack }
         };
     }
-
     @Override
     protected IsElement<?>[] contents() {
         return new IsElement<?>[]{ grid };
     }
-
     @Override
     public void update() {
         update(query);

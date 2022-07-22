@@ -6,6 +6,6 @@ data class Preprocessing(val id: String?) {
     var createdBy: String? = ""
     var lastModifyAt: String? = ""
     var lastModifyBy: String? = ""
-    var json : String? = ""
+    // var json : String? = ""
 }
 

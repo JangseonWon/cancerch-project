@@ -41,7 +41,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
                                     });
                                 }
                                 else Router.location(data.idx(), true);
-                            }).font("Nanum Gothic Coding").build(),
+                            }).font("Nanum Gothic Coding").horizontal("center").build(),
                     column("추출일").horizontal("center").font("Nanum Gothic Coding").build(),
                     column("상태").build(),
                     column("워크리스트 명").build(),

@@ -32,7 +32,17 @@ class WorkDao(
                 createBy.name.`as`("createBy"),
                 preprocessing.lastModifyAt.`as`("lastModifyAt"),
                 preprocessing.lastModifyBy.`as`("lastModifyById"),
-                modifyBy.name.`as`("lastModifyBy")
+                modifyBy.name.`as`("lastModifyBy"),
+                preprocessing.fragmentSize,
+                preprocessing.amount,
+                preprocessing.dilution,
+                preprocessing.volume,
+                preprocessing.libVolume,
+                preprocessing.bufferVolume,
+                preprocessing.indexI7,
+                preprocessing.sequenceI7,
+                preprocessing.indexI5,
+                preprocessing.sequenceI5
             )
         ).from(work)
             .leftJoin(preprocessing).on(preprocessing.worklist.eq(work.worklist).and(preprocessing.index.eq(work.index)))

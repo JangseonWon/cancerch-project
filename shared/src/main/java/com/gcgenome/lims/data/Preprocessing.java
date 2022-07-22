@@ -18,5 +18,20 @@ public final class Preprocessing {
     private String lastModifyAt;
     private String createdBy;
     private String createdAt;
+    private Double concNa;
+    private Double concInput;
+    private Double libPrep;
+    private Double libConcTape;
+    private Double libConcQubit;
+    private Double fragmentSize;
+    private Double amount;
+    private Double dilution;
+    private Double volume;
+    private Double libVolume;
+    private Double bufferVolume;
+    private String indexI7;
+    private String sequenceI7;
+    private String indexI5;
+    private String sequenceI5;
     private String json;
 }

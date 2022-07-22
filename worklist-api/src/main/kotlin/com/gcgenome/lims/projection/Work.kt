@@ -15,8 +15,18 @@ data class Work(
     val createBy: User,
     val createAt:       LocalDateTime,
     val lastModifyBy:   User?,
-    val lastModifyAt:   LocalDateTime?
-    ) {
+    val lastModifyAt:   LocalDateTime?,
+    var fragmentSize:   Double? = null,
+    var amount:         Double? = null,
+    var dilution:       Double? = null,
+    var volume:         Double? = null,
+    var libVolume:      Double? = null,
+    var bufferVolume:   Double? = null,
+    var indexI7:        String? = null,
+    var sequenceI7:     String? = null,
+    var indexI5:        String? = null,
+    var sequenceI5:     String? = null
+) {
     companion object{
         data class WorkBuilder(
             val worklist:       String,
@@ -32,9 +42,42 @@ data class Work(
             val createBy:       String,
             val lastModifyAt:   LocalDateTime?,
             val lastModifyById: String?,
-            val lastModifyBy:   String?
+            val lastModifyBy:   String?,
+            var fragmentSize:   Double?,
+            var amount:         Double?,
+            var dilution:       Double?,
+            var volume:         Double?,
+            var libVolume:      Double?,
+            var bufferVolume:   Double?,
+            var indexI7:        String?,
+            var sequenceI7:     String?,
+            var indexI5:        String?,
+            var sequenceI5:     String?
         ){
-            fun build() = Work(worklist, index, samples, services, patientName, mrns, gid, json, User(createById, createBy), createAt, User(lastModifyById, lastModifyBy), lastModifyAt)
+            fun build() = Work(
+                worklist = worklist,
+                index = index,
+                samples = samples,
+                services = services,
+                patientName = patientName,
+                mrns = mrns,
+                gid = gid,
+                json = json,
+                createBy = User(createById, createBy),
+                createAt = createAt,
+                lastModifyBy = User(lastModifyById, lastModifyBy),
+                lastModifyAt = lastModifyAt,
+                fragmentSize = fragmentSize,
+                amount = amount,
+                dilution = dilution,
+                volume = volume,
+                libVolume = libVolume,
+                bufferVolume = bufferVolume,
+                indexI7 = indexI7,
+                sequenceI7 = sequenceI7,
+                indexI5 = indexI5,
+                sequenceI5 = sequenceI5
+            )
         }
     }
 }

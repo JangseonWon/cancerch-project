@@ -27,7 +27,17 @@ class PreprocessingDao(
                 preprocessing.createAt,
                 preprocessing.lastModifyBy,
                 preprocessing.lastModifyAt,
-                preprocessing.json
+                preprocessing.json,
+                preprocessing.fragmentSize,
+                preprocessing.amount,
+                preprocessing.dilution,
+                preprocessing.volume,
+                preprocessing.libVolume,
+                preprocessing.bufferVolume,
+                preprocessing.indexI7,
+                preprocessing.sequenceI7,
+                preprocessing.indexI5,
+                preprocessing.sequenceI5
             )
         ).from(preprocessing).where(preprocessing.worklist.eq(worklist).and(preprocessing.index.eq(index.toInt())))}
             .one().switchIfEmpty(Mono.just(Preprocessing(worklist, index.toInt())))
