@@ -34,6 +34,7 @@ open class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer
     }
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/**")
+            .addResourceLocations("file:/data/lims/static/avoid-service/")
 //            .addResourceLocations("classpath:/static/")
             .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
             .resourceChain(false)
