@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit
 @EnableAsync
 @EnableWebFlux
 open class WebConfig(
-    @Value("\${server.resources}")
-    private val resources: String,
     private val objectMapper: ObjectMapper
     ) : WebFluxConfigurer {
+    @Value("\${server.resources}")
+    lateinit var resources: String
     @Bean
     @LoadBalanced
     open fun clientBuilder(): WebClient.Builder {
@@ -39,7 +39,7 @@ open class WebConfig(
     }
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/**")
-            .addResourceLocations("file:/data/lims/static/avoid-service/")
+            .addResourceLocations(resources)
             .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
             .resourceChain(false)
     }
