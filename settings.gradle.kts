@@ -41,7 +41,8 @@ dependencyResolutionManagement {
             library("querydsl-core", "com.querydsl", "querydsl-core").withoutVersion()
             library("querydsl-apt", "com.querydsl", "querydsl-apt").withoutVersion()
             library("querydsl-r2dbc", "com.infobip", "infobip-spring-data-r2dbc-querydsl-boot-starter").version { require("7.0.0") }
-            bundle("r2dbc-querydsl", listOf("querydsl-core", "querydsl-apt", "querydsl-r2dbc"))
+            library("querydsl-persist", "com.gcgenome", "query-dsl-persist").version { require("1.0") }
+            bundle("r2dbc-querydsl", listOf("querydsl-core", "querydsl-apt", "querydsl-r2dbc", "querydsl-persist"))
 
             library("spring-boot-test", "org.springframework.boot", "spring-boot-starter-test").withoutVersion()
             library("mockito-kotlin", "org.mockito.kotlin", "mockito-kotlin").version { require("4.0.0") }

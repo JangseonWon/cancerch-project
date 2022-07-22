@@ -11,8 +11,24 @@ import java.time.LocalDateTime
 @Schema("avoid")
 @Table("preprocessing")
 data class Preprocessing(
-    @Column("worklist")                      val worklist:      String,
-    @Column("index")                         val index:         Int
+    @Column("worklist")             val worklist:               String,
+    @Column("index")                val index:                  Int,
+    @Column("conc_na")              var concNa:                 Double? = null,
+    @Column("conc_input")           var concInput:              Double? = null,
+    @Column("lib_prep")             var libPrep:                String? = null,
+    @Column("lib_conc_tapestation") var libConcTape:            Double? = null,
+    @Column("lib_conc_qubit")       var libConcQubit:           Double? = null,
+    @Column("fragment_size")        var fragmentSize:           Double? = null,
+    @Column("amount_in_nm")         var amount:                 Double? = null,
+    @Column("dilution")             var dilution:               Double? = null,
+    @Column("volume")               var volume:                 Double? = null,
+    @Column("lib_volume")           var libVolume:              Double? = null,
+    @Column("buffer_volume")        var bufferVolume:           Double? = null,
+    @Column("i7_index")             var indexI7:                String? = null,
+    @Column("i7_sequence")          var sequenceI7:             String? = null,
+    @Column("i5_index")             var indexI5:                String? = null,
+    @Column("i5_sequence")          var sequenceI5:             String? = null,
+    @Column("value")                var json:                   String? = null
 ): Persistable<Preprocessing.Companion.PreprocessingPK> {
     @CreatedBy
     @Column("create_by")            lateinit var createBy:      String
@@ -22,20 +38,10 @@ data class Preprocessing(
     @Column("last_modify_by")       lateinit var lastModifyBy:  String
     @LastModifiedDate
     @Column("last_modify_at")       lateinit var lastModifyAt:  LocalDateTime
-    @Column("fragment_size")        var fragmentSize:           Double? = null
-    @Column("amount_in_nm")         var amount:                 Double? = null
-    @Column("dilution")             var dilution:               Double? = null
-    @Column("volume")               var volume:                 Double? = null
-    @Column("lib_volume")           var libVolume:              Double? = null
-    @Column("buffer_volume")        var bufferVolume:           Double? = null
-    @Column("i7_index")             var indexI7:                String? = null
-    @Column("i7_sequence")          var sequenceI7:             String? = null
-    @Column("i5_index")             var indexI5:                String? = null
-    @Column("i5_sequence")          var sequenceI5:             String? = null
-    @Column("value")                var json:                   String? = null
     @Id @Transient                  lateinit var _id:           PreprocessingPK
 
     constructor(worklist: String, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String,
+                concNa: Double?, concInput: Double?, libPrep: String?, libConcTape: Double?, libConcQubit: Double?,
                 fragmentSize: Double?, amount: Double?, dilution: Double?, volume: Double?, libVolume: Double?, bufferVolume: Double?,
                 indexI7: String?, sequenceI7: String?, indexI5: String?, sequenceI5: String?): this(worklist, index){
         this.createBy = createBy
@@ -43,6 +49,11 @@ data class Preprocessing(
         this.lastModifyBy = lastModifyBy
         this.lastModifyAt = lastModifyAt
         this.json = json
+        this.concNa = concNa
+        this.concInput= concInput
+        this.libPrep = libPrep
+        this.libConcTape = libConcTape
+        this.libConcQubit = libConcQubit
         this.fragmentSize = fragmentSize
         this.amount = amount
         this.dilution = dilution

@@ -17,11 +17,8 @@ class PreprocessingRouter(private val handler: PreprocessingHandler) {
     }
     private fun save(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(object : ParameterizedTypeReference<List<Preprocessing>>(){})
-            .flatMapMany { handler.saveMany(it) }
-            .collectList()
-            .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
-            .doOnError(Exception::class.java) {
-                it.printStackTrace()
-            }
+            .flatMapMany(handler::saveMany)
+            .then(ServerResponse.ok().build())
+            .doOnError(Exception::class.java) { it.printStackTrace() }
     }
 }

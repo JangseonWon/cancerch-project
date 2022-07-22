@@ -2,6 +2,7 @@ package com.gcgenome.lims.client.work;
 
 import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.data.Work;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import elemental2.promise.Promise;
 import net.sayaya.ui.HTMLElementBuilder;
@@ -36,21 +37,21 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column("의뢰번호").readOnly(true).build(),
                     column("수진자명").readOnly(true).build(),
                     column("MRN").readOnly(true).build(),
-                    column("Na Conc(pg/ul)").horizontal("right").build(),
-                    column("input Conc(ng)").horizontal("right").build(),
-                    column("Library Prep").build(),
-                    column(WorkModel.ConcTape.id).horizontal("right").build(),
-                    column(WorkModel.ConcQubit.id).horizontal("right").build(),
-                    column(WorkModel.FragSize.id).horizontal("right").build(),
-                    column(WorkModel.NM.id).horizontal("right").readOnly(true).build(),
-                    column(WorkModel.Dilution.id).name(WorkModel.Dilution.label).build(),
-                    column(WorkModel.Volume.id).horizontal("right").readOnly(true).build(),
-                    column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).build(),
-                    column(WorkModel.TEBuffer.id).horizontal("right").readOnly(true).build(),
-                    column("I7 Index ID").build(),
-                    column("I7 Sequence").build(),
-                    column("I5 Index ID").build(),
-                    column("I5 Sequence").build());
+                    column(WorkModel.ConcNa.id).name(WorkModel.ConcNa.label).horizontal("right").build(),
+                    column(WorkModel.ConcInput.id).name(WorkModel.ConcInput.label).horizontal("right").build(),
+                    column(WorkModel.LibPrep.id).name(WorkModel.LibPrep.label).build(),
+                    column(WorkModel.ConcTape.id).name(WorkModel.ConcTape.label).horizontal("right").build(),
+                    column(WorkModel.ConcQubit.id).name(WorkModel.ConcQubit.label).horizontal("right").build(),
+                    column(WorkModel.FragSize.id).name(WorkModel.FragSize.label).horizontal("right").build(),
+                    column(WorkModel.NM.id).name(WorkModel.NM.label).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.Dilution.id).name(WorkModel.Dilution.label).name(WorkModel.Dilution.label).build(),
+                    column(WorkModel.Volume.id).name(WorkModel.Volume.label).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).name(WorkModel.LibraryVolume.label).build(),
+                    column(WorkModel.TEBuffer.id).name(WorkModel.TEBuffer.label).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.IndexI7.id).name(WorkModel.IndexI7.label).build(),
+                    column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).build(),
+                    column(WorkModel.IndexI5.id).name(WorkModel.IndexI5.label).build(),
+                    column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).build());
 
     private final SheetElement elemSheet = config.build();
     private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
@@ -74,27 +75,21 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     public Work[] values(){
         Data[] data = elemSheet.values();
         for(int i = 0; i < works.length; i++){
-            works[i].libConcTape(toDouble(data[i].get(WorkModel.ConcTape.id)));
-            works[i].fragmentSize(toDouble(data[i].get(WorkModel.FragSize.id)));
-            /*String json = "{";
-            if(!data[i].get("Na Conc(pg/ul)").isEmpty())                 json += "\"naConc\":"       +data[i].get("Na Conc(pg/ul)")+",";
-            if(!data[i].get("input Conc(ng)").isEmpty())                 json += "\"inputConc\":"    +data[i].get("input Conc(ng)")+",";
-            if(!data[i].get("Library Prep").isEmpty())                   json += "\"libPrep\":\""    +data[i].get("Library Prep")+"\",";
-            if(!data[i].get(WorkModel.ConcTape.id).isEmpty())            json += "\"libConcT\":"     +data[i].get(WorkModel.ConcTape.id)+",";
-            if(!data[i].get(WorkModel.ConcQubit.id).isEmpty())           json += "\"libConc\":"      +data[i].get(WorkModel.ConcQubit.id)+",";
-            if(!data[i].get(WorkModel.FragSize.id).isEmpty())             json += "\"fragSize\":"     +data[i].get(WorkModel.FragSize.id)+",";
-            if(!data[i].get(WorkModel.NM.id).isEmpty())                  json += "\"convert\":"      +data[i].get(WorkModel.NM.id)+",";
-            if(!data[i].get(WorkModel.Dilution.id).isEmpty())                 json += "\"dilution\":"     +data[i].get(WorkModel.Dilution.id)+",";
-            if(!data[i].get(WorkModel.Volume.id).isEmpty())                  json += "\"totalVol\":"     +data[i].get(WorkModel.Volume.id)+",";
-            if(!data[i].get(WorkModel.LibraryVolume.id).isEmpty())             json += "\"libVol\":"       +data[i].get(WorkModel.LibraryVolume.id)+",";
-            if(!data[i].get(WorkModel.TEBuffer.id).isEmpty())                 json += "\"teBuffer\":"     +data[i].get(WorkModel.TEBuffer.id)+",";
-            if(!data[i].get("I7 Index ID").isEmpty())                    json += "\"i7Index\":\""    +data[i].get("I7 Index ID")+"\",";
-            if(!data[i].get("I7 Sequence").isEmpty())                    json += "\"i7Seq\":\""      +data[i].get("I7 Sequence")+"\",";
-            if(!data[i].get("I5 Index ID").isEmpty())                    json += "\"i5Index\":\""    +data[i].get("I5 Index ID")+"\",";
-            if(!data[i].get("I5 Sequence").isEmpty())                    json += "\"i5Seq\":\""      +data[i].get("I5 Sequence")+"\",";
-            json = json.substring(0, json.length()-1);
-            json += "}";
-            works[i].json(json);*/
+            works[i].concNa         = toDouble(data[i].get(WorkModel.ConcNa.id));
+            works[i].concInput      = toDouble(data[i].get(WorkModel.ConcInput.id));
+            works[i].libPrep        = data[i].get(WorkModel.LibPrep.id);
+            works[i].libConcTape    = toDouble(data[i].get(WorkModel.ConcTape.id));
+            works[i].libConcQubit   = toDouble(data[i].get(WorkModel.ConcQubit.id));
+            works[i].fragmentSize   = toDouble(data[i].get(WorkModel.FragSize.id));
+            works[i].amount         = toDouble(data[i].get(WorkModel.NM.id));
+            works[i].dilution       = toDouble(data[i].get(WorkModel.Dilution.id));
+            works[i].volume         = toDouble(data[i].get(WorkModel.Volume.id));
+            works[i].libVolume      = toDouble(data[i].get(WorkModel.LibraryVolume.id));
+            works[i].bufferVolume   = toDouble(data[i].get(WorkModel.TEBuffer.id));
+            works[i].indexI7        = data[i].get(WorkModel.IndexI7.id);
+            works[i].sequenceI7     = data[i].get(WorkModel.SequenceI7.id);
+            works[i].indexI5        = data[i].get(WorkModel.IndexI5.id);
+            works[i].sequenceI5     = data[i].get(WorkModel.SequenceI5.id);
         }
         return works;
     }
@@ -102,9 +97,9 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         this.works = Arrays.stream(values).toArray(Work[]::new);
         return Promise.resolve(update(Arrays.stream(values).map(this::map).toArray(Data[]::new)));
     }
-    Promise<Void> initialize(Double assuming, Double dilution, Double volume) {
+    Promise<Void> initialize(Double dilution, Double volume) {
         ProgressApi.open(false);
-        return WorkCalculator.initialize(elemSheet.values(), assuming, dilution, volume)
+        return WorkCalculator.initialize(elemSheet.values(), dilution, volume)
                 .then(data->Promise.resolve(update(data)))
                 .then(s->Promise.resolve((Void)null))
                 .finally_(ProgressApi::close);
@@ -134,84 +129,28 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     private Data map(Work value){
         if(value == null) return null;
-        return new Data(value.worklist() + "$" + value.index())
-                .put("index",                           String.valueOf(value.index()))
-                .put("G-ID",                            value.gid())
-                .put("의뢰번호",                         value.samples())
-                .put("수진자명",                         value.patientName())
-                .put("MRN",                             value.mrns())
-                .put(WorkModel.ConcTape.id,             toString(value.libConcTape()))
-                .put(WorkModel.ConcQubit.id,            toString(value.libConcQubit()))
-                .put(WorkModel.FragSize.id,             toString(value.fragmentSize()))
-                .put(WorkModel.NM.id,                   toString(value.amount()))
-                .put(WorkModel.Dilution.id,             toString(value.dilution()))
-                .put(WorkModel.Volume.id,               toString(value.volume()))
-                .put(WorkModel.LibraryVolume.id,        toString(value.libVolume()))
-                .put(WorkModel.TEBuffer.id,             toString(value.bufferVolume()));
-
-        /*String[] values = new String[16];
-        if(value.json() != null) {
-            var json = Js.asPropertyMap(JSON.parse(value.json()));
-            values[0]   = json.has("naConc")      ? String.valueOf(json.get("naConc"))                                          : "";
-            values[1]   = json.has("inputConc")   ? String.valueOf(json.get("inputConc"))                                       : "";
-            values[2]   = json.has("libPrep")     ? String.valueOf(json.get("libPrep")).replace("\"", ""): "";
-            values[3]   = json.has("libConcT")    ? String.valueOf(json.get("libConcT"))                                        : "";
-            values[4]   = json.has("libConc")     ? String.valueOf(json.get("libConc"))                                         : "";
-            values[5]   = json.has("fragSize")    ? String.valueOf(json.get("fragSize"))                                        : "";
-            values[6]   = json.has("convert")     ? String.valueOf(json.get("convert"))                                         : "";
-            values[7]   = json.has("assuming")    ? String.valueOf(json.get("assuming"))                                        : "";
-            values[8]   = json.has("dilution")    ? String.valueOf(json.get("dilution"))                                        : "";
-            values[9]   = json.has("totalVol")    ? String.valueOf(json.get("totalVol"))                                        : "";
-            values[10]  = json.has("libVol")      ? String.valueOf(json.get("libVol"))                                          : "";
-            values[11]  = json.has("teBuffer")    ? String.valueOf(json.get("teBuffer"))                                        : "";
-            values[12]  = json.has("i7Index")     ? String.valueOf(json.get("i7Index")).replace("\"", ""): "";
-            values[13]  = json.has("i7Seq")       ? String.valueOf(json.get("i7Seq")).replace("\"", "")  : "";
-            values[14]  = json.has("i5Index")     ? String.valueOf(json.get("i5Index")).replace("\"", ""): "";
-            values[15]  = json.has("i5Seq")       ? String.valueOf(json.get("i5Seq")).replace("\"", "")  : "";
-            return new Data(value.worklist() + "$" + value.index())
-                    .put("index",                           String.valueOf(value.index()))
-                    .put("G-ID",                            value.gid())
-                    .put("의뢰번호",                        value.samples())
-                    .put("수진자명",                        value.patientName())
-                    .put("MRN",                             value.mrns())
-                    .put("Na Conc(pg/ul)",                  values[0])
-                    .put("input Conc(ng)",                  values[1])
-                    .put("Library Prep",                    values[2])
-                    .put(WorkModel.ConcTape.id,             values[3])
-                    .put(WorkModel.ConcQubit.id,            values[4])
-                    .put(WorkModel.FragSize.id,             values[5])
-                    .put(WorkModel.NM.id,                   values[6])
-                    .put(WorkModel.Dilution.id,             values[8])
-                    .put(WorkModel.Volume.id,               values[9])
-                    .put(WorkModel.LibraryVolume.id,        values[10])
-                    .put(WorkModel.TEBuffer.id,             values[11])
-                    .put("I7 Index ID",                     values[12])
-                    .put("I7 Sequence",                     values[13])
-                    .put("I5 Index ID",                     values[14])
-                    .put("I5 Sequence",                     values[15]);
-        }else{
-            return new Data(value.worklist() + "$" + value.index())
-                    .put("index",                           String.valueOf(value.index()))
-                    .put("G-ID",                            value.gid())
-                    .put("의뢰번호",                        value.samples())
-                    .put("수진자명",                        value.patientName())
-                    .put("MRN",                             value.mrns())
-                    .put("Na Conc(pg/ul)",                  "")
-                    .put("input Conc(ng)",                  "")
-                    .put("Library Prep",                    "")
-                    .put(WorkModel.ConcTape.id,     "")
-                    .put(WorkModel.ConcQubit.id,           "")
-                    .put(WorkModel.FragSize.id,              "")
-                    .put(WorkModel.NM.id,                   "")
-                    .put(WorkModel.Dilution.id,                  "")
-                    .put(WorkModel.Volume.id,                   "")
-                    .put(WorkModel.LibraryVolume.id,              "")
-                    .put(WorkModel.TEBuffer.id,                  "")
-                    .put("I7 Index ID",                     "")
-                    .put("I7 Sequence",                     "")
-                    .put("I5 Index ID",                     "")
-                    .put("I5 Sequence",                     "");
-        }*/
+        DomGlobal.console.log(value);
+        return new Data(value.worklist + "$" + value.index)
+                .put("index",                           String.valueOf(value.index))
+                .put("G-ID",                            value.gid)
+                .put("의뢰번호",                         value.samples)
+                .put("수진자명",                         value.patientName)
+                .put("MRN",                             value.mrns)
+                .put(WorkModel.ConcNa.id,               toString(value.concNa))
+                .put(WorkModel.ConcInput.id,            toString(value.concInput))
+                .put(WorkModel.LibPrep.id,              value.libPrep)
+                .put(WorkModel.ConcTape.id,             toString(value.libConcTape))
+                .put(WorkModel.ConcQubit.id,            toString(value.libConcQubit))
+                .put(WorkModel.FragSize.id,             toString(value.fragmentSize))
+                .put(WorkModel.NM.id,                   toString(value.amount))
+                .put(WorkModel.Dilution.id,             toString(value.dilution))
+                .put(WorkModel.Volume.id,               toString(value.volume))
+                .put(WorkModel.LibraryVolume.id,        toString(value.libVolume))
+                .put(WorkModel.TEBuffer.id,             toString(value.bufferVolume))
+                .put(WorkModel.IndexI7.id,              toString(value.indexI7))
+                .put(WorkModel.SequenceI7.id,           toString(value.sequenceI7))
+                .put(WorkModel.IndexI5.id,              toString(value.indexI5))
+                .put(WorkModel.SequenceI5.id,           toString(value.sequenceI5));
     }
 
     @Override

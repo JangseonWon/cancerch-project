@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 
 @Component
-class WorkDao(
-    private val repo: WorkRepository
-    ) {
+class WorkDao(private val repo: WorkRepository) {
     private val createBy = QUser("Creator")
     private val modifyBy = QUser("Modifier")
     private fun select(query: SQLQuery<*>): SQLQuery<Work.Companion.WorkBuilder>{
@@ -33,16 +31,21 @@ class WorkDao(
                 preprocessing.lastModifyAt.`as`("lastModifyAt"),
                 preprocessing.lastModifyBy.`as`("lastModifyById"),
                 modifyBy.name.`as`("lastModifyBy"),
-                preprocessing.fragmentSize,
-                preprocessing.amount,
+                preprocessing.concNa.`as`("concNa"),
+                preprocessing.concInput.`as`("concInput"),
+                preprocessing.libPrep.`as`("libPrep"),
+                preprocessing.libConcTape.`as`("libConcTape"),
+                preprocessing.libConcQubit.`as`("libConcQubit"),
+                preprocessing.fragmentSize.`as`("fragmentSize"),
+                preprocessing.amount.`as`("amount"),
                 preprocessing.dilution,
                 preprocessing.volume,
-                preprocessing.libVolume,
-                preprocessing.bufferVolume,
-                preprocessing.indexI7,
-                preprocessing.sequenceI7,
-                preprocessing.indexI5,
-                preprocessing.sequenceI5
+                preprocessing.libVolume.`as`("libVolume"),
+                preprocessing.bufferVolume.`as`("bufferVolume"),
+                preprocessing.indexI7.`as`("indexI7"),
+                preprocessing.sequenceI7.`as`("sequenceI7"),
+                preprocessing.indexI5.`as`("indexI5"),
+                preprocessing.sequenceI5.`as`("sequenceI5")
             )
         ).from(work)
             .leftJoin(preprocessing).on(preprocessing.worklist.eq(work.worklist).and(preprocessing.index.eq(work.index)))

@@ -30,7 +30,6 @@ class WebConfig(
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        println(resources == "file:/data/lims/static/avoid-service/")
         registry.addResourceHandler("/**")
             .addResourceLocations(resources)
             .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))

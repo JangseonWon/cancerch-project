@@ -9,10 +9,6 @@ import reactor.core.publisher.Mono
 @Service
 class PreprocessingHandler(val dao: PreprocessingDao) {
     @Transactional
-    fun save(dto : Preprocessing): Mono<Any> {
-        return dao.merge(dto.worklist, dto.index, dto)
-    }
-    fun saveMany(dtos: List<Preprocessing>) : Flux<Any> {
-        return Flux.mergeSequential(dtos.map(this::save))
-    }
+    fun save(dto : Preprocessing): Mono<*> = dao.merge(dto.worklist, dto.index, dto)
+    fun saveMany(dto: List<Preprocessing>) : Flux<*> = Flux.mergeSequential(dto.map(this::save))
 }

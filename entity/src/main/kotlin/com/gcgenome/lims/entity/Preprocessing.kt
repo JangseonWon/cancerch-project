@@ -23,7 +23,7 @@ class Preprocessing {
     @Column(name = "conc_input")
     var concInput: Double? = null
     @Column(name = "lib_prep")
-    var libPrep: Double? = null
+    var libPrep: String? = null
     @Column(name = "lib_conc_tapestation")
     var libConcTape: Double? = null
     @Column(name = "lib_conc_qubit")

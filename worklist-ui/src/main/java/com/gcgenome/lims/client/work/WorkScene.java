@@ -28,7 +28,6 @@ public class WorkScene extends AbstractScene<WorkScene> {
     private final ButtonElement btnCalc                         = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
     private final ButtonElement btnSave                         = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
     private final ButtonElement btnBack                         = ButtonElement.outline().css("button").text("Exit").before(IconElement.icon(IconElement.Type.Regular, "fa-external-link-alt"));
-    private final TextFieldElement<Double, TextFieldOutlined<Double>> iptAssuming          = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("Assuming a Mr");
     private final TextFieldElement<Double, TextFieldOutlined<Double>> iptnMOfDilution      = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("nM of dilution");
     private final TextFieldElement<Double, TextFieldOutlined<Double>> iptLibraryVol        = TextFieldElement.numberBox().outlined().css("button", "input").style("height:36px;").text("Library Volume");
     private final BreadcrumbElement breadcumb                    = BreadcrumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
@@ -58,9 +57,10 @@ public class WorkScene extends AbstractScene<WorkScene> {
         });
     }
     private void accept(Event event) {
-        if(iptAssuming.value() <= 0 || iptAssuming.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
+        if(iptnMOfDilution.value() <= 0 || iptnMOfDilution.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
+        else if(iptLibraryVol.value() <= 0 || iptLibraryVol.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
         else this.dialog("기존 정보가 모두 지워집니다.").then(result-> {
-            if (result) return grid.initialize(iptAssuming.value(), iptnMOfDilution.value(), iptLibraryVol.value());
+            if (result) return grid.initialize(iptnMOfDilution.value(), iptLibraryVol.value());
             else return Promise.reject(false);
         });
     }
@@ -128,7 +128,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement[][]{
-                new IsElement<?>[] { div().add(iptAssuming).add(iptnMOfDilution).add(iptLibraryVol).add(btnAccept).style("display:flex;")},
+                new IsElement<?>[] { div().add(iptnMOfDilution).add(iptLibraryVol).add(btnAccept).style("display:flex;")},
                 new IsElement<?>[] { btnCalc },
                 new IsElement<?>[] { btnSequencing },
                 new IsElement<?>[] { btnSave, btnBack }

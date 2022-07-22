@@ -8,7 +8,7 @@ import static com.gcgenome.lims.client.work.WorkModel.*;
 
 @UtilityClass
 public class WorkCalculator {
-    public Promise<Data[]> initialize(Data[] data, Double assuming, Double dilution, Double volume) {
+    public Promise<Data[]> initialize(Data[] data, Double dilution, Double volume) {
         for(Data datum: data) {
             datum.delete(Dilution.id).delete(LibraryVolume.id);
             if(dilution!=null)  datum.put(Dilution.id, dilution.toString());

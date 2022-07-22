@@ -35,6 +35,30 @@ public class WorklistApi {
             }); else return Promise.resolve(response);
         });
     }
+    public Promise<String> batchCurrent(){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
+        });
+        return FetchApi.request("/worklist/batches/current", request).then(response -> {
+            if (!response.ok) return response.text().then(msg -> {
+                DomGlobal.alert(msg);
+                return Promise.reject(msg);
+            }); else return response.text();
+        });
+    }
+    public Promise<Integer> max(String batch){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
+        });
+        return FetchApi.request("/worklist/batches/" + batch + "/max", request).then(response -> {
+            if (!response.ok) return response.text().then(msg -> {
+                DomGlobal.alert(msg);
+                return Promise.reject(msg);
+            }); else return response.text();
+        }).then(txt->Promise.resolve(Integer.parseInt(txt)));
+    }
     public Promise<Response> merge(Worklist worklist){
         RequestInit request = RequestInit.create();
         request.setHeaders(new String[][]{
