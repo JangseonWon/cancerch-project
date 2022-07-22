@@ -1,8 +1,8 @@
 package com.gcgenome.lims.client;
 
+import com.gcgenome.lims.client.work.WorkScene;
+import com.gcgenome.lims.client.worklist.WorklistScene;
 import com.gcgenome.lims.dto.Query;
-import com.gcgenome.lims.work.WorkScene;
-import com.gcgenome.lims.worklist.WorklistScene;
 
 public class Application extends AbstractEntryPoint {
     private WorklistScene worklist;

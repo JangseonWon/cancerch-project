@@ -2,6 +2,7 @@
 <module rename-to="worklist">
     <inherits name="net.sayaya.Chart"/>
     <inherits name="com.gcgenome.lims.Service"/>
+    <inherits name="com.gcgenome.lims.Shared"/>
     <inherits name="com.google.gwt.json.JSON" />
     <source path="client"/>
     <source path="api" />

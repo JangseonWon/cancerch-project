@@ -1,4 +1,4 @@
-package com.gcgenome.lims.worklist;
+package com.gcgenome.lims.client.worklist;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;

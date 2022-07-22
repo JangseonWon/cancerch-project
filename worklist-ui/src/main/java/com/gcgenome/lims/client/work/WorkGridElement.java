@@ -1,4 +1,4 @@
-package com.gcgenome.lims.work;
+package com.gcgenome.lims.client.work;
 
 import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.data.Work;

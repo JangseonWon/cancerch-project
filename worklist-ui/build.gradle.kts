@@ -32,9 +32,10 @@ tasks {
         options.encoding = "UTF-8"
     }
     gwt {
-        gwt.modules = listOf("com.greencross.lims.Worklist")
+        gwt.modules = listOf("com.gcgenome.lims.Worklist")
         minHeapSize = "1024M"
         maxHeapSize = "2048M"
+        sourceLevel = "auto"
     }
     compileGwt {
         extraJvmArgs = listOf("-XX:ReservedCodeCacheSize=512M","-javaagent:${lombok}=ECJ")

@@ -1,4 +1,4 @@
-package com.gcgenome.lims.worklist;
+package com.gcgenome.lims.client.worklist;
 
 import com.gcgenome.lims.client.Router;
 import com.gcgenome.lims.data.Worklist;
