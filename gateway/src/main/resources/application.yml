@@ -14,11 +14,11 @@ spring:
         - id: worklist-api
           uri: lb://worklist-api
           predicates:
-            - Path=/worklist/**, /worklist.html, /worklist/*.js, /css/worklist.css
+            - Path=/worklist/**
         - id: analysis-api
           uri: lb://analysis-api
           predicates:
-            - Path=/analysis/**, /analysis.html, /analysis/*.js, /css/analysis.css
+            - Path=/analysis/**
         - id: publish-api
           uri: lb://publish-api
           predicates:
@@ -28,7 +28,9 @@ spring:
           predicates:
             - Path=/samples/**
 
+
 server:
+  resources : file:/data/lims/static/avoid-service/
   compression:
     enabled: true
     mime-types: text/javascript,application/javascript

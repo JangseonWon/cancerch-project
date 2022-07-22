@@ -26,5 +26,4 @@ logging:
     io.r2dbc.postgresql.PARAM: TRACE
 
 server:
-  resources: "file:/D:/"
   port: 0
