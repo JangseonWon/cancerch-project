@@ -3,8 +3,6 @@ package com.gcgenome.lims.client;
 import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
-import com.greencross.lims.client.Router;
-import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
@@ -61,10 +59,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String service = data.get("검사코드");
 		String report = data.get("reportCreated");
 		AnalysisApi.download(sample, service, report)
-				.last(blob->{
+				.then(blob->{
 					String url = URL.createObjectURL(blob);
 					DomGlobal.window.open(url);
 					URL.revokeObjectURL(url);
+					return null;
 				});
 	}
 

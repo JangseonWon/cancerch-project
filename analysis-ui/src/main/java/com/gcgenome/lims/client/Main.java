@@ -1,8 +1,6 @@
 package com.gcgenome.lims.client;
 
-import com.greencross.lims.client.AbstractEntryPoint;
-import com.greencross.lims.client.AbstractScene;
-import com.greencross.lims.dto.Query;
+import com.gcgenome.lims.dto.Query;
 
 public class Main extends AbstractEntryPoint {
 	private AnalysisScene elem;
