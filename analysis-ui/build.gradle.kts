@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.wisepersist.gwt") version "1.1.15"
+    id("org.wisepersist.gwt") version "1.1.18"
     id("java")
     id("war")
 }
@@ -10,27 +10,18 @@ version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 dependencies {
     implementation(project(":shared"))
-    implementation("com.greencross:lims-api-gateway-data:1.0")
-    implementation("com.greencross:lims-service:1.1")
-    implementation("com.greencross:lims-service-data:1.0")
-    implementation("com.greencross:lims-service-util:1.0")
-    implementation("com.greencross:lims-icon:1.1")
-    implementation("org.jboss.elemento:elemento-core:1.0.3")
-    implementation("com.google.elemental2:elemental2-svg:1.1.0")
-    implementation("com.google.gwt:gwt-user:2.9.0")
-    implementation("com.google.gwt:gwt-dev:2.9.0")
-    implementation("net.sayaya:ui:3.1")
-    implementation("net.sayaya:chart:1.0")
+    implementation("com.gcgenome:gateway-api:1.0")
+    implementation("com.gcgenome:gateway-service:1.0")
+    implementation("com.gcgenome:lims-icon:2.0")
+    implementation(libs.bundles.gwt)
+    compileOnly(libs.gwt.dev)
+    implementation("net.sayaya:ui:4.0")
+    implementation("net.sayaya:chart:2.0")
     implementation("net.sayaya:calculator:1.0")
-    implementation("org.projectlombok:lombok:1.18.22")
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
+    implementation(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 val lombok = project.configurations.annotationProcessor.get().filter { it.name.startsWith("lombok") }.single()
@@ -40,9 +31,10 @@ tasks {
         options.encoding = "UTF-8"
     }
     gwt {
-        gwt.modules = listOf("com.greencross.lims.Analysis")
+        gwt.modules = listOf("com.gcgenome.lims.Analysis")
         minHeapSize = "1024M"
         maxHeapSize = "2048M"
+        sourceLevel = "auto"
     }
     compileGwt {
         extraJvmArgs = listOf("-XX:ReservedCodeCacheSize=512M","-javaagent:${lombok}=ECJ")
@@ -53,8 +45,26 @@ tasks {
         codeServerPort = 9666
         war = file("src/main/webapp")
     }
+    register<Copy>("copyWebResources") {
+        dependsOn(build)
+        from(zipTree("build/libs/avoid-service-analysis-ui.war")) {
+            include("**/*.js")
+            include("**/*.css")
+            include("**/*.png")
+            include("**/*.gif")
+            include("**/*.svg")
+            include("**/*.ttf")
+            include("**/*.woff")
+            include("**/*.woff2")
+            include("**/*.eot")
+            include("*.ico")
+            include("*.html")
+            includeEmptyDirs = false
+        }
+        into("build/static")
+    }
     withType<War> {
-        archiveFileName.set("analysis-ui.war")
+        archiveFileName.set("avoid-service-analysis-ui.war")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }

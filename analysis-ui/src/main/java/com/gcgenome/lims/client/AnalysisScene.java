@@ -1,10 +1,12 @@
-package com.greencross.lims.client;
+package com.gcgenome.lims.client;
 
+import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.Scheduler;
-import com.greencross.lims.api.AnalysisApi;
 import com.greencross.lims.api.ProgressApi;
 import com.greencross.lims.api.RouteApi;
+import com.greencross.lims.client.AbstractScenePageable;
+import com.greencross.lims.client.Router;
 import com.greencross.lims.dto.Query;
 import com.greencross.lims.ui.IconElement;
 import elemental2.core.JsDate;

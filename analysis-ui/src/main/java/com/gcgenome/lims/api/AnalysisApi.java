@@ -1,6 +1,7 @@
-package com.greencross.lims.api;
+package com.gcgenome.lims.api;
 
 import com.gcgenome.lims.data.Analysis;
+import com.greencross.lims.api.FetchApi;
 import com.greencross.lims.dto.Promise;
 import com.greencross.lims.dto.Query;
 import elemental2.dom.Blob;

@@ -1,8 +1,9 @@
-package com.greencross.lims.client;
+package com.gcgenome.lims.client;
 
+import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
-import com.greencross.lims.api.AnalysisApi;
+import com.greencross.lims.client.Router;
 import com.greencross.lims.util.DataTransformUtil;
 import elemental2.dom.*;
 import net.sayaya.ui.HTMLElementBuilder;

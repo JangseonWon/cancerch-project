@@ -1,4 +1,4 @@
-package com.greencross.lims.client;
+package com.gcgenome.lims.client;
 
 import elemental2.dom.HTMLAudioElement;
 import elemental2.dom.HTMLSourceElement;
