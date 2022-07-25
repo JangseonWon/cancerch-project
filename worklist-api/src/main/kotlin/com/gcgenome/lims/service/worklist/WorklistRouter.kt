@@ -30,7 +30,7 @@ class WorklistRouter(private val handler: WorklistHandler, private val om: Objec
     }
     // 가장 최근 생성된 Batch의 Batch Prefix를 돌려준다
     private fun current(request: ServerRequest): Mono<ServerResponse>{
-        return Mono.empty();
+        return handler.current()
     }
     // 주어진 Batch Prefix의 최대값을 돌려준다
     private fun max(request: ServerRequest): Mono<ServerResponse>{
