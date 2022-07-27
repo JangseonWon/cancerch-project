@@ -3,6 +3,7 @@ package com.gcgenome.lims.client.worklist;
 import com.gcgenome.lims.api.WorklistApi;
 import com.gcgenome.lims.data.Worklist;
 import elemental2.core.JsDate;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.promise.Promise;
 import lombok.experimental.Delegate;
@@ -73,12 +74,12 @@ public class CreateBatchDialog {
                 Worklist worklist = new Worklist().id(worklistId).prefix(prefix)
                         .idx(iptBatchCount.value().intValue());
                 WorklistApi.merge(worklist).then(result ->{
-
+                    DomGlobal.alert("생성이 완료됬습니다.");
+                    dialog.close();
+                    dialog.element().remove();
+                    resolve.onInvoke(new Worklist().id(worklistId).prefix("").idx(iptBatchCount.value().intValue()));
                     return null;
                 });
-                dialog.close();
-                dialog.element().remove();
-                resolve.onInvoke(new Worklist().id(worklistId).prefix("").idx(iptBatchCount.value().intValue()));
             });
             btnCancel.onClick(evt -> {
                 dialog.close();

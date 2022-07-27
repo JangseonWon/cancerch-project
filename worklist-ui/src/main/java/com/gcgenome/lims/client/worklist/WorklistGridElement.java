@@ -3,6 +3,7 @@ package com.gcgenome.lims.client.worklist;
 import com.gcgenome.lims.client.Router;
 import com.gcgenome.lims.data.Worklist;
 import com.google.gwt.core.client.JsDate;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
@@ -35,8 +36,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
                             .onClick(data->{
                                 if(data.get("serial") == null || data.get("serial").trim().isEmpty()) {
                                     CreateBatchDialog.build(data.idx()).onSubmit().then(worklist->{
-                                        // 1. API 의 PUT 호출
-                                        // 2. data에 serial, prefix, idx 업데이트
+                                        Router.location(data.idx(), true);
                                         return null;
                                     });
                                 }
