@@ -1,12 +1,12 @@
-package com.greencross.lims.api;
+package com.gcgenome.lims.api;
 
 import com.gcgenome.lims.data.Analysis;
-import com.greencross.lims.dto.Promise;
-import com.greencross.lims.dto.Query;
+import com.gcgenome.lims.dto.Query;
 import elemental2.dom.Blob;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.RequestInit;
 import elemental2.dom.Response;
+import elemental2.promise.Promise;
 import lombok.experimental.UtilityClass;
 
 import static elemental2.core.Global.JSON;
@@ -22,12 +22,12 @@ public class AnalysisApi {
 		request.setMethod("GET");
 
 		StringBuilder urlBuilder = new StringBuilder("/analysis/search");
-		urlBuilder.append("?page=").append(query.page())
-				.append("&limit=").append(query.limit())
-				.append("&sort_by=").append(query.sortBy())
-				.append("&asc=").append(query.asc());
+		urlBuilder.append("?page=").append(query.page)
+				.append("&limit=").append(query.limit)
+				.append("&sort_by=").append(query.sortBy)
+				.append("&asc=").append(query.asc);
 
-		if(query.filters()!=null && query.filters().length > 0) urlBuilder.append("&filters=").append(encodeURI(JSON.stringify(query.filters())));
+		if(query.filters!=null && query.filters.length > 0) urlBuilder.append("&filters=").append(encodeURI(JSON.stringify(query.filters)));
 
 		return FetchApi.request(urlBuilder.toString(), request).then(response -> {
 			if (!response.ok) return response.text().then(msg -> {

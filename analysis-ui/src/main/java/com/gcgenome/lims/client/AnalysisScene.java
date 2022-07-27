@@ -1,19 +1,19 @@
-package com.greencross.lims.client;
+package com.gcgenome.lims.client;
 
+import com.gcgenome.lims.api.AnalysisApi;
+import com.gcgenome.lims.api.ProgressApi;
+import com.gcgenome.lims.api.RouteApi;
 import com.gcgenome.lims.data.Analysis;
+import com.gcgenome.lims.dto.Query;
+import com.gcgenome.lims.ui.IconElement;
 import com.google.gwt.core.client.Scheduler;
-import com.greencross.lims.api.AnalysisApi;
-import com.greencross.lims.api.ProgressApi;
-import com.greencross.lims.api.RouteApi;
-import com.greencross.lims.dto.Query;
-import com.greencross.lims.ui.IconElement;
 import elemental2.core.JsDate;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
 import elemental2.promise.Promise;
-import net.sayaya.ui.BreadcumbElement;
+import net.sayaya.ui.BreadcrumbElement;
 import net.sayaya.ui.ButtonElement;
 import net.sayaya.ui.ButtonElementToggle;
 import net.sayaya.ui.TextFieldElement;
@@ -30,7 +30,7 @@ import static org.jboss.elemento.Elements.label;
 
 public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Analysis");
-	private final BreadcumbElement breadcumb = BreadcumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
+	private final BreadcrumbElement breadcumb = BreadcrumbElement.home(IconElement.icon(IconElement.Type.Regular, "fa-home").style("font-size: 18px;"), evt->{
 		RouteApi.location("", true, false);
 	}).splitter(IconElement.icon(IconElement.Type.Light, "fa-chevron-double-right").style("font-size: 18px;").element())
 	.add("액체생검", evt->{
@@ -43,8 +43,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	});
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("Analyzed").value(true);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("Not complete only").value(true);
-	private final TextFieldElement<JsDate> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
-	private final TextFieldElement<JsDate> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
@@ -82,9 +82,9 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		if(!initiailized) return;
 		Query proxy = new Query().asc(this.isAsc());
 		List<Query.Filter> filters = new LinkedList<>();
-		if(query.filters()!=null){
-			Arrays.stream(query.filters()).forEach(filter->filter.key(" "));
-			Collections.addAll(filters, query.filters());
+		if(query.filters!=null){
+			Arrays.stream(query.filters).forEach(filter->filter.key(" "));
+			Collections.addAll(filters, query.filters);
 		}
 		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
@@ -100,8 +100,10 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 				.then(this::updateTotal)
 				.then(Response::text)
 				.then(this::map)
-				.last(grid::update)
-				.finally_(ProgressApi::close);
+				.then(a->{
+					grid.update(a);
+					return null;
+				}).finally_(ProgressApi::close);
 	}
 	private Promise<Response> updateTotal(Response response) {
 		total(Long.parseLong(response.headers.get("X-TOTAL-COUNT")));
@@ -133,7 +135,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		return title;
 	}
 	@Override
-	protected BreadcumbElement breadcumb() {
+	protected BreadcrumbElement breadcrumb() {
 		return breadcumb;
 	}
 	@Override
@@ -155,11 +157,11 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		ProgressApi.open(false);
 		for (Analysis analysis: selection) {
 			AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
-				.last(result-> {
+				.then(result-> {
 					DomGlobal.alert("완료되었습니다.");
 					update();
-				})
-				.finally_(ProgressApi::close);
+					return null;
+				}).finally_(ProgressApi::close);
 		}
 	}
 	private void publish() {
@@ -169,11 +171,11 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		ProgressApi.open(false);
 		for (Analysis analysis: selection) {
 			AnalysisApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), String.valueOf((long) JsDate.parse(analysis.report().createAt())))
-					.last(result-> {
+					.then(result-> {
 						DomGlobal.alert("완료되었습니다.");
 						update();
-					})
-					.finally_(ProgressApi::close);
+						return null;
+					}).finally_(ProgressApi::close);
 		}
 	}
 	@Override
