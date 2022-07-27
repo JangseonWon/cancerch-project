@@ -29,11 +29,11 @@ spring:
               - PATCH
               - DELETE
       routes:
-        - id: avoid-project-gateway
-          uri: http://localhost:26040/
-          filters:
-            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Expose-Headers Vary
-          predicates:
-            - Path=/**
+      - id: avoid-project-gateway
+        uri: http://localhost:26040/
+        filters:
+          - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Expose-Headers Vary
+        predicates:
+          - Path=/**
 server:
   port: 26041

@@ -1,5 +1,6 @@
 package com.gcgenome.lims.service.worklist
 
+import com.gcgenome.lims.entity.QWorklist
 import com.gcgenome.lims.entity.QWorklist.worklist
 import com.gcgenome.lims.entity.Worklist
 import com.gcgenome.lims.service.Searchable
@@ -8,7 +9,9 @@ import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.ComparablePath
 import com.querydsl.sql.RelationalPathBase
+import com.querydsl.sql.SQLExpressions.select
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -64,6 +67,13 @@ class WorklistDao(private val repo: WorklistRepository): Searchable<Worklist>(re
       catch (_ : IllegalArgumentException){}
       return null
    }
+   fun findCurrent(): Mono<Worklist> =  repo.query {
+      it.select(worklist).from(worklist).where(worklist.lastModifyAt.isNotNull).orderBy(worklist.lastModifyAt.desc())
+   }.one()
+   fun findMax(batch: String): Mono<Worklist> = repo.query{
+      it.select(worklist).from(worklist).where(worklist.prefix.like(batch).and(worklist.idx.isNotNull)).orderBy(worklist.idx.desc())
+   }.one()
+
    companion object {
       val statusMap : Map<String, String> = mapOf(
          "검증" to "Normal",

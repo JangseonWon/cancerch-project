@@ -3,6 +3,7 @@ package com.gcgenome.lims.service.worklist
 import com.gcgenome.lims.data.Worklist
 import com.gcgenome.lims.search.PageReactive
 import com.gcgenome.lims.search.SearchParam
+import com.gcgenome.lims.service.batch.BatchHandler
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Mono
@@ -15,9 +16,9 @@ class WorklistHandler(
 ) {
     fun search(query: SearchParam): Mono<PageReactive<Worklist>> = dao.search(query).map { it.map(mapper::toDto) }
     fun current(): Mono<String> {
-        return null
+        return dao.findCurrent().map{ it.prefix }
     }
     fun max(prefix: String): Mono<Int> {
-        return null
+        return dao.findMax(prefix).map{ it.idx?.plus(1) }
     }
 }

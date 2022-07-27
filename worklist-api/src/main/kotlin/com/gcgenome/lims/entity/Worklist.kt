@@ -12,15 +12,17 @@ import java.util.*
 @Schema("avoid")
 @Table("worklist")
 data class Worklist(
-    @Id                                  val id:        UUID,
-    val title:     String? = null,
     @CreatedDate @Column("create_at")    var createAt:  LocalDateTime? = null,
-    val status:    Status? = null,
-    val remark:    String? = null,
     val domain:    String? = null,
-    val prefix:    String? = null,
+    @Id                                  val id:        UUID,
     val idx:       Int? = null,
-    val serial:    String? = null
+    @Column("last_modify_at") val lastModifyAt: LocalDateTime? = null,
+    val prefix:    String? = null,
+    val remark:    String? = null,
+    val serial:    String? = null,
+    val status:    Status? = null,
+    val title:     String? = null
+
 ) : Serializable {
     companion object {
         enum class Status{

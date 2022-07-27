@@ -14,7 +14,7 @@ spring:
         - id: worklist-api
           uri: lb://worklist-api
           predicates:
-            - Path=/worklist/**
+            - Path=/worklist, /worklist/**
         - id: analysis-api
           uri: lb://analysis-api
           predicates:
@@ -27,7 +27,6 @@ spring:
           uri: lb://report-api
           predicates:
             - Path=/samples/**
-
 
 server:
   compression:

@@ -49,3 +49,4 @@ src/main/resources/bootstrap.yml
 ### excel ###
 *.xlsx
 /analysis/src/main/resources/static/
+/worklist-ui/src/main/java/com/gcgenome/lims/api/FetchApi.java
