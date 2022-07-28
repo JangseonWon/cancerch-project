@@ -23,7 +23,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
     public static WorkScene build(Query query) { return new WorkScene(query);}
     private final HtmlContentBuilder<HTMLLabelElement> title    = label().add("Avoid");
     private final WorkGridElement grid                          = WorkGridElement.build();
-    private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
+    private final ButtonElement btnIndexAuto                    = ButtonElement.outline().css("button").text("Indexing").before(IconElement.icon(IconElement.Type.Regular, "fa-dna"));
     private final ButtonElement btnAccept                       = ButtonElement.outline().css("button").text("적용");
     private final ButtonElement btnCalc                         = ButtonElement.outline().css("button").text("계산").before(IconElement.icon(IconElement.Type.Regular, "fa-calculator"));
     private final ButtonElement btnSave                         = ButtonElement.outline().css("button").text("저장").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
@@ -43,7 +43,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
     public WorkScene(Query query) {
         super(query);
         this.query = query;
-        btnSequencing.onClick(this::sequence);
+        btnIndexAuto.onClick(this::sequence);
         btnBack.onClick(this::back);
         btnCalc.onClick(this::calc);
         btnSave.onClick(this::save);
@@ -130,7 +130,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
         return new IsElement[][]{
                 new IsElement<?>[] { div().add(iptnMOfDilution).add(iptLibraryVol).add(btnAccept).style("display:flex;")},
                 new IsElement<?>[] { btnCalc },
-                new IsElement<?>[] { btnSequencing },
+                new IsElement<?>[] {btnIndexAuto},
                 new IsElement<?>[] { btnSave, btnBack }
         };
     }

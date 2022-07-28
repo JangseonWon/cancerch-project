@@ -11,6 +11,7 @@ data class Work(
     val patientName:    String?,
     val mrns:           String?,
     val gid:            String,
+    val address:        String,
     val json:           String? = "",
     val createBy:       User,
     val createAt:       LocalDateTime,
@@ -41,6 +42,8 @@ data class Work(
             val patientName:    String?,
             val mrns:           String?,
             val gid:            String,
+            val x:              Short,
+            val y:              Short,
             val json:           String?,
             val createAt:       LocalDateTime,
             val createById:     String,
@@ -72,6 +75,7 @@ data class Work(
                 patientName = patientName,
                 mrns = mrns,
                 gid = gid,
+                address = toAddress(x, y),
                 json = json,
                 createBy = User(createById, createBy),
                 createAt = createAt,
@@ -93,6 +97,15 @@ data class Work(
                 indexI5 = indexI5,
                 sequenceI5 = sequenceI5
             )
+        }
+        fun toAddress(x: Short, y: Short): String {
+            var y = y.toInt()
+            var address = ""
+            do {
+                address = 'A'.plus(y%26) + address
+                y /= 26
+            } while(y-- > 0)
+            return "$address${x+1}"
         }
     }
 }

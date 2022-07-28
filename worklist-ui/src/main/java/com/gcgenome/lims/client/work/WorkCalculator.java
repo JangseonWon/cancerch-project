@@ -36,4 +36,8 @@ public class WorkCalculator {
         }
         return Promise.resolve(data);
     }
+    public Promise<Data[]> indexing(Data[] data, String plate) {
+        return null;
+    }
+
 }

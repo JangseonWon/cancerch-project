@@ -1,0 +1,18 @@
+spring:
+  application.name: worklist-api
+  main.web-application-type: reactive
+  cloud:
+    zookeeper:
+      connect-string: test:12181
+      discovery.root: /avoid-service
+  r2dbc:
+    url: r2dbc:postgresql://aries:5432/lims
+    compatibility-mode : true
+    username: avoid
+    password: avoid1004
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: TRACE
+    io.r2dbc.postgresql.PARAM: TRACE
+server:
+  port: 54005

@@ -10,25 +10,27 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Schema("worklist")
+@Schema("avoid")
 @Table("work")
 data class Work(
-    @Column("worklist")                  val worklist:      String,
-    @Column("index")                     val index:         Int,
-    @Column("samples")                   val samples:       String? = "",
-    @Column("services")                  val services:      String? = "",
-    @Column("patient_names")             val patientName:   String? = "",
-    @Column("mrns")                      val mrns:          String? = "",
-    @Column("gid")                       val gid:           String
+    @Column("worklist")                 val worklist:       String,
+    @Column("index")                    val index:          Int,
+    @Column("samples")                  val samples:        String? = "",
+    @Column("services")                 val services:       String? = "",
+    @Column("patient_names")            val patientName:    String? = "",
+    @Column("mrns")                     val mrns:           String? = "",
+    @Column("gid")                      val gid:            String,
+    @Column("x")                        val x:              Short,
+    @Column("y")                        val y:              Short
 ): Persistable<Work.Companion.WorkPK> {
     @CreatedBy
-    @Column("create_user")               lateinit var createBy: String
+    @Column("create_user")              lateinit var createBy: String
     @CreatedDate
-    @Column("create_at")                 lateinit var createAt: LocalDateTime
-    @Id @Transient                       lateinit var _id: WorkPK
+    @Column("create_at")                lateinit var createAt: LocalDateTime
+    @Id @Transient                      lateinit var _id: WorkPK
     constructor(
-        worklist: String, index: Int, samples: String, services: String, patientName: String, mrns: String, gid: String, createBy: String, createAt: LocalDateTime
-    ): this(worklist, index, samples, services, patientName, mrns, gid){
+        worklist: String, index: Int, samples: String, services: String, patientName: String, mrns: String, gid: String, x: Short, y:Short, createBy: String, createAt: LocalDateTime
+    ): this(worklist, index, samples, services, patientName, mrns, gid, x, y){
         this.createBy = createBy
         this.createAt = createAt
     }

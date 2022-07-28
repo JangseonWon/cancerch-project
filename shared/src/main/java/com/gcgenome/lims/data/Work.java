@@ -14,6 +14,7 @@ public final class Work {
     public String patientName;
     public String gid;
     public String json;
+    public String address;
     @JsProperty(name = "last_modify_by")
     public User lastModifyBy;
     @JsProperty(name = "created_by")

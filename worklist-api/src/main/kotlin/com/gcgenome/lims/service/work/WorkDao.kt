@@ -24,6 +24,8 @@ class WorkDao(private val repo: WorkRepository) {
                 work.patientName.`as`("patientName"),
                 work.mrns,
                 work.gid,
+                work.x,
+                work.y,
                 preprocessing.json.`as`("json"),
                 work.createAt.`as`("createAt"),
                 createBy.id.`as`("createById"),

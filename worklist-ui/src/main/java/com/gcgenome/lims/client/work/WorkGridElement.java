@@ -48,10 +48,11 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column(WorkModel.Volume.id).name(WorkModel.Volume.label).horizontal("right").readOnly(true).build(),
                     column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).name(WorkModel.LibraryVolume.label).build(),
                     column(WorkModel.TEBuffer.id).name(WorkModel.TEBuffer.label).horizontal("right").readOnly(true).build(),
+                    column(WorkModel.Address.id).name(WorkModel.Address.label).readOnly(true).build(),
                     column(WorkModel.IndexI7.id).name(WorkModel.IndexI7.label).build(),
-                    column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).build(),
+                    column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).readOnly(true).build(),
                     column(WorkModel.IndexI5.id).name(WorkModel.IndexI5.label).build(),
-                    column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).build());
+                    column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).readOnly(true).build());
 
     private final SheetElement elemSheet = config.build();
     private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
