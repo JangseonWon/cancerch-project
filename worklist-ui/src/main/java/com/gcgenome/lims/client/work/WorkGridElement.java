@@ -53,7 +53,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).readOnly(true).build(),
                     column(WorkModel.IndexI5.id).name(WorkModel.IndexI5.label).build(),
                     column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).readOnly(true).build());
-
     private final SheetElement elemSheet = config.build();
     private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
     private final ListElement.SingleLineItem lblPhone = ListElement.singleLine().label("연락처");
@@ -87,6 +86,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             works[i].volume         = toDouble(data[i].get(WorkModel.Volume.id));
             works[i].libVolume      = toDouble(data[i].get(WorkModel.LibraryVolume.id));
             works[i].bufferVolume   = toDouble(data[i].get(WorkModel.TEBuffer.id));
+            works[i].address        = data[i].get(WorkModel.Address.id);
             works[i].indexI7        = data[i].get(WorkModel.IndexI7.id);
             works[i].sequenceI7     = data[i].get(WorkModel.SequenceI7.id);
             works[i].indexI5        = data[i].get(WorkModel.IndexI5.id);
@@ -148,6 +148,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .put(WorkModel.Volume.id,               toString(value.volume))
                 .put(WorkModel.LibraryVolume.id,        toString(value.libVolume))
                 .put(WorkModel.TEBuffer.id,             toString(value.bufferVolume))
+                .put(WorkModel.Address.id,              toString(value.address))
                 .put(WorkModel.IndexI7.id,              toString(value.indexI7))
                 .put(WorkModel.SequenceI7.id,           toString(value.sequenceI7))
                 .put(WorkModel.IndexI5.id,              toString(value.indexI5))

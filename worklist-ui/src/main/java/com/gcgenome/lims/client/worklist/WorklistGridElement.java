@@ -3,20 +3,24 @@ package com.gcgenome.lims.client.worklist;
 import com.gcgenome.lims.client.Router;
 import com.gcgenome.lims.data.Worklist;
 import com.google.gwt.core.client.JsDate;
-import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
+import net.sayaya.ui.chart.SheetElementSelectableMulti;
 import net.sayaya.ui.chart.column.ColumnBuilder;
 import net.sayaya.ui.chart.column.ColumnString;
+import net.sayaya.ui.event.HasSelectionChangeHandlers;
+import org.gwtproject.event.shared.HandlerRegistration;
 import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.jboss.elemento.Elements.div;
 
-public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, WorklistGridElement>{
+public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, WorklistGridElement> implements HasSelectionChangeHandlers<Worklist[]> {
     public static WorklistGridElement build() { return new WorklistGridElement(div());}
     private static ColumnString column(String name) {
         return ColumnBuilder.string(name).name(name).readOnly(true).horizontal("center");
@@ -48,7 +52,8 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
                     column("Comment").horizontal("left").build()
             ).data(new Data[10]);
     private final SheetElement elemSheet = config.build();
-
+    private final SheetElementSelectableMulti selection = SheetElementSelectableMulti.wrap(elemSheet);
+    private Map<String, Worklist> map = new HashMap<>();
     private WorklistGridElement(HtmlContentBuilder<HTMLDivElement> e) {
         super(e.style("width: 100%;"));
         HtmlContentBuilder<HTMLDivElement> table = div().style("overflow: hidden; width: 100%; height: 85vh; border-bottom: 1px solid #AAA;")
@@ -56,7 +61,8 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
         e.add(table);
     }
     public WorklistGridElement update(Worklist[] values){
-        return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
+        map.clear();
+        return update(Arrays.stream(values).peek(w->map.put(w.id(), w)).map(this::map).toArray(Data[]::new));
     }
     private WorklistGridElement update(Data[] data){
         try {
@@ -94,5 +100,18 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
     @Override
     public WorklistGridElement that() {
         return this;
+    }
+
+    @Override
+    public Worklist[] selection() {
+        return Arrays.stream(selection.selection()).map(data->map.get(data.idx())).toArray(Worklist[]::new);
+    }
+    @Override
+    public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Worklist[]> selectionChangeEventListener) {
+        return selection.onSelectionChange(element, evt->{
+            var selected = Arrays.stream(evt.selection()).map(data->map.get(data.idx())).toArray(Worklist[]::new);
+            SelectionChangeEvent<Worklist[]> cast = SelectionChangeEvent.event(evt.event(), selected);
+            selectionChangeEventListener.handle(cast);
+        });
     }
 }
