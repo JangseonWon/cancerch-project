@@ -52,8 +52,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
 
     private void sequence(Event event) {
         String plate = DomGlobal.prompt("좌표에 따라 인덱스를 입력합니다. Plate 종류를 입력하세요(Plate 1 ~ Plate 6):");
-        if(plate==null || plate.trim().isEmpty()) return;
-        else grid.indexing(plate.trim());
+        if(plate!=null && !plate.trim().isEmpty()) grid.indexing(plate.trim()).then(e->null);
     }
     private void accept(Event event) {
         if(iptnMOfDilution.value() <= 0 || iptnMOfDilution.value().isNaN()) DomGlobal.alert("잘못 입력된 숫자입니다.");
