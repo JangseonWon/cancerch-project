@@ -2,6 +2,7 @@ package com.gcgenome.lims.client.work;
 
 import com.gcgenome.lims.api.SequencingApi;
 import com.gcgenome.lims.data.Index;
+import elemental2.dom.DomGlobal;
 import elemental2.promise.Promise;
 import lombok.experimental.UtilityClass;
 import net.sayaya.ui.chart.Data;
@@ -46,8 +47,12 @@ public class WorkCalculator {
         return SequencingApi.indices(plate).then(WorkCalculator::mapByAddress).then(map->{
             Map<String, Index> i7 = map.get("i7");
             Map<String, Index> i5 = map.get("i7");
+            DomGlobal.console.log(i7.size());
+            DomGlobal.console.log(i5.size());
             Arrays.stream(data).forEach(datum->{
                 var address = datum.get(Address.id);
+                DomGlobal.console.log(address);
+                DomGlobal.console.log(i7.containsKey(address));
                 if(i7.containsKey(address)) {
                     var index = i7.get(address);
                     datum.put(IndexI7.id, index.id).put(SequenceI7.id, index.sequence);

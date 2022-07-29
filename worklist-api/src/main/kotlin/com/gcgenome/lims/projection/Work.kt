@@ -105,7 +105,7 @@ data class Work(
                 address = 'A'.plus(y%26) + address
                 y /= 26
             } while(y-- > 0)
-            return "$address${x+1}"
+            return "$address${(x+1).toString().padStart(2, '0')}"
         }
     }
 }
