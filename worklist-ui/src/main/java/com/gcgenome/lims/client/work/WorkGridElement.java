@@ -112,6 +112,13 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .then(s->Promise.resolve((Void)null))
                 .finally_(ProgressApi::close);
     }
+    Promise<Void> indexing(String plate) {
+        ProgressApi.open(false);
+        return WorkCalculator.indexing(elemSheet.values(), plate)
+                .then(data->Promise.resolve(update(data)))
+                .then(s->Promise.resolve((Void)null))
+                .finally_(ProgressApi::close);
+    }
     private WorkGridElement update(Data[] data){
         try {
             elemSheet.values(data);

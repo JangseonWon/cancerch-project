@@ -8,5 +8,5 @@ import reactor.core.publisher.Flux
 @Service
 @Transactional(readOnly = true)
 class IndexHandler(private val dao: IndexDao) {
-    fun indexes(plate: String): Flux<Index> = dao.findByPlate(plate)
+    fun indices(plate: String): Flux<Index> = dao.findByPlate(plate)
 }

@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono
 class IndexRouter(private val handler: IndexHandler) {
     @Bean("WorklistRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        GET("/plates/{plate}/indexes",          contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::indexes)
+        GET("/plates/{plate}/indices",          contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::indices)
     }
-    private fun indexes(request: ServerRequest): Mono<ServerResponse>{
-        return handler.indexes(request.pathVariable("plate")).collectList()
+    private fun indices(request: ServerRequest): Mono<ServerResponse>{
+        return handler.indices(request.pathVariable("plate")).collectList()
             .flatMap { ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(it) }
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
            // .onErrorResume(Exception::class.java) { ServerResponse.badRequest().bodyValue(it.localizedMessage) }

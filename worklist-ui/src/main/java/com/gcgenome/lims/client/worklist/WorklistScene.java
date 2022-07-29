@@ -9,12 +9,11 @@ import com.gcgenome.lims.data.Worklist;
 import com.gcgenome.lims.dto.Query;
 import com.gcgenome.lims.ui.IconElement;
 import elemental2.core.JsDate;
+import elemental2.dom.Event;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
 import elemental2.promise.Promise;
-import net.sayaya.ui.BreadcrumbElement;
-import net.sayaya.ui.ButtonElement;
-import net.sayaya.ui.TextFieldElement;
+import net.sayaya.ui.*;
 import net.sayaya.ui.TextFieldElement.TextFieldOutlined;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
@@ -25,8 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static elemental2.core.Global.JSON;
-import static org.jboss.elemento.Elements.div;
-import static org.jboss.elemento.Elements.label;
+import static org.jboss.elemento.Elements.*;
 
 public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     public static WorklistScene build(Query query) { return new WorklistScene(query); }
@@ -57,12 +55,37 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
                 Router.location("", true);
             });
     private final Query query;
-
     public WorklistScene(Query query) {
         super(query);
         this.sortable("작성일", "워크리스트 명", "상태").sort("작성일", false);
         this.query = query;
         btnSearch.onClick(evt->update());
+        btnSequencing.onClick(this::sequence);
+    }
+    private Promise<Boolean> dialog(String title){
+        ButtonElementText ok = ButtonElement.outline().text("OK");
+        ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
+        Dialog dialog = Dialog.alert(title, ok, cancel);
+        body().add(dialog);
+        return new Promise<>((resolve, reject)-> {
+            ok.onClick(evt -> {
+                dialog.close();
+                dialog.element().remove();
+                resolve.onInvoke(true);
+            });
+            cancel.onClick(evt -> {
+                dialog.close();
+                dialog.element().remove();
+                reject.onInvoke(false);
+            });
+            dialog.open();
+        });
+    }
+    private void sequence(Event event) {
+        this.dialog("시퀀싱을 수행합니다.").then(result->{
+            if(result){ }
+            return null;
+        });
     }
     private void update(Query query){
         Query proxy = new Query().asc(this.isAsc());
@@ -99,7 +122,6 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         if(json!=null && !json.trim().isEmpty()) return Promise.resolve((Worklist[])JSON.parse(json));
         else return Promise.resolve((Worklist[])null);
     }
-
     @Override
     protected IsElement<?> grid() {
         return grid;
