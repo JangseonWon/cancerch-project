@@ -48,6 +48,13 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column(WorkModel.Volume.id).name(WorkModel.Volume.label).horizontal("right").readOnly(true).build(),
                     column(WorkModel.LibraryVolume.id).name(WorkModel.LibraryVolume.label).name(WorkModel.LibraryVolume.label).build(),
                     column(WorkModel.TEBuffer.id).name(WorkModel.TEBuffer.label).horizontal("right").readOnly(true).build(),
+                    ColumnBuilder.dropdown(WorkModel.QC.id,
+                            ListElement.singleLine().label("Pass"),
+                            ListElement.singleLine().label("Fail"))
+                            .color("#FFFFFF").colorBackground((td, row, prop, value)->{
+                                if("Pass".equalsIgnoreCase(value)) return "#007B5F";
+                                else return "#AD1742";
+                            }).name(WorkModel.QC.name()).horizontal("center").build(),
                     column(WorkModel.Address.id).name(WorkModel.Address.label).readOnly(true).build(),
                     column(WorkModel.IndexI7.id).name(WorkModel.IndexI7.label).build(),
                     column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).readOnly(true).build(),
@@ -86,6 +93,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             works[i].volume         = toDouble(data[i].get(WorkModel.Volume.id));
             works[i].libVolume      = toDouble(data[i].get(WorkModel.LibraryVolume.id));
             works[i].bufferVolume   = toDouble(data[i].get(WorkModel.TEBuffer.id));
+            works[i].qc             = data[i].get(WorkModel.QC.id);
             works[i].address        = data[i].get(WorkModel.Address.id);
             works[i].indexI7        = data[i].get(WorkModel.IndexI7.id);
             works[i].sequenceI7     = data[i].get(WorkModel.SequenceI7.id);
@@ -155,6 +163,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .put(WorkModel.Volume.id,               toString(value.volume))
                 .put(WorkModel.LibraryVolume.id,        toString(value.libVolume))
                 .put(WorkModel.TEBuffer.id,             toString(value.bufferVolume))
+                .put(WorkModel.QC.id,                   value.qc!=null?value.qc:"Pass")
                 .put(WorkModel.Address.id,              toString(value.address))
                 .put(WorkModel.IndexI7.id,              toString(value.indexI7))
                 .put(WorkModel.SequenceI7.id,           toString(value.sequenceI7))

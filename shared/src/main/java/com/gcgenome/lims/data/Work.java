@@ -38,6 +38,7 @@ public final class Work {
     public Double libVolume;
     @JsProperty(name = "buffer_volume")
     public Double bufferVolume;
+    public String qc;
     @JsProperty(name = "index_i7")
     public String indexI7;
     @JsProperty(name = "sequence_i7")

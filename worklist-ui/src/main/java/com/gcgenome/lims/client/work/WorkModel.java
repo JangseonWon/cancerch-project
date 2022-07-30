@@ -12,6 +12,7 @@ public enum WorkModel {
     Volume(     "volume",           "Total Vol(ul)"),
     LibraryVolume("library_volume", "Library volume(ul)"),
     TEBuffer(   "buffer",           "TE buffer (ul)"),
+    QC(         "result",           "QC"),
     Address(    "address",          "Position"),
     IndexI7(    "i7Index",          "I7 Index ID"),
     SequenceI7( "i7Seq",            "I7 Sequence"),
