@@ -88,8 +88,10 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
             if(result){
                 ProgressApi.open(false);
                 SequencingApi.sequencing(grid.selection())
-                        .finally_(ProgressApi::close)
-                        .finally_(()->DomGlobal.alert("시퀀싱 정보 전송을 완료했습니다."));
+                        .then(e->{
+                            DomGlobal.alert("시퀀싱 정보 전송을 완료했습니다.");
+                            return Promise.resolve(e);
+                        }).finally_(ProgressApi::close);
             }
             return null;
         });
