@@ -1,66 +1,45 @@
+package com.gcgenome.lims.service.lims1
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.gcgenome.lims.entity.Worklist
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
 @Component
-class Lims1Api: Actor {
+class Lims1Api(private val worklistToBatch: WorklistToBatch) {
     private val logger = LoggerFactory.getLogger(javaClass)
-    @Autowired
-    public lateinit var request : HttpRequest
-    @Autowired
-    public  lateinit var client: HttpClient
-    @Autowired
-    public  lateinit var bodyHandler: BatchBodyHandler<BatchDTO>
-    @Autowired
-    public  lateinit var batchUpdater: BatchUpdater
-
+    private val client: HttpClient = HttpClient.newHttpClient()
     private val om = ObjectMapper()
         .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         .registerModule(JavaTimeModule())
         .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-
-    override fun genericType(): Class<SequencingEvent<out Mapper>> {
-        return SequencingEvent::class.java
-    }
-    override fun onNext(event: SequencingEvent<out Mapper>) {
-        client.sendAsync(request, bodyHandler)
-            .thenAccept { response ->
-                val batchToUpdate = response.body().get()!!.filter{ batch ->
-                    (batch!!.state == "CREATE" && batch.value.getOrDefault(UUIDEnum.PROGRESS.toUUID(), null) != "1.0" && batch.value.getOrDefault(UUIDEnum.DEVICE.toUUID(), null) == event.device && batch.value.getOrDefault(UUIDEnum.PATH.toUUID(), null) == event.path)
-                }.findAny()
-                if(batchToUpdate.isPresent){
-                    logger.info("Update Batch")
-                    updateBatch(batchToUpdate.get(), event)
-                } else {
-                    logger.info("Create New Batch")
-                    createBatch(event)
-                }
-            }.join()
-    }
-
-    private fun updateBatch(oldBatch : BatchDTO, event : SequencingEvent<out Mapper>){
-        val batch = batchUpdater.update(oldBatch, event)
-        val putRequest = HttpRequest
-            .newBuilder()
-            .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx))
-            .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(batch)))
-            .header("Content-Type", "application/json")
-            .build()
-        val response = client.send(putRequest, HttpResponse.BodyHandlers.ofString())
-        if(response.statusCode() != 200)
-            logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
-    }
-
     @Synchronized
-    private fun createBatch(event: SequencingEvent<out Mapper>){
-        val getRequest = HttpRequest
-            .newBuilder()
-            .uri(URI.create("http://172.19.210.215/api2/batch/" + UUIDEnum.TEMPLATE.uuid + "/max" ))
-            .GET()
-            .build()
-        val batch = BatchDTO()
-        batch.value = HashMap<UUID, String>()
-        batch.state = "CREATE"
-        batch.template = UUIDEnum.TEMPLATE.toUUID()
-        batch.idx = client.send(getRequest, HttpResponse.BodyHandlers.ofString()).body().toString().toInt() + 1
-        updateBatch(batch, event)
+    fun create(worklist: List<Worklist>): Mono<Int> {
+        val getRequest = HttpRequest.newBuilder().uri(URI.create("http://172.19.210.215/api2/batch/" + UUIDEnum.TEMPLATE.uuid + "/max" )).GET().build()
+        val idx =  client.send(getRequest, HttpResponse.BodyHandlers.ofString()).body().toString().toInt() + 1
+        return worklistToBatch.map(idx, worklist).flatMap { batch->
+            val putRequest = HttpRequest
+                .newBuilder()
+                .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx))
+                .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(batch)))
+                .header("Content-Type", "application/json")
+                .build()
+            val response = client.send(putRequest, HttpResponse.BodyHandlers.ofString())
+
+            if(response.statusCode() != 200)
+                logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
+            Mono.just(response.statusCode())
+        }
     }
 }
