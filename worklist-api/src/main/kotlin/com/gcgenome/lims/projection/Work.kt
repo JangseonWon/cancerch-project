@@ -2,10 +2,9 @@ package com.gcgenome.lims.projection
 
 import com.gcgenome.lims.entity.User
 import java.time.LocalDateTime
-import java.util.*
 
 data class Work(
-    val worklist:       UUID,
+    val worklist:       String,
     val index:          Int,
     val samples:        String?,
     val services:       String?,
@@ -36,7 +35,7 @@ data class Work(
 ) {
     companion object{
         data class WorkBuilder(
-            val worklist:       UUID,
+            val worklist:       String,
             val index:          Int,
             val samples:        String?,
             val services:       String?,
