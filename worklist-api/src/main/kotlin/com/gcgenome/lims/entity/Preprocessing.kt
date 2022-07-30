@@ -7,12 +7,11 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
-import java.util.*
 
 @Schema("avoid")
 @Table("preprocessing")
 data class Preprocessing(
-    @Column("worklist")             val worklist:               UUID,
+    @Column("worklist")             val worklist:               String,
     @Column("index")                val index:                  Int,
     @Column("conc_na")              var concNa:                 Double? = null,
     @Column("conc_input")           var concInput:              Double? = null,
@@ -41,7 +40,7 @@ data class Preprocessing(
     @Column("last_modify_at")       lateinit var lastModifyAt:  LocalDateTime
     @Id @Transient                  lateinit var _id:           PreprocessingPK
 
-    constructor(worklist: UUID, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String,
+    constructor(worklist: String, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String,
                 concNa: Double?, concInput: Double?, libPrep: String?, libConcTape: Double?, libConcQubit: Double?,
                 fragmentSize: Double?, amount: Double?, dilution: Double?, volume: Double?, libVolume: Double?, bufferVolume: Double?,
                 indexI7: String?, sequenceI7: String?, indexI5: String?, sequenceI5: String?): this(worklist, index){
@@ -69,8 +68,8 @@ data class Preprocessing(
     override fun getId(): PreprocessingPK = PreprocessingPK(worklist, index)
     override fun isNew(): Boolean = this::createAt.isInitialized.not()
     companion object {
-        data class PreprocessingPK(
-            val worklist: UUID,
+        data class PreprocessingPK (
+            val worklist: String,
             val index: Int
         )
     }
