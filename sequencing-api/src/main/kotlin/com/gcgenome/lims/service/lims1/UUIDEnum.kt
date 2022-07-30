@@ -34,7 +34,17 @@ enum class UUIDEnum(val uuid: String) {
     APPLICATION("dcf8f21f-231a-496e-a8da-f748a24c951c"),
     ASSAY("3f2f87ab-0e8c-4ce6-bc5b-9a0f3f72fd97"),
     CHEMISTRY("36f35add-6bfe-43ed-bca2-5a2d1bc87556"),
-    MANIFESTS("dcde8d1b-e1f2-4791-9908-5db821ff6d5c");
+    MANIFESTS("dcde8d1b-e1f2-4791-9908-5db821ff6d5c"),
+
+    ANALYSIS_NAME("f46136d7-7cfc-4f79-adb0-c254edd5c72a"),
+    ORDER_NAME("494aa18c-681b-4509-b3b4-b5166682fc7a"),
+    PATIENT_NAME("5e5e7085-c856-4daa-a866-76ec1218eacf"),
+    TAT("47b1714e-ba4e-4cc2-aa5c-69091b34e2f1"),
+    GTRACKER("68a8dff2-1852-4f5e-8449-635961b29092"),
+    I7IDX("d57c24cb-7b04-41d5-8f8f-5136c197a50f"),
+    I7SEQ("209cf560-9790-4817-9af5-be5e1c81812a"),
+    I5IDX("e11e5ecf-f77b-43b0-b00b-69a1f9987a56"),
+    I5SEQ("010d2221-bb21-438e-952a-1b90d738fb9a");
 
     fun toUUID() : UUID{
         return UUID.fromString(uuid)

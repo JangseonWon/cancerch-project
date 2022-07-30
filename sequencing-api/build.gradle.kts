@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)
     implementation(libs.bundles.r2dbc.querydsl)
+    implementation("org.apache.httpcomponents:httpmime")
     kapt(libs.bundles.r2dbc.querydsl)
     testImplementation(libs.bundles.test)
 }

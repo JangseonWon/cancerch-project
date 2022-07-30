@@ -23,6 +23,12 @@ class WorklistToBatch(val repo: SequencingRepository) {
             Batch(idx=idx).also {
                 it.title = title
                 it.analysis.addAll(analysis)
+                it.value[UUIDEnum.WORKFLOW.toUUID()] = "GenerateFASTQ"
+                it.value[UUIDEnum.APPLICATION.toUUID()] = "FASTQ Only"
+                it.value[UUIDEnum.CHEMISTRY.toUUID()] = "Amplicon"
+                it.value[UUIDEnum.ASSAY.toUUID()] = "Swift"
+                it.value[UUIDEnum.ADAPTOR1.toUUID()] = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+                it.value[UUIDEnum.ADAPTOR2.toUUID()] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
             }
         }
     }
@@ -44,16 +50,15 @@ class WorklistToBatch(val repo: SequencingRepository) {
             serial + "_" + samplePickOne.substring(0, 8) + "-" + samplePickOne.substring(8, 11) + "-" + samplePickOne.substring(11)
         } else serial + "_" + sequencing.gid
         return Analysis(row=row, patientId=samplePickOne?.toLong(), code=servicePickOne, serial=serial, sort=sort).apply {
-            this.value[SEQUENCING_ORDER_NAME] = "-"
-            this.value[SEQUENCING_PATIENT_NAME] = "-"
-            this.value[SEQUENCING_TAT] = "-"
-            this.value[SEQUENCING_ANALYSIS_NAME] = seqname
-            this.value[SEQUENCING_STB] = sequencing.gid
+            this.value[UUIDEnum.ORDER_NAME.toUUID()] = "-"
+            this.value[UUIDEnum.PATIENT_NAME.toUUID()] = "-"
+            this.value[UUIDEnum.TAT.toUUID()] = "-"
+            this.value[UUIDEnum.ANALYSIS_NAME.toUUID()] = seqname
+            this.value[UUIDEnum.GTRACKER.toUUID()] = sequencing.gid
+            this.value[UUIDEnum.I7IDX.toUUID()] = sequencing.indexI7
+            this.value[UUIDEnum.I7SEQ.toUUID()] = sequencing.sequenceI7
+            this.value[UUIDEnum.I5IDX.toUUID()] = sequencing.indexI5
+            this.value[UUIDEnum.I5SEQ.toUUID()] = sequencing.sequenceI5
         }
     }
-    private val SEQUENCING_ANALYSIS_NAME = UUID.fromString("f46136d7-7cfc-4f79-adb0-c254edd5c72a")
-    private val SEQUENCING_ORDER_NAME = UUID.fromString("494aa18c-681b-4509-b3b4-b5166682fc7a")
-    private val SEQUENCING_PATIENT_NAME = UUID.fromString("5e5e7085-c856-4daa-a866-76ec1218eacf")
-    private val SEQUENCING_TAT = UUID.fromString("47b1714e-ba4e-4cc2-aa5c-69091b34e2f1")
-    private val SEQUENCING_STB = UUID.fromString("68a8dff2-1852-4f5e-8449-635961b29092")
 }
