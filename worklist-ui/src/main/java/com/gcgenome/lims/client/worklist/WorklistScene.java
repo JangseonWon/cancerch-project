@@ -2,6 +2,7 @@ package com.gcgenome.lims.client.worklist;
 
 import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.api.RouteApi;
+import com.gcgenome.lims.api.SequencingApi;
 import com.gcgenome.lims.api.WorklistApi;
 import com.gcgenome.lims.client.AbstractScenePageable;
 import com.gcgenome.lims.client.Router;
@@ -9,6 +10,7 @@ import com.gcgenome.lims.data.Worklist;
 import com.gcgenome.lims.dto.Query;
 import com.gcgenome.lims.ui.IconElement;
 import elemental2.core.JsDate;
+import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
@@ -83,7 +85,12 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     }
     private void sequence(Event event) {
         this.dialog("시퀀싱을 수행합니다.").then(result->{
-            if(result){ }
+            if(result){
+                ProgressApi.open(false);
+                SequencingApi.sequencing(grid.selection())
+                        .finally_(ProgressApi::close)
+                        .finally_(()->DomGlobal.alert("시퀀싱 정보 전송을 완료했습니다."));
+            }
             return null;
         });
     }

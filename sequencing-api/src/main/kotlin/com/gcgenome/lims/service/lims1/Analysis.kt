@@ -4,8 +4,8 @@ import java.util.*
 
 data class Analysis (
     val row: Int,
-    val patientId: Long,
-    val code: String,
+    val patientId: Long?,
+    val code: String?,
     val serial: String,
     val sort: String
 ) {

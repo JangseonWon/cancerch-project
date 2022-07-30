@@ -23,7 +23,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
         .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         .registerModule(JavaTimeModule())
-        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+        .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
     @Synchronized
     fun create(worklist: List<Worklist>): Mono<Int> {
         val getRequest = HttpRequest.newBuilder().uri(URI.create("http://172.19.210.215/api2/batch/" + UUIDEnum.TEMPLATE.uuid + "/max" )).GET().build()
@@ -36,9 +36,18 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .header("Content-Type", "application/json")
                 .build()
             val response = client.send(putRequest, HttpResponse.BodyHandlers.ofString())
-
-            if(response.statusCode() != 200)
-                logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
+            if(response.statusCode() != 200) logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
+            for(analysis in batch.analysis) {
+                val putRequest2 = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx + "/analysis/" + analysis.row))
+                    .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(analysis)))
+                    .header("Content-Type", "application/json")
+                    .build()
+                println(om.writeValueAsString(analysis))
+                val response2 = client.send(putRequest2, HttpResponse.BodyHandlers.ofString())
+                if(response2.statusCode() != 200) logger.error("Updated failed, Server sent response : \n" + response2.statusCode() + "\n" + response2.body())
+            }
             Mono.just(response.statusCode())
         }
     }

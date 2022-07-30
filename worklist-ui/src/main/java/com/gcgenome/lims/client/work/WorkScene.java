@@ -51,7 +51,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
     }
 
     private void sequence(Event event) {
-        String plate = DomGlobal.prompt("좌표에 따라 인덱스를 입력합니다. Plate 종류를 입력하세요(Plate 1 ~ Plate 6):");
+        String plate = DomGlobal.prompt("좌표에 따라 인덱스를 입력합니다. Plate 종류를 입력하세요(Plate 1 ~ Plate 16):");
         if(plate!=null && !plate.trim().isEmpty()) grid.indexing(plate.trim()).then(e->null);
     }
     private void accept(Event event) {
@@ -76,7 +76,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
                     return WorkApi.merge(hash, grid.values());
                 }).then(result2-> {
                     if (!result2.ok) return Promise.reject(false);
-                    DomGlobal.alert("저장이 완료됬습니다.");
+                    DomGlobal.alert("저장을 완료했습니다.");
                     return WorkApi.works(hash);
                 }).then(works->Promise.resolve(grid.update(works)))
                 .finally_(ProgressApi::close);

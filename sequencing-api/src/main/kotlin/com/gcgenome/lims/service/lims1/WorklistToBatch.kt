@@ -16,30 +16,34 @@ class WorklistToBatch(val repo: SequencingRepository) {
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd")
     fun map(idx: Int, worklist: List<Worklist>): Mono<Batch> {
         val row = AtomicInteger(1)
-        return Flux.fromStream(worklist.stream().distinct()).flatMap { map(row, it) }
-            .collectList().map { analysis->
-                val today = LocalDate.now()
-                val title = "${formatter.format(today)}_${worklist.stream().map(Worklist::serial).distinct().collect(Collectors.joining("_"))}"
-                Batch(idx=idx).also {
-                    it.title = title
-                    it.analysis.addAll(analysis)
-                }
+        return Flux.fromIterable(worklist).flatMap { map(row, it) }.collectList()
+            .map { analysis->
+            val today = LocalDate.now()
+            val title = "${formatter.format(today)}_${worklist.stream().map(Worklist::serial).distinct().collect(Collectors.joining("_"))}"
+            Batch(idx=idx).also {
+                it.title = title
+                it.analysis.addAll(analysis)
             }
+        }
     }
-    private fun map(row: AtomicInteger, worklist: Worklist): Flux<Analysis> = repo.findAllByWorklist(worklist.id).map {
-        val title = worklist.title
-        check(title!=null)
-        map(row.getAndIncrement(), title, it)
-    }
-    private fun map(row: Int, worklistTitle: String, sequencing: Sequencing): Analysis {
-        val samples = sequencing.samples.split(":")
-        val services = sequencing.services.split(":")
+    private fun map(row: AtomicInteger, worklist: Worklist): Flux<Analysis> = repo.findAllByWorklist(worklist.id)
+        .sort(Comparator.comparing(Sequencing::index))
+        .map {
+            val serial = worklist.serial
+            check(serial!=null)
+            map(row.getAndIncrement(), serial, it)
+        }
+    private fun map(row: Int, worklistSerial: String, sequencing: Sequencing): Analysis {
+        val samples = if(sequencing.samples!=null) sequencing.samples.split("ː") else emptyList()
+        val services = if(sequencing.services!=null) sequencing.services.split("ː") else emptyList()
         val samplePickOne = samples.stream().filter(Objects::nonNull).filter(String::isNotBlank).findFirst().orElse(null)
         val servicePickOne = services.stream().filter(Objects::nonNull).filter(String::isNotBlank).findFirst().orElse(null)
-        val serial = "$worklistTitle-${sequencing.index.toString().padStart(2, '0')}"
+        val serial = "$worklistSerial-${sequencing.index.toString().padStart(2, '0')}"
         val sort = (row*5).toString().padStart(4, '0')
-        val seqname = serial + "_" + samplePickOne.substring(0, 8) + "-" + samplePickOne.substring(8, 11) + "-" + samplePickOne.substring(11)
-        return Analysis(row=row, patientId=samplePickOne.toLong(), code=servicePickOne, serial=serial, sort=sort).apply {
+        val seqname = if(samplePickOne!=null) {
+            serial + "_" + samplePickOne.substring(0, 8) + "-" + samplePickOne.substring(8, 11) + "-" + samplePickOne.substring(11)
+        } else serial + "_" + sequencing.gid
+        return Analysis(row=row, patientId=samplePickOne?.toLong(), code=servicePickOne, serial=serial, sort=sort).apply {
             this.value[SEQUENCING_ORDER_NAME] = "-"
             this.value[SEQUENCING_PATIENT_NAME] = "-"
             this.value[SEQUENCING_TAT] = "-"

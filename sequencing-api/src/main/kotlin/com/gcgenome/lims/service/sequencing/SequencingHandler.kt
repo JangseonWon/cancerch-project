@@ -10,7 +10,7 @@ import java.util.*
 @Service
 @Transactional(readOnly = true)
 class SequencingHandler(val repo: WorklistRepository, val lims1: Lims1Api) {
-    fun sequencing(worklist: Flux<String>): Mono<Void> = worklist.map(UUID::fromString)
+    fun sequencing(worklist: Flux<String>): Mono<Int> = worklist.map(UUID::fromString)
         .collectList().flatMapMany(repo::findAllById)
-        .collectList().map(lims1::create).then()
+        .collectList().flatMap(lims1::create)
 }

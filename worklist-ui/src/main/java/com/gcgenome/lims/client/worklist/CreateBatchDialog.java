@@ -9,9 +9,6 @@ import elemental2.promise.Promise;
 import lombok.experimental.Delegate;
 import net.sayaya.ui.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.jboss.elemento.Elements.body;
 import static org.jboss.elemento.Elements.div;
 
@@ -74,7 +71,7 @@ public class CreateBatchDialog {
                 Worklist worklist = new Worklist().id(worklistId).prefix(prefix)
                         .idx(iptBatchCount.value().intValue());
                 WorklistApi.merge(worklist).then(result ->{
-                    DomGlobal.alert("생성이 완료됬습니다.");
+                    DomGlobal.alert("생성을 완료했습니다.");
                     dialog.close();
                     dialog.element().remove();
                     resolve.onInvoke(new Worklist().id(worklistId).prefix("").idx(iptBatchCount.value().intValue()));
