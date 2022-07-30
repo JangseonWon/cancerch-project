@@ -21,6 +21,7 @@ class PreprocessingDao(private val repo: PreprocessingRepository) {
             volume       = dto.volume
             libVolume    = dto.libVolume
             bufferVolume = dto.bufferVolume
+            qc           = dto.qc
             indexI7      = dto.indexI7
             sequenceI7   = dto.sequenceI7
             indexI5      = dto.indexI5

@@ -47,6 +47,7 @@ class WorkDao(private val repo: WorkRepository) {
                 preprocessing.volume,
                 preprocessing.libVolume.`as`("libVolume"),
                 preprocessing.bufferVolume.`as`("bufferVolume"),
+                preprocessing.qc,
                 preprocessing.indexI7.`as`("indexI7"),
                 preprocessing.sequenceI7.`as`("sequenceI7"),
                 preprocessing.indexI5.`as`("indexI5"),

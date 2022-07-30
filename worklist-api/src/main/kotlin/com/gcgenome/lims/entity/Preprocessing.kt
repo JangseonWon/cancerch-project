@@ -25,6 +25,7 @@ data class Preprocessing(
     @Column("volume")               var volume:                 Double? = null,
     @Column("lib_volume")           var libVolume:              Double? = null,
     @Column("buffer_volume")        var bufferVolume:           Double? = null,
+    @Column("qc")                   var qc:                     Boolean = true,
     @Column("i7_index")             var indexI7:                String? = null,
     @Column("i7_sequence")          var sequenceI7:             String? = null,
     @Column("i5_index")             var indexI5:                String? = null,
@@ -43,7 +44,7 @@ data class Preprocessing(
 
     constructor(worklist: UUID, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String,
                 concNa: Double?, concInput: Double?, libPrep: String?, libConcTape: Double?, libConcQubit: Double?,
-                fragmentSize: Double?, amount: Double?, dilution: Double?, volume: Double?, libVolume: Double?, bufferVolume: Double?,
+                fragmentSize: Double?, amount: Double?, dilution: Double?, volume: Double?, libVolume: Double?, bufferVolume: Double?, qc: Boolean,
                 indexI7: String?, sequenceI7: String?, indexI5: String?, sequenceI5: String?): this(worklist, index){
         this.createBy = createBy
         this.createAt = createAt
@@ -61,6 +62,7 @@ data class Preprocessing(
         this.volume = volume
         this.libVolume = libVolume
         this.bufferVolume = bufferVolume
+        this.qc = qc
         this.indexI7 = indexI7
         this.sequenceI7 = sequenceI7
         this.indexI5 = indexI5

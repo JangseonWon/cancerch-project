@@ -21,6 +21,7 @@ data class Sequencing(
     @Column("services")             val services:               String?,
     @Column("patient_names")        val patient_names:          String?,
     @Column("mrns")                 val mrns:                   String?,
+    @Column("qc")                   val qc:                     Boolean,
     @Column("i7_index")             val indexI7:                String,
     @Column("i7_sequence")          val sequenceI7:             String,
     @Column("i5_index")             val indexI5:                String,

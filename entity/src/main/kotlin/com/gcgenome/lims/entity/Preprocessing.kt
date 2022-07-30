@@ -48,6 +48,8 @@ class Preprocessing {
     var indexI5: String? = null
     @Column(name = "i5_sequence", length=10)
     var sequenceI5: String? = null
+    @Column(name = "qc")
+    var qc: Boolean = true
     @Column(columnDefinition = "jsonb")
     var value: String? = null
     @Embeddable

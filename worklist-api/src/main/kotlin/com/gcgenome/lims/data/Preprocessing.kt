@@ -14,6 +14,7 @@ data class Preprocessing(
     val volume: Double?,
     val libVolume: Double?,
     val bufferVolume: Double?,
+    val qc: Boolean,
     val indexI7: String?,
     val sequenceI7: String?,
     val indexI5: String?,
