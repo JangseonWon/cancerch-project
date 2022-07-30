@@ -19,7 +19,5 @@ class SequencingRouter(private val handler: SequencingHandler) {
             .flatMapMany { str-> Flux.fromIterable(str.split(",")) })
             .flatMap { ServerResponse.ok().build() }
             .doOnError { it.printStackTrace() }
-    // 워크리스트 배치 아이디가 없다
-    // 워크리스트 내 검체 중 시퀀스가 없는게 있다
-    // 워크리스트 내 검체끼리 시퀀스가 충돌한다
+            .onErrorResume(Exception::class.java) { ServerResponse.badRequest().bodyValue(it.localizedMessage) }
 }
