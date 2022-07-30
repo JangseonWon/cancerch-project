@@ -4,11 +4,12 @@ import com.gcgenome.lims.entity.Preprocessing
 import com.gcgenome.querydsl.persist
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import java.util.*
 
 @Component
 class PreprocessingDao(private val repo: PreprocessingRepository) {
     fun merge(worklist: String, index: Int, dto: com.gcgenome.lims.data.Preprocessing): Mono<*> {
-        val entity = Preprocessing(worklist, index).apply {
+        val entity = Preprocessing(UUID.fromString(worklist), index).apply {
             concNa       = dto.concNa
             concInput    = dto.concInput
             libPrep      = dto.libPrep
