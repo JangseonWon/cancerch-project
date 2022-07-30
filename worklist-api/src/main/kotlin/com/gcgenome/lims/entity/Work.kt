@@ -9,11 +9,12 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
+import java.util.*
 
 @Schema("avoid")
 @Table("work")
 data class Work(
-    @Column("worklist")                 val worklist:       String,
+    @Column("worklist")                 val worklist:       UUID,
     @Column("index")                    val index:          Int,
     @Column("samples")                  val samples:        String? = "",
     @Column("services")                 val services:       String? = "",
@@ -29,14 +30,14 @@ data class Work(
     @Column("create_at")                lateinit var createAt: LocalDateTime
     @Id @Transient                      lateinit var _id: WorkPK
     constructor(
-        worklist: String, index: Int, samples: String, services: String, patientName: String, mrns: String, gid: String, x: Short, y:Short, createBy: String, createAt: LocalDateTime
+        worklist: UUID, index: Int, samples: String, services: String, patientName: String, mrns: String, gid: String, x: Short, y:Short, createBy: String, createAt: LocalDateTime
     ): this(worklist, index, samples, services, patientName, mrns, gid, x, y){
         this.createBy = createBy
         this.createAt = createAt
     }
     companion object {
         data class WorkPK(
-            val worklist: String,
+            val worklist: UUID,
             val index: Int
         )
     }

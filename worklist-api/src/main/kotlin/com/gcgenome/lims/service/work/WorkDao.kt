@@ -8,6 +8,7 @@ import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
+import java.util.*
 
 @Component
 class WorkDao(private val repo: WorkRepository) {
@@ -54,7 +55,7 @@ class WorkDao(private val repo: WorkRepository) {
             .leftJoin(createBy).on(createBy.id.eq(work.createBy))
             .leftJoin(modifyBy).on(modifyBy.id.eq(preprocessing.lastModifyBy))
     }
-    fun findByWorklist(worklist: String): Flux<Work> {
+    fun findByWorklist(worklist: UUID): Flux<Work> {
         return repo.query{
             select(it).where(work.worklist.eq(worklist)).orderBy(work.index.asc())
         }.all().map(Work.Companion.WorkBuilder::build)

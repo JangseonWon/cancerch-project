@@ -6,6 +6,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.util.*
 
 @Configuration
 class WorkRouter(private val handler: WorkHandler) {
@@ -14,7 +15,7 @@ class WorkRouter(private val handler: WorkHandler) {
         GET("/worklist/{id}/works", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::works)
     }
     private fun works(request: ServerRequest): Mono<ServerResponse> {
-        return handler.works(request.pathVariable("id")).collectList()
+        return handler.works(UUID.fromString(request.pathVariable("id"))).collectList()
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
     }
 }
