@@ -7,6 +7,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
+import java.util.*
 
 @Schema("avoid")
 @Table("preprocessing")
@@ -65,11 +66,11 @@ data class Preprocessing(
         this.indexI5 = indexI5
         this.sequenceI5 = sequenceI5
     }
-    override fun getId(): PreprocessingPK = PreprocessingPK(worklist, index)
+    override fun getId(): PreprocessingPK = PreprocessingPK(UUID.fromString(worklist), index)
     override fun isNew(): Boolean = this::createAt.isInitialized.not()
     companion object {
         data class PreprocessingPK (
-            val worklist: String,
+            val worklist: UUID,
             val index: Int
         )
     }
