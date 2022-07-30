@@ -16,6 +16,7 @@ class WorkDao(private val repo: WorkRepository) {
     private val createBy = QUser("Creator")
     private val modifyBy = QUser("Modifier")
     private fun select(query: SQLQuery<*>): SQLQuery<Work.Companion.WorkBuilder>{
+        @Suppress("UNCHECKED_CAST")
         return query.select(
             constructor(
                 Work.Companion.WorkBuilder::class.java,

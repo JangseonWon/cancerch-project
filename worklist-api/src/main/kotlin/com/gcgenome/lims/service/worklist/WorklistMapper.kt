@@ -8,7 +8,7 @@ class WorklistMapper {
     fun toDto(entity: com.gcgenome.lims.entity.Worklist): Worklist {
         return Worklist(
             id=entity.id.toString(),
-            title= if(entity.title!=null) entity.title!! else "",
+            title= entity.title ?: "",
             createdAt = entity.createAt.toString(),
             status = entity.status,
             prefix = entity.prefix,
