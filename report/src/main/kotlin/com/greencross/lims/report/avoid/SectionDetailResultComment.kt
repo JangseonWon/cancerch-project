@@ -52,7 +52,7 @@ class SectionDetailResultComment (private var y: Float = 581f)  : Painter<AvoidT
             TextBlock(styleBold, template.lblResultToWord(dto.result)), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine2END()),
             TextBlock(styleBold, dto.patientName), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_1()),
             TextBlock(styleBold, dto.first.name),  TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_2()),
-            TextBlock(styleBold, template.lblPatientInfo()), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_3()),
+            TextBlock(styleBold, template.lblPatientInfo(dto.age!!, dto.sex!!)), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_3()),
             TextBlock(styleBold, (round(dto.first.asr.div(1000) * 100) / 100).toString()+"%"),
             TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_4()), TextBlock(styleBold, template.lblDetailResultAnalysisContentLine3ASR(dto.first.asr.toString())),
             TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_5()), TextBlock(styleBold, dto.first.name+" "),

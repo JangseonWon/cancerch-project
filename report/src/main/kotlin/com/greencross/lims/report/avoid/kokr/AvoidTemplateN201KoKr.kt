@@ -25,9 +25,9 @@ class AvoidTemplateN201KoKr(
     override fun lblSpecimenType       () = "검체종류"
     override fun lblSpecimenDate       () = "검체채취일"
     override fun lblReceiptReportDate  () = "접수일/보고일"
-    override fun lblIntroHeader() = "인공지능 액체생검 주요 암 선별검사"
-    override fun lblIntroContent() = "AVOID 검사는 1,400명의 암 환자에서 특징적으로 나타나는 DNA 이상 패턴을 " +
-            "학습한 인공지능으로 수검자의 DNA 패턴을 분석하여 \n 주요 6종 암의 존재 가능성을 예측합니다. " +
+    override fun lblIntroHeader() = "인공지능 액체생검 주요 6종 암 선별검사"
+    override fun lblIntroContent() = "AVOID 검사는 1,600명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 " +
+            "학습한 인공지능으로 수검자의 DNA 패턴을\n분석하여 주요 6종 암의 존재 가능성을 예측합니다. " +
             "본 검사의 결과는 암의 진단 혹은 완전한 배제를 의미하지 않습니다."
 
     override fun lblOverviewTitle() = "종 합 결 과"
@@ -41,7 +41,7 @@ class AvoidTemplateN201KoKr(
     override fun lblOverViewMiddleRisk() = "되었으나,\n정확한 암종에 대한 구분은 어렵습니다.\n"
     override fun lblOverViewHighRisk() = "되었으며,\n6종 암중 가장 의심되는 암종은 "
     override fun lblOverViewHighRiskEnd() = "입니다.\n"
-    override fun lblOverviewMidHighEnd() = "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
+    override fun lblOverviewMidHighEnd() = "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n정상인이라도 건강상테애 따라 약 1%는 집중관리로 보고될 수 있습니다.\n확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
     override fun lblDoubtSquareTitle() = "이상 패턴 검출 여부"
     override fun lblDoubtSquareContent(result: AvoidDto.Results) = when (result) {
         AvoidDto.Results.NORMAL -> "미검출"
@@ -68,10 +68,10 @@ class AvoidTemplateN201KoKr(
     override fun lblDangerIntroBridge() = "실제로 암일 확률"
     override fun lblDangerIntroEnd() = "을 동일집단(동일한 연령대, 성별)과 비교합니다."
     override fun lblDangerCancerName(code: Int) = when(code){
-        1  -> "폐암"
+        1 -> "폐암"
         2 -> "대장암"
-        3  -> "간암"
-        4 -> "췌장암"
+        3 -> "간암"
+        4 -> "췌장담도암"
         5 -> "식도암"
         6 -> "난소암"
         7 -> "기타 암종"
@@ -84,7 +84,7 @@ class AvoidTemplateN201KoKr(
 
     override fun lblDetailResultAnalysisHeader(name: String) = name + "님의 상세 결과 해석"
     override fun lblDetailResultAnalysis(patient: String) = "[ $patient ]님의\n인공지능 알고리즘을 통한\nDNA 분석 결과는"
-    override fun lblDetailResultAnalysisTableHeaderTop() = "의심 암종"
+    override fun lblDetailResultAnalysisTableHeaderTop() = "암종"
     override fun lblDetailResultAnalysisTableHedaerBot() = "위험도 비교"
     override fun lblDetailResultAnalysisTableNone1() = "해당없음"
     override fun lblDetailResultAnalysisTableNone2() = "암의 존재가능성 낮음"
@@ -93,7 +93,8 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisTableMidRisk2() = "특정 암으로 예측하기에는\n불분명하나 암 존재 가능성이\n약 2배 이상 높을 것으로 예측됨"
     override fun lblDetailResultAnlaysisTableContentCom() = "약 1배"
     override fun lblDetailResultAnalysisTableContentMID() = "약 2배 이상"
-    override fun lblDetailResultAnalysisTableContentHIG() = "약 10배 이상"
+    override fun lblDetailResultAnalysisTableContentHIG1() = "약 5배 이상"
+    override fun lblDetailResultAnalysisTableContentHIG2() = "약 10배 이상"
     override fun lblDetailResultAnalysisContentLine1() = "혈액 속 암세포에서 유래된 DNA를 인공지능 알고리즘을 통해 분석한 결과,\n"
     override fun lblDetailResultAnalysisContentLine2NRM() = "님은 암의 존재 가능성이 낮을 것으로 예측되어 "
     override fun lblDetailResultAnalysisContentLine2MID() = "님은 암의 존재 가능성이 다소 높을 것으로 예측되어 "
@@ -111,15 +112,15 @@ class AvoidTemplateN201KoKr(
             "관심관리 대상자여도 암이 아닐 수 잇으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
             "정상인 대비 DNA 패턴이 암환자와 유사하지만 추적 관찰을 통한 확인이 필요한 경우 "
 
-    override fun lblDetailResultAnalysisContentLine3MID_3() = " 대상자로 보고됩니다.\n 하지만 "
+    override fun lblDetailResultAnalysisContentLine3MID_3() = " 대상자로 보고됩니다.\n 하지만"
     override fun lblDetailResultAnalysisContentLine3MID_4() =
-        "정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다(약 5%).\n"
+        " 정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다(약 5%).\n"
 
     override fun lblDetailResultAnalysisContentLine3HIG_1() =
-        "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장암, 식도암, 난소암) 중\n"
+        "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장담도암, 식도암, 난소암) 중\n"
 
-    override fun lblDetailResultAnalysisContentLine3HIG_2() = " 환자의 DNA 이상 패턴과 가장 유사합니다.\n일반적으로"
-    override fun lblDetailResultAnalysisContentLine3HIG_3() = " 환자는"
+    override fun lblDetailResultAnalysisContentLine3HIG_2() = " 환자의 DNA 이상 패턴과 가장 유사합니다.\n일반적으로 "
+    override fun lblDetailResultAnalysisContentLine3HIG_3() = " 환자는 "
     override fun lblDetailResultAnalysisContentLine3HIG_4() = "(10만명 중에 "
     override fun lblDetailResultAnalysisContentLine3ASR(asr: String) = "${asr}명"
     override fun lblDetailResultAnalysisContentLine3HIG_5() = ")의 확률로 발생하지만,\nAVOID 검사 결과 "
@@ -127,13 +128,13 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisContentLine3HIG_7() = "님은 "
     override fun lblDetailResultAnalysisContentLine3HIG_8() = "일 확률이 "
     override fun lblDetailResultAnalysisContentLine3HIG_9() = "로\n일반인 대비 "
-    override fun lblDetailResultAnalysisContentLine3HIG_10() = "존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n" +
+    override fun lblDetailResultAnalysisContentLine3HIG_10() = " 존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n" +
             "집중관리 대상자여도 암이 아닐 수 있으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
             "정상인 대비 DNA 패턴이 암환자와 유사한 경우 "
 
     override fun lblDetailResultAnalysisContentLine3HIG_11() = " 대상자로 분류됩니다.\n하지만"
     override fun lblDetailResultAnalysisContentLine3HIG_12() =
-        "정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%)."
+        " 정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%).\n"
 
     override fun lblDetailResultAnalysisContentLine3MIDHIG() = "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아니며,\n" +
             "확진을 위해서는 의뢰진 상담을 통한 정밀 검사를 권장합니다."
@@ -148,17 +149,8 @@ class AvoidTemplateN201KoKr(
         AvoidDto.Results.ATTENTION -> "관심관리군 맞춤 가이드라인은 다음과 같습니다"
         else -> "$cancer 집중관리군 맞춤 가이드라인은 다음과 같습니다."
     }
-    override fun lblGuideLineDetection(cancer: String): String {
-        return when (cancer) {
-            "폐암" -> "· 저선량흉부CT검사\n· PET-CT"
-            "대장암" -> "· 대장내시경검사\n· 대장이중조영검사\n· PET-CT"
-            "간암" -> "· 간초음파검사\n· 혈청알파태아단백검사\n· PET-CT"
-            "췌장암" -> "· 복부초음파검사\n· 복부CT검사\n· PET-CT"
-            "식도암" -> "· 식도-위 내시경검사\n· 식도조영검사\n· PET-CT"
-            "유방암" -> "· 유방촬영검사\n· PET-CT"
-            "난소암" -> "· 초음파검사\n· CT검사\n· MRI검사\n· PET-CT"
-            else -> "· PET-CT"
-        }
+    override fun lblGuideLineDetection(): String {
+        return "· 주치의와 상담요함"
     }
 
     override fun lblGuideLineTime(cancer: String): String {
@@ -185,7 +177,7 @@ class AvoidTemplateN201KoKr(
         0->"폐암"
         1->"대장암"
         2->"간암"
-        3->"췌장암"
+        3->"췌장담도암"
         4->"식도암"
         else -> "난소암"
     }
@@ -195,7 +187,7 @@ class AvoidTemplateN201KoKr(
         1f->"만 50세 이상 남녀"
         2f->"만 40세 이상 남녀 중 간암 발생 고위험군\n"
         2.5f->"(간경변증이나 B형 간염 바이러스 항원 또는\nC형 간염바이러스 항체 양성으로 확인된 자)"
-        3f->"만 70세 이상 남녀\n췌장암 가족력/장기 흡연자/만성췌장염 병력"
+        3f->"만 70세 이상 남녀\n췌장담도암 가족력/장기 흡연자/만성췌장염 병력"
         4f->"증상이 있거나, 식도암이 의심되는 자"
         else -> "-"
     }
@@ -222,36 +214,36 @@ class AvoidTemplateN201KoKr(
 
     override fun lblGuideLineComment(cancer: String): String {
         return when {
-            cancer == "폐암" -> "AVOID 검사 폐암 고위험군은 저선량흉부CT검사를 권장합니다.\n" +
+            cancer == "폐암" -> "AVOID 검사 폐암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 폐암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "대장암" -> "AVOID 검사 대장암 고위험군은 대장내시경검사를 권장합니다.\n" +
+            cancer == "대장암" -> "AVOID 검사 대장암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "시행이 어려운 경우 대장이중조영검사를 통해서도 대장암 여부를 확인할 수 있습니다.\n" +
                     "정밀검사를 통해 대장암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "간암" -> "AVOID 검사 간암 고위험군은 간초음파검사와 혈청알파태아단백검사를 권장합니다.\n" +
+            cancer == "간암" -> "AVOID 검사 간암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 간암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "췌장암" -> "AVOID 검사 췌장암 고위험군은 복부초음파검사, CT검사, MRI검사를 권장합니다.\n" +
-                    "정밀검사를 통해 췌장암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
+            cancer == "췌장암" -> "AVOID 검사 췌장담도암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                    "정밀검사를 통해 췌장담도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "식도암" -> "AVOID 검사 식도암 고위험군은 식도-위내시경검사 혹은 식도조영검사를 권장합니다.\n" +
+            cancer == "식도암" -> "AVOID 검사 식도암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 식도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "유방암" -> "AVOID 검사 유방암 고위험군은 유방촬영검사를 권장합니다.\n" +
+            cancer == "유방암" -> "AVOID 검사 유방암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 유방암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "난소암" -> "AVOID 검사 난소암 고위험군은 경질초음파검사, CT검사, MRI검사를 권장합니다.\n" +
+            cancer == "난소암" -> "AVOID 검사 난소암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 난소암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            else -> "AVOID 검사 기타 암 고위험군은 PET-CT검사를 통한 암의 여부 및 암종 확인을 권장합니다.\n" +
+            else -> "AVOID 검사 기타 암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
         }
     }
@@ -267,7 +259,7 @@ class AvoidTemplateN201KoKr(
         5 -> "암 존재 가능성 확인"
         6 -> "정상인"
         7 -> "간암"
-        8 -> "췌장암"
+        8 -> "췌장담도암"
         9 -> "대장암"
         10 -> "학습된 알고리즘"
         11 -> "액체생검(Liquid Biopsy; LBx)"
@@ -278,7 +270,7 @@ class AvoidTemplateN201KoKr(
                 "딥 러닝은 경험적 데이터를 기반으로 학습하여, 새로운 데이터를 예측하고 스스로의\n" +
                 "성능을 향상시키는 인공지능(AI) 기술입니다.\n" +
                 "GC지놈에서 자체개발한 AVOID 검사의 딥 러닝 알고리즘은"
-        15 -> "은 약 2천명 이상의\n" +
+        15 -> "은 약 1천명 이상의\n" +
                 "암환자와 정상인의 cfDNA의 특징을 학습"
         16 -> "하였습니다. 이를 바탕으로 수검자의 cfDNA를\n" +
                 "분석하여 암의 존재 가능성을 예측할 수 있습니다."
@@ -317,91 +309,129 @@ class AvoidTemplateN201KoKr(
     }
     override fun lblLimitationTableTotalCancer(col: Int) = when(col){
         0       -> "전체"
-        1       -> "95%"
-        2       -> "87.15%"
-        3       -> "66.18%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> ">90.0%"
+        3       -> "65.9%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTableLungCancer(col: Int) = when(col){
         0       -> "폐암"
-        1       -> "95%"
-        2       -> "73.81%"
-        3       -> "8.28%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> ">90.0%"
+        3       -> "9.4%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTableColorCancer(col: Int) = when(col){
         0       -> "대장암"
-        1       -> "95%"
-        2       -> "70.83%"
-        3       -> "12.53%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> "87.3%"
+        3       -> "14.0%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTableLiverCancer(col: Int) = when(col){
         0       -> "간암"
-        1       -> "95%"
-        2       -> "96.97%"
-        3       -> "6.82%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> ">90.0%"
+        3       -> "6.4%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTablePanCancer(col: Int) = when(col){
-        0       -> "췌장암"
-        1       -> "95%"
-        2       -> "95.00%"
-        3       -> "1.52%"
-        else    -> ">98%"
+        0       -> "췌장담도암"
+        1       -> "95.0%"
+        2       -> ">90.0%"
+        3       -> "1.4%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTableEsopCancer(col: Int) = when(col){
         0       -> "식도암"
-        1       -> "95%"
-        2       -> "95.00%"
-        3       -> "1.39%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> ">90.0%"
+        3       -> "1.2%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTableOverCancer(col: Int) = when(col){
         0       -> "난소암"
-        1       -> "95%"
-        2       -> "74.07%"
-        3       -> "1.11%"
-        else    -> ">98%"
+        1       -> "95.0%"
+        2       -> "89.8%"
+        3       -> "1.3%"
+        else    -> ">98.0%"
     }
 
     override fun lblLimitationTable2Header(col: Int) = when(col){
-        0       -> "병기"
-        1       -> "특이도"
-        else    -> "민감도"
+        0       -> "암종"
+        1       -> "검사"
+        2       -> "특이도"
+        3       -> "민감도"
+        4       -> "양성예측도"
+        else    -> "음성예측도"
     }
     override fun lblLimitationTable2Row1(col: Int) = when(col){
-        0       -> "1기"
-        1       -> "99%"
-        else    -> "63.60%"
+        0       -> "폐암"
+        1       -> "저선량흉부CT검사"
+        2       -> "약 92.6%"
+        3       -> "약 88.9%"
+        4       -> "약 6.3%"
+        else    -> ">98%"
     }
     override fun lblLimitationTable2Row2(col: Int) = when(col){
-        0       -> "2기"
-        1       -> "99%"
-        else    -> "74.50%"
+        0       -> "대장암"
+        1       -> "분변잠혈검사"
+        2       -> "95.4%"
+        3       -> "약 40.0%"
+        4       -> "약 7.5%"
+        else    -> ">98%"
     }
     override fun lblLimitationTable2Row3(col: Int) = when(col){
-        0       -> "3기"
-        1       -> "99%"
-        else    -> "91.80%"
+        0       -> "대장내시경 검사"
+        1       -> "약 99.0%"
+        2       -> "약 85.0~95.0%"
+        3       -> "약 44.1~46.9%"
+        else    -> ">98%"
     }
     override fun lblLimitationTable2Row4(col: Int) = when(col){
-        0       -> "4기"
-        1       -> "99%"
-        else    -> "83.10%"
+        0       -> "간암"
+        1       -> "간초음파 및 혈청알파태아단백검사"
+        2       -> "약 94.0%"
+        3       -> "약 80.0%"
+        4       -> "약 4.5%"
+        else    -> ">98%"
+    }
+    override fun lblLimitationTable2Row5(col: Int) = when(col){
+        0       -> "췌장담도암"
+        1       -> "CA19-9 수치 검사"
+        2       -> "약 79.9~85.3%"
+        3       -> "약 76.1~80.2%"
+        4       -> "약 0.3~0.4%"
+        else    -> ">98%"
+    }
+    override fun lblLimitationTable2Row6(col: Int) = when(col){
+        0       -> "식도암"
+        1       -> "식도-위내시경 검사"
+        2       -> "약 79.0%"
+        3       -> "약 62.0%"
+        4       -> "약 0.2%"
+        else    -> ">98%"
+    }
+    override fun lblLimitationTable2Row7(col: Int) = when(col){
+        0       -> "난소암"
+        1       -> "CA125 수치 검사"
+        2       -> "약 95.0%"
+        3       -> "약 43.3%"
+        4       -> "약 0.6%"
+        else    -> ">98%"
     }
 
     override fun lblLimitation(row: Int): String {
         return when (row) {
             0 -> "본 검사는 암세포 유래 cfDNA 특성 분석을 통해 암의 존재 가능성을 예측하는 검사로, 확진 목적으로 사용할 수 없습니다."
             1 -> "본 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성적이 달라질 수 있습니다."
-            2 -> "본 검사의 데이터는 주요 암종인 폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암을 포함하고 있으며 기타 암종은 정확한 분석이 어렵습니다."
+            2 -> "본 검사의 데이터는 주요 암종인 폐암, 대장암, 간암, 췌장담도암, 식도암, 유방암, 난소암을 포함하고 있으며 기타 암종은 정확한 분석이 어렵습니다."
             3 -> "암종의 위치 및 유전적 특성에 따라 검출민감도가 상이할 수 있습니다."
             4 -> "본 검사는 내부적으로 축적된 데이터에 따라 검사 대상 암종 확대 및 성능이 변경될 수 있습니다."
             5 -> "본 검사는 양성질환, 자가면역질환 등에서 위양성으로 보고될 수 있으며, 항암치료, 세포치료 등에 따라서 위음성으로 보고될 수 있습니다."
@@ -422,14 +452,22 @@ class AvoidTemplateN201KoKr(
     override fun lblReferenceTitle() = "참 고 문 헌"
 
     override fun lblReferenceLeft(): String {
-        return "1. Cancer Biol Ther. 2019; 20(8): 1057–1067.\n" +
-                "2. Mutat Res. Jul-Sep 2019;781:100-129."
+        return  "1.\tCancer Biol Ther. 2019; 20(8): 1057–1067.\n" +
+                "2.\tMutat Res. Jul-Sep 2019;781:100-129.\n" +
+                "3.\tBMC Cancer. 2017; 17: 697.\n" +
+                "4.\tCancer Resaerch. 2022:82(12, Supplement):6371-6371\n"+
+                "5.\tBr J Cancer. 2008;98(10):1602-7.\n"+
+                "6.\t대한소화기내시경학회지, 2007;35(2): 68-73."
     }
 
     override fun lblReferenceRight(): String {
-        return "3. BMC Cancer. 2017; 17: 697.\n" +
-                "4. Jin Mo, Ahn et al. \"Highly sensitive deep learning algorithm for multi-cancer\n" +
-                "       detection using cf-WGS\". AACR-KCA"
+        return  "7.\tJAMA . 2016;315(23):2564-2575.\n" +
+                "8.\tAliment Pharmacol Ther. 2009;30(1):37-47.\n"+
+                "9.\tOnco Targets Ther. 2016;9:7459-7467.\n" +
+                "10.\tCurr Mol Med. 2013;13(3):340-51.\n" +
+                "11.\tWorld J Gastroenterol. 2015;21(26):7933-43.\n" +
+                "12.\tGynecol Oncol. 2008;108(2):402-8."
+
     }
 
     override fun lblReferenceDescription(col: Int): String {
@@ -448,6 +486,8 @@ class AvoidTemplateN201KoKr(
     override fun lblPerformance(): String {
         return "AVOID 검사의 암종별 · 병기별 성능"
     }
+
+    override fun lblPerformanceBasic(): String = "기존 선별검사 성능"
 
     override fun lblResultToWord(result: AvoidDto.Results) = when(result) {
         AvoidDto.Results.NORMAL -> "일반관리"
@@ -468,4 +508,12 @@ class AvoidTemplateN201KoKr(
         return ageStream + "대 " + cut + " " + sexStr + " 평균"
     }
     override fun lblPatientSir(name: String,) = "${name}님"
+    override fun lblCancerToWord(cancer: String) = when(cancer){
+        "췌장암" -> "췌장담도암"
+        "기타암종" -> "기타 암"
+        else -> cancer
+    }
+
+    override fun lblDetailResultAnalysisTableConcent(cancer: String) = "의심 암종 : ${lblCancerToWord(cancer)}"
+    override fun lblDetailResultAnalysisTableConcent(): String = "기타 암"
 }

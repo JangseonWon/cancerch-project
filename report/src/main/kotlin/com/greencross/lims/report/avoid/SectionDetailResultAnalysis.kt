@@ -47,10 +47,11 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         stream.paragraph(147f,y+28, 80f, AlignHorizontal.RIGHT, TextBlock(styleRegular, template.lblDetailResultAnalysis(dto.patientName!!)))
         stream.paragraph(151f, y+15, 80f, AlignHorizontal.LEFT, TextBlock(styleBold.clone().color(colors), template.lblResultToWord(dto.result)))
 
-        stream.paragraph(312f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHeaderTop()))
+        stream.paragraph(312f, y+79, 50f, AlignHorizontal.CENTER,
+            TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHeaderTop()))
         if(dto.result == AvoidDto.Results.CONCENT){
-            stream.paragraph(403f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), dto.first.name))
-            stream.paragraph(498f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), dto.second.name))
+            stream.paragraph(403f, y+79, 100f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent(dto.first.name)))
+            stream.paragraph(498f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent()))
         } else {
             val results = when(dto.result){
                 AvoidDto.Results.NORMAL -> template.lblDetailResultAnalysisTableNone1()
@@ -127,10 +128,10 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
                 y + height + 5,
                 60f,
                 AlignHorizontal.CENTER,
-                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG())
+                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG2())
             )
 
-            img = template.resource().imgBackgroundCancer(dto.second.name)
+            img = template.resource().imgBackgroundCancer("기타암종")
             width = img.width * RESULT_IMAGE_LOW_RATE / img.height
             stream.drawImage(img, 498 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
 
@@ -148,14 +149,14 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
             )
 
             img = template.resource().imgBarDanger()
-            height = CONTENT_SQUARE_RATE * 6f
+            height = CONTENT_SQUARE_RATE * 3f
             stream.drawImage(img, 513 - width / 2, y, width, height)
             stream.paragraph(
                 513f,
                 y + height + 5,
                 60f,
                 AlignHorizontal.CENTER,
-                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG())
+                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG1())
             )
         }
         return stream

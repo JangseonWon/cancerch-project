@@ -39,6 +39,8 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblDetailResultAnalysisHeader(name: String): String
     fun lblDetailResultAnalysis(patient: String): String
     fun lblDetailResultAnalysisTableHeaderTop(): String
+    fun lblDetailResultAnalysisTableConcent(cancer: String): String
+    fun lblDetailResultAnalysisTableConcent(): String
     fun lblDetailResultAnalysisTableHedaerBot(): String
     fun lblDetailResultAnalysisTableNone1(): String
     fun lblDetailResultAnalysisTableNone2(): String
@@ -46,7 +48,8 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblDetailResultAnalysisTableMidRisk2(): String
     fun lblDetailResultAnlaysisTableContentCom(): String
     fun lblDetailResultAnalysisTableContentMID(): String
-    fun lblDetailResultAnalysisTableContentHIG(): String
+    fun lblDetailResultAnalysisTableContentHIG1(): String
+    fun lblDetailResultAnalysisTableContentHIG2(): String
     fun lblDetailResultAnalysisContentLine1(): String
     fun lblDetailResultAnalysisContentLine2NRM(): String
     fun lblDetailResultAnalysisContentLine2MID(): String
@@ -82,7 +85,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblGuideLineNormalFrequency(code: Int): String
     fun lblGuideLineNormalTest(code: Float): String
     fun lblGuideLineCaption(): String
-    fun lblGuideLineDetection(cancer: String): String
+    fun lblGuideLineDetection(): String
     fun lblGuideLineTime(cancer: String): String
     fun lblGuideLineComment(cancer: String): String
     fun lblDetailProcessHeader(): String
@@ -105,10 +108,14 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblLimitationTable2Row2(col: Int): String
     fun lblLimitationTable2Row3(col: Int): String
     fun lblLimitationTable2Row4(col: Int): String
+    fun lblLimitationTable2Row5(col: Int): String
+    fun lblLimitationTable2Row6(col: Int): String
+    fun lblLimitationTable2Row7(col: Int): String
 
     fun lblLimitation(row: Int): String
     fun lblLimitationDescription(row: Int) : String
     fun lblPerformance(): String
+    fun lblPerformanceBasic(): String
     fun lblReferenceTitle() : String
     fun lblReferenceLeft(): String
     fun lblReferenceRight(): String
@@ -119,4 +126,5 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblResultToWord(result: AvoidDto.Results): String
     fun lblPatientInfo(age: String, sex: Sex) : String
     fun lblPatientSir(name: String) : String
+    fun lblCancerToWord(cancer: String): String
 }

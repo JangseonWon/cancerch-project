@@ -47,15 +47,18 @@ interface AvoidResource : HasSign {
     fun imgRankSecond(): PDImageXObject
     fun imgCancerTypeTitle(): PDImageXObject
     fun imgCancerTypeContent(): PDImageXObject
+    fun imgCancerTypeImage(cancer: String): PDImageXObject
     fun imgCancerReadingGuide(): PDImageXObject
+    fun imgCancerTypeDetect(): PDImageXObject
+    fun imgUnderBar(): PDImageXObject
     fun imgHuman(): PDImageXObject
-    fun imgEsop(first: String, second: String): PDImageXObject
-    fun imgLung(first: String, second: String): PDImageXObject
-    fun imgLiver(first: String, second: String): PDImageXObject
-    fun imgPanc(first: String, second: String): PDImageXObject
-    fun imgColon(first: String, second: String): PDImageXObject
-    fun imgBreast(first: String, second: String): PDImageXObject
-    fun imgOvary(first: String, second: String): PDImageXObject
+    fun imgEsop(first: String): PDImageXObject
+    fun imgLung(first: String): PDImageXObject
+    fun imgLiver(first: String): PDImageXObject
+    fun imgPanc(first: String): PDImageXObject
+    fun imgColon(first: String): PDImageXObject
+    fun imgBreast(first: String): PDImageXObject
+    fun imgOvary(first: String): PDImageXObject
     fun imgLine(cancer: String): PDImageXObject
     fun imgBarNormal(): PDImageXObject
     fun imgBarGray(): PDImageXObject
@@ -81,7 +84,8 @@ interface AvoidResource : HasSign {
     fun imgLimitationTableTitle() : PDImageXObject
     fun imgLimitationTable1() : PDImageXObject
     fun imgLimitationTable2() : PDImageXObject
-    fun imgReferenceTable() : PDImageXObject
+    fun imgReferenceVertical() : PDImageXObject
+    fun imgReferenceHorizontal(): PDImageXObject
     fun styleContentRegualar() : TextStyle
     fun styleContentBold(): TextStyle
     fun styleContentSpecial(): TextStyle

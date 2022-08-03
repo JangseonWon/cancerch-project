@@ -84,23 +84,16 @@ class ReportHandler(
         val valueMap : Map<String, String> =  om.readValue(analysis.value!!, object : TypeReference<List<Map<String, String>>>(){})[0]
 
         val barcode = analysis.barcode.toString()
-        val result = stringToEnum(valueMap["result"]!!)
-        val cancer1 = when(result){
+        val cancer1 = when(stringToEnum(valueMap["result"]!!)){
             CancerRepo.결과.NORMAL        -> AvoidDto.Cancer()
             CancerRepo.결과.ATTENTION     -> AvoidDto.Cancer("기타암종")
             else                          -> AvoidDto.Cancer(valueMap["first"]!!,
-                cancerRepo.findPPVbyAgeAndCancerAndSex(result, stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
+                cancerRepo.findPPVbyAgeAndCancerAndSex(
+                    stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
                 cancerRepo.findASRbyAgeAndCancerAndSex(stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
                 valueMap["firstScore"]!!.toDouble())
         }
-        val cancer2 = when(result){
-            CancerRepo.결과.CONCENT       -> AvoidDto.Cancer(valueMap["second"]!!,
-            cancerRepo.findPPVbyAgeAndCancerAndSex(result, stringToCancer(valueMap["second"]!!), age(patient.birth), sex(patient.sex))!!,
-            cancerRepo.findASRbyAgeAndCancerAndSex(stringToCancer(valueMap["second"]!!), age(patient.birth), sex(patient.sex))!!,
-            valueMap["secondScore"]!!.toDouble())
-            else                          -> AvoidDto.Cancer()
-        }
-        val avoidDto = AvoidDto(barcode, stringToResult(valueMap["result"]!!), cancer1, cancer2)
+        val avoidDto = AvoidDto(barcode, stringToResult(valueMap["result"]!!), cancer1)
         avoidDto.barcode = barcode
         avoidDto.patientName = patient.name
         avoidDto.birthDate = patient.birth

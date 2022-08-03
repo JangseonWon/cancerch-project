@@ -6,8 +6,7 @@ import com.greencross.lims.report.builder.AbstractReportDto
 data class AvoidDto(
     override var barcode: String?,
     val result: Results,
-    val first: Cancer,
-    val second: Cancer
+    val first: Cancer
 ): AbstractReportDto(), HasServiceCode {
     override fun code(): String? {
         return barcode

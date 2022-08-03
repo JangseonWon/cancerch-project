@@ -64,10 +64,6 @@ class SectionDoubtCancer (private val y: Float = 508f)  : Painter<AvoidTemplate<
             img = template.resource().imgDoubtCancer(dto.first.name)
             width = img.width * DOUBT_CANCER_RATE / img.height
             stream.drawImage(img, 285f - width/2f, y- DOUBT_CANCER_RATE-22, width, DOUBT_CANCER_RATE)
-
-            img = template.resource().imgRankFirst()
-            width = img.width * DOUBT_ICON_RATE / img.height
-            stream.drawImage(img, 260f - width/2f, y- DOUBT_ICON_RATE-22, width, DOUBT_ICON_RATE)
         }
 
         //endregion

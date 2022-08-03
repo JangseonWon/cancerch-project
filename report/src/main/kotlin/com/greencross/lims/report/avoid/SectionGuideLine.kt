@@ -61,8 +61,8 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
                 TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f),  template.lblGuideLineTableHeader2())
             )
             stream.paragraph(
-                255f, y+RESULT_CONTENT_RATE-69, 200f, AlignHorizontal.LEFT,
-                TextBlock(styleRegular.clone().fontSize(9.5f), template.lblGuideLineDetection(dto.first.name))
+                255f, y+RESULT_CONTENT_RATE-77, 200f, AlignHorizontal.LEFT,
+                TextBlock(styleRegular.clone().fontSize(9.5f), template.lblGuideLineDetection())
             )
             stream.paragraph(
                 462f, y+RESULT_CONTENT_RATE-77, 160f, AlignHorizontal.CENTER,

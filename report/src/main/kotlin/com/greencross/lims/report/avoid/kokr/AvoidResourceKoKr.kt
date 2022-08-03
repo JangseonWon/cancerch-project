@@ -48,7 +48,6 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val imgAI                   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_aiimg.png"))
     val imgMiniSquare           :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_square.png"))
     val imgLimitationTableTitle :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_table_title.png"))
-    val imgReferenceTableTitle  :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_reference_table.png"))
 
     override fun labels(): Array<SignLabel> {
         return arrayOf(
@@ -113,37 +112,43 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     override fun imgRankFirst():            PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/kokr/C_rankfirst.png"))
     override fun imgRankSecond():           PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/kokr/C_ranksecond.png"))
 
-    override fun imgCancerTypeTitle():      PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/new_title.png"))
-    override fun imgCancerTypeContent():    PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/content.png"))
+    override fun imgCancerTypeTitle():      PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/large_content_box.png"))
+    override fun imgCancerTypeContent():    PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/cancer_box.png"))
+    override fun imgCancerTypeImage(cancer: String) : PDImageXObject = img(
+        File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/$cancer.png")
+    )
+
+    override fun imgCancerTypeDetect():     PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/detected.png"))
+    override fun imgUnderBar():             PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/underBar.png"))
     override fun imgCancerReadingGuide():   PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/guidebox.png"))
     override fun imgHuman():                PDImageXObject     = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/human.png"))
-    override fun imgEsop(first: String, second: String): PDImageXObject {
+    override fun imgEsop(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/식도암_"+
-            ((first == "식도암") || (second == "식도암"))+".png"))
+            (first == "식도암")+".png"))
     }
-    override fun imgLung(first: String, second: String): PDImageXObject {
+    override fun imgLung(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/폐암_"+
-                ((first == "폐암") || (second == "폐암"))+".png"))
+                (first == "폐암")+".png"))
     }
-    override fun imgLiver(first: String, second: String): PDImageXObject {
+    override fun imgLiver(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/간암_"+
-                ((first == "간암") || (second == "간암"))+".png"))
+                (first == "간암")+".png"))
     }
-    override fun imgPanc(first: String, second: String): PDImageXObject {
+    override fun imgPanc(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/췌장암_"+
-                ((first == "췌장암") || (second == "췌장암"))+".png"))
+                (first == "췌장암")+".png"))
     }
-    override fun imgColon(first: String, second: String): PDImageXObject {
+    override fun imgColon(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/대장암_"+
-                ((first == "대장암") || (second == "대장암"))+".png"))
+                (first == "대장암")+".png"))
     }
-    override fun imgBreast(first: String, second: String): PDImageXObject {
+    override fun imgBreast(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/유방암_"+
-                ((first == "유방암") || (second == "유방암"))+".png"))
+                (first == "유방암")+".png"))
     }
-    override fun imgOvary(first: String, second: String): PDImageXObject {
+    override fun imgOvary(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/난소암_"+
-                ((first == "난소암") || (second == "난소암"))+".png"))
+                (first == "난소암")+".png"))
     }
 
     override fun imgLine(cancer: String): PDImageXObject {
@@ -181,9 +186,10 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     override fun imgLBxBox():                PDImageXObject { return imgLBxBox }
     override fun imgNGS():                   PDImageXObject { return imgNGS }
     override fun imgLimitationTableTitle():  PDImageXObject { return imgLimitationTableTitle }
-    override fun imgLimitationTable1():      PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table1.png"))
-    override fun imgLimitationTable2():      PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table2.png"))
-    override fun imgReferenceTable():        PDImageXObject { return imgReferenceTableTitle }
+    override fun imgLimitationTable1():      PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table1.png"))
+    override fun imgLimitationTable2():      PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_limitation_table2.png"))
+    override fun imgReferenceVertical():     PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_reference_vertical.png"))
+    override fun imgReferenceHorizontal():   PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionLimitation/img_reference_horizontal.png"))
     override fun imgBarNormal():             PDImageXObject { return imgBarNormal    }
     override fun imgBarGray():               PDImageXObject { return imgBarGray      }
     override fun imgBarMiddle():             PDImageXObject = img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/bar_Middle.png"))

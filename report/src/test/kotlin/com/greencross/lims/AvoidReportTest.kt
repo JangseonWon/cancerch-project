@@ -37,6 +37,8 @@ class AvoidReportTest {
             doc.save("./"+this.barcode + ".pdf")
             Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
         }
+
+
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
@@ -44,18 +46,16 @@ class AvoidReportTest {
         val repo: CancerRepo = CancerRepo()
         return builder(
             TestInfo.N201, type,
-//            AvoidDto("TT-5-412",
-//                AvoidDto.Results.CONCENT,
-//                AvoidDto.Cancer("폐암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.결과.CONCENT, CancerRepo.암종.간암, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, 57, Sex.F)!!, 95.5),
-//                AvoidDto.Cancer("기타암종", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.결과.CONCENT, CancerRepo.암종.기타암종, 57, Sex.F)!!, repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.기타암종, 57, Sex.F)!!, 13.8)))?.build()
             AvoidDto("TT-5-412",
-                AvoidDto.Results.ATTENTION,
-                AvoidDto.Cancer("기타암종"),
-                AvoidDto.Cancer()))?.build()
+                AvoidDto.Results.CONCENT,
+                AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+                    repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
+//            AvoidDto("TT-5-412",
+//                AvoidDto.Results.ATTENTION,
+//                AvoidDto.Cancer("기타암종")))?.build()
 //            AvoidDto(this.barcode,
 //                AvoidDto.Results.NORMAL,
-//                AvoidDto.Cancer("", 0.0,0.0, 95.5),
-//                AvoidDto.Cancer("", 0.0, 0.0, 13.8)))?.build()
+//                AvoidDto.Cancer("", 0.0,0.0, 95.5)))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
         val doc = PDDocument()

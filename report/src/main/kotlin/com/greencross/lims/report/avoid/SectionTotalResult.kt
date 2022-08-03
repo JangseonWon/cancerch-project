@@ -48,7 +48,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
         //region  □ TotalResult Title, Content Text
         val styleRegular = template.resource().styleContentRegualar().clone().fontSize(8.5f)
         val styleBold    = template.resource().styleContentBold().clone().fontSize(8.5f)
-        val styleRegular7= template.resource().styleContentRegualar().clone().fontSize(7f)
+        val styleRegular7= template.resource().styleContentRegualar().clone().fontSize(6f)
 
         if(dto.result == AvoidDto.Results.NORMAL) {
             stream.paragraph(
@@ -61,7 +61,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
             )
         }
         else if(dto.result == AvoidDto.Results.ATTENTION)
-            stream.paragraph(325f, y-25, 400f, AlignHorizontal.LEFT,
+            stream.paragraph(325f, y-20, 400f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblOverviewCommon()),
                 TextBlock(styleBold, dto.patientName),
                 TextBlock(styleRegular, template.lblOverviewBridgeWord()),
@@ -72,7 +72,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
                 TextBlock(styleRegular7, template.lblOverviewMidHighEnd())
             )
         else
-            stream.paragraph(325f, y-25, 400f, AlignHorizontal.LEFT,
+            stream.paragraph(325f, y-20, 400f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblOverviewCommon()),
                 TextBlock(styleBold, dto.patientName),
                 TextBlock(styleRegular, template.lblOverviewBridgeWord()),
