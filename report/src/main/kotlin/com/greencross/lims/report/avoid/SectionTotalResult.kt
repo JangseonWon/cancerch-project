@@ -25,13 +25,13 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
         width = img.width * RESULT_CONTENT_RATE / img.height
         stream.drawImage(img, 305f-width/2, y- CONTENT_TITLE_RATE-72, width, RESULT_CONTENT_RATE)
 
-        if(dto!!.result == AvoidDto.Results.NORMAL) {
+        if(dto!!.result == AvoidDto.Results.GENERAL) {
             img = template.resource().imgTotalResultLowRisk()
             width = img.width * RESULT_IMAGE_LOW_RATE / img.height
             stream.drawImage(img, 240f-width/2, y-CONTENT_TITLE_RATE-55, width, RESULT_IMAGE_LOW_RATE)
             stream.paragraph(165f, y-CONTENT_TITLE_RATE-35, 200f, AlignHorizontal.RIGHT, TextBlock(style.clone().fontSize(21f).color(Color(141, 197, 86)), template.lblResultToWord(dto.result)))
         }
-        else if(dto.result == AvoidDto.Results.ATTENTION){
+        else if(dto.result == AvoidDto.Results.CONCERN){
             img = template.resource().imgTotalResultMiddleRisk()
             width = img.width * RESULT_IMAGE_HIGH_RATE / img.height
             stream.drawImage(img, 240f-width/2, y-CONTENT_TITLE_RATE-55, width, RESULT_IMAGE_HIGH_RATE)
@@ -50,7 +50,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
         val styleBold    = template.resource().styleContentBold().clone().fontSize(8.5f)
         val styleRegular7= template.resource().styleContentRegualar().clone().fontSize(6f)
 
-        if(dto.result == AvoidDto.Results.NORMAL) {
+        if(dto.result == AvoidDto.Results.GENERAL) {
             stream.paragraph(
                 325f, y - 37, 400f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblOverviewCommon()),
@@ -60,7 +60,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
                 TextBlock(styleRegular, template.lblOverviewLowLisk())
             )
         }
-        else if(dto.result == AvoidDto.Results.ATTENTION)
+        else if(dto.result == AvoidDto.Results.CONCERN)
             stream.paragraph(325f, y-20, 400f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblOverviewCommon()),
                 TextBlock(styleBold, dto.patientName),

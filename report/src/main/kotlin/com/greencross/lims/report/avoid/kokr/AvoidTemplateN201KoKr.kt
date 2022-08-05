@@ -44,20 +44,20 @@ class AvoidTemplateN201KoKr(
     override fun lblOverviewMidHighEnd() = "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n정상인이라도 건강상테애 따라 약 1%는 집중관리로 보고될 수 있습니다.\n확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
     override fun lblDoubtSquareTitle() = "이상 패턴 검출 여부"
     override fun lblDoubtSquareContent(result: AvoidDto.Results) = when (result) {
-        AvoidDto.Results.NORMAL -> "미검출"
+        AvoidDto.Results.GENERAL -> "미검출"
         else -> "검 출"
     }
 
     override fun lblDoubtContentTitle() = "6종 암 중 인공지능 예측 암종"
     override fun lblDoubtContentLarge(result: AvoidDto.Results, name: String) = when (result) {
-        AvoidDto.Results.ATTENTION -> "해당없음 : 추적관찰 권장"
-        AvoidDto.Results.CONCENT -> "6종 암 중 $name" + "의 DNA 패턴과 가장 유사합니다."
+        AvoidDto.Results.CONCERN -> "해당없음 : 추적관찰 권장"
+        AvoidDto.Results.RISK -> "6종 암 중 $name" + "의 DNA 패턴과 가장 유사합니다."
         else -> "해당없음"
     }
 
     override fun lblDoubtContentSmall(result: AvoidDto.Results) = when (result) {
-        AvoidDto.Results.NORMAL -> "DNA 패턴 분석 결과, 암 존재 가능성이 낮게 예측되었습니다."
-        AvoidDto.Results.CONCENT-> "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
+        AvoidDto.Results.GENERAL -> "DNA 패턴 분석 결과, 암 존재 가능성이 낮게 예측되었습니다."
+        AvoidDto.Results.RISK-> "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
                 "타 암종에 대해서는 정확한 분석이 어렵습니다."
         else -> "DNA 패턴 분석 결과, 6종 암으로 예측되지는 않습니다.\n " +
                 "그러나 암의 존재 가능성이 발견되었으므로 추적관찰을 권장합니다."
@@ -140,13 +140,13 @@ class AvoidTemplateN201KoKr(
             "확진을 위해서는 의뢰진 상담을 통한 정밀 검사를 권장합니다."
 
     override fun lblGuideLineHeader(type: AvoidDto.Results, name: String) = when (type) {
-        AvoidDto.Results.NORMAL -> "암 검진 가이드라인"
+        AvoidDto.Results.GENERAL -> "암 검진 가이드라인"
         else -> name + "님의 맞춤 가이드라인"
     }
     override fun lblGuideLineTableHeader1() = "정밀검사"
     override fun lblGuideLineTableHeader2() = "AVOID 검사 모니터링 권장 기간"
     override fun lblGuideLineTop(type: AvoidDto.Results, cancer: String) = when (type) {
-        AvoidDto.Results.ATTENTION -> "관심관리군 맞춤 가이드라인은 다음과 같습니다"
+        AvoidDto.Results.CONCERN -> "관심관리군 맞춤 가이드라인은 다음과 같습니다"
         else -> "$cancer 집중관리군 맞춤 가이드라인은 다음과 같습니다."
     }
     override fun lblGuideLineDetection(): String {
@@ -490,8 +490,8 @@ class AvoidTemplateN201KoKr(
     override fun lblPerformanceBasic(): String = "기존 선별검사 성능"
 
     override fun lblResultToWord(result: AvoidDto.Results) = when(result) {
-        AvoidDto.Results.NORMAL -> "일반관리"
-        AvoidDto.Results.ATTENTION -> "관심관리"
+        AvoidDto.Results.GENERAL -> "일반관리"
+        AvoidDto.Results.CONCERN -> "관심관리"
         else -> "집중관리"
     }
 

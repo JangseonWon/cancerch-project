@@ -6,12 +6,8 @@ import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
-import java.time.LocalDate
-import java.time.Period
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
     override fun paint(
@@ -126,7 +122,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.drawImage(img, x-width/2+8, y+14, width, DANGER_BAR_RATE)
 
         when(dto.result){
-            AvoidDto.Results.CONCENT -> {
+            AvoidDto.Results.RISK -> {
                 val checker = dto.first.name == cancer.name
                 img = if(checker) template.resource().imgBarDanger() else template.resource().imgBarMiddle()
                 val height = if(checker) if(repo.findPPVbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
@@ -142,7 +138,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
                     stream.drawImage(img, x-width/2-16, y+DANGER_CANCER_ICON, width, DANGER_GUIDE_RATE)
                 }
             }
-            AvoidDto.Results.ATTENTION -> {
+            AvoidDto.Results.CONCERN -> {
                 img = template.resource().imgBarMiddle()
                 val value = ">${round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
                 style = template.resource().styleContentBold().clone().fontSize(7f).color(Color(217, 166, 71))

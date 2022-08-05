@@ -32,12 +32,12 @@ class SectionDoubtCancer (private val y: Float = 508f)  : Painter<AvoidTemplate<
 
         //region □ Doubt Square Box, Title, Content's Text
         val colors = when(dto!!.result){
-            AvoidDto.Results.NORMAL     -> Color(141, 197, 86)
-            AvoidDto.Results.ATTENTION  -> Color(239, 167, 24)
+            AvoidDto.Results.GENERAL     -> Color(141, 197, 86)
+            AvoidDto.Results.CONCERN  -> Color(239, 167, 24)
             else                        -> Color(217,  52, 29)
         }
         val horizontal = when(dto.result){
-            AvoidDto.Results.CONCENT    -> AlignHorizontal.LEFT
+            AvoidDto.Results.RISK    -> AlignHorizontal.LEFT
             else                        -> AlignHorizontal.CENTER
         }
         var x = 303f - width / 2
@@ -45,12 +45,12 @@ class SectionDoubtCancer (private val y: Float = 508f)  : Painter<AvoidTemplate<
         stream.paragraph(x,y - DOUBT_SQUARE_RATE + 22, 80f, AlignHorizontal.CENTER,
             TextBlock(style, template.lblDoubtSquareContent(dto.result)))
         x = when(dto.result){
-            AvoidDto.Results.NORMAL     -> 423f - width / 2
-            AvoidDto.Results.ATTENTION  -> 423f - width / 2
+            AvoidDto.Results.GENERAL     -> 423f - width / 2
+            AvoidDto.Results.CONCERN  -> 423f - width / 2
             else                        -> 373f - width / 2
         }
         val ys = when(dto.result){
-            AvoidDto.Results.NORMAL    -> y - DOUBT_SQUARE_RATE + 35
+            AvoidDto.Results.GENERAL    -> y - DOUBT_SQUARE_RATE + 35
             else                       -> y - DOUBT_SQUARE_RATE + 45
         }
         style = template.resource().styleContentSpecial().clone().color(Color(67, 72, 142)).fontSize(9f)
@@ -60,7 +60,7 @@ class SectionDoubtCancer (private val y: Float = 508f)  : Painter<AvoidTemplate<
         stream.paragraph(x+130, ys-17, 300f, horizontal,
             TextBlock(style, template.lblDoubtContentSmall(dto.result)))
 
-        if(dto.result == AvoidDto.Results.CONCENT) {
+        if(dto.result == AvoidDto.Results.RISK) {
             img = template.resource().imgDoubtCancer(dto.first.name)
             width = img.width * DOUBT_CANCER_RATE / img.height
             stream.drawImage(img, 285f - width/2f, y- DOUBT_CANCER_RATE-22, width, DOUBT_CANCER_RATE)

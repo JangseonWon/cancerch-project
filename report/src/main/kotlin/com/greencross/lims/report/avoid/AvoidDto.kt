@@ -12,7 +12,7 @@ data class AvoidDto(
         return barcode
     }
     enum class Results{
-        NORMAL, ATTENTION, CONCENT
+        GENERAL, CONCERN, RISK
     }
     data class Cancer(
         val name: String = "",

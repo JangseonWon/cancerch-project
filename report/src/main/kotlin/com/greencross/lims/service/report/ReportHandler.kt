@@ -152,8 +152,8 @@ class ReportHandler(
         else       -> CancerRepo.암종.유방암
     }
     private fun stringToResult(result:String) = when(result){
-        "일반관리" -> AvoidDto.Results.NORMAL
-        "관심관리" -> AvoidDto.Results.ATTENTION
-        else       -> AvoidDto.Results.CONCENT
+        "일반관리" -> AvoidDto.Results.GENERAL
+        "관심관리" -> AvoidDto.Results.CONCERN
+        else       -> AvoidDto.Results.RISK
     }
 }

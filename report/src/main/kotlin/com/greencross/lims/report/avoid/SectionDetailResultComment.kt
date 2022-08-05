@@ -1,7 +1,6 @@
 package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
@@ -15,7 +14,7 @@ class SectionDetailResultComment (private var y: Float = 581f)  : Painter<AvoidT
         dto: AvoidDto?
     ): PDPageContentStreamPageAccessible {
         stream!!.saveGraphicsState()
-        val rate = if(AvoidDto.Results.NORMAL == dto!!.result) RESULT_IMAGE_COMMENT_RATE_LOW else RESULT_IMAGE_COMMENT_RATE
+        val rate = if(AvoidDto.Results.GENERAL == dto!!.result) RESULT_IMAGE_COMMENT_RATE_LOW else RESULT_IMAGE_COMMENT_RATE
         y = y - rate - 10
         val img = template!!.resource().imgAnalysisContentBox()
         val width = img.width*RESULT_IMAGE_COMMENT_RATE /img.height
@@ -23,7 +22,7 @@ class SectionDetailResultComment (private var y: Float = 581f)  : Painter<AvoidT
         val styleRegular = template.resource().styleContentRegualar().clone().fontSize(9f)
         val styleBold    = template.resource().styleContentBold().clone().fontSize(9f)
         val blackbold = styleBold.clone().color(Color(11,11,11))
-        if(AvoidDto.Results.NORMAL == dto.result) {
+        if(AvoidDto.Results.GENERAL == dto.result) {
             stream.paragraph(
                 80f, y + rate - 35, 480f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine1()),
@@ -34,7 +33,7 @@ class SectionDetailResultComment (private var y: Float = 581f)  : Painter<AvoidT
                 TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3NRM())
             )
         }
-        else if(AvoidDto.Results.ATTENTION == dto.result)
+        else if(AvoidDto.Results.CONCERN == dto.result)
             stream.paragraph(
                 80f, y+rate-35, 480f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular,  template.lblDetailResultAnalysisContentLine1()),

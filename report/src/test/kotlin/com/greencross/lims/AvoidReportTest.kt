@@ -47,7 +47,7 @@ class AvoidReportTest {
         return builder(
             TestInfo.N201, type,
             AvoidDto("TT-5-412",
-                AvoidDto.Results.CONCENT,
+                AvoidDto.Results.RISK,
                 AvoidDto.Cancer("간암", repo.findPPVbyAgeAndCancerAndSex(CancerRepo.암종.간암, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
                     repo.findASRbyAgeAndCancerAndSex(CancerRepo.암종.간암, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
 //            AvoidDto("TT-5-412",

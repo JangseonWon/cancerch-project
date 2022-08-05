@@ -157,8 +157,8 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
 
     override fun imgDetailResultOverview(): PDImageXObject { return imgDetailResultOverview }
     override fun imgDetailResultTable(result: AvoidDto.Results): PDImageXObject = when(result){
-        AvoidDto.Results.CONCENT    -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_CONCENT.png"))
-        AvoidDto.Results.ATTENTION  -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_ATTENTION.png"))
+        AvoidDto.Results.RISK    -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_CONCENT.png"))
+        AvoidDto.Results.CONCERN  -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_ATTENTION.png"))
         else                        -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_NORMAL.png"))
     }
 

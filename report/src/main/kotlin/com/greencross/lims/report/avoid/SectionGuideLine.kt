@@ -17,14 +17,14 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
         var style = template!!.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(12f)
         var styleBold = template.resource().styleContentBold().clone().fontSize(9f)
         var styleRegular = template.resource().styleContentRegualar().clone().fontSize(8f)
-        y -= CONTENT_TITLE_RATE+10+if(dto!!.result == AvoidDto.Results.NORMAL)-17 else 0
+        y -= CONTENT_TITLE_RATE+10+if(dto!!.result == AvoidDto.Results.GENERAL)-17 else 0
 
         var img = template.resource().imgContentTitle()
         var width = img.width * CONTENT_TITLE_RATE / img.height
         stream.drawImage(img, 305f-width/2, y, width, CONTENT_TITLE_RATE)
         stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblGuideLineHeader(dto.result, dto.patientName!!)))
 
-        if(dto.result != AvoidDto.Results.NORMAL) {
+        if(dto.result != AvoidDto.Results.GENERAL) {
             img = template.resource().imgGuideLineTable()
             width = img.width * RESULT_CONTENT_RATE / img.height
             y -= RESULT_CONTENT_RATE + 10
