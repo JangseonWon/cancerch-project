@@ -46,9 +46,7 @@ public class WorkCalculator {
     public Promise<Data[]> indexing(Data[] data, String plate) {
         return SequencingApi.indices(plate).then(WorkCalculator::mapByAddress).then(map->{
             Map<String, Index> i7 = map.get("i7");
-            Map<String, Index> i5 = map.get("i7");
-            DomGlobal.console.log(i7.size());
-            DomGlobal.console.log(i5.size());
+            Map<String, Index> i5 = map.get("i5");
             Arrays.stream(data).forEach(datum->{
                 var address = datum.get(Address.id);
                 DomGlobal.console.log(address);
