@@ -3,13 +3,11 @@ package com.gcgenome.lims.service.publish
 import com.gcgenome.alis.Client
 import com.gcgenome.alis.FileUpload
 import com.gcgenome.alis.Request
-import com.gcgenome.alis.RestClient
 import com.gcgenome.lims.service.report.ReportDao
 import com.gcgenome.lims.service.reportfile.ReportFileRepository
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
-import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.core.context.SecurityContext
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.time.Instant
@@ -46,7 +43,6 @@ class PublishHandler(
                 val data = reportFileRepo.findById(it.file).map { it2 ->
                     it2.data!!.array()
                 }.get()
-                val jsonObject = JSONObject().put("Data", data)
 
                 getUser().flatMap{ user ->
                     client.state(requestAlis, "F", user.authentication.principal.toString(), "LIMS")
@@ -61,7 +57,7 @@ class PublishHandler(
                 .flatMap { tuple ->
                     client.state(requestAlis, "I", tuple.t2.authentication.principal.toString(), "LIMS")
                 }.flatMap{ _ ->
-                    reportDao.merge(it.sample, it.service, it.createAt, jsonObject.toString())
+                    reportDao.merge(it.sample, it.service, it.createAt)
                 }
                 .then(Mono.just(true))
                 .switchIfEmpty(Mono.just(false))

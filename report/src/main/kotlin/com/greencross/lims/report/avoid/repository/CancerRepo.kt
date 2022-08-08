@@ -2,7 +2,6 @@ package com.greencross.lims.report.avoid.repository
 
 import com.google.common.collect.Range
 import com.google.common.collect.TreeRangeMap
-import com.greencross.lims.report.avoid.AvoidDto
 import com.greencross.lims.report.builder.Sex
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -316,7 +315,7 @@ class CancerRepo(
         폐암, 대장암, 간암, 췌장암, 식도암, 유방암, 난소암, 기타암종
     }
     enum class 결과 {
-        NORMAL, ATTENTION, CONCENT
+        GENERAL, CONCERN, RISK
     }
     fun findPPVbyAgeAndCancerAndSex(cancer: 암종, age: Int, sex: Sex): Double? {
         return ppv.get(cancer)?.get(age)?.get(sex)

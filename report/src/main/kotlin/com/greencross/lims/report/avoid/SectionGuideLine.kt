@@ -22,7 +22,7 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
         var img = template.resource().imgContentTitle()
         var width = img.width * CONTENT_TITLE_RATE / img.height
         stream.drawImage(img, 305f-width/2, y, width, CONTENT_TITLE_RATE)
-        stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblGuideLineHeader(dto.result, dto.patientName!!)))
+        stream.paragraph(305f, y+7, 300f, AlignHorizontal.CENTER, TextBlock(style, template.lblGuideLineHeader(dto.result, dto.patientName!!)))
 
         if(dto.result != AvoidDto.Results.GENERAL) {
             img = template.resource().imgGuideLineTable()

@@ -14,7 +14,9 @@ data class Analysis (
     val dateDue: LocalDateTime,
     val sampleType: String,
     val patient: Patient,
-    val barcode: Long
+    val barcode: Long,
+    val result: String,
+    val cancer: String
 ) {
     companion object {
         data class AnalysisBuilder(
@@ -32,8 +34,10 @@ data class Analysis (
             val birth: LocalDate,
             val customerName: String,
             val mrn: String?,
+            val result: String,
+            val cancer: String
         ){
-            fun build() = Analysis(sample, service, value?.asString(), dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode)
+            fun build() = Analysis(sample, service, value?.asString(), dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode, result, cancer)
         }
     }
 }

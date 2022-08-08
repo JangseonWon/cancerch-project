@@ -50,8 +50,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
-					column("발송자").build(),
-					column("비고").build()
+					column("발송자").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -85,7 +84,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
-			elemSheet.values(data).refresh();
+			elemSheet.values(data);
 			return that();
 		} catch(Exception e){
 			throw new RuntimeException(e.getMessage(), e);
@@ -93,25 +92,44 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private Data map(Analysis value) {
 		if(value == null) return null;
-		String publishDt = value.report().publishAt().isEmpty() ? DataTransformUtil.formatDate((long) JsDate.parse(value.report().publishAt())) : "";
-		return new Data(value.request().sample().id()+"$"+value.request().service().id())
-				.put("ID", String.valueOf(value.request().sample().id()))
-				.put("Serial", value.request().serial())
-				.put("검사코드", value.request().service().id())
-				.put("검사명", value.request().service().name())
-				.put("수진자명", value.request().sample().patient().name())
-				.put("성별", value.request().sample().patient().sex())
-				.put("MRN", value.request().sample().patient().mrn())
-				.put("의뢰일", DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateRequest())))
-				.put("TAT", DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateDue())))
-				.put("의뢰기관", value.request().sample().patient().customer())
-				.put("분석일", DataTransformUtil.formatDate((long) JsDate.parse(value.createAt())))
-				.put("Batch", value.batch())
-				.put("Row", String.valueOf(value.row()))
-				.put("reportCreated", String.valueOf((long) JsDate.parse(value.report().createAt())))
-				.put("결과지", value.report().fileName())
-				.put("발송자", value.report().publisher().name())
-				.put("결과발송일", publishDt);
+		String id 			= String.valueOf(value.request().sample().id());
+		String service 		= value.request().service().id();
+		String seiral		= value.request().serial();
+		String idx 			= id+"$"+service;
+		String serviceNm 	= value.request().service().name();
+
+		//Nullable
+		String sex 			= value.request().sample().patient().sex();
+		String mrn 			= value.request().sample().patient().mrn();
+		String patientNm 	= value.request().sample().patient().name();
+		String requestDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateRequest()));
+		String tatDt		= DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateDue()));
+		String customer		= value.request().sample().patient().customer();
+		String analysisDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.createAt()));
+		String batch		= value.batch();
+		String row			= String.valueOf(value.row());
+		String reportCreateDt = String.valueOf((long) JsDate.parse(value.report().createAt()));
+		String reportNm		= value.report().fileName();
+		String publishNm	= value.report().publisher().name();
+		String publishDt 	= value.report().publishAt();
+		return new Data(idx)
+				.put("ID",       		id)
+				.put("Serial",   		seiral)
+				.put("검사코드", 		service)
+				.put("검사명",   		serviceNm)
+				.put("수진자명", 		patientNm)
+				.put("성별", 	 		sex)
+				.put("MRN",  	 		mrn == null ? "" : mrn)
+				.put("의뢰일",   		requestDt)
+				.put("TAT",      		tatDt)
+				.put("의뢰기관", 		customer)
+				.put("분석일",   		analysisDt)
+				.put("Batch",    		batch)
+				.put("Row",      		row)
+				.put("reportCreated", 	reportCreateDt)
+				.put("결과지", 			reportNm  == null ? "" : reportNm)
+				.put("발송자", 			publishNm == null ? "" : publishNm)
+				.put("결과발송일", 		publishDt.equals("null") ? "" : publishDt);
 	}
 	@Override
 	public AnalysisGridElement that() {

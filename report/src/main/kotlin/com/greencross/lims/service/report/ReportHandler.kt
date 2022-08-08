@@ -81,19 +81,19 @@ class ReportHandler(
     }
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
-        val valueMap : Map<String, String> =  om.readValue(analysis.value!!, object : TypeReference<List<Map<String, String>>>(){})[0]
-
+        println(analysis)
         val barcode = analysis.barcode.toString()
-        val cancer1 = when(stringToEnum(valueMap["result"]!!)){
-            CancerRepo.결과.NORMAL        -> AvoidDto.Cancer()
-            CancerRepo.결과.ATTENTION     -> AvoidDto.Cancer("기타암종")
-            else                          -> AvoidDto.Cancer(valueMap["first"]!!,
+        val cancer1 = when(stringToEnum(analysis.result)){
+            CancerRepo.결과.GENERAL       -> AvoidDto.Cancer()
+            CancerRepo.결과.CONCERN       -> AvoidDto.Cancer("기타암종")
+            else                          ->
+                AvoidDto.Cancer(analysis.cancer,
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
-                    stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
-                cancerRepo.findASRbyAgeAndCancerAndSex(stringToCancer(valueMap["first"]!!), age(patient.birth), sex(patient.sex))!!,
-                valueMap["firstScore"]!!.toDouble())
+                    stringToCancer(analysis.cancer), age(patient.birth), sex(patient.sex))!!,
+                cancerRepo.findASRbyAgeAndCancerAndSex(
+                    stringToCancer(analysis.cancer), age(patient.birth), sex(patient.sex))!!)
         }
-        val avoidDto = AvoidDto(barcode, stringToResult(valueMap["result"]!!), cancer1)
+        val avoidDto = AvoidDto(barcode, stringToResult(analysis.result), cancer1)
         avoidDto.barcode = barcode
         avoidDto.patientName = patient.name
         avoidDto.birthDate = patient.birth
@@ -138,9 +138,9 @@ class ReportHandler(
         } else null
     }
     private fun stringToEnum(result: String) = when(result){
-        "일반관리" -> CancerRepo.결과.NORMAL
-        "관심관리" -> CancerRepo.결과.ATTENTION
-        else       -> CancerRepo.결과.CONCENT
+        "GENERAL" -> CancerRepo.결과.GENERAL
+        "CONCERN" -> CancerRepo.결과.CONCERN
+        else      -> CancerRepo.결과.RISK
     }
     private fun stringToCancer(result: String) = when(result){
         "폐암"     -> CancerRepo.암종.폐암
@@ -152,8 +152,8 @@ class ReportHandler(
         else       -> CancerRepo.암종.유방암
     }
     private fun stringToResult(result:String) = when(result){
-        "일반관리" -> AvoidDto.Results.GENERAL
-        "관심관리" -> AvoidDto.Results.CONCERN
-        else       -> AvoidDto.Results.RISK
+        "GENERAL" -> AvoidDto.Results.GENERAL
+        "CONCERN" -> AvoidDto.Results.CONCERN
+        else      -> AvoidDto.Results.RISK
     }
 }

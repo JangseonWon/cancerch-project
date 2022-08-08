@@ -50,7 +50,7 @@ class ReportDao(private val repo: ReportRepository) {
             select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
         }.one().map(Report.Companion.ReportBuilder::build)
     }
-    fun merge(sample: Long, service: String, createdAt: LocalDateTime, publishLog: String) : Mono<Any>{
+    fun merge(sample: Long, service: String, createdAt: LocalDateTime) : Mono<Any>{
         return repo.query { it.select(
             constructor(
                 com.gcgenome.lims.entity.Report::class.java,
@@ -70,22 +70,18 @@ class ReportDao(private val repo: ReportRepository) {
         ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
         }.one().switchIfEmpty(Mono.just(com.gcgenome.lims.entity.Report(sample, service, createdAt)))
             .zipWith(ReactiveSecurityContextHolder.getContext())
-            .flatMap { repo.merge(it.t1, publishLog, it.t2.authentication.principal.toString()) }
+            .flatMap { repo.merge(it.t1, it.t2.authentication.principal.toString()) }
     }
-    private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, json: String?, user : String): Mono<Void>{
+    private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, user : String): Mono<Void>{
         val now = LocalDateTime.now()
-        return if(entity.isNew) repo.save(entity.apply { if(json!=null) entity.publishLog = Json.of(json)}).then()
+        return if(entity.isNew) repo.save(entity).then()
         else update {
             Expressions.stringPath(report.publishLog.metadata)
-            if(json!=null) {
-                it.set(Expressions.stringPath(report.publishLog.metadata),json)
-                    .set(report.publishAt, now)
-                    .set(report.publishBy, user)
-                    .set(report.lastModifyAt, now)
-                    .set(report.lastModifyBy, user)
-            } else {
-                it.setNull(report.publishLog)
-            }.where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.stringValue().eq(entity.createAt.toString().replace("T", " "))))
+            it.set(report.publishAt, now)
+            .set(report.publishBy, user)
+            .set(report.lastModifyAt, now)
+            .set(report.lastModifyBy, user)
+                .where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.stringValue().eq(entity.createAt.toString().replace("T", " "))))
         }.then()
     }
 }

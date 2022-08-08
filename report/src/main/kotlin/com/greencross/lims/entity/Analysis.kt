@@ -22,9 +22,11 @@ data class Analysis(
     @Column("last_modify_at")   lateinit var lastModifyAt:   LocalDateTime
     @Column("last_modify_by")   lateinit var lastModifyBy:   String
     @Column("file")             lateinit var file:           String
+    @Column("result")           lateinit var result:         String
+    @Column("cancer")           lateinit var cancer:         String
     @Column("value")            var value:          Json? = null
     @Id @Transient lateinit var _id: AnalysisPK
-    constructor(sample: Long, service: String, batch: String, row: Long, createAt: LocalDateTime, createdBy: String, lastModifiedBy: String, lastModifiedAt: LocalDateTime, file: String, value: Json) : this(sample, service) {
+    constructor(sample: Long, service: String, batch: String, row: Long, createAt: LocalDateTime, createdBy: String, lastModifiedBy: String, lastModifiedAt: LocalDateTime, file: String, result: String, cancer: String, value: Json) : this(sample, service) {
         this.row = row
         this.batch = batch
         this.createBy = createdBy
@@ -32,6 +34,8 @@ data class Analysis(
         this.lastModifyBy = lastModifiedBy
         this.lastModifyAt = lastModifiedAt
         this.file = file
+        this.result = result
+        this.cancer = cancer
         this.value = value
     }
     override fun getId(): AnalysisPK {

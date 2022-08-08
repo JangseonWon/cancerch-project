@@ -46,6 +46,10 @@ public class Analysis {
 	@Column(name="value", columnDefinition="jsonb")
 	@Type(type="com.greencross.lims.entity.udt.MapConverter2")
 	private Map<String, Object> value;
+	@Column(name="result")
+	private String result;
+	@Column(name="cancer")
+	private String cancer;
 	@Column(name="etc")
 	@Lob
 	private String etc;
