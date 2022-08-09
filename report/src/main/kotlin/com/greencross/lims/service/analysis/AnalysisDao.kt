@@ -18,7 +18,6 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 Analysis.Companion.AnalysisBuilder::class.java,
                 analysis.sample,
                 analysis.service,
-                analysis.value.`as`("value"),
                 request.dateRequest.`as`("dateRequest"),
                 request.dateSampling.`as`("dateSampling"),
                 request.dateDue.`as`("dateDue"),
@@ -31,7 +30,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 patient.customerName.`as`("customerName"),
                 patient.mrn,
                 analysis.result,
-                analysis.cancer
+                analysis.cancer.`as`("cancer")
             )
         ).from(analysis)
             .leftJoin(sample).on(sample.id.eq(analysis.sample))

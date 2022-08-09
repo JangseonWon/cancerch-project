@@ -23,8 +23,7 @@ data class Analysis(
     @Column("last_modify_by")   lateinit var lastModifyBy:   String
     @Column("file")             lateinit var file:           String
     @Column("result")           lateinit var result:         String
-    @Column("cancer")           lateinit var cancer:         String
-    @Column("value")            var value:          Json? = null
+    @Column("too5_pred")        lateinit var cancer:         String
     @Id @Transient lateinit var _id: AnalysisPK
     constructor(sample: Long, service: String, batch: String, row: Long, createAt: LocalDateTime, createdBy: String, lastModifiedBy: String, lastModifiedAt: LocalDateTime, file: String, result: String, cancer: String, value: Json) : this(sample, service) {
         this.row = row
@@ -36,7 +35,6 @@ data class Analysis(
         this.file = file
         this.result = result
         this.cancer = cancer
-        this.value = value
     }
     override fun getId(): AnalysisPK {
         return AnalysisPK(sample, service)

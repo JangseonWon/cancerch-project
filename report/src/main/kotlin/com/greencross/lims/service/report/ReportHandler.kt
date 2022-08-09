@@ -81,13 +81,12 @@ class ReportHandler(
     }
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
-        println(analysis)
         val barcode = analysis.barcode.toString()
         val cancer1 = when(stringToEnum(analysis.result)){
             CancerRepo.결과.GENERAL       -> AvoidDto.Cancer()
             CancerRepo.결과.CONCERN       -> AvoidDto.Cancer("기타암종")
             else                          ->
-                AvoidDto.Cancer(analysis.cancer,
+                AvoidDto.Cancer(cancerToFileName(analysis.cancer),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
                     stringToCancer(analysis.cancer), age(patient.birth), sex(patient.sex))!!,
                 cancerRepo.findASRbyAgeAndCancerAndSex(
@@ -143,13 +142,22 @@ class ReportHandler(
         else      -> CancerRepo.결과.RISK
     }
     private fun stringToCancer(result: String) = when(result){
-        "폐암"     -> CancerRepo.암종.폐암
-        "췌장암"   -> CancerRepo.암종.췌장암
-        "간암"     -> CancerRepo.암종.간암
-        "대장암"   -> CancerRepo.암종.대장암
-        "기타암종" -> CancerRepo.암종.기타암종
-        "식도암"   -> CancerRepo.암종.식도암
-        else       -> CancerRepo.암종.유방암
+        "LuC"    -> CancerRepo.암종.폐암
+        "Panc"   -> CancerRepo.암종.췌장암
+        "HCC"    -> CancerRepo.암종.간암
+        "colon"  -> CancerRepo.암종.대장암
+        "etc"    -> CancerRepo.암종.기타암종
+        "ESO"    -> CancerRepo.암종.식도암
+        else     -> CancerRepo.암종.유방암
+    }
+    private fun cancerToFileName(cancer: String) = when(cancer){
+        "LuC"    -> "폐암"
+        "Panc"   -> "췌장암"
+        "HCC"    -> "간암"
+        "colon"  -> "대장암"
+        "etc"    -> "기타암종"
+        "ESO"    -> "식도암"
+        else     -> "유방암"
     }
     private fun stringToResult(result:String) = when(result){
         "GENERAL" -> AvoidDto.Results.GENERAL

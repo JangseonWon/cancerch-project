@@ -8,7 +8,6 @@ import java.time.LocalDateTime
 data class Analysis (
     val sample: Long,
     val service: String,
-    val value: String?,
     val dateRequest: LocalDateTime,
     val dateSampling: LocalDateTime,
     val dateDue: LocalDateTime,
@@ -22,7 +21,6 @@ data class Analysis (
         data class AnalysisBuilder(
             val sample: Long,
             val service: String,
-            val value: Json?,
             val dateRequest: LocalDateTime,
             val dateSampling: LocalDateTime,
             val dateDue: LocalDateTime,
@@ -37,7 +35,7 @@ data class Analysis (
             val result: String,
             val cancer: String
         ){
-            fun build() = Analysis(sample, service, value?.asString(), dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode, result, cancer)
+            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode, result, cancer)
         }
     }
 }
