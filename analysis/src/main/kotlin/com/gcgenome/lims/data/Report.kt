@@ -11,3 +11,4 @@ data class Report(
     var publishAt: String? = "",
     var publisher: User? = null
 )
+

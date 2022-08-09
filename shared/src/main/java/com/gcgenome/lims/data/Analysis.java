@@ -15,6 +15,32 @@ public final class Analysis {
 	private Double row;
 	private Request request;
 	private String sample;
+	private Double freemix;
+	@JsProperty(name="raw_reads_millions")
+	private Long rawReadsMillions;
+	@JsProperty(name="due_rate")
+	private Double dueRate;
+	private Double gc;
+	@JsProperty(name="raw_reads")
+	private Double rawReads;
+	@JsProperty(name="total_reads")
+	private Double totalReads;
+	private Double mean;
+	private Double median;
+	private String flowcell;
+	private String qc;
+	@JsProperty(name="cad_ensemble_prob")
+	private Double cadEnsembleProb;
+	@JsProperty(name="too5_pred")
+	private String too5Pred;
+	@JsProperty(name="too5_fems_prob")
+	private Double too5FemsProb;
+	@JsProperty(name="too6_pred")
+	private String too6Pred;
+	@JsProperty(name="too6_fems_prob")
+	private Double too6FemsProb;
+	private Double iscore;
+	private String result;
 	@JsProperty(name="created_at")
 	private String createAt;
 	private User createBy;

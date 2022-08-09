@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent=true)
 public final class Request {
 	private Sample sample;
-	private String serial;
 	private Service service;
 	@JsProperty(name="date_request")
 	private String dateRequest;

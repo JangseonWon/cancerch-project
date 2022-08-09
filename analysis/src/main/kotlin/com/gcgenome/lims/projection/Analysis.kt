@@ -10,15 +10,10 @@ data class Analysis(
     val batch: String,
     val row: Int,
     val file: String,
-    val value: String,
     val createAt: LocalDateTime,
     val createBy: User,
     val lastModifyAt: LocalDateTime,
     val lastModifyBy: User,
-    //endregion
-
-    //region work
-    val serial: String,
     //endregion
 
     //region Request
@@ -60,14 +55,12 @@ data class Analysis(
             val batch: String,
             val row: Int,
             val file: String,
-            val value: String,
             val createAt: LocalDateTime,
             val createById: String,
             val createBy: String,
             val lastModifyAt: LocalDateTime,
             val lastModifyById: String,
             val lastModifyBy: String,
-            val serial: String,
             val dateRequest: LocalDateTime,
             val dateStart: LocalDateTime,
             val dateDue: LocalDateTime,
@@ -97,12 +90,10 @@ data class Analysis(
                 batch,
                 row,
                 file,
-                value,
                 createAt,
                 User(createById, createBy),
                 lastModifyAt,
                 User(lastModifyById, lastModifyBy),
-                serial,
                 dateRequest,
                 dateStart,
                 dateDue,

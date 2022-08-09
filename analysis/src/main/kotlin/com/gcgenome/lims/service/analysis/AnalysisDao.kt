@@ -22,7 +22,6 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         return when {
             key.trim().isEmpty()                -> analysis.analysisAt
             "작성일".contentEquals(key)         -> analysis.analysisAt
-            "상태".contentEquals(key)           -> analysis.serial
             else                                -> analysis.analysisAt
         }
     }

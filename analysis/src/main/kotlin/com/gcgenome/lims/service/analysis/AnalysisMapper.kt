@@ -10,6 +10,23 @@ class AnalysisMapper {
         return Analysis(entity.sample, entity.serviceId).apply{
             this.batch = entity.batch
             this.row = entity.row
+            this.freemix = entity.freemix
+            this.rawReadsMillions = entity.rawReadsMillions
+            this.rawReads = entity.rawReads
+            this.dupRate = entity.dupRate
+            this.gc = entity.gc
+            this.totalReads = entity.totalReads
+            this.flowcell = entity.flowcell
+            this.mean = entity.mean
+            this.qc = entity.qc
+            this.cadEnsembleProb = entity.cadEnsembleProb
+            this.median = entity.median
+            this.too5Pred = entity.too5Pred
+            this.too5FemsProb = entity.too5FemsProb
+            this.too6Pred = entity.too6Pred
+            this.too6FemsProb = entity.too6FemsProb
+            this.iscore = entity.iscore
+            this.result = entity.result
             this.request = Request(
                 Sample(entity.sample).apply{
                     this.barcode = entity.barcode.toString()
@@ -23,7 +40,6 @@ class AnalysisMapper {
                 }
             ).apply {
                 this.service = Service(entity.serviceId, entity.serviceNm)
-                this.serial = entity.serial
                 this.dateRequest = entity.dateRequest.toString()
                 this.dateStart = entity.dateStart.toString()
                 this.dateDue = entity.dateDue.toString()
@@ -37,7 +53,6 @@ class AnalysisMapper {
                 User(entity.reportedById, entity.reportedByNm), entity.publishAt.toString(), User(entity.publishById, entity.publishByNm)
             )
             this.file = entity.analysisFile
-            this.value = entity.value
             this.createdAt = entity.analysisAt.toString()
             this.createdBy = User(entity.analysisById, entity.analysisByNm)
             this.lastModifyAt = entity.lastModifyAt.toString()

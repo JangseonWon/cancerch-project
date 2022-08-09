@@ -28,7 +28,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
 			.rowHeaders(true)
-			.autoColSize(true)
+			.autoColSize(false)
 			.autoRowSize(false)
 			.manualColumnMove(true)
 			.manualColumnResize(true)
@@ -36,7 +36,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
 							.onClick(data-> Router.location(data.idx(), true)).build(),
-					column("Serial").build(),
 					column("검사명").build(),
 					column("수진자명").build(),
 					column("성별").build(),
@@ -50,7 +49,24 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
-					column("발송자").build()
+					column("발송자").build(),
+					column("관리분류").build(),
+					column("top 5 prediction").build(),
+					column("top 5 FEMS prob").build(),
+					column("iscore").build(),
+					column("freemix").build(),
+					column("raw read").build(),
+					column("raw read(Million)").build(),
+					column("total read").build(),
+					column("due rate").build(),
+					column("gc").build(),
+					column("mean").build(),
+					column("median").build(),
+					column("flowcell").build(),
+					column("qc").build(),
+					column("cad ensemble prob").build(),
+					column("top 6 prediction").build(),
+					column("top 6 FEMS prob").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -84,7 +100,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
-			elemSheet.values(data);
+			elemSheet.values(data).refresh();
 			return that();
 		} catch(Exception e){
 			throw new RuntimeException(e.getMessage(), e);
@@ -94,7 +110,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		if(value == null) return null;
 		String id 			= String.valueOf(value.request().sample().id());
 		String service 		= value.request().service().id();
-		String seiral		= value.request().serial();
 		String idx 			= id+"$"+service;
 		String serviceNm 	= value.request().service().name();
 
@@ -112,9 +127,25 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String reportNm		= value.report().fileName();
 		String publishNm	= value.report().publisher().name();
 		String publishDt 	= value.report().publishAt();
+		String freemix		= String.valueOf(value.freemix());
+		String rawReadMil	= String.valueOf(value.rawReadsMillions());
+		String duerate      = String.valueOf(value.dueRate());
+		String rawRead		= String.valueOf(value.rawReads());
+		String totalRead	= String.valueOf(value.totalReads());
+		String gc			= String.valueOf(value.gc());
+		String mean			= String.valueOf(value.mean());
+		String median		= String.valueOf(value.median());
+		String flowcell		= value.flowcell();
+		String qc			= value.qc();
+		String cadEnsemble  = String.valueOf(value.cadEnsembleProb());
+		String top5Pred		= convertCancerName(value.too5Pred());
+		String top5FEMS		= String.valueOf(value.too5FemsProb());
+		String top6Pred		= convertCancerName(value.too6Pred());
+		String top6FEMS		= String.valueOf(value.too6FemsProb());
+		String iscore		= String.valueOf(value.iscore());
+		String result		= convertResultName(value.result());
 		return new Data(idx)
 				.put("ID",       		id)
-				.put("Serial",   		seiral)
 				.put("검사코드", 		service)
 				.put("검사명",   		serviceNm)
 				.put("수진자명", 		patientNm)
@@ -129,7 +160,24 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("reportCreated", 	reportCreateDt)
 				.put("결과지", 			reportNm  == null ? "" : reportNm)
 				.put("발송자", 			publishNm == null ? "" : publishNm)
-				.put("결과발송일", 		publishDt.equals("null") ? "" : publishDt);
+				.put("결과발송일", 		publishDt.equals("null") ? "" : publishDt)
+				.put("관리분류", 		result)
+				.put("top 5 prediction",top5Pred)
+				.put("top 5 FEMS prob", top5FEMS)
+				.put("iscore",			iscore)
+				.put("freemix",			freemix)
+				.put("raw read", 		rawRead)
+				.put("raw read(Million)", rawReadMil)
+				.put("total read",      totalRead)
+				.put("due rate", 		duerate)
+				.put("gc",  			gc)
+				.put("mean",			mean)
+				.put("median",          median)
+				.put("flowcell",        flowcell)
+				.put("qc",              qc)
+				.put("cad ensemble prob", cadEnsemble)
+				.put("top 6 prediction",top6Pred)
+				.put("top 6 FEMS prob", top6FEMS);
 	}
 	@Override
 	public AnalysisGridElement that() {
@@ -148,5 +196,24 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	public HandlerRegistration onSelectionChange(EventTarget dom, SelectionChangeEventListener<Analysis[]> listener) {
 		EventListener wrapper = evt->listener.handle(SelectionChangeEvent.event(evt, selection()));
 		return bind(dom, "selection-change", wrapper);
+	}
+	private String convertCancerName(String pred){
+		switch (pred) {
+			case "ESO" : return "식도암";
+			case "HCC" : return "간암";
+			case "OV"  : return "난소암";
+			case "colon"  : return "대장암";
+			case "LuC"  : return "폐암";
+			case "PanC"  : return "췌장암";
+			default  : return "WTF";
+		}
+	}
+	private String convertResultName(String result){
+		switch (result) {
+			case "RISK"  : return "집중관리";
+			case "GENERAL" : return "일반관리";
+			case "CONCERN"  : return "관심관리";
+			default  : return "WTF";
+		}
 	}
 }
