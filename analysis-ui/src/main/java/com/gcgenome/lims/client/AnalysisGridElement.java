@@ -27,9 +27,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center");
 	}
 	private static ColumnString columnAndColor(String name, String type) {
-		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
 			if("A".equals(type)) return "#df7368";
-			else return "#d8cebf";
+			else return "#eacbca";
 		});
 	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
@@ -58,8 +58,10 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("발송자").build(),
 					column("관리분류").build(),
 					column("top 5 prediction").build(),
-					column("top 5 FEMS prob").build(),
-					column("iscore").build(),
+					column("top 5 FEMS prob").horizontal("right").build(),
+					column("top 6 prediction").build(),
+					column("top 6 FEMS prob").horizontal("right").build(),
+					column("iscore").horizontal("right").build(),
 					columnAndColor("freemix A", "A").build(),
 					columnAndColor("raw read A", "A").build(),
 					columnAndColor("raw read(Million) A", "A").build(),
@@ -68,7 +70,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc A", "A").build(),
 					columnAndColor("mean A", "A").build(),
 					columnAndColor("median A", "A").build(),
-					columnAndColor("qc A", "A").build(),
+					columnAndColor("qc A", "A").horizontal("center").build(),
 					columnAndColor("cad ensemble prob A", "A").build(),
 					columnAndColor("freemix B", "B").build(),
 					columnAndColor("raw read B", "B").build(),
@@ -78,10 +80,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean B", "B").build(),
 					columnAndColor("median B", "B").build(),
-					columnAndColor("qc B", "B").build(),
-					columnAndColor("cad ensemble prob B", "B").build(),
-					column("top 6 prediction").build(),
-					column("top 6 FEMS prob").build()
+					columnAndColor("qc B", "B").horizontal("center").build(),
+					columnAndColor("cad ensemble prob B", "B").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
