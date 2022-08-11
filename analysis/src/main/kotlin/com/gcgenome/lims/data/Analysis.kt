@@ -10,9 +10,9 @@ data class Analysis(
     var report: Report? = null
     var file: String? = ""
     var createdAt: String? = ""
-    var createdBy: User? = null
     var lastModifyAt: String? = ""
     var lastModifyBy: User? = null
+
     var freemix: Double = 0.0
     var rawReadsMillions: Long =  0
     var dupRate: Double = 0.0
@@ -21,9 +21,20 @@ data class Analysis(
     var totalReads: Double = 0.0
     var mean: Double = 0.0
     var median: Double = 0.0
-    var flowcell: String = "C"
     var qc: String = "F"
     var cadEnsembleProb: Double = 0.0
+
+    var freemixTmp: Double = 0.0
+    var rawReadsMillionsTmp: Long =  0
+    var dupRateTmp: Double = 0.0
+    var gcTmp: Double = 0.0
+    var rawReadsTmp: Double = 0.0
+    var totalReadsTmp: Double = 0.0
+    var meanTmp: Double = 0.0
+    var medianTmp: Double = 0.0
+    var qcTmp: String = "F"
+    var cadEnsembleProbTmp: Double = 0.0
+
     var too5Pred: String = ""
     var too5FemsProb: Double = 0.0
     var too6Pred: String = ""

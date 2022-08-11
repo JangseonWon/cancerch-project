@@ -17,7 +17,7 @@ public final class Analysis {
 	private String sample;
 	private Double freemix;
 	@JsProperty(name="raw_reads_millions")
-	private Long rawReadsMillions;
+	private Double rawReadsMillions;
 	@JsProperty(name="due_rate")
 	private Double dueRate;
 	private Double gc;
@@ -27,10 +27,29 @@ public final class Analysis {
 	private Double totalReads;
 	private Double mean;
 	private Double median;
-	private String flowcell;
 	private String qc;
 	@JsProperty(name="cad_ensemble_prob")
 	private Double cadEnsembleProb;
+	@JsProperty(name="freemix_tmp")
+	private Double freemixTmp;
+	@JsProperty(name="raw_reads_millions_tmp")
+	private Long rawReadsMillionsTmp;
+	@JsProperty(name="due_rate_tmp")
+	private Double dueRateTmp;
+	@JsProperty(name="gc_tmp")
+	private Double gcTmp;
+	@JsProperty(name="raw_reads_tmp")
+	private Long rawReadsTmp;
+	@JsProperty(name="total_reads_tmp")
+	private Double totalReadsTmp;
+	@JsProperty(name="mean_tmp")
+	private Double meanTmp;
+	@JsProperty(name="median_tmp")
+	private Double medianTmp;
+	@JsProperty(name="qc_tmp")
+	private String qcTmp;
+	@JsProperty(name="cad_ensemble_prob_tmp")
+	private Double cadEnsembleProbTmp;
 	@JsProperty(name="too5_pred")
 	private String too5Pred;
 	@JsProperty(name="too5_fems_prob")
@@ -43,7 +62,6 @@ public final class Analysis {
 	private String result;
 	@JsProperty(name="created_at")
 	private String createAt;
-	private User createBy;
 	@JsProperty(name="last_modify_at")
 	private String lastModifyAt;
 	private User lastModifyBy;

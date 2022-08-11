@@ -8,25 +8,38 @@ import org.springframework.stereotype.Component
 class AnalysisMapper {
     fun toDto(entity: Analysis) : com.gcgenome.lims.data.Analysis{
         return Analysis(entity.sample, entity.serviceId).apply{
-            this.batch = entity.batch
-            this.row = entity.row
-            this.freemix = entity.freemix
-            this.rawReadsMillions = entity.rawReadsMillions
-            this.rawReads = entity.rawReads
-            this.dupRate = entity.dupRate
-            this.gc = entity.gc
-            this.totalReads = entity.totalReads
-            this.flowcell = entity.flowcell
-            this.mean = entity.mean
-            this.qc = entity.qc
-            this.cadEnsembleProb = entity.cadEnsembleProb
-            this.median = entity.median
-            this.too5Pred = entity.too5Pred
-            this.too5FemsProb = entity.too5FemsProb
-            this.too6Pred = entity.too6Pred
-            this.too6FemsProb = entity.too6FemsProb
-            this.iscore = entity.iscore
-            this.result = entity.result
+            this.batch                          = entity.batch
+            this.row                            = entity.row
+
+            this.freemix                        = entity.freemix
+            this.rawReadsMillions               = entity.rawReadsMillions
+            this.rawReads                       = entity.rawReads
+            this.dupRate                        = entity.dupRate
+            this.gc                             = entity.gc
+            this.totalReads                     = entity.totalReads
+            this.mean                           = entity.mean
+            this.qc                             = entity.qc
+            this.cadEnsembleProb                = entity.cadEnsembleProb
+            this.median                         = entity.median
+
+            this.freemixTmp                     = entity.freemixTmp
+            this.rawReadsMillionsTmp            = entity.rawReadsMillionsTmp
+            this.rawReadsTmp                    = entity.rawReadsTmp
+            this.dupRateTmp                     = entity.dupRateTmp
+            this.gcTmp                          = entity.gcTmp
+            this.totalReadsTmp                  = entity.totalReadsTmp
+            this.meanTmp                        = entity.meanTmp
+            this.qcTmp                          = entity.qcTmp
+            this.cadEnsembleProbTmp             = entity.cadEnsembleProbTmp
+            this.medianTmp                      = entity.medianTmp
+
+            this.too5Pred                       = entity.too5Pred
+            this.too5FemsProb                   = entity.too5FemsProb
+            this.too6Pred                       = entity.too6Pred
+            this.too6FemsProb                   = entity.too6FemsProb
+            this.iscore                         = entity.iscore
+            this.result                         = entity.result
+
             this.request = Request(
                 Sample(entity.sample).apply{
                     this.barcode = entity.barcode.toString()
@@ -54,7 +67,6 @@ class AnalysisMapper {
             )
             this.file = entity.analysisFile
             this.createdAt = entity.analysisAt.toString()
-            this.createdBy = User(entity.analysisById, entity.analysisByNm)
             this.lastModifyAt = entity.lastModifyAt.toString()
             this.lastModifyBy = User(entity.lastModifyById, entity.lastModifyByNm)
         }

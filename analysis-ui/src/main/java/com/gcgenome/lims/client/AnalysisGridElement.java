@@ -26,9 +26,15 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	private static ColumnString column(String name) {
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center");
 	}
+	private static ColumnString columnAndColor(String name, String type) {
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+			if("A".equals(type)) return "#df7368";
+			else return "#6a61a8";
+		});
+	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
 			.rowHeaders(true)
-			.autoColSize(false)
+			.autoColSize(true).renderAllRows(true).viewportColumnRenderingOffset(500.0)
 			.autoRowSize(false)
 			.manualColumnMove(true)
 			.manualColumnResize(true)
@@ -54,17 +60,26 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("top 5 prediction").build(),
 					column("top 5 FEMS prob").build(),
 					column("iscore").build(),
-					column("freemix").build(),
-					column("raw read").build(),
-					column("raw read(Million)").build(),
-					column("total read").build(),
-					column("due rate").build(),
-					column("gc").build(),
-					column("mean").build(),
-					column("median").build(),
-					column("flowcell").build(),
-					column("qc").build(),
-					column("cad ensemble prob").build(),
+					columnAndColor("freemix A", "A").build(),
+					columnAndColor("raw read A", "A").build(),
+					columnAndColor("raw read(Million) A", "A").build(),
+					columnAndColor("total read A", "A").build(),
+					columnAndColor("due rate A", "A").build(),
+					columnAndColor("gc A", "A").build(),
+					columnAndColor("mean A", "A").build(),
+					columnAndColor("median A", "A").build(),
+					columnAndColor("qc A", "A").build(),
+					columnAndColor("cad ensemble prob A", "A").build(),
+					columnAndColor("freemix B", "B").build(),
+					columnAndColor("raw read B", "B").build(),
+					columnAndColor("raw read(Million) B", "B").build(),
+					columnAndColor("total read B", "B").build(),
+					columnAndColor("due rate B", "B").build(),
+					columnAndColor("gc B", "B").build(),
+					columnAndColor("mean B", "B").build(),
+					columnAndColor("median B", "B").build(),
+					columnAndColor("qc B", "B").build(),
+					columnAndColor("cad ensemble prob B", "B").build(),
 					column("top 6 prediction").build(),
 					column("top 6 FEMS prob").build()
 			).data(new Data[10]);
@@ -135,16 +150,25 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String gc			= String.valueOf(value.gc());
 		String mean			= String.valueOf(value.mean());
 		String median		= String.valueOf(value.median());
-		String flowcell		= value.flowcell();
 		String qc			= value.qc();
-		String cadEnsemble  = String.valueOf(value.cadEnsembleProb());
+		String cadEnsemble = String.valueOf(value.cadEnsembleProb());
+		String freemixT		= String.valueOf(value.freemixTmp());
+		String rawReadMilT	= String.valueOf(value.rawReadsMillionsTmp());
+		String duerateT     = String.valueOf(value.dueRateTmp());
+		String rawReadT		= String.valueOf(value.rawReadsTmp());
+		String totalReadT	= String.valueOf(value.totalReadsTmp());
+		String gcT			= String.valueOf(value.gcTmp());
+		String meanT		= String.valueOf(value.meanTmp());
+		String medianT		= String.valueOf(value.medianTmp());
+		String qcT			= value.qcTmp();
+		String cadEnsembleT = String.valueOf(value.cadEnsembleProbTmp());
 		String top5Pred		= convertCancerName(value.too5Pred());
 		String top5FEMS		= String.valueOf(value.too5FemsProb());
 		String top6Pred		= convertCancerName(value.too6Pred());
 		String top6FEMS		= String.valueOf(value.too6FemsProb());
 		String iscore		= String.valueOf(value.iscore());
 		String result		= convertResultName(value.result());
-		return new Data(idx)
+		Data datum = new Data(idx)
 				.put("ID",       		id)
 				.put("검사코드", 		service)
 				.put("검사명",   		serviceNm)
@@ -165,19 +189,29 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("top 5 prediction",top5Pred)
 				.put("top 5 FEMS prob", top5FEMS)
 				.put("iscore",			iscore)
-				.put("freemix",			freemix)
-				.put("raw read", 		rawRead)
-				.put("raw read(Million)", rawReadMil)
-				.put("total read",      totalRead)
-				.put("due rate", 		duerate)
-				.put("gc",  			gc)
-				.put("mean",			mean)
-				.put("median",          median)
-				.put("flowcell",        flowcell)
-				.put("qc",              qc)
-				.put("cad ensemble prob", cadEnsemble)
+				.put("freemix A",		freemix)
+				.put("raw read A", 		rawRead)
+				.put("raw read(Million) A", rawReadMil)
+				.put("total read A",    totalRead)
+				.put("due rate A", 		duerate)
+				.put("gc A",  			gc)
+				.put("mean A",			mean)
+				.put("median A",        median)
+				.put("qc A",            qc)
+				.put("cad ensemble prob A", cadEnsemble)
+				.put("freemix B",		freemixT)
+				.put("raw read B", 		rawReadT)
+				.put("raw read(Million) B", rawReadMilT)
+				.put("total read B",    totalReadT)
+				.put("due rate B", 		duerateT)
+				.put("gc B",  			gcT)
+				.put("mean B",			meanT)
+				.put("median B",        medianT)
+				.put("qc B",            qcT)
+				.put("cad ensemble prob B", cadEnsembleT)
 				.put("top 6 prediction",top6Pred)
 				.put("top 6 FEMS prob", top6FEMS);
+		return datum;
 	}
 	@Override
 	public AnalysisGridElement that() {
