@@ -29,7 +29,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	private static ColumnString columnAndColor(String name, String type) {
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
 			if("A".equals(type)) return "#df7368";
-			else return "d8cebf";
+			else return "#d8cebf";
 		});
 	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
