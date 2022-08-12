@@ -3,7 +3,6 @@ package com.gcgenome.lims.client.collapse;
 import com.gcgenome.lims.client.CollapseElement;
 import com.gcgenome.lims.client.WindowState;
 import com.gcgenome.lims.ui.IconElement;
-import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import jsinterop.base.JsPropertyMap;
@@ -33,21 +32,16 @@ public class DefaultCollapseElement extends HTMLElementBuilder<HTMLDivElement, D
 			   .style("margin-left: 16px;margin-right: 16px;display: flex; flex-direction: row; " +
 					  "flex-wrap: nowrap; align-content: space-between; justify-content: space-between; " +
 					  "align-items: center; cursor: pointer;"));
-		DomGlobal.console.log("!");
 		_this = e;
 		this.id = id;
-		DomGlobal.console.log("2");
 		layout();
-		DomGlobal.console.log("3");
 		this.on(EventType.click, evt->fireStateChangeEvent());
 	}
 
 	private void layout() {
-		DomGlobal.console.log("4");
 		_this.add(span().css("mdc-list-item__graphic").style("height: auto; align-self: unset;").add(icon))
 			 .add(div().css("mdc-list-item__text").style("margin-bottom: 10px;").add(title).add(info))
 			 .add(meta);
-		DomGlobal.console.log("5");
 	}
 	@Override
 	public DefaultCollapseElement that() {
