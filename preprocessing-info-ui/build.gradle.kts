@@ -31,7 +31,7 @@ tasks {
         options.encoding = "UTF-8"
     }
     gwt {
-        gwt.modules = listOf("com.gcgenome.lims.Worklist")
+        gwt.modules = listOf("com.gcgenome.lims.Preprocessing")
         minHeapSize = "1024M"
         maxHeapSize = "2048M"
         sourceLevel = "auto"
@@ -47,7 +47,7 @@ tasks {
     }
     register<Copy>("copyWebResources") {
         dependsOn(build)
-        from(zipTree("build/libs/avoid-service-worklist-ui.war")) {
+        from(zipTree("build/libs/avoid-service-preprocessing-info-ui.war")) {
             include("**/*.js")
             include("**/*.css")
             include("**/*.png")
@@ -64,7 +64,7 @@ tasks {
         into("build/static")
     }
     withType<War> {
-        archiveFileName.set("avoid-service-worklist-ui.war")
+        archiveFileName.set("avoid-service-preprocessing-info-ui.war")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
     getByName<Test>("test") {
