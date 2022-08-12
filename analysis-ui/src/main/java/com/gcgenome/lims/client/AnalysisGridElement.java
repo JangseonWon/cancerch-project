@@ -42,7 +42,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.stretchH("all")
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
-							.onClick(data-> Router.location("analysisInfo.html#"+data.get("ID"), true)).build(),
+							.onClick(data->{
+								//TODO : IMPLEMENT
+							}).build(),
 					column("검사명").build(),
 					column("수진자명").build(),
 					column("성별").build(),
