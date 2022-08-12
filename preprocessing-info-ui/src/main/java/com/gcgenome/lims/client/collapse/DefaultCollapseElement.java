@@ -48,10 +48,8 @@ public class DefaultCollapseElement extends HTMLElementBuilder<HTMLDivElement, D
 	}
 	@Override
 	public void update() {
-		DomGlobal.console.log("Update Preprocessing:Collapse");
 		Message msg = Message.builder().id(id).type(Message.MessageType.COLLAPSE).param("64px").build();
 		DomGlobal.window.parent.postMessage(Global.JSON.stringify(msg), "*");
-		DomGlobal.console.log("Sent MSG");
 	}
 
 	@Override
