@@ -19,11 +19,15 @@ public class Main extends AbstractMain {
 	}-*/;
     @Override
     public void onModuleLoad() {
+        DomGlobal.console.log("a");
         JsPropertyMap<String> params = params(DomGlobal.window.location.search);
+        DomGlobal.console.log(params);
         String id = (String)params.get("id");
+        DomGlobal.console.log(id);
         long sample = Long.parseLong(((String)params.get("sample")).replace("-", ""));
+        DomGlobal.console.log(sample);
         String service = (String)params.get("service");
-        DomGlobal.console.log("2");
+        DomGlobal.console.log(service);
         ServiceApi.service(service).then((svc) -> {
             DomGlobal.console.log("!");
             CollapseElement<?> elemCollapsed = this.collapse(id, sample, svc);
