@@ -13,24 +13,20 @@ class AnalysisMapper {
 
             this.freemix                        = entity.freemix
             this.rawReadsMillions               = entity.rawReadsMillions
-            this.rawReads                       = entity.rawReads
             this.dupRate                        = entity.dupRate
             this.gc                             = entity.gc
             this.totalReads                     = entity.totalReads
             this.mean                           = entity.mean
             this.qc                             = entity.qc
-            this.cadEnsembleProb                = entity.cadEnsembleProb
             this.median                         = entity.median
 
             this.freemixTmp                     = entity.freemixTmp
             this.rawReadsMillionsTmp            = entity.rawReadsMillionsTmp
-            this.rawReadsTmp                    = entity.rawReadsTmp
             this.dupRateTmp                     = entity.dupRateTmp
             this.gcTmp                          = entity.gcTmp
             this.totalReadsTmp                  = entity.totalReadsTmp
             this.meanTmp                        = entity.meanTmp
             this.qcTmp                          = entity.qcTmp
-            this.cadEnsembleProbTmp             = entity.cadEnsembleProbTmp
             this.medianTmp                      = entity.medianTmp
 
             this.too5Pred                       = entity.too5Pred
@@ -38,6 +34,7 @@ class AnalysisMapper {
             this.too6Pred                       = entity.too6Pred
             this.too6FemsProb                   = entity.too6FemsProb
             this.iscore                         = entity.iscore
+            this.cadEnsembleProb                = entity.cadEnsembleProb
             this.result                         = entity.result
 
             this.request = Request(
