@@ -1,6 +1,7 @@
 package com.gcgenome.lims.client;
 
 import com.gcgenome.lims.api.AnalysisApi;
+import com.gcgenome.lims.api.WindowApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
@@ -41,7 +42,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.stretchH("all")
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
-							.onClick(data-> Router.location(data.idx(), true)).build(),
+							.onClick(data-> WindowApi.open("analysisInfo.html#"+data.idx(), "_blank", null, false)).build(),
 					column("검사명").build(),
 					column("수진자명").build(),
 					column("성별").build(),
