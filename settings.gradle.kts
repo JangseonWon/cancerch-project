@@ -12,7 +12,7 @@ include("worklist-ui")
 include("worklist-api")
 include("sequencing-api")
 include("search")
-include("worklist-info-ui")
+include("preprocessing-info-ui")
 include("alis")
 include("publish")
 
