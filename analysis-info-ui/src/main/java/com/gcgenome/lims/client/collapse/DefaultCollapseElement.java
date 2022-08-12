@@ -2,10 +2,7 @@ package com.gcgenome.lims.client.collapse;
 
 import com.gcgenome.lims.client.CollapseElement;
 import com.gcgenome.lims.client.WindowState;
-import com.gcgenome.lims.dto.Message;
 import com.gcgenome.lims.ui.IconElement;
-import elemental2.core.Global;
-import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import jsinterop.base.JsPropertyMap;
@@ -23,8 +20,8 @@ public class DefaultCollapseElement extends HTMLElementBuilder<HTMLDivElement, D
 	public static DefaultCollapseElement build(String id, long sample, JsPropertyMap<?> service) {
 		return new DefaultCollapseElement(div(), id, sample, service);
 	}
-	private final IconElement icon = IconElement.icon(IconElement.Type.Light, "fa-comment-medical");
-	private final HtmlContentBuilder<HTMLElement> title = span().css("mdc-list-item__primary-text").add("Interpretation");
+	private final IconElement icon = IconElement.icon(IconElement.Type.Light, "fa-server");
+	private final HtmlContentBuilder<HTMLElement> title = span().css("mdc-list-item__primary-text").add("BI Analysis");
 	private final HtmlContentBuilder<HTMLElement> info = span().css("mdc-list-item__secondary-text").add("아직 지원하고 있지 않는 검사입니다.");
 	private final HtmlContentBuilder<HTMLElement> meta = span().css("mdc-list-item__meta");
 	private final HtmlContentBuilder<HTMLDivElement> _this;
@@ -43,8 +40,6 @@ public class DefaultCollapseElement extends HTMLElementBuilder<HTMLDivElement, D
 		_this.add(span().css("mdc-list-item__graphic").style("height: auto; align-self: unset;").add(icon))
 			 .add(div().css("mdc-list-item__text").style("margin-bottom: 10px;").add(title).add(info))
 			 .add(meta);
-		Message msg = Message.builder().id(id).type(Message.MessageType.COLLAPSE).param("64px").build();
-		DomGlobal.window.parent.postMessage(Global.JSON.stringify(msg), "*");
 	}
 
 	@Override
