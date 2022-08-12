@@ -43,7 +43,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
 							.onClick(data->{
-								DomGlobal.window.open("Https://"+Router.location().split("/")[2]+"/sample.html#"+data.get("ID"));
+								DomGlobal.window.open("../sample.html#"+data.get("ID"));
 							}).build(),
 					column("검사명").build(),
 					column("수진자명").build(),
