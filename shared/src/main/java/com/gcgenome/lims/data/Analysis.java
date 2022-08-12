@@ -18,8 +18,8 @@ public final class Analysis {
 	private Double freemix;
 	@JsProperty(name="raw_reads_millions")
 	private Double rawReadsMillions;
-	@JsProperty(name="due_rate")
-	private Double dueRate;
+	@JsProperty(name="dup_rate")
+	private Double dupRate;
 	private Double gc;
 	@JsProperty(name="raw_reads")
 	private Double rawReads;
@@ -34,8 +34,8 @@ public final class Analysis {
 	private Double freemixTmp;
 	@JsProperty(name="raw_reads_millions_tmp")
 	private Long rawReadsMillionsTmp;
-	@JsProperty(name="due_rate_tmp")
-	private Double dueRateTmp;
+	@JsProperty(name="dup_rate_tmp")
+	private Double dupRateTmp;
 	@JsProperty(name="gc_tmp")
 	private Double gcTmp;
 	@JsProperty(name="raw_reads_tmp")

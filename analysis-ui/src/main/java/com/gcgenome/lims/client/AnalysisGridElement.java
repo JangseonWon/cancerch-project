@@ -141,7 +141,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String publishDt 	= value.report().publishAt();
 		String freemix		= String.valueOf(value.freemix());
 		String rawReadMil	= String.valueOf(value.rawReadsMillions());
-		String duerate      = String.valueOf(value.dueRate());
+		String duprate      = String.valueOf(value.dupRate());
 		String totalRead	= String.valueOf(value.totalReads());
 		String gc			= String.valueOf(value.gc());
 		String mean			= String.valueOf(value.mean());
@@ -149,7 +149,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String qc			= value.qc();
 		String freemixT		= String.valueOf(value.freemixTmp());
 		String rawReadMilT	= String.valueOf(value.rawReadsMillionsTmp());
-		String duerateT     = String.valueOf(value.dueRateTmp());
+		String duprateT     = String.valueOf(value.dupRateTmp());
 		String totalReadT	= String.valueOf(value.totalReadsTmp());
 		String gcT			= String.valueOf(value.gcTmp());
 		String meanT		= String.valueOf(value.meanTmp());
@@ -190,18 +190,18 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("freemix A",		freemix)
 				.put("raw read(Million) A", rawReadMil)
 				.put("filtered reads A",    totalRead)
-				.put("due rate A", 		duerate)
+				.put("dup rate A", 		duprate)
 				.put("gc A",  			gc)
 				.put("mean is A",			mean)
 				.put("median is A",        median)
 				.put("qc A",            qc)
 				.put("freemix B",		freemixT)
 				.put("raw read(Million) B", rawReadMilT)
-				.put("filtered read B",    totalReadT)
-				.put("due rate B", 		duerateT)
+				.put("filtered reads B",    totalReadT)
+				.put("dup rate B", 		duprateT)
 				.put("gc B",  			gcT)
-				.put("mean B",			meanT)
-				.put("median B",        medianT)
+				.put("mean is B",			meanT)
+				.put("median is B",        medianT)
 				.put("qc B",            qcT);
 		return datum;
 	}
