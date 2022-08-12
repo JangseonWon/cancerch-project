@@ -26,7 +26,6 @@ data class Analysis(
     @Column("mean")                     val mean: Double = 0.0,
     @Column("median")                   val median: Double = 0.0,
     @Column("qc")                       val qc: String = "F",
-    @Column("cad_ensemble_prob")        val cadEnsembleProb: Double = 0.0,
 
     @Column("freemix_tmp")              val freemixTmp: Double = 0.0,
     @Column("raw_reads_millions_tmp")   val rawReadsMillionsTmp: Long = 0,
@@ -37,8 +36,8 @@ data class Analysis(
     @Column("mean_tmp")                 val meanTmp: Double = 0.0,
     @Column("median_tmp")               val medianTmp: Double = 0.0,
     @Column("qc_tmp")                   val qcTmp: String = "F",
-    @Column("cad_ensemble_prob_tmp")    val cadEnsembleProbTmp: Double = 0.0,
 
+    @Column("cad_ensemble_prob_tmp")    val cadEnsembleProbTmp: Double = 0.0,
     @Column("too5_pred")                val too5Pred: String = "",
     @Column("too5_rmd_fems_ensemble_prob") val too5FemsProb: Double = 0.0,
     @Column("too6_pred")                val too6Pred: String = "",

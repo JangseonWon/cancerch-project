@@ -62,26 +62,23 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("top 6 prediction").build(),
 					column("top 6 FEMS prob").horizontal("right").build(),
 					column("iscore").horizontal("right").build(),
+					column("cad ensemble prob").horizontal("right").build(),
 					columnAndColor("freemix A", "A").build(),
-					columnAndColor("raw read A", "A").build(),
 					columnAndColor("raw read(Million) A", "A").build(),
-					columnAndColor("total read A", "A").build(),
+					columnAndColor("filtered reads A", "A").build(),
 					columnAndColor("due rate A", "A").build(),
 					columnAndColor("gc A", "A").build(),
-					columnAndColor("mean A", "A").build(),
-					columnAndColor("median A", "A").build(),
+					columnAndColor("mean is A", "A").build(),
+					columnAndColor("median is A", "A").build(),
 					columnAndColor("qc A", "A").horizontal("center").build(),
-					columnAndColor("cad ensemble prob A", "A").build(),
 					columnAndColor("freemix B", "B").build(),
-					columnAndColor("raw read B", "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
-					columnAndColor("total read B", "B").build(),
+					columnAndColor("filtered reads B", "B").build(),
 					columnAndColor("due rate B", "B").build(),
 					columnAndColor("gc B", "B").build(),
-					columnAndColor("mean B", "B").build(),
-					columnAndColor("median B", "B").build(),
-					columnAndColor("qc B", "B").horizontal("center").build(),
-					columnAndColor("cad ensemble prob B", "B").build()
+					columnAndColor("mean is B", "B").build(),
+					columnAndColor("median is B", "B").build(),
+					columnAndColor("qc B", "B").horizontal("center").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -145,23 +142,21 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String freemix		= String.valueOf(value.freemix());
 		String rawReadMil	= String.valueOf(value.rawReadsMillions());
 		String duerate      = String.valueOf(value.dueRate());
-		String rawRead		= String.valueOf(value.rawReads());
 		String totalRead	= String.valueOf(value.totalReads());
 		String gc			= String.valueOf(value.gc());
 		String mean			= String.valueOf(value.mean());
 		String median		= String.valueOf(value.median());
 		String qc			= value.qc();
-		String cadEnsemble = String.valueOf(value.cadEnsembleProb());
 		String freemixT		= String.valueOf(value.freemixTmp());
 		String rawReadMilT	= String.valueOf(value.rawReadsMillionsTmp());
 		String duerateT     = String.valueOf(value.dueRateTmp());
-		String rawReadT		= String.valueOf(value.rawReadsTmp());
 		String totalReadT	= String.valueOf(value.totalReadsTmp());
 		String gcT			= String.valueOf(value.gcTmp());
 		String meanT		= String.valueOf(value.meanTmp());
 		String medianT		= String.valueOf(value.medianTmp());
 		String qcT			= value.qcTmp();
-		String cadEnsembleT = String.valueOf(value.cadEnsembleProbTmp());
+
+		String cadEnsemble = String.valueOf(value.cadEnsembleProb());
 		String top5Pred		= convertCancerName(value.too5Pred());
 		String top5FEMS		= String.valueOf(value.too5FemsProb());
 		String top6Pred		= convertCancerName(value.too6Pred());
@@ -188,29 +183,26 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("관리분류", 		result)
 				.put("top 5 prediction",top5Pred)
 				.put("top 5 FEMS prob", top5FEMS)
+				.put("top 6 prediction",top6Pred)
+				.put("top 6 FEMS prob", top6FEMS)
 				.put("iscore",			iscore)
+				.put("cad ensemble prob", cadEnsemble)
 				.put("freemix A",		freemix)
-				.put("raw read A", 		rawRead)
 				.put("raw read(Million) A", rawReadMil)
-				.put("total read A",    totalRead)
+				.put("filtered reads A",    totalRead)
 				.put("due rate A", 		duerate)
 				.put("gc A",  			gc)
-				.put("mean A",			mean)
-				.put("median A",        median)
+				.put("mean is A",			mean)
+				.put("median is A",        median)
 				.put("qc A",            qc)
-				.put("cad ensemble prob A", cadEnsemble)
 				.put("freemix B",		freemixT)
-				.put("raw read B", 		rawReadT)
 				.put("raw read(Million) B", rawReadMilT)
-				.put("total read B",    totalReadT)
+				.put("filtered read B",    totalReadT)
 				.put("due rate B", 		duerateT)
 				.put("gc B",  			gcT)
 				.put("mean B",			meanT)
 				.put("median B",        medianT)
-				.put("qc B",            qcT)
-				.put("cad ensemble prob B", cadEnsembleT)
-				.put("top 6 prediction",top6Pred)
-				.put("top 6 FEMS prob", top6FEMS);
+				.put("qc B",            qcT);
 		return datum;
 	}
 	@Override
