@@ -152,7 +152,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         return new Data(value.worklist + "$" + value.index)
                 .put("index",                           String.valueOf(value.index))
                 .put("G-ID",                            value.gid)
-                .put("의뢰번호",                         DataTransformUtil.formatSampleId(Long.parseLong(value.samples)))
+                .put("의뢰번호",                         value.samples!=null?DataTransformUtil.formatSampleId(Long.parseLong(value.samples)):null)
                 .put("수진자명",                         value.patientName)
                 .put("MRN",                             value.mrns)
                 .put(WorkModel.ConcNa.id,               toString(value.concNa))

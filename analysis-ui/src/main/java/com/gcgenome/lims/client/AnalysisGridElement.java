@@ -122,7 +122,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private Data map(Analysis value) {
 		if(value == null) return null;
-		String id 			= DataTransformUtil.formatSampleId(value.request().sample().id());
+		String id 			= (value.request()!=null && value.request().sample()!=null)?DataTransformUtil.formatSampleId(value.request().sample().id()):null;
 		String service 		= value.request().service().id();
 		String idx 			= id+"$"+service;
 		String serviceNm 	= value.request().service().name();
