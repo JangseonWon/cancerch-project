@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to="preprocessing">
-    <inherits name="net.sayaya.Chart"/>
     <inherits name="com.gcgenome.lims.Service"/>
-    <inherits name="com.google.gwt.json.JSON" />
+    <inherits name="com.gcgenome.lims.Panel"/>
+    <entry-point class="com.gcgenome.lims.client.Main"/>
     <source path="client"/>
     <source path="api" />
+    <source path="test"/>
     <source path="dto" />
-    <entry-point class="com.gcgenome.lims.client.Application"/>
     <collapse-all-properties/>
 </module>

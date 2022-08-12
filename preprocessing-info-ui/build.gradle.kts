@@ -43,7 +43,7 @@ tasks {
         extraJvmArgs = listOf("-XX:ReservedCodeCacheSize=512M","-javaagent:${lombok}=ECJ")
         port = 9629
         codeServerPort = 9630
-        //war = file("src/main/webapp")
+        war = file("src/main/webapp")
     }
     register<Copy>("copyWebResources") {
         dependsOn(build)
