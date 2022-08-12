@@ -10,6 +10,7 @@ import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import jsinterop.base.JsPropertyMap;
 import net.sayaya.ui.HTMLElementBuilder;
+import org.jboss.elemento.EventType;
 import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Collection;
@@ -37,14 +38,20 @@ public class DefaultCollapseElement extends HTMLElementBuilder<HTMLDivElement, D
 		_this = e;
 		this.id = id;
 		layout();
+		this.on(EventType.click, evt->fireStateChangeEvent());
 	}
 
 	private void layout() {
 		_this.add(span().css("mdc-list-item__graphic").style("height: auto; align-self: unset;").add(icon))
 			 .add(div().css("mdc-list-item__text").style("margin-bottom: 10px;").add(title).add(info))
 			 .add(meta);
+	}
+	@Override
+	public void update() {
+		DomGlobal.console.log("Update Preprocessing:Collapse");
 		Message msg = Message.builder().id(id).type(Message.MessageType.COLLAPSE).param("64px").build();
 		DomGlobal.window.parent.postMessage(Global.JSON.stringify(msg), "*");
+		DomGlobal.console.log("Sent MSG");
 	}
 
 	@Override
