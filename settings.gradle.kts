@@ -13,6 +13,8 @@ include("worklist-api")
 include("sequencing-api")
 include("search")
 include("preprocessing-info-ui")
+include("analysis-info-ui")
+include("report-info-ui")
 include("alis")
 include("publish")
 
