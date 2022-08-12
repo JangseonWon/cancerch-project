@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="worklist">
+    <inherits name="net.sayaya.Chart"/>
+    <inherits name="com.gcgenome.lims.Service"/>
+    <inherits name="com.gcgenome.lims.Shared"/>
+    <inherits name="com.google.gwt.json.JSON" />
+    <source path="client"/>
+    <source path="api" />
+    <source path="dto" />
+    <entry-point class="com.gcgenome.lims.client.Application"/>
+    <collapse-all-properties/>
+</module>
