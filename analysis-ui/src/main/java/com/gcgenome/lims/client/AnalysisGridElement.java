@@ -66,7 +66,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("freemix A", "A").build(),
 					columnAndColor("raw read(Million) A", "A").build(),
 					columnAndColor("filtered reads A", "A").build(),
-					columnAndColor("due rate A", "A").build(),
+					columnAndColor("dup rate A", "A").build(),
 					columnAndColor("gc A", "A").build(),
 					columnAndColor("mean is A", "A").build(),
 					columnAndColor("median is A", "A").build(),
@@ -74,7 +74,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("freemix B", "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
 					columnAndColor("filtered reads B", "B").build(),
-					columnAndColor("due rate B", "B").build(),
+					columnAndColor("dup rate B", "B").build(),
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean is B", "B").build(),
 					columnAndColor("median is B", "B").build(),
@@ -189,11 +189,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("cad ensemble prob", cadEnsemble)
 				.put("freemix A",		freemix)
 				.put("raw read(Million) A", rawReadMil)
-				.put("filtered reads A",    totalRead)
+				.put("filtered reads A",totalRead)
 				.put("dup rate A", 		duprate)
 				.put("gc A",  			gc)
-				.put("mean is A",			mean)
-				.put("median is A",        median)
+				.put("mean is A",		mean)
+				.put("median is A",     median)
 				.put("qc A",            qc)
 				.put("freemix B",		freemixT)
 				.put("raw read(Million) B", rawReadMilT)
