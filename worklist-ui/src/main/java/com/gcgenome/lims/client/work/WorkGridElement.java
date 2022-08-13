@@ -34,7 +34,10 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             .columns(
                     column("index").readOnly(true).build(),
                     column("G-ID").readOnly(true).build(),
-                    column("의뢰번호").readOnly(true).build(),
+                    ColumnBuilder.link("의뢰번호", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
+                            .onClick(data->{
+                                DomGlobal.window.open("../sample.html#"+data.get("의뢰번호"));
+                            }).build(),
                     column("수진자명").readOnly(true).build(),
                     column("MRN").readOnly(true).build(),
                     column(WorkModel.ConcNa.id).name(WorkModel.ConcNa.label).horizontal("right").build(),
@@ -149,7 +152,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
         return new Data(value.worklist + "$" + value.index)
                 .put("index",                           String.valueOf(value.index))
                 .put("G-ID",                            value.gid)
-                .put("의뢰번호",                         value.samples)
+                .put("의뢰번호",                         value.samples!=null?DataTransformUtil.formatSampleId(Long.parseLong(value.samples)):null)
                 .put("수진자명",                         value.patientName)
                 .put("MRN",                             value.mrns)
                 .put(WorkModel.ConcNa.id,               toString(value.concNa))

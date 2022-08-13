@@ -1,7 +1,6 @@
 package com.gcgenome.lims.client;
 
 import com.gcgenome.lims.api.AnalysisApi;
-import com.gcgenome.lims.api.WindowApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
@@ -123,7 +122,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private Data map(Analysis value) {
 		if(value == null) return null;
-		String id 			= String.valueOf(value.request().sample().id());
+		String id 			= (value.request()!=null && value.request().sample()!=null)?DataTransformUtil.formatSampleId(value.request().sample().id()):null;
 		String service 		= value.request().service().id();
 		String idx 			= id+"$"+service;
 		String serviceNm 	= value.request().service().name();
