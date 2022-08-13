@@ -3,7 +3,7 @@ package com.gcgenome.lims.service.worker
 import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.file_reader.TSVFileCrawler
 import com.gcgenome.lims.data.AnalysisQC
-import com.gcgenome.lims.entity.AnalysisResult
+import com.gcgenome.lims.data.AnalysisResult
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
