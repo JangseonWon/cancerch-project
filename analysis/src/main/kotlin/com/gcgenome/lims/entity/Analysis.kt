@@ -43,7 +43,7 @@ data class Analysis(
     @Column("iscore")                   val iscore: Double = 0.0,
     @Column("result")                   val result: String,
 
-    @Column("analysis_at")              val analysisAt: LocalDateTime,
+    @Column("analysis_at")              val analysisAt: LocalDateTime?,
     @LastModifiedDate
     @Column("last_modify_at")           val lastModifyAt: LocalDateTime,
     @Column("last_modify_by_id")        val lastModifyById: String,
