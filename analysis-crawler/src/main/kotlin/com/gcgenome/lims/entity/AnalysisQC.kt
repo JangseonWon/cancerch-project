@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 @Table("analysis_qc")
 data class AnalysisQC(
     @Column("sample")                 val sample:          Long,
-    @Column("sample")                 val service:         String
+    @Column("service")                val service:         String
 ): Persistable<AnalysisQC.Companion.AnalysisQCPK> {
     @Column("batch")         lateinit var batch:           String
     @Column("row")                    var row:             Int = 0

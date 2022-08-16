@@ -14,12 +14,12 @@ class FileCrawlerConfig {
     @Value("\${gcgenome.tmp-dir}")
     lateinit var tmp: String
 
-    @Bean("qcCrawler")
+    @Bean
     fun qc() : FileCrawler<AnalysisQC> {
         return TSVFileCrawler(Path.of(tmp), "avoid_lims_qc.+", AnalysisQC::class.java)
     }
 
-    @Bean("resultCrawler")
+    @Bean
     fun result() : FileCrawler<AnalysisResult> {
         return TSVFileCrawler(Path.of(tmp), "avoid_lims_results.+", AnalysisResult::class.java)
     }

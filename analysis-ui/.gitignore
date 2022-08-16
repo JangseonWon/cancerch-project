@@ -90,7 +90,7 @@ fabric.properties
 gradle/
 ../cnv/src/test/resources/
 src/main/resources/static
-src/main/java/com/greencross/lims/api/FetchApi.java
+src/main/java/com/gcgenome/lims/api/FetchApi.java
 gradlew
 gradlew.bat
 /src/main/webapp/css/

@@ -20,7 +20,7 @@ data class AnalysisResult(
     @Column("batch") lateinit var batch: String
     @Column("row")            var row: Int = 0
     @CreatedDate
-    @Column("created_at")
+    @Column("create_at")
     lateinit var createAt: LocalDateTime
     @Column("cad_ensemble_prob")
              var cadEnsembleProb: Double = 0.0

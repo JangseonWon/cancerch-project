@@ -82,6 +82,9 @@ class ReportHandler(
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
+        if(sex(patient.sex) == Sex.M){
+
+        }
         val cancer1 = when(stringToEnum(analysis.result)){
             CancerRepo.결과.GENERAL       -> AvoidDto.Cancer()
             CancerRepo.결과.CONCERN       -> AvoidDto.Cancer("기타암종")

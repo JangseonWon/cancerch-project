@@ -6,17 +6,18 @@ import com.gcgenome.lims.service.analysisRS.AnalysisRSDao
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
+import java.time.LocalDateTime
 
 @Configuration
 class AnalysisRSCrawler(
-    @Qualifier("resultCrawler")
     val crawler : FileCrawler<AnalysisResult>,
     val dao: AnalysisRSDao
     ) {
     @Scheduled(fixedDelay=1000*60*60)
     fun updateStatus(){
-        crawler.getDTOs().map {(dtos, file) ->
-            dtos.map{
+        crawler.getDTOs().forEach{(dtos, file) ->
+            dtos.forEach{
+                println(it)
                 val primaries = it.primary.split("_")
                 val batchRow = primaries[0].split("-")
                 val sampleId = primaries[1].replace("-","")
@@ -32,10 +33,9 @@ class AnalysisRSCrawler(
                         this.iscore             = it.iscore
                         this.result             = it.result
                     }
-                    dao.merge(entity)
+                    dao.merge(entity).block()
                 }
             }
-//            file.
         }
     }
 
