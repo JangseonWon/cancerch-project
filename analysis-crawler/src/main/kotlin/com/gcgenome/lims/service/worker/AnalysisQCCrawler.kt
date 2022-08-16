@@ -6,12 +6,14 @@ import com.gcgenome.lims.service.analysisQC.AnalysisQCDao
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
+import java.io.File
 import java.time.LocalDateTime
 
 @Configuration
 class AnalysisQCCrawler(
     val crawler : FileCrawler<AnalysisQC>,
-    val dao: AnalysisQCDao
+    val dao: AnalysisQCDao,
+    val processed: File
     ) {
     @Scheduled(fixedDelay=1000*60*60)
     fun updateStatus(){
@@ -44,6 +46,9 @@ class AnalysisQCCrawler(
                     dao.merge(entity).block()
                 }
             }
+            //TODO : file 이름 가져와서 dir 만들고 저장
+            file.copyTo(File(processed.path + "/test/" + file.name), true)
+            file.delete()
         }
     }
 }
