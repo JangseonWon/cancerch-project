@@ -45,9 +45,9 @@ data class Analysis(
 
     @Column("analysis_at")              val analysisAt: LocalDateTime?,
     @LastModifiedDate
-    @Column("last_modify_at")           val lastModifyAt: LocalDateTime,
-    @Column("last_modify_by_id")        val lastModifyById: String,
-    @Column("last_modify_by_nm")        val lastModifyByNm: String,
+    @Column("last_modify_at")           val lastModifyAt: LocalDateTime?,
+    @Column("last_modify_by_id")        val lastModifyById: String?,
+    @Column("last_modify_by_nm")        val lastModifyByNm: String?,
     @Column("date_request")             val dateRequest: LocalDateTime,
     @Column("date_start")               val dateStart: LocalDateTime,
     @Column("date_due")                 val dateDue: LocalDateTime,
