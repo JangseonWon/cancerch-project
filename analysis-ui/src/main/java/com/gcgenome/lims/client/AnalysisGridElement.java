@@ -109,7 +109,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	public AnalysisGridElement update(Analysis[] values) {
 		this.values = Arrays.stream(values).collect(Collectors.toMap(a->a.sample() + "/" + a.request().service().id(), w->w));
-		Arrays.stream(values).forEach(DomGlobal.console::log);
 		return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
 	}
 	private AnalysisGridElement update(Data[] data){
@@ -158,12 +157,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String medianT		= String.valueOf(value.medianTmp());
 		String qcT			= value.qcTmp();
 
-		String cadEnsemble  = value.cadEnsembleProb() != 0 ?	"" : String.valueOf(round(value.cadEnsembleProb()*100)/100.0);
+		String cadEnsemble  = value.cadEnsembleProb() == 0 ?	"" : String.valueOf(round(value.cadEnsembleProb()*100)/100.0);
 		String top5Pred		= convertCancerName(value.too5Pred());
-		String top5FEMS		= value.too5FemsProb() != 0 ? 		"" : String.valueOf(round(value.too5FemsProb()*100)/100.0);
+		String top5FEMS		= value.too5FemsProb() == 0 ? 		"" : String.valueOf(round(value.too5FemsProb()*100)/100.0);
 		String top6Pred		= convertCancerName(value.too6Pred());
-		String top6FEMS		= value.too6FemsProb() != 0 ?		"" : String.valueOf(round(value.too6FemsProb()*100)/100.0);
-		String iscore		= value.iscore() != 0 ?				"" : String.valueOf(round(value.iscore()*100)/100.0);
+		String top6FEMS		= value.too6FemsProb() == 0 ?		"" : String.valueOf(round(value.too6FemsProb()*100)/100.0);
+		String iscore		= value.iscore() == 0 ?				"" : String.valueOf(round(value.iscore()*100)/100.0);
 		String result		= convertResultName(value.result());
 		Data datum = new Data(idx)
 				.put("ID",       		id)
@@ -214,7 +213,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 
 	@Override
 	public Analysis[] selection() {
-		Arrays.stream(wrapper.selection()).forEach(DomGlobal.console::log);
 		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
