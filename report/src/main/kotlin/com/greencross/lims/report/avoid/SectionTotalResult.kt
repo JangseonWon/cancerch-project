@@ -69,7 +69,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
                 TextBlock(styleRegular, template.lblOverviewRiskBridge()),
                 TextBlock(styleBold, template.lblOverViewRisk()),
                 TextBlock(styleRegular, template.lblOverViewMiddleRisk()),
-                TextBlock(styleRegular7, template.lblOverviewMidHighEnd())
+                TextBlock(styleRegular7, template.lblOverviewMidHighEnd(dto.result))
             )
         else
             stream.paragraph(325f, y-20, 400f, AlignHorizontal.LEFT,
@@ -82,7 +82,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
                 TextBlock(styleRegular, template.lblOverViewHighRisk()),
                 TextBlock(styleBold, dto.first.name),
                 TextBlock(styleRegular, template.lblOverViewHighRiskEnd()),
-                TextBlock(styleRegular7, template.lblOverviewMidHighEnd())
+                TextBlock(styleRegular7, template.lblOverviewMidHighEnd(dto.result))
             )
         //endregion
         return stream

@@ -38,7 +38,6 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     val imgSmallSquareAverage   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_average.png"))
     val imgSmallSquarePatinet   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/img_small_square_patient.png"))
     val imgAnalysisContentBox   :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/contentBox.png"))
-    val imgGuideLine            :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table.png"))
     val imgGuideLineToTalCancer :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_total.png"))
     val imgProcess              :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_process.png"))
     val imgLBxBox               :       PDImageXObject  = img(File(AvoidResource.resource, "img/avoid/SectionDetailProcess/img_LBXbox.png"))
@@ -174,7 +173,10 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
         return img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/background_$cancer.png"))
     }
 
-    override fun imgGuideLineTable():       PDImageXObject { return imgGuideLine   }
+    override fun imgGuideLineTable(risk: AvoidDto.Results) = when(risk){
+        AvoidDto.Results.RISK -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table.png"))
+        else                  -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table_notRisk.png"))
+    }
     override fun imgGuideLineCancer(cancer: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/cancer_$cancer.png"))
     }

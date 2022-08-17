@@ -20,7 +20,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblOverViewMiddleRisk(): String
     fun lblOverViewHighRisk(): String
     fun lblOverViewHighRiskEnd(): String
-    fun lblOverviewMidHighEnd(): String
+    fun lblOverviewMidHighEnd(risk: AvoidDto.Results): String
 
     fun lblDoubtSquareTitle(): String
     fun lblDoubtSquareContent(result: AvoidDto.Results): String

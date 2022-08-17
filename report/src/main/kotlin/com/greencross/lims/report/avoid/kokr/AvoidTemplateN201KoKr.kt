@@ -26,22 +26,32 @@ class AvoidTemplateN201KoKr(
     override fun lblSpecimenDate       () = "검체채취일"
     override fun lblReceiptReportDate  () = "접수일/보고일"
     override fun lblIntroHeader() = "인공지능 액체생검 주요 6종 암 선별검사"
-    override fun lblIntroContent() = "AVOID 검사는 1,600명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 " +
+    override fun lblIntroContent() = "AVOID 검사는 약 1,600명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 " +
             "학습한 인공지능으로 수검자의 DNA 패턴을\n분석하여 주요 6종 암의 존재 가능성을 예측합니다. " +
             "본 검사의 결과는 암의 진단 혹은 완전한 배제를 의미하지 않습니다."
 
     override fun lblOverviewTitle() = "종 합 결 과"
     override fun lblOverviewCommon() = "인공지능 알고리즘을 통해 DNA를 분석한 결과,\n"
     override fun lblOverviewBridgeWord() = "님은 "
-    override fun lblOverviewLowLisk() = " 대상자 입니다.\n현재 암 존재 가능성이 낮게 예측됩니다.\n국가 암 검진 " +
-            "권고사항에 따라 정기적인 건강검진을 권장합니다."
+    override fun lblOverviewLowLisk() = " 대상자 입니다.\n현재 암 존재 가능성이 낮게 예측됩니다.\n" +
+            "그러나 암에 걸리지 않는다는 것을 의미하지 않으므로, \n" +
+            "국가 암 검진 권고사항에 따라 정기적인 건강검진을 권장합니다."
 
     override fun lblOverviewRiskBridge() = " 대상자 입니다.\n 암환자군과 다소 유사한 "
     override fun lblOverViewRisk() = "이상패턴이 발견"
     override fun lblOverViewMiddleRisk() = "되었으나,\n정확한 암종에 대한 구분은 어렵습니다.\n"
-    override fun lblOverViewHighRisk() = "되었으며,\n6종 암중 가장 의심되는 암종은 "
+    override fun lblOverViewHighRisk() = "되었으며,\n6종 암 중 가장 의심되는 암종은 "
     override fun lblOverViewHighRiskEnd() = "입니다.\n"
-    override fun lblOverviewMidHighEnd() = "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n정상인이라도 건강상테애 따라 약 1%는 집중관리로 보고될 수 있습니다.\n확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
+    override fun lblOverviewMidHighEnd(risk: AvoidDto.Results) : String {
+        val case = when(risk){
+            AvoidDto.Results.CONCERN -> "약 5%는 관심관리"
+            else                     -> "약 1%는 집중관리"
+        }
+        return "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n" +
+            "정상인이라도 건강상태에 따라 로 보고될 수 있습니다.\n" +
+            "확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
+    }
+
     override fun lblDoubtSquareTitle() = "이상 패턴 검출 여부"
     override fun lblDoubtSquareContent(result: AvoidDto.Results) = when (result) {
         AvoidDto.Results.GENERAL -> "미검출"
@@ -103,7 +113,8 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisContentLine3NRM() =
         "AVOID 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성능이 달라질 수 있습니다.\n" +
                 "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아닙니다.\n\n" +
-                "현재 암 일반 관리군이더라도 정기적인 건강검진과 생활습관 관리를 통해 암을 예방할 것을 권장합니다."
+                "현재 암 일반관리군이더라도 암에 걸리지 않는 것은 아니므로,\n" +
+                "정기적인 건강검진과 생활습관 관리를 통해 암을 예방할 것을 권장합니다."
 
     override fun lblDetailResultAnalysisContentLine3MID_1() = "님의 암세포 유래 DNA 이상 패턴은 암환자와 다소 유사하여\n" +
             "암 존재 가능성이 "
@@ -137,7 +148,7 @@ class AvoidTemplateN201KoKr(
         " 정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%).\n"
 
     override fun lblDetailResultAnalysisContentLine3MIDHIG() = "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아니며,\n" +
-            "확진을 위해서는 의뢰진 상담을 통한 정밀 검사를 권장합니다."
+            "확진을 위해서는 의료진 상담을 통한 정밀 검사를 권장합니다."
 
     override fun lblGuideLineHeader(type: AvoidDto.Results, name: String) = when (type) {
         AvoidDto.Results.GENERAL -> "암 검진 가이드라인"
@@ -203,48 +214,51 @@ class AvoidTemplateN201KoKr(
     override fun lblGuideLineNormalTest(code: Float) = when(code){
         0f->"저선량흉부CT검사"
         1f->"분변잠혈검사 이상소견 시, 대장내시경검사\n"
-        1.5f->"(단, 대장내시경을 실시하기 어려운 경우 대장이중조영검사 선택적 시행"
+        1.5f->"(단, 대장내시경을 실시하기 어려운 경우 대장이중조영검사 선택적 시행)"
         2f->"간초음파검사, 혈청알파태아단백검사"
         3f->"복부초음파검사, 복부CT검사"
         4f->"식도-위 내시경검사"
-        else -> "CA125 수치 검사 이상소견 시 초음파검사, CT검사, MRI검사"
+        else -> "CA125 암표지자 검사 이상소견 시 초음파검사, CT검사, MRI검사"
     }
 
     override fun lblGuideLineCaption() = "*갑년 : 일평균 흡연량(갑) x 흡연기간(년) ex) 2갑 x 15년 = 30갑년(검진 대상)"
 
     override fun lblGuideLineComment(cancer: String): String {
         return when {
-            cancer == "폐암" -> "AVOID 검사 폐암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "폐암" -> "AVOID 검사 폐암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 폐암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "대장암" -> "AVOID 검사 대장암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "대장암" -> "AVOID 검사 대장암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "시행이 어려운 경우 대장이중조영검사를 통해서도 대장암 여부를 확인할 수 있습니다.\n" +
                     "정밀검사를 통해 대장암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "간암" -> "AVOID 검사 간암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "간암" -> "AVOID 검사 간암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 간암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "췌장암" -> "AVOID 검사 췌장담도암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "췌장암" -> "AVOID 검사 췌장담도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 췌장담도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "식도암" -> "AVOID 검사 식도암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "식도암" -> "AVOID 검사 식도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 식도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "유방암" -> "AVOID 검사 유방암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "유방암" -> "AVOID 검사 유방암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 유방암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "난소암" -> "AVOID 검사 난소암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "난소암" -> "AVOID 검사 난소암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 난소암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            else -> "AVOID 검사 기타 암 고위험군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
-                    "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
+            else -> "AVOID 검사 관심관리군은 3개월 후 본 검사를 통해 암 DNA를 추적할 것을 권장합니다.\n" +
+                    "관심관리군은 암환자와 다소 유사한 DNA 이상 패턴이 관찰되었으나,\n" +
+                    "건강상태(양성질환, 자가면역질환 등)에 따른 일시적인 이상 패턴 검출의 가능성을 배재할 수 없는 경우입니다.\n" +
+                    "3개월 주기로 본 검사를 통해 암 DNA에 의한 이상 패턴을 추적할 것을 권장합니다.\n" +
+                    "증상 등이 동반되어 특정 암종이 의심될 경우 의료진 상담을 통한 해당 암종에 대한 정밀 검사를 권장합니다."
         }
     }
 
@@ -404,7 +418,7 @@ class AvoidTemplateN201KoKr(
     }
     override fun lblLimitationTable2Row5(col: Int) = when(col){
         0       -> "췌장담도암"
-        1       -> "CA19-9 수치 검사"
+        1       -> "CA19-9 암표지자 검사"
         2       -> "약 79.9~85.3%"
         3       -> "약 76.1~80.2%"
         4       -> "약 0.3~0.4%"
@@ -420,7 +434,7 @@ class AvoidTemplateN201KoKr(
     }
     override fun lblLimitationTable2Row7(col: Int) = when(col){
         0       -> "난소암"
-        1       -> "CA125 수치 검사"
+        1       -> "CA125 암표지자 검사"
         2       -> "약 95.0%"
         3       -> "약 43.3%"
         4       -> "약 0.6%"
@@ -431,7 +445,7 @@ class AvoidTemplateN201KoKr(
         return when (row) {
             0 -> "본 검사는 암세포 유래 cfDNA 특성 분석을 통해 암의 존재 가능성을 예측하는 검사로, 확진 목적으로 사용할 수 없습니다."
             1 -> "본 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성적이 달라질 수 있습니다."
-            2 -> "본 검사의 데이터는 주요 암종인 폐암, 대장암, 간암, 췌장담도암, 식도암, 유방암, 난소암을 포함하고 있으며 기타 암종은 정확한 분석이 어렵습니다."
+            2 -> "본 검사의 데이터는 주요 암종인 폐암, 대장암, 간암, 췌장담도암, 식도암, 난소암을 포함하고 있으며 기타 암종은 정확한 분석이 어렵습니다."
             3 -> "암종의 위치 및 유전적 특성에 따라 검출민감도가 상이할 수 있습니다."
             4 -> "본 검사는 내부적으로 축적된 데이터에 따라 검사 대상 암종 확대 및 성능이 변경될 수 있습니다."
             5 -> "본 검사는 양성질환, 자가면역질환 등에서 위양성으로 보고될 수 있으며, 항암치료, 세포치료 등에 따라서 위음성으로 보고될 수 있습니다."
@@ -484,7 +498,7 @@ class AvoidTemplateN201KoKr(
     }
 
     override fun lblPerformance(): String {
-        return "AVOID 검사의 암종별 · 병기별 성능"
+        return "AVOID 검사의 암종별 성능"
     }
 
     override fun lblPerformanceBasic(): String = "기존 선별검사 성능"

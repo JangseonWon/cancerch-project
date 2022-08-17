@@ -71,7 +71,7 @@ interface AvoidResource : HasSign {
     fun imgSmallSquarePatient() : PDImageXObject
     fun imgAnalysisContentBox() : PDImageXObject
     fun imgBackgroundCancer(cancer: String) : PDImageXObject
-    fun imgGuideLineTable() : PDImageXObject
+    fun imgGuideLineTable(risk: AvoidDto.Results) : PDImageXObject
     fun imgGuideLineCancer(cancer: String) : PDImageXObject
     fun imgGuideLineTotalCancer() : PDImageXObject
     fun imgProcess() : PDImageXObject
