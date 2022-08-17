@@ -10,31 +10,25 @@ import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
 @Schema("avoid")
-@Table("analysis")
+@Table("analysis_result")
 data class Analysis(
     @Column("sample")           val sample:         Long,
     @Column("service")          val service:        String
 ): Persistable<Analysis.Companion.AnalysisPK> {
     @Column("batch")            lateinit var batch:          String
     @Column("row")                       var row:            Long? = null
-    @Column("create_at")        lateinit var createAt:       LocalDateTime
-    @Column("create_by")        lateinit var createBy:       String
-    @Column("last_modify_at")   lateinit var lastModifyAt:   LocalDateTime
-    @Column("last_modify_by")   lateinit var lastModifyBy:   String
     @Column("file")             lateinit var file:           String
     @Column("result")           lateinit var result:         String
-    @Column("too5_pred")        lateinit var cancer:         String
+    @Column("too5_pred")        lateinit var too5Pred:       String
+    @Column("too6_pred")        lateinit var too6Pred:       String
     @Id @Transient lateinit var _id: AnalysisPK
-    constructor(sample: Long, service: String, batch: String, row: Long, createAt: LocalDateTime, createdBy: String, lastModifiedBy: String, lastModifiedAt: LocalDateTime, file: String, result: String, cancer: String, value: Json) : this(sample, service) {
+    constructor(sample: Long, service: String, batch: String, row: Long, file: String, result: String, too5Pred: String, too6Pred: String) : this(sample, service) {
         this.row = row
         this.batch = batch
-        this.createBy = createdBy
-        this.createAt = createAt
-        this.lastModifyBy = lastModifiedBy
-        this.lastModifyAt = lastModifiedAt
         this.file = file
         this.result = result
-        this.cancer = cancer
+        this.too5Pred = too5Pred
+        this.too6Pred = too6Pred
     }
     override fun getId(): AnalysisPK {
         return AnalysisPK(sample, service)

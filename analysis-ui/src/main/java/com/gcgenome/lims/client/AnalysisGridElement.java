@@ -110,6 +110,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	public AnalysisGridElement update(Analysis[] values) {
 		this.values = Arrays.stream(values).collect(Collectors.toMap(a->a.sample() + "/" + a.request().service().id(), w->w));
+		Arrays.stream(values).forEach(DomGlobal.console::log);
 		return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
 	}
 	private AnalysisGridElement update(Data[] data){
@@ -122,7 +123,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private Data map(Analysis value) {
 		if(value == null) return null;
-		String id 			= (value.request()!=null && value.request().sample()!=null)?DataTransformUtil.formatSampleId(value.request().sample().id()):null;
+		String id 			= (value.request()!=null && value.request().sample()!=null) ? DataTransformUtil.formatSampleId(value.request().sample().id()):null;
 		String service 		= value.request().service().id();
 		String idx 			= id+"$"+service;
 		String serviceNm 	= value.request().service().name();
@@ -214,7 +215,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 
 	@Override
 	public Analysis[] selection() {
-		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+		Arrays.stream(wrapper.selection()).forEach(DomGlobal.console::log);
+		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
@@ -227,21 +229,21 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private String convertCancerName(String pred){
 		switch (pred) {
-			case "ESO" : return "식도암";
-			case "HCC" : return "간암";
-			case "OV"  : return "난소암";
+			case "ESO" : 	return "식도암";
+			case "HCC" : 	return "간암";
+			case "OV"  : 	return "난소암";
 			case "colon"  : return "대장암";
-			case "LuC"  : return "폐암";
-			case "PanC"  : return "췌장암";
-			default  : return "WTF";
+			case "LuC"  : 	return "폐암";
+			case "Panc"  : 	return "췌장암";
+			default  : 		return "WTF";
 		}
 	}
 	private String convertResultName(String result){
 		switch (result) {
-			case "RISK"  : return "집중관리";
-			case "GENERAL" : return "일반관리";
-			case "CONCERN"  : return "관심관리";
-			default  : return "WTF";
+			case "RISK"  : 		return "집중관리";
+			case "GENERAL" : 	return "일반관리";
+			case "CONCERN"  : 	return "관심관리";
+			default  : 			return "WTF";
 		}
 	}
 }

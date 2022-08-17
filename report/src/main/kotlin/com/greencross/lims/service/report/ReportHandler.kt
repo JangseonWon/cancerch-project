@@ -82,19 +82,18 @@ class ReportHandler(
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
-        if(sex(patient.sex) == Sex.M){
+        val result = if(sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
+        println(result)
+        val cancer1  = when(stringToEnum(analysis.result)) {
+            CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
+            CancerRepo.결과.CONCERN -> AvoidDto.Cancer("기타암종")
+            else                    -> AvoidDto.Cancer(cancerToFileName(result),
+                        cancerRepo.findPPVbyAgeAndCancerAndSex(
+                            stringToCancer(result), age(patient.birth), sex(patient.sex))!!,
+                        cancerRepo.findASRbyAgeAndCancerAndSex(
+                            stringToCancer(result), age(patient.birth), sex(patient.sex))!!)
+        }
 
-        }
-        val cancer1 = when(stringToEnum(analysis.result)){
-            CancerRepo.결과.GENERAL       -> AvoidDto.Cancer()
-            CancerRepo.결과.CONCERN       -> AvoidDto.Cancer("기타암종")
-            else                          ->
-                AvoidDto.Cancer(cancerToFileName(analysis.cancer),
-                cancerRepo.findPPVbyAgeAndCancerAndSex(
-                    stringToCancer(analysis.cancer), age(patient.birth), sex(patient.sex))!!,
-                cancerRepo.findASRbyAgeAndCancerAndSex(
-                    stringToCancer(analysis.cancer), age(patient.birth), sex(patient.sex))!!)
-        }
         val avoidDto = AvoidDto(barcode, stringToResult(analysis.result), cancer1)
         avoidDto.barcode = barcode
         avoidDto.patientName = patient.name

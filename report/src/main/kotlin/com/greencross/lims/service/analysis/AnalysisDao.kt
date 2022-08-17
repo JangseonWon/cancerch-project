@@ -30,7 +30,8 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 patient.customerName.`as`("customerName"),
                 patient.mrn,
                 analysis.result,
-                analysis.cancer.`as`("cancer")
+                analysis.too5Pred.`as`("too5Pred"),
+                analysis.too6Pred.`as`("too6Pred")
             )
         ).from(analysis)
             .leftJoin(sample).on(sample.id.eq(analysis.sample))

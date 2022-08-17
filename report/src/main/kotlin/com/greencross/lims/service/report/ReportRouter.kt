@@ -30,12 +30,11 @@ class ReportRouter(
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
     private fun preview(request: ServerRequest): Mono<ServerResponse>{
-        val sample = request.pathVariable("sample")
+        val sample = request.pathVariable("sample").toString().replace("-", "")
         val service = request.pathVariable("service")
         val createAt = request.pathVariable("createAt")
-        println("test: ${LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt.toLong()), TimeZone.getDefault().toZoneId())}")
         return handler.preview(sample.toLong(), service, createAt.toLong())
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)::bodyValue)
-//            .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
+            .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
 }

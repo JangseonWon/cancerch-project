@@ -15,7 +15,8 @@ data class Analysis (
     val patient: Patient,
     val barcode: Long,
     val result: String,
-    val cancer: String
+    val too5Pred: String,
+    val too6Pred: String
 ) {
     companion object {
         data class AnalysisBuilder(
@@ -33,9 +34,10 @@ data class Analysis (
             val customerName: String,
             val mrn: String?,
             val result: String,
-            val cancer: String
+            val too5Pred: String,
+            val too6Pred: String
         ){
-            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode, result, cancer)
+            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, Patient(patient, patientName, sex, birth, customerName, mrn), barcode, result, too5Pred, too6Pred)
         }
     }
 }
