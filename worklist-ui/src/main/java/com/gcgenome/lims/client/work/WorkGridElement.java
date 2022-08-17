@@ -148,7 +148,6 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     private Data map(Work value){
         if(value == null) return null;
-        DomGlobal.console.log(value);
         return new Data(value.worklist + "$" + value.index)
                 .put("index",                           String.valueOf(value.index))
                 .put("G-ID",                            value.gid)

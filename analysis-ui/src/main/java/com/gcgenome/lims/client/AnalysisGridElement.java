@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.round;
 import static org.jboss.elemento.Elements.div;
 import static org.jboss.elemento.EventType.bind;
 
@@ -41,9 +42,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.stretchH("all")
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
-							.onClick(data->{
-								DomGlobal.window.open("../sample.html#"+data.get("ID"));
-							}).build(),
+							.onClick(data->{DomGlobal.window.open("../sample.html#"+data.get("ID"));}).build(),
 					column("검사명").build(),
 					column("수진자명").build(),
 					column("성별").build(),
@@ -141,7 +140,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String reportCreateDt = String.valueOf((long) JsDate.parse(value.report().createAt()));
 		String reportNm		= value.report().fileName();
 		String publishNm	= value.report().publisher().name();
-		String publishDt 	= value.report().publishAt();
+		String publishDt 	= value.report().publishAt().equals("null") ? "" : DataTransformUtil.formatDate((long) JsDate.parse(value.report().publishAt()));
 		String freemix		= String.valueOf(value.freemix());
 		String rawReadMil	= String.valueOf(value.rawReadsMillions());
 		String duprate      = String.valueOf(value.dupRate());
@@ -159,12 +158,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String medianT		= String.valueOf(value.medianTmp());
 		String qcT			= value.qcTmp();
 
-		String cadEnsemble = String.valueOf(value.cadEnsembleProb());
+		String cadEnsemble  = value.cadEnsembleProb() != 0 ?	"" : String.valueOf(round(value.cadEnsembleProb()*100)/100.0);
 		String top5Pred		= convertCancerName(value.too5Pred());
-		String top5FEMS		= String.valueOf(value.too5FemsProb());
+		String top5FEMS		= value.too5FemsProb() != 0 ? 		"" : String.valueOf(round(value.too5FemsProb()*100)/100.0);
 		String top6Pred		= convertCancerName(value.too6Pred());
-		String top6FEMS		= String.valueOf(value.too6FemsProb());
-		String iscore		= String.valueOf(value.iscore());
+		String top6FEMS		= value.too6FemsProb() != 0 ?		"" : String.valueOf(round(value.too6FemsProb()*100)/100.0);
+		String iscore		= value.iscore() != 0 ?				"" : String.valueOf(round(value.iscore()*100)/100.0);
 		String result		= convertResultName(value.result());
 		Data datum = new Data(idx)
 				.put("ID",       		id)
@@ -182,7 +181,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("reportCreated", 	reportCreateDt)
 				.put("결과지", 			reportNm  == null ? "" : reportNm)
 				.put("발송자", 			publishNm == null ? "" : publishNm)
-				.put("결과발송일", 		publishDt.equals("null") ? "" : publishDt)
+				.put("결과발송일", 		publishDt)
 				.put("관리분류", 		result)
 				.put("top 5 prediction",top5Pred)
 				.put("top 5 FEMS prob", top5FEMS)

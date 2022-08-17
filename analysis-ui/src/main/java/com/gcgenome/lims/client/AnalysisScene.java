@@ -156,7 +156,6 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
 		ProgressApi.open(false);
 		for (Analysis analysis: selection) {
-			DomGlobal.console.log(analysis);
 			AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
 				.then(result-> {
 					DomGlobal.alert("완료되었습니다.");
