@@ -10,6 +10,7 @@ import reactor.core.scheduler.Schedulers
 class Client(webClientBuilder: WebClient.Builder) {
     val webClient: WebClient = webClientBuilder.baseUrl("http://alis-api/alis/").build()
     fun fileUpload(fileUpload: FileUpload) : Mono<Boolean>{
+        println("PUT fileUpload")
         return webClient.put().uri("fileUpload")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(fileUpload))
@@ -18,6 +19,7 @@ class Client(webClientBuilder: WebClient.Builder) {
             }
     }
     fun state(request: Request, state: String, member: String?, machine: String?): Mono<Boolean> {
+        println("PUT state/${state}/member/${member}/machine/${machine}/state")
         return webClient.put().uri("state/${state}/member/${member}/machine/${machine}/state")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
@@ -26,6 +28,7 @@ class Client(webClientBuilder: WebClient.Builder) {
             }
     }
     fun chkWorklist(request: Request) : Mono<Boolean>{
+        println("PUT chkWorklist")
        return webClient.put().uri("chkWorklist")
             .headers{ it.add("Content-Type", "application/json") }
             .body(BodyInserters.fromValue(request))
