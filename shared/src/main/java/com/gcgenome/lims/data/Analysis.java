@@ -33,7 +33,7 @@ public final class Analysis {
 	@JsProperty(name="freemix_tmp")
 	private Double freemixTmp;
 	@JsProperty(name="raw_reads_millions_tmp")
-	private Long rawReadsMillionsTmp;
+	private Double rawReadsMillionsTmp;
 	@JsProperty(name="dup_rate_tmp")
 	private Double dupRateTmp;
 	@JsProperty(name="gc_tmp")

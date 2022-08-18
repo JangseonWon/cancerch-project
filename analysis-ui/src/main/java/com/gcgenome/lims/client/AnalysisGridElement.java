@@ -140,29 +140,29 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String reportNm		= value.report().fileName();
 		String publishNm	= value.report().publisher().name();
 		String publishDt 	= value.report().publishAt().equals("null") ? "" : DataTransformUtil.formatDate((long) JsDate.parse(value.report().publishAt()));
-		String freemix		= String.valueOf(value.freemix());
-		String rawReadMil	= String.valueOf(value.rawReadsMillions());
-		String duprate      = String.valueOf(value.dupRate());
-		String totalRead	= String.valueOf(value.totalReads());
-		String gc			= String.valueOf(value.gc());
-		String mean			= String.valueOf(value.mean());
-		String median		= String.valueOf(value.median());
+		String freemix		= convertFormat(value.freemix());
+		String rawReadMil	= convertFormat(value.rawReadsMillions());
+		String duprate      = convertFormat(value.dupRate());
+		String totalRead	= convertFormat(value.totalReads());
+		String gc			= convertFormat(value.gc());
+		String mean			= convertFormat(value.mean());
+		String median		= convertFormat(value.median());
 		String qc			= value.qc();
-		String freemixT		= String.valueOf(value.freemixTmp());
-		String rawReadMilT	= String.valueOf(value.rawReadsMillionsTmp());
-		String duprateT     = String.valueOf(value.dupRateTmp());
-		String totalReadT	= String.valueOf(value.totalReadsTmp());
-		String gcT			= String.valueOf(value.gcTmp());
-		String meanT		= String.valueOf(value.meanTmp());
-		String medianT		= String.valueOf(value.medianTmp());
+		String freemixT		= convertFormat(value.freemixTmp());
+		String rawReadMilT	= convertFormat(value.rawReadsMillionsTmp());
+		String duprateT     = convertFormat(value.dupRateTmp());
+		String totalReadT	= convertFormat(value.totalReadsTmp());
+		String gcT			= convertFormat(value.gcTmp());
+		String meanT		= convertFormat(value.meanTmp());
+		String medianT		= convertFormat(value.medianTmp());
 		String qcT			= value.qcTmp();
 
-		String cadEnsemble  = value.cadEnsembleProb() == 0 ?	"" : String.valueOf(round(value.cadEnsembleProb()*100)/100.0);
+		String cadEnsemble  = convertFormat(value.cadEnsembleProb());
 		String top5Pred		= convertCancerName(value.too5Pred());
-		String top5FEMS		= value.too5FemsProb() == 0 ? 		"" : String.valueOf(round(value.too5FemsProb()*100)/100.0);
+		String top5FEMS		= convertFormat(value.too5FemsProb());
 		String top6Pred		= convertCancerName(value.too6Pred());
-		String top6FEMS		= value.too6FemsProb() == 0 ?		"" : String.valueOf(round(value.too6FemsProb()*100)/100.0);
-		String iscore		= value.iscore() == 0 ?				"" : String.valueOf(round(value.iscore()*100)/100.0);
+		String top6FEMS		= convertFormat(value.too6FemsProb());
+		String iscore		= convertFormat(value.iscore());
 		String result		= convertResultName(value.result());
 		Data datum = new Data(idx)
 				.put("ID",       		id)
@@ -242,5 +242,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			case "CONCERN"  : 	return "관심관리";
 			default  : 			return "WTF";
 		}
+	}
+	private String convertFormat(Double data){
+		return data == 0 ? "" : String.valueOf(round(data*100)/100);
 	}
 }
