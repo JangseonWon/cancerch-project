@@ -29,14 +29,14 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnAndColor(String name, String type) {
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-			if("A".equals(type)) return "#8C6462";
-			else return "#6221A6";
+			if("A".equals(type)) return "#BF5C26";
+			else return "#8C7162";
 		}).color("#FFFFFF");
 	}
 	private static ColumnString columnResult(String name){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
-			if("P".equals(value)) return "#00FA52";
-			else return "#DB1200";
+			if("P".equals(value)) return "#46BF26";
+			else return "#F25349";
 		}).color("#FFFFFF");
 	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
