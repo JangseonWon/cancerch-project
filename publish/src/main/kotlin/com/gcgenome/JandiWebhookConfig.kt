@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class JandiWebhookConfig {
-    @Value("{webhook.url}")
+    @Value("\${webhook.url}")
     lateinit var url: String
 
     @Bean
