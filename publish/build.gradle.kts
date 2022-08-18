@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
     implementation(libs.bundles.spring.client)
+    implementation("com.greencross:jandi-webhook:1.0")
     implementation("org.apache.pdfbox:pdfbox:2.+")
     implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
     implementation(libs.bundles.kotlin.webflux)

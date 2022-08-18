@@ -5,6 +5,8 @@ import com.gcgenome.alis.FileUpload
 import com.gcgenome.alis.Request
 import com.gcgenome.lims.service.report.ReportDao
 import com.gcgenome.lims.service.reportfile.ReportFileRepository
+import com.greencross.lims.jandiwebhook.Webhook
+import com.greencross.lims.jandiwebhook.dto.ConnectInfo
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
@@ -28,11 +30,13 @@ import javax.imageio.ImageIO
 class PublishHandler(
     val reportDao: ReportDao,
     val reportFileRepo: ReportFileRepository,
-    val client: Client
+    val client: Client,
+    val jandi: Webhook
     ) {
     private val logger = LoggerFactory.getLogger(PublishHandler::class.java)
     @Transactional
     fun publish(sample: Long, service: String, createAt: Long) : Mono<Boolean> {
+        val title = "검사 결과 전송에 실패했습니다. 8ㅁ8"
         return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             .flatMap {
                 val sampleId = it.sample
@@ -46,20 +50,35 @@ class PublishHandler(
 
                 getUser().flatMap{ user ->
                     client.state(requestAlis, "F", user.authentication.principal.toString(), "LIMS")
-                }.filter{result -> result}
-                .zipWith(getUser())
+                }.map{result ->
+                    if(!result)  Exception("Delete failure")
+                    else result}.zipWith(getUser())
                 .flatMap { tuple -> createImgDiv(tuple.t2.authentication.principal.toString(), data, requestAlis) }
-                .filter{result -> result}
-                .zipWith(getUser())
+                .map{result ->
+                    if(!result)  Exception("Change failure")
+                    else result}.zipWith(getUser())
                 .flatMap { tuple -> sendToAlis(tuple.t2.authentication.principal.toString(), data, requestAlis, "pdf", "") }
-                .filter{result -> result}
-                .zipWith(getUser())
+                .map{result ->
+                    if(!result)  Exception("PDF failure")
+                    else result}.zipWith(getUser())
                 .flatMap { tuple ->
                     client.state(requestAlis, "I", tuple.t2.authentication.principal.toString(), "LIMS")
                 }.flatMap{ _ ->
                     reportDao.merge(it.sample, it.service, it.createAt)
                 }
                 .then(Mono.just(true))
+                    .doOnError{
+                        when(it.message){
+                            "Delete failure" -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
+                                .title("실패 대상 : ${requestNum}/${service}").description("기존 파일 삭제 실패")))
+                            "Change failure" -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
+                                .title("실패 대상 : ${requestNum}/${service}").description("ALIS 상태 변경 실패")))
+                            "PDF failure"    -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
+                                .title("실패 대상 : ${requestNum}/${service}").description("PDF 전송 실패")))
+                            else             -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
+                                .title("실패 대상 : ${requestNum}/${service}").description("원인 미상 LIMS팀 확인 필요")))
+                        }
+                    }
                 .switchIfEmpty(Mono.just(false))
             }
 

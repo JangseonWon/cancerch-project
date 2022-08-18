@@ -321,6 +321,7 @@ class CancerRepo(
         return ppv.get(cancer)?.get(age)?.get(sex)
     }
     fun findASRbyAgeAndCancerAndSex(cancer: 암종, age: Int, sex: Sex): Double? {
-        return asr.get(cancer)?.get(age)?.get(sex)
+        return if(asr.get(cancer)?.get(age)?.get(sex)!! < 0.01) 0.01
+        else asr.get(cancer)?.get(age)?.get(sex)
     }
 }

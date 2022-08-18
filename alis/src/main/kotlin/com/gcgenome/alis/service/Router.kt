@@ -20,7 +20,6 @@ class Router(private val handler: Handler) {
     }
 
     private fun state(request: ServerRequest): Mono<ServerResponse>{
-        println("State")
         val state = request.pathVariable("state")
         val member = request.pathVariable("member")
         val machine = request.pathVariable("machine")
