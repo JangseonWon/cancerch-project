@@ -30,9 +30,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
         .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
     @Synchronized
     fun create(worklist: List<Worklist>): Mono<Int> {
-        val getRequest = HttpRequest.newBuilder().uri(URI.create("http://172.19.210.215/api2/batch/" + UUIDEnum.TEMPLATE.uuid + "/max" )).GET().build()
-        val idx =  client.send(getRequest, HttpResponse.BodyHandlers.ofString()).body().toString().toInt() + 1
-        return worklistToBatch.map(idx, worklist).flatMap { batch->
+        return worklistToBatch.map(0, worklist).flatMap { batch->
             SampleSheetFactory.validation(batch.analysis)
             val samplesheet = SampleSheetFactory.toSampleSheet(batch)
             val putRequest = HttpRequest
@@ -43,10 +41,11 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .build()
             val response = client.send(putRequest, HttpResponse.BodyHandlers.ofString())
             if(response.statusCode() != 200) logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
+            val batch2 = om.readValue(response.body(), Batch::class.java)
             for(analysis in batch.analysis) {
                 val putRequest2 = HttpRequest
                     .newBuilder()
-                    .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx + "/analysis/" + analysis.row))
+                    .uri(URI.create("http://172.19.210.215/api2/batch/" + batch2.template + "/" + batch2.idx + "/analysis/" + analysis.row))
                     .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(analysis)))
                     .header("Content-Type", "application/json")
                     .build()
@@ -58,7 +57,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .build()
             val putRequest3 = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx + "/" + UUIDEnum.SAMPLE_SHEET.uuid))
+                .uri(URI.create("http://172.19.210.215/api2/batch/" + batch2.template + "/" + batch2.idx + "/" + UUIDEnum.SAMPLE_SHEET.uuid))
                 .POST(HttpRequest.BodyPublishers.ofInputStream{ entity.content })
                 .header("Content-Type", entity.contentType.value)
                 .build()
@@ -67,8 +66,8 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
 
             val putRequest4 = HttpRequest
                 .newBuilder()
-                .uri(URI.create("http://172.19.210.215/api2/batch/" + batch.template + "/" + batch.idx))
-                .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(batch)))
+                .uri(URI.create("http://172.19.210.215/api2/batch/" + batch2.template + "/" + batch2.idx))
+                .PUT(HttpRequest.BodyPublishers.ofString(om.writeValueAsString(batch2)))
                 .header("Content-Type", "application/json")
                 .build()
             val response4 = client.send(putRequest4, HttpResponse.BodyHandlers.ofString())
