@@ -29,9 +29,15 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnAndColor(String name, String type) {
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-			if("A".equals(type)) return "#df7368";
-			else return "#eacbca";
-		});
+			if("A".equals(type)) return "#8C6462";
+			else return "#6221A6";
+		}).color("#FFFFFF");
+	}
+	private static ColumnString columnResult(String name){
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+			if("P".equals(value)) return "#00FA52";
+			else return "#DB1200";
+		}).color("#FFFFFF");
 	}
 	private final SheetElement.SheetConfiguration config = SheetElement.builder()
 			.rowHeaders(true)
@@ -71,7 +77,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc A", "A").build(),
 					columnAndColor("mean is A", "A").build(),
 					columnAndColor("median is A", "A").build(),
-					columnAndColor("qc A", "A").horizontal("center").build(),
+					columnResult("qc A").build(),
 					columnAndColor("freemix B", "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
 					columnAndColor("filtered reads B", "B").build(),
@@ -79,7 +85,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean is B", "B").build(),
 					columnAndColor("median is B", "B").build(),
-					columnAndColor("qc B", "B").horizontal("center").build()
+					columnResult("qc B").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -244,6 +250,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		}
 	}
 	private String convertFormat(Double data){
-		return data == 0 ? "" : String.valueOf(round(data*100)/100);
+		return data == 0 ? "" : String.valueOf(round(data*100f)/100f);
 	}
 }
