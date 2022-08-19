@@ -51,15 +51,18 @@ class PublishHandler(
                 getUser().flatMap{ user ->
                     client.state(requestAlis, "F", user.authentication.principal.toString(), "LIMS")
                 }.map{result ->
-                    if(!result)  Exception("Delete failure")
-                    else result}.zipWith(getUser())
+                    if(!result)  {
+                        throw Exception("Delete failure")
+                    }
+                    else result
+                }.zipWith(getUser())
                 .flatMap { tuple -> createImgDiv(tuple.t2.authentication.principal.toString(), data, requestAlis) }
                 .map{result ->
-                    if(!result)  Exception("Change failure")
+                    if(!result)  throw Exception("Change failure")
                     else result}.zipWith(getUser())
                 .flatMap { tuple -> sendToAlis(tuple.t2.authentication.principal.toString(), data, requestAlis, "pdf", "") }
                 .map{result ->
-                    if(!result)  Exception("PDF failure")
+                    if(!result)  throw Exception("PDF failure")
                     else result}.zipWith(getUser())
                 .flatMap { tuple ->
                     client.state(requestAlis, "I", tuple.t2.authentication.principal.toString(), "LIMS")
