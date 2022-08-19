@@ -1,15 +1,12 @@
 package com.gcgenome.lims.service.report
 
-import com.gcgenome.SecurityContextRepository
-import com.gcgenome.lims.entity.QUser
 import com.gcgenome.lims.entity.QReport.report
-import com.gcgenome.lims.entity.User
+import com.gcgenome.lims.entity.QUser
 import com.gcgenome.lims.projection.Report
-
+import com.querydsl.core.types.Ops
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.sql.SQLQuery
-import io.r2dbc.postgresql.codec.Json
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
@@ -47,7 +44,7 @@ class ReportDao(private val repo: ReportRepository) {
     }
     fun findForCassandraReport(sample: Long, service: String, createdAt: LocalDateTime): Mono<Report>{
         return repo.query{
-            select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
+            select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(Expressions.predicate(Ops.EQ, report.createAt, Expressions.asDateTime(createdAt.toString().replace("T", " ")))))
         }.one().map(Report.Companion.ReportBuilder::build)
     }
     fun merge(sample: Long, service: String, createdAt: LocalDateTime) : Mono<Any>{
