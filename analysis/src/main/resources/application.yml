@@ -26,4 +26,5 @@ logging:
     io.r2dbc.postgresql.PARAM: TRACE
 
 server:
+  resources : file:/data/lims/static/avoid-service/
   port: 0

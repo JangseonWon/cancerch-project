@@ -14,7 +14,11 @@ spring:
         - id: worklist-api
           uri: lb://worklist-api
           predicates:
-            - Path=/worklist, /worklist/**
+            - Path=/worklist/**
+        - id: sequencing-api
+          uri: lb://sequencing-api
+          predicates:
+            - Path=/plates/**, /sequencing, /sequencing/**
         - id: analysis-api
           uri: lb://analysis-api
           predicates:
@@ -26,9 +30,11 @@ spring:
         - id: report-api
           uri: lb://report-api
           predicates:
-            - Path=/samples/**
+            - Path=/samples/*/services/*/print/*, /samples/*/services/*/reports/*
+
 
 server:
+  resources : file:/data/lims/static/avoid-service/
   compression:
     enabled: true
     mime-types: text/javascript,application/javascript
