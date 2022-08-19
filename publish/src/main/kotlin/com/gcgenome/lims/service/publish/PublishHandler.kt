@@ -73,13 +73,13 @@ class PublishHandler(
                     .doOnError{
                         when(it.message){
                             "Delete failure" -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
-                                .title("실패 대상 : ${requestNum}/${service}").description("기존 파일 삭제 실패")))
+                                .title("실패 대상 : $sampleId / $service").description("기존 파일 삭제 실패")))
                             "Change failure" -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
-                                .title("실패 대상 : ${requestNum}/${service}").description("ALIS 상태 변경 실패")))
+                                .title("실패 대상 : $sampleId / $service").description("ALIS 상태 변경 실패")))
                             "PDF failure"    -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
-                                .title("실패 대상 : ${requestNum}/${service}").description("PDF 전송 실패")))
+                                .title("실패 대상 : $sampleId / $service").description("PDF 전송 실패")))
                             else             -> jandi.sendWithConnectInfos(title, listOf(ConnectInfo()
-                                .title("실패 대상 : ${requestNum}/${service}").description("원인 미상 LIMS팀 확인 필요")))
+                                .title("실패 대상 : $sampleId / $service").description("원인 미상 LIMS팀 확인 필요")))
                         }
                     }
                 .switchIfEmpty(Mono.just(false))
