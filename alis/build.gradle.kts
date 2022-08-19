@@ -7,7 +7,7 @@ plugins {
 }
 dependencies {
     implementation(project(":shared"))
-    implementation(libs.bundles.spring.client)
+    implementation(libs.bundles.spring.client.without.security)
     implementation("org.apache.pdfbox:pdfbox:2.+")
     implementation("org.jsoup:jsoup:1.+")
     implementation(libs.r2dbc)

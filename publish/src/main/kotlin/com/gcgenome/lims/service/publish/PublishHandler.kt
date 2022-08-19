@@ -36,7 +36,7 @@ class PublishHandler(
     private val logger = LoggerFactory.getLogger(PublishHandler::class.java)
     @Transactional
     fun publish(sample: Long, service: String, createAt: Long) : Mono<Boolean> {
-        val title = "검사 결과 전송에 실패했습니다. 8ㅁ8"
+        val title = "검사 결과 전송에 실패했습니다. (8ㅁ8)"
         return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             .flatMap {
                 val sampleId = it.sample

@@ -23,6 +23,7 @@ class Router(private val handler: Handler) {
         val state = request.pathVariable("state")
         val member = request.pathVariable("member")
         val machine = request.pathVariable("machine")
+        println("Change state")
         return request.bodyToMono(Request::class.java)
             .flatMap {
                 handler.state(it, state, member, machine)
@@ -32,7 +33,7 @@ class Router(private val handler: Handler) {
     }
 
     private fun fileUpload(request: ServerRequest): Mono<ServerResponse>{
-        println("fileUpload")
+        println("FileUploading")
         return request.bodyToMono(FileUpload::class.java)
             .publishOn(Schedulers.boundedElastic())
             .map(handler::fileUpload)
