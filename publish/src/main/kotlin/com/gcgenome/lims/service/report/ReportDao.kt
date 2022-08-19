@@ -64,7 +64,7 @@ class ReportDao(private val repo: ReportRepository) {
                 report.publishBy,
                 report.publishLog
             )
-        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
+        ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(Expressions.predicate(Ops.EQ, report.createAt, Expressions.asDateTime(createdAt.toString().replace("T", " ")))))
         }.one().switchIfEmpty(Mono.just(com.gcgenome.lims.entity.Report(sample, service, createdAt)))
             .zipWith(ReactiveSecurityContextHolder.getContext())
             .flatMap { repo.merge(it.t1, it.t2.authentication.principal.toString()) }
@@ -78,7 +78,7 @@ class ReportDao(private val repo: ReportRepository) {
             .set(report.publishBy, user)
             .set(report.lastModifyAt, now)
             .set(report.lastModifyBy, user)
-                .where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(report.createAt.stringValue().eq(entity.createAt.toString().replace("T", " "))))
+                .where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(Expressions.predicate(Ops.EQ, report.createAt, Expressions.asDateTime(entity.createAt.toString().replace("T", " ")))))
         }.then()
     }
 }

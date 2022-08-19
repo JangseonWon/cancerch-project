@@ -61,12 +61,13 @@ data class Report(
     companion object{
         data class ReportPK(
             val sample: Long,
-            val service: String
+            val service: String,
+            val createAt: LocalDateTime
         )
     }
 
     override fun getId(): ReportPK {
-        return ReportPK(sample, service)
+        return ReportPK(sample, service, createAt)
     }
 
     override fun isNew(): Boolean {
