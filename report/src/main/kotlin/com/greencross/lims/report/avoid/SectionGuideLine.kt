@@ -103,7 +103,7 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
             stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-33, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(0f)))
             stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-71, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(1f)))
             stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-100, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(2f)), TextBlock(styleRegular.clone().fontSize(7f), template.lblGuideLineNormalTarget(2.5f)))
-            stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-141, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(3f)))
+            stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-141, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().fontSize(7f), template.lblGuideLineNormalTarget(3f)))
             stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-179, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(4f)))
             stream.paragraph(125f, y+ RESULT_CONTENT_LOW_RATE-207, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblGuideLineNormalTarget(5f)))
 

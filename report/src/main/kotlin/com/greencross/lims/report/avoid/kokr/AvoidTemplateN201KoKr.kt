@@ -38,7 +38,7 @@ class AvoidTemplateN201KoKr(
             "국가 암 검진 권고사항에 따라 정기적인 건강검진을 권장합니다."
 
     override fun lblOverviewRiskBridge() = " 대상자 입니다.\n 암환자군과 다소 유사한 "
-    override fun lblOverViewRisk() = "이상패턴이 발견"
+    override fun lblOverViewRisk() = "이상 패턴이 발견"
     override fun lblOverViewMiddleRisk() = "되었으나,\n정확한 암종에 대한 구분은 어렵습니다.\n"
     override fun lblOverViewHighRisk() = "되었으며,\n6종 암 중 가장 의심되는 암종은 "
     override fun lblOverViewHighRiskEnd() = "입니다.\n"
@@ -120,7 +120,7 @@ class AvoidTemplateN201KoKr(
             "암 존재 가능성이 "
 
     override fun lblDetailResultAnalysisContentLine3MID_2() = " 높을 것으로 예측되나, 암종을 예측하기에는 불분명합니다.\n" +
-            "관심관리 대상자여도 암이 아닐 수 잇으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
+            "관심관리 대상자여도 암이 아닐 수 있으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
             "정상인 대비 DNA 패턴이 암환자와 유사하지만 추적 관찰을 통한 확인이 필요한 경우 "
 
     override fun lblDetailResultAnalysisContentLine3MID_3() = " 대상자로 보고됩니다.\n 하지만"
@@ -197,7 +197,7 @@ class AvoidTemplateN201KoKr(
         0f->"만 54세 이상 만 74세 이하 남녀\n 폐암 발생 고위험군(30갑년*이상 흡연력)"
         1f->"만 50세 이상 남녀"
         2f->"만 40세 이상 남녀 중 간암 발생 고위험군\n"
-        2.5f->"(간경변증이나 B형 간염 바이러스 항원 또는\nC형 간염바이러스 항체 양성으로 확인된 자)"
+        2.5f->"(간경변증이나 B형 간염 바이러스 항원 또는\nC형 간염 바이러스 항체 양성으로 확인된 자)"
         3f->"만 70세 이상 남녀\n췌장담도암 가족력/장기 흡연자/만성췌장염 병력"
         4f->"증상이 있거나, 식도암이 의심되는 자"
         else -> "-"
@@ -284,7 +284,7 @@ class AvoidTemplateN201KoKr(
                 "딥 러닝은 경험적 데이터를 기반으로 학습하여, 새로운 데이터를 예측하고 스스로의\n" +
                 "성능을 향상시키는 인공지능(AI) 기술입니다.\n" +
                 "GC지놈에서 자체개발한 AVOID 검사의 딥 러닝 알고리즘은"
-        15 -> "은 약 1천명 이상의\n" +
+        15 -> " 약 1천명 이상의\n" +
                 "암환자와 정상인의 cfDNA의 특징을 학습"
         16 -> "하였습니다. 이를 바탕으로 수검자의 cfDNA를\n" +
                 "분석하여 암의 존재 가능성을 예측할 수 있습니다."
@@ -457,7 +457,7 @@ class AvoidTemplateN201KoKr(
         return when (row) {
             0 -> "1) 특이도 : 정상인을 검사했을 때 AVOID Pan-cancer Screen 검사가 일반관리군으로 판단한 비율을 의미합니다."
             1 -> "2) 민감도 : 암환자를 검사했을 때 AVOID Pan-cancer Screen 검사가 관심관리군 · 집중관리군으로 판단한 비율을 의미합니다."
-            2 -> "3) 양성예측도 : AVOID Pan-Screen 검사에서 관심관리 · 집중관리로 판단한 수검자가 실제 암환자일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 양성예측도가 계산되었습니다."
+            2 -> "3) 양성예측도 : AVOID Pan-cancer Screen 검사에서 관심관리 · 집중관리로 판단한 수검자가 실제 암환자일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 양성예측도가 계산되었습니다."
             3 -> "4) 음성예측도 : AVOID Pan-cancer Screen 검사에서 일반관리로 판단한 수검자가 실제 정상인일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 음성예측도가 계산되었습니다."
             else -> ""
         }
