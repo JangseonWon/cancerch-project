@@ -36,5 +36,26 @@ data class AnalysisQC(
     @FileColumn("QC_fcA")
     var qcFcA:                  String = "",
     @FileColumn("QC_fcB")
-    var qcFcB:                  String = ""
+    var qcFcB:                  String = "",
+    @FileColumn("chrX_count_fcA")
+    var chrXCntFcA:             Long = 0,
+    @FileColumn("chrY_count_fcA")
+    var chrYCntFcA:             Long = 0,
+    @FileColumn("chrX_proportion_fcA")
+    var chrXPropFcA:            Double = 0.0,
+    @FileColumn("chrY_proportion_fcA")
+    var chrYPropFcA:            Double = 0.0,
+    @FileColumn("pred_sex_fcA")
+    var predSexFcA:             String = "",
+    @FileColumn("chrX_count_fcB")
+    var chrXCntFcB:             Long = 0,
+    @FileColumn("chrY_count_fcB")
+    var chrYCntFcB:             Long = 0,
+    @FileColumn("chrX_proportion_fcB")
+    var chrXPropFcB:            Double = 0.0,
+    @FileColumn("chrY_proportion_fcB")
+    var chrYPropFcB:            Double = 0.0,
+    @FileColumn("pred_sex_fcB")
+    var predSexFcB:             String = ""
+
 )

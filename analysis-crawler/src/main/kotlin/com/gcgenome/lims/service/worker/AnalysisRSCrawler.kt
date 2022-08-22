@@ -3,25 +3,26 @@ package com.gcgenome.lims.service.worker
 import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisResult
 import com.gcgenome.lims.service.analysisRS.AnalysisRSDao
-import org.springframework.beans.factory.annotation.Qualifier
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
-import java.time.LocalDateTime
+import java.io.File
 
 @Configuration
 class AnalysisRSCrawler(
     val crawler : FileCrawler<AnalysisResult>,
-    val dao: AnalysisRSDao
+    val dao: AnalysisRSDao,
+    val processed: File
     ) {
+    private val logger = LoggerFactory.getLogger(AnalysisRSCrawler::class.java)
     @Scheduled(fixedDelay=1000*60*60)
     fun updateStatus(){
         crawler.getDTOs().forEach{(dtos, file) ->
             dtos.forEach{
-                println(it)
                 val primaries = it.primary.split("_")
                 val batchRow = primaries[0].split("-")
                 val sampleId = primaries[1].replace("-","")
-                Tests.values().forEach { test ->
+                if(sampleId != "NTC" && sampleId != "CONTROL") Tests.values().forEach { test ->
                     val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name).apply {
                         this.batch              = batchRow[0]
                         this.row                = batchRow[1].toInt()
@@ -33,9 +34,13 @@ class AnalysisRSCrawler(
                         this.iscore             = it.iscore
                         this.result             = it.result
                     }
+                    logger.info("RS Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
                     dao.merge(entity).block()
                 }
             }
+            val folderName = file.name.split("_")[0]
+            file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
+            file.delete()
         }
     }
 
