@@ -101,6 +101,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         val age : Int = dto.age!!.toInt()
         var img = template.resource().imgCancerTypeContent()
         var width = img.width * DANGER_CANCER_CONTENT / img.height
+        val ppv = if(round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100 == 0.0) 0.1 else round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100
         stream.drawImage(img, x-width/2, y, width, DANGER_CANCER_CONTENT)
 
         img = template.resource().imgCancerTypeImage(cancer.name)
@@ -118,17 +119,19 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
 
         img = template.resource().imgBarGray()
         width = img.width * DANGER_BAR_RATE / img.height
-        stream.paragraph(x-width/2+16, y+18+DANGER_BAR_RATE,  100f, AlignHorizontal.CENTER, TextBlock(style, "${round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"))
+        stream.paragraph(x-width/2+16, y+18+DANGER_BAR_RATE,  100f, AlignHorizontal.CENTER, TextBlock(style, "${ppv}"+"%"))
         stream.drawImage(img, x-width/2+8, y+14, width, DANGER_BAR_RATE)
 
         when(dto.result){
             AvoidDto.Results.RISK -> {
                 val checker = dto.first.name == cancer.name
                 img = if(checker) template.resource().imgBarDanger() else template.resource().imgBarMiddle()
-                val height = if(checker) if(repo.findPPVbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!! >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
+                val riskPPV = repo.findPPVbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!
+                val height = if(checker) if(riskPPV >= 50) DANGER_BAR_RATE*5 else DANGER_BAR_RATE*4 else DANGER_BAR_RATE
 
-                val value = if(checker) "${repo.findPPVbyAgeAndCancerAndSex(cancer, age, dto.sex!!)}%" else ">${round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
-                style =  if(checker) template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29)) else template.resource().styleContentBold().clone().fontSize(7f).color(Color(217, 166, 71))
+                val value = if(checker) "${riskPPV}%" else ">${ppv}"+"%"
+                style =  if(checker) template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29))
+                else template.resource().styleContentBold().clone().fontSize(7f).color(Color(217, 166, 71))
                 stream.paragraph(x-width/2+43, y+18+height, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
                 stream.drawImage(img, x-width/2+34, y+14, width, height)
 
@@ -140,16 +143,14 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
             }
             AvoidDto.Results.CONCERN -> {
                 img = template.resource().imgBarMiddle()
-                val value = ">${round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
                 style = template.resource().styleContentBold().clone().fontSize(7f).color(Color(217, 166, 71))
-                stream.paragraph(x-width/2+43, y+18+DANGER_BAR_RATE+5, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
+                stream.paragraph(x-width/2+43, y+18+DANGER_BAR_RATE+5, 100f, AlignHorizontal.CENTER, TextBlock(style, ">${ppv}"+"%"))
                 stream.drawImage(img, x-width/2+34, y+14, width, DANGER_BAR_RATE+5)
             }
             else -> {
                 img = template.resource().imgBarNormal()
-                val value = "≤${round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100}"+"%"
                 style = template.resource().styleContentBold().clone().fontSize(7f).color(Color(81, 78, 145))
-                stream.paragraph(x-width/2+43, y+18+DANGER_BAR_RATE, 100f, AlignHorizontal.CENTER, TextBlock(style, value))
+                stream.paragraph(x-width/2+43, y+18+DANGER_BAR_RATE, 100f, AlignHorizontal.CENTER, TextBlock(style, "≤${ppv}"+"%"))
                 stream.drawImage(img, x-width/2+34, y+14, width, DANGER_BAR_RATE)
             }
         }
