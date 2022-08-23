@@ -81,7 +81,7 @@ class ReportHandler(
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
-        val (customerName, requestNumber) = if(patient.customerCode2!=null) Pair(patient.customerName2!!, formatSampleId(
+        val (customerName, requestNumber) = if(patient.customerName2!=null) Pair(patient.customerName2, formatSampleId(
             analysis.remark?.toLongOrNull()
         ))
         else Pair(patient.customerName, formatSampleId(analysis.sample))
