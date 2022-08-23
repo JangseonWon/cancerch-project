@@ -1,6 +1,5 @@
 package com.greencross.lims.service.report
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.avoid.TestInfo
 import com.greencross.lims.entity.ReportFile
@@ -82,6 +81,8 @@ class ReportHandler(
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
+        val (customerName, requestNumber) = if(patient.customerCode2!=null) Pair(patient.customerName2!!, formatSampleId(analysis.remark.toLongOrNull()))
+        else Pair(patient.customerName, formatSampleId(analysis.sample))
         val result = if(sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1  = when(stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
@@ -99,13 +100,13 @@ class ReportHandler(
         avoidDto.birthDate = patient.birth
         avoidDto.age = age(avoidDto.birthDate).toString()
         avoidDto.sex = sex(patient.sex)
-        avoidDto.requestNumber = if(patient.customerName == "Gclabs") analysis.remark else analysis.sample.toString()
+        avoidDto.requestNumber = requestNumber
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
         avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
         avoidDto.reportDate = analysis.dateDue.toLocalDate()
         avoidDto.medicalRecordNumber = patient.mrn
         avoidDto.barcode = barcode
-        avoidDto.medicalInstitution = if(patient.customerName == "Gclabs") patient.customerName2 else patient.customerName
+        avoidDto.medicalInstitution = customerName
         avoidDto.medicalRecordNumber = patient.code
         avoidDto.specimenType = analysis.sampleType
 
@@ -164,5 +165,11 @@ class ReportHandler(
         "GENERAL" -> AvoidDto.Results.GENERAL
         "CONCERN" -> AvoidDto.Results.CONCERN
         else      -> AvoidDto.Results.RISK
+    }
+    private fun formatSampleId(id: Long?): String? {
+        if (id == null) return null
+        val cast = id.toString()
+        return if (cast.length == 15) "${cast.substring(0, 8)}-${cast.substring(8, 11)}-${cast.substring(11)}"
+        else cast
     }
 }
