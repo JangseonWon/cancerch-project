@@ -81,7 +81,9 @@ class ReportHandler(
     private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
-        val (customerName, requestNumber) = if(patient.customerCode2!=null) Pair(patient.customerName2!!, formatSampleId(analysis.remark.toLongOrNull()))
+        val (customerName, requestNumber) = if(patient.customerCode2!=null) Pair(patient.customerName2!!, formatSampleId(
+            analysis.remark?.toLongOrNull()
+        ))
         else Pair(patient.customerName, formatSampleId(analysis.sample))
         val result = if(sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1  = when(stringToEnum(analysis.result)) {
