@@ -4,6 +4,8 @@ import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
+import net.sayaya.ui.ButtonElement;
+import net.sayaya.ui.ButtonElementText;
 import net.sayaya.ui.Dialog;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
@@ -266,9 +268,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 
 	@Override
 	public Analysis[] selection() {
-		/*if(Arrays.stream(wrapper.selection()).anyMatch(d -> d.get("QC 분석").equals("FAIL") || d.get("성별 분석").equals("FAIL"))){
-			Dialog dialog = Dialog.alert("선택하신 샘플 중 QC / 성별 분석에서 FAIL")
-		} else */return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+		return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {

@@ -1,7 +1,6 @@
 package com.greencross.lims.projection
 
 import com.greencross.lims.entity.readonly.Patient
-import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -34,7 +33,7 @@ data class Analysis (
             val sex: String,
             val birth: LocalDate,
             val customerName: String,
-            val customerName2: String,
+            val customerName2: String?,
             val mrn: String?,
             val result: String,
             val too5Pred: String,
