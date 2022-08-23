@@ -35,7 +35,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnResult(String name){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
-			if("P".equals(value)) return "#46BF26";
+			if("PASS".equals(value)) return "#46BF26";
 			else return "#F25349";
 		}).color("#FFFFFF");
 	}
@@ -59,6 +59,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("분석일").build(),
 					column("Batch").build(),
 					column("Row").build(),
+					columnResult("QC 분석").build(),
+					columnResult("성별 분석").build(),
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
@@ -78,6 +80,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("mean is A", "A").build(),
 					columnAndColor("median is A", "A").build(),
 					columnResult("qc A").build(),
+					columnAndColor("chrX Count A", "A").build(),
+					columnAndColor("chrX Proportion A", "A").build(),
+					columnAndColor("chrY Count A", "A").build(),
+					columnAndColor("chrY Proportion A", "A").build(),
+					columnResult("Sex Prediction A").build(),
 					columnAndColor("freemix B", "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
 					columnAndColor("filtered reads B", "B").build(),
@@ -85,7 +92,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean is B", "B").build(),
 					columnAndColor("median is B", "B").build(),
-					columnResult("qc B").build()
+					columnResult("qc B").build(),
+					columnAndColor("chrX Count B", "B").build(),
+					columnAndColor("chrX Proportion B", "B").build(),
+					columnAndColor("chrY Count B", "B").build(),
+					columnAndColor("chrY Proportion B", "B").build(),
+					columnResult("Sex Prediction B").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -146,6 +158,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String reportNm		= value.report().fileName();
 		String publishNm	= value.report().publisher().name();
 		String publishDt 	= value.report().publishAt().equals("null") ? "" : DataTransformUtil.formatDate((long) JsDate.parse(value.report().publishAt()));
+
 		String freemix		= convertFormat(value.freemix());
 		String rawReadMil	= convertFormat(value.rawReadsMillions());
 		String duprate      = convertFormat(value.dupRate());
@@ -153,7 +166,13 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String gc			= convertFormat(value.gc());
 		String mean			= convertFormat(value.mean());
 		String median		= convertFormat(value.median());
-		String qc			= value.qc();
+		String qc			= value.qc().equals("P") ? "PASS" : "FAIL";
+		String chrXCnt		= String.valueOf(value.chrXCnt());
+		String chrYCnt		= String.valueOf(value.chrYCnt());
+		String chrXProp		= String.valueOf(value.chrXProp());
+		String chrYProp		= String.valueOf(value.chrYProp());
+		String sexPred		= sex.equals(value.predSexTmp()) ? "PASS" : "FAIL";
+
 		String freemixT		= convertFormat(value.freemixTmp());
 		String rawReadMilT	= convertFormat(value.rawReadsMillionsTmp());
 		String duprateT     = convertFormat(value.dupRateTmp());
@@ -161,8 +180,14 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String gcT			= convertFormat(value.gcTmp());
 		String meanT		= convertFormat(value.meanTmp());
 		String medianT		= convertFormat(value.medianTmp());
-		String qcT			= value.qcTmp();
-
+		String qcT			= value.qcTmp().equals("P") ? "PASS" : "FAIL";
+		String chrXCntT		= String.valueOf(value.chrXCntTmp());
+		String chrYCntT		= String.valueOf(value.chrYCntTmp());
+		String chrXPropT	= String.valueOf(value.chrXPropTmp());
+		String chrYPropT	= String.valueOf(value.chrYPropTmp());
+		String sexPredT		= sex.equals(value.predSexTmp()) ? "PASS" : "FAIL";
+		String sexCheck		= sexPred.equals("PASS") && sexPredT.equals("PASS") ? "PASS" : "FAIL";
+		String qcCheck		= qc.equals("P") && qcT.equals("P") ? "PASS" : "FAIL";
 		String cadEnsemble  = convertFormat(value.cadEnsembleProb());
 		String top5Pred		= convertCancerName(value.too5Pred());
 		String top5FEMS		= convertFormat(value.too5FemsProb());
@@ -171,45 +196,58 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String iscore		= convertFormat(value.iscore());
 		String result		= convertResultName(value.result());
 		Data datum = new Data(idx)
-				.put("ID",       		id)
-				.put("검사코드", 		service)
-				.put("검사명",   		serviceNm)
-				.put("수진자명", 		patientNm)
-				.put("성별", 	 		sex)
-				.put("MRN",  	 		mrn == null ? "" : mrn)
-				.put("의뢰일",   		requestDt)
-				.put("TAT",      		tatDt)
-				.put("의뢰기관", 		customer)
-				.put("분석일",   		analysisDt)
-				.put("Batch",    		batch)
-				.put("Row",      		row)
-				.put("reportCreated", 	reportCreateDt)
-				.put("결과지", 			reportNm  == null ? "" : reportNm)
-				.put("발송자", 			publishNm == null ? "" : publishNm)
-				.put("결과발송일", 		publishDt)
-				.put("관리분류", 		result)
-				.put("top 5 prediction",top5Pred)
-				.put("top 5 FEMS prob", top5FEMS)
-				.put("top 6 prediction",top6Pred)
-				.put("top 6 FEMS prob", top6FEMS)
-				.put("iscore",			iscore)
-				.put("cad ensemble prob", cadEnsemble)
-				.put("freemix A",		freemix)
-				.put("raw read(Million) A", rawReadMil)
-				.put("filtered reads A",totalRead)
-				.put("dup rate A", 		duprate)
-				.put("gc A",  			gc)
-				.put("mean is A",		mean)
-				.put("median is A",     median)
-				.put("qc A",            qc)
-				.put("freemix B",		freemixT)
-				.put("raw read(Million) B", rawReadMilT)
-				.put("filtered reads B",    totalReadT)
-				.put("dup rate B", 		duprateT)
-				.put("gc B",  			gcT)
-				.put("mean is B",			meanT)
-				.put("median is B",        medianT)
-				.put("qc B",            qcT);
+				.put("ID",       				id)
+				.put("검사코드", 				service)
+				.put("검사명",   				serviceNm)
+				.put("수진자명", 				patientNm)
+				.put("성별", 	 				sex)
+				.put("MRN",  	 				mrn == null ? "" : mrn)
+				.put("의뢰일",   				requestDt)
+				.put("TAT",      				tatDt)
+				.put("의뢰기관", 				customer)
+				.put("분석일",   				analysisDt)
+				.put("Batch",    				batch)
+				.put("Row",      				row)
+				.put("reportCreated", 			reportCreateDt)
+				.put("QC 분석",					qcCheck)
+				.put("성별 분석",               sexCheck)
+				.put("결과지", 					reportNm  == null ? "" : reportNm)
+				.put("발송자", 					publishNm == null ? "" : publishNm)
+				.put("결과발송일", 				publishDt)
+				.put("관리분류", 				result)
+				.put("top 5 prediction",		top5Pred)
+				.put("top 5 FEMS prob", 		top5FEMS)
+				.put("top 6 prediction",		top6Pred)
+				.put("top 6 FEMS prob", 		top6FEMS)
+				.put("iscore",					iscore)
+				.put("cad ensemble prob", 		cadEnsemble)
+				.put("Sex Check A", 			sexPred)
+				.put("freemix A",				freemix)
+				.put("raw read(Million) A", 	rawReadMil)
+				.put("filtered reads A",		totalRead)
+				.put("dup rate A", 				duprate)
+				.put("gc A",  					gc)
+				.put("mean is A",				mean)
+				.put("median is A",     		median)
+				.put("qc A",            		qc)
+				.put("chrX Count A",            chrXCnt)
+				.put("chrX Proportion A",       chrXProp)
+				.put("chrY Count A",            chrYCnt)
+				.put("chrY Proportion A",       chrYProp)
+				.put("Sex Prediction A",  		sexPred)
+				.put("freemix B",				freemixT)
+				.put("raw read(Million) B", 	rawReadMilT)
+				.put("filtered reads B",    	totalReadT)
+				.put("dup rate B", 				duprateT)
+				.put("gc B",  					gcT)
+				.put("mean is B",				meanT)
+				.put("median is B",     		medianT)
+				.put("qc B",            		qcT)
+				.put("chrX Count B",            chrXCntT)
+				.put("chrX Proportion B",       chrXPropT)
+				.put("chrY Count B",            chrYCntT)
+				.put("chrY Proportion B",       chrYPropT)
+				.put("Sex Prediction B",  		sexPredT);
 		return datum;
 	}
 	@Override

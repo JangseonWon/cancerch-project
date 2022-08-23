@@ -48,12 +48,12 @@ class AnalysisQCCrawler(
                         this.chrYCnt            = it.chrYCntFcA
                         this.chrXProp           = it.chrXPropFcA
                         this.chrYProp           = it.chrYPropFcA
-                        this.predSex            = it.predSexFcA
+                        this.predSex            = sexMapper(it.predSexFcA)
                         this.chrXCntTmp         = it.chrXCntFcB
                         this.chrYCntTmp         = it.chrYCntFcB
                         this.chrXPropTmp        = it.chrXPropFcB
                         this.chrYPropTmp        = it.chrYPropFcB
-                        this.predSexTmp         = it.predSexFcB
+                        this.predSexTmp         = sexMapper(it.predSexFcB)
                     }
                     logger.info("QC Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
                     dao.merge(entity).block()
@@ -64,4 +64,10 @@ class AnalysisQCCrawler(
             file.delete()
         }
     }
+    private fun sexMapper(sexPred: String) = when(sexPred){
+        "MALE"     -> "M"
+        "FEMALE"   -> "F"
+        else       -> "?"
+    }
+
 }

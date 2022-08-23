@@ -36,15 +36,15 @@ data class AnalysisQC(
     @Column("mean_tmp")               var meanTmp:         Double = 0.0
     @Column("median_tmp")             var medianTmp:       Double = 0.0
     @Column("qc_tmp")        lateinit var qcTmp:           String
-    @Column("chrX_cnt")               var chrXCnt:         Long = 0
-    @Column("chrY_cnt")               var chrYCnt:         Long = 0
-    @Column("chrX_prop")              var chrXProp:        Double = 0.0
-    @Column("chrY_prop")              var chrYProp:        Double = 0.0
+    @Column("chrx_cnt")               var chrXCnt:         Long = 0
+    @Column("chry_cnt")               var chrYCnt:         Long = 0
+    @Column("chrx_prop")              var chrXProp:        Double = 0.0
+    @Column("chry_prop")              var chrYProp:        Double = 0.0
     @Column("pred_sex")      lateinit var predSex:         String
-    @Column("chrX_cnt_tmp")           var chrXCntTmp:      Long = 0
-    @Column("chrY_cnt_tmp")           var chrYCntTmp:      Long = 0
-    @Column("chrX_prop_tmp")          var chrXPropTmp:     Double = 0.0
-    @Column("chrY_prop_tmp")          var chrYPropTmp:     Double = 0.0
+    @Column("chrx_cnt_tmp")           var chrXCntTmp:      Long = 0
+    @Column("chry_cnt_tmp")           var chrYCntTmp:      Long = 0
+    @Column("chrx_prop_tmp")          var chrXPropTmp:     Double = 0.0
+    @Column("chry_prop_tmp")          var chrYPropTmp:     Double = 0.0
     @Column("pred_sex_tmp")  lateinit var predSexTmp:      String
 
     @Id @Transient           lateinit var _id:             AnalysisQCPK

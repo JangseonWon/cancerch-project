@@ -49,7 +49,7 @@ class AvoidTemplateN201KoKr(
         }
         return "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n" +
             "정상인이라도 건강상태에 따라 ${case}로 보고될 수 있습니다.\n" +
-            "확진을 위해서는 의뢰인과의 상담을 통한 정밀검사를 권장합니다."
+            "확진을 위해서는 의료인과의 상담을 통한 정밀검사를 권장합니다."
     }
 
     override fun lblDoubtSquareTitle() = "이상 패턴 검출 여부"

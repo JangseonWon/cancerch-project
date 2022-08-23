@@ -19,6 +19,11 @@ class AnalysisMapper {
             this.mean                           = entity.mean
             this.qc                             = entity.qc
             this.median                         = entity.median
+            this.chrXCnt                        = entity.chrXCnt
+            this.chrYCnt                        = entity.chrYCnt
+            this.chrXProp                       = entity.chrXProp
+            this.chrYProp                       = entity.chrYProp
+            this.predSex                        = entity.predSex
 
             this.freemixTmp                     = entity.freemixTmp
             this.rawReadsMillionsTmp            = entity.rawReadsMillionsTmp
@@ -28,6 +33,11 @@ class AnalysisMapper {
             this.meanTmp                        = entity.meanTmp
             this.qcTmp                          = entity.qcTmp
             this.medianTmp                      = entity.medianTmp
+            this.chrXCntTmp                     = entity.chrXCntTmp
+            this.chrYCntTmp                     = entity.chrYCntTmp
+            this.chrXPropTmp                    = entity.chrXPropTmp
+            this.chrYPropTmp                    = entity.chrYPropTmp
+            this.predSexTmp                     = entity.predSexTmp
 
             this.too5Pred                       = entity.too5Pred
             this.too5FemsProb                   = entity.too5FemsProb
