@@ -99,13 +99,13 @@ class ReportHandler(
         avoidDto.birthDate = patient.birth
         avoidDto.age = age(avoidDto.birthDate).toString()
         avoidDto.sex = sex(patient.sex)
-        avoidDto.requestNumber = analysis.sample.toString()
+        avoidDto.requestNumber = if(patient.customerName == "Gclabs") analysis.remark else analysis.sample.toString()
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
         avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
         avoidDto.reportDate = analysis.dateDue.toLocalDate()
         avoidDto.medicalRecordNumber = patient.mrn
         avoidDto.barcode = barcode
-        avoidDto.medicalInstitution = patient.customerName
+        avoidDto.medicalInstitution = if(patient.customerName == "Gclabs") patient.customerName2 else patient.customerName
         avoidDto.medicalRecordNumber = patient.code
         avoidDto.specimenType = analysis.sampleType
 
