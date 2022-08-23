@@ -93,28 +93,4 @@ public final class Analysis {
 		if(request == null) return null;
 		return Js.uncheckedCast(request);
 	}
-	@JsOverlay
-	@JsIgnore
-	public Long chrXCnt() {
-		if(chrXCnt == null) return null;
-		else return chrXCnt.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long chrYCnt() {
-		if(chrYCnt == null) return null;
-		else return chrYCnt.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long chrXCntTmp() {
-		if(chrXCntTmp == null) return null;
-		else return chrXCntTmp.longValue();
-	}
-	@JsOverlay
-	@JsIgnore
-	public Long chrYCntTmp() {
-		if(chrXCntTmp == null) return null;
-		else return chrXCntTmp.longValue();
-	}
 }

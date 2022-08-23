@@ -65,8 +65,8 @@ class AnalysisQCCrawler(
         }
     }
     private fun sexMapper(sexPred: String) = when(sexPred){
-        "MALE"     -> "M"
-        "FEMALE"   -> "F"
+        "male"     -> "M"
+        "female"   -> "F"
         else       -> "?"
     }
 

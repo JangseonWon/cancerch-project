@@ -4,6 +4,7 @@ import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
+import net.sayaya.ui.Dialog;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
@@ -35,6 +36,14 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnResult(String name){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+			if("일반관리".equals(value)) return "#8DC556";
+			else if("관심관리".equals(value)) return "#EFA718";
+			else if("집중관리".equals(value)) return "#D9341D";
+			else return "#FFFFFF";
+		}).color("#FFFFFF");
+	}
+	private static ColumnString columnPassOrFail(String name){
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
 			if("PASS".equals(value)) return "#46BF26";
 			else return "#F25349";
 		}).color("#FFFFFF");
@@ -59,13 +68,13 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("분석일").build(),
 					column("Batch").build(),
 					column("Row").build(),
-					columnResult("QC 분석").build(),
-					columnResult("성별 분석").build(),
+					columnResult("결과 분석").build(),
+					columnPassOrFail("QC 분석").build(),
+					columnPassOrFail("성별 분석").build(),
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
 					column("발송자").build(),
-					column("관리분류").build(),
 					column("top 5 prediction").build(),
 					column("top 5 FEMS prob").horizontal("right").build(),
 					column("top 6 prediction").build(),
@@ -79,12 +88,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc A", "A").build(),
 					columnAndColor("mean is A", "A").build(),
 					columnAndColor("median is A", "A").build(),
-					columnResult("qc A").build(),
+					columnPassOrFail("qc A").build(),
 					columnAndColor("chrX Count A", "A").build(),
 					columnAndColor("chrX Proportion A", "A").build(),
 					columnAndColor("chrY Count A", "A").build(),
 					columnAndColor("chrY Proportion A", "A").build(),
-					columnResult("Sex Prediction A").build(),
+					columnPassOrFail("Sex Prediction A").build(),
 					columnAndColor("freemix B", "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
 					columnAndColor("filtered reads B", "B").build(),
@@ -92,12 +101,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean is B", "B").build(),
 					columnAndColor("median is B", "B").build(),
-					columnResult("qc B").build(),
+					columnPassOrFail("qc B").build(),
 					columnAndColor("chrX Count B", "B").build(),
 					columnAndColor("chrX Proportion B", "B").build(),
 					columnAndColor("chrY Count B", "B").build(),
 					columnAndColor("chrY Proportion B", "B").build(),
-					columnResult("Sex Prediction B").build()
+					columnPassOrFail("Sex Prediction B").build()
 			).data(new Data[10]);
 
 	private void preview(Data data) {
@@ -167,10 +176,10 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String mean			= convertFormat(value.mean());
 		String median		= convertFormat(value.median());
 		String qc			= value.qc().equals("P") ? "PASS" : "FAIL";
-		String chrXCnt		= String.valueOf(value.chrXCnt());
-		String chrYCnt		= String.valueOf(value.chrYCnt());
-		String chrXProp		= String.valueOf(value.chrXProp());
-		String chrYProp		= String.valueOf(value.chrYProp());
+		String chrXCnt		= convertFormat(value.chrXCnt());
+		String chrYCnt		= convertFormat(value.chrYCnt());
+		String chrXProp		= convertFormat(value.chrXProp());
+		String chrYProp		= convertFormat(value.chrYProp());
 		String sexPred		= sex.equals(value.predSexTmp()) ? "PASS" : "FAIL";
 
 		String freemixT		= convertFormat(value.freemixTmp());
@@ -181,13 +190,13 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String meanT		= convertFormat(value.meanTmp());
 		String medianT		= convertFormat(value.medianTmp());
 		String qcT			= value.qcTmp().equals("P") ? "PASS" : "FAIL";
-		String chrXCntT		= String.valueOf(value.chrXCntTmp());
-		String chrYCntT		= String.valueOf(value.chrYCntTmp());
-		String chrXPropT	= String.valueOf(value.chrXPropTmp());
-		String chrYPropT	= String.valueOf(value.chrYPropTmp());
+		String chrXCntT		= convertFormat(value.chrXCntTmp());
+		String chrYCntT		= convertFormat(value.chrYCntTmp());
+		String chrXPropT	= convertFormat(value.chrXPropTmp());
+		String chrYPropT	= convertFormat(value.chrYPropTmp());
 		String sexPredT		= sex.equals(value.predSexTmp()) ? "PASS" : "FAIL";
 		String sexCheck		= sexPred.equals("PASS") && sexPredT.equals("PASS") ? "PASS" : "FAIL";
-		String qcCheck		= qc.equals("P") && qcT.equals("P") ? "PASS" : "FAIL";
+		String qcCheck		= qc.equals("PASS") && qcT.equals("PASS") ? "PASS" : "FAIL";
 		String cadEnsemble  = convertFormat(value.cadEnsembleProb());
 		String top5Pred		= convertCancerName(value.too5Pred());
 		String top5FEMS		= convertFormat(value.too5FemsProb());
@@ -209,12 +218,12 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("Batch",    				batch)
 				.put("Row",      				row)
 				.put("reportCreated", 			reportCreateDt)
+				.put("결과 분석", 				result)
 				.put("QC 분석",					qcCheck)
 				.put("성별 분석",               sexCheck)
 				.put("결과지", 					reportNm  == null ? "" : reportNm)
 				.put("발송자", 					publishNm == null ? "" : publishNm)
 				.put("결과발송일", 				publishDt)
-				.put("관리분류", 				result)
 				.put("top 5 prediction",		top5Pred)
 				.put("top 5 FEMS prob", 		top5FEMS)
 				.put("top 6 prediction",		top6Pred)
@@ -257,7 +266,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 
 	@Override
 	public Analysis[] selection() {
-		return  Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+		/*if(Arrays.stream(wrapper.selection()).anyMatch(d -> d.get("QC 분석").equals("FAIL") || d.get("성별 분석").equals("FAIL"))){
+			Dialog dialog = Dialog.alert("선택하신 샘플 중 QC / 성별 분석에서 FAIL")
+		} else */return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
