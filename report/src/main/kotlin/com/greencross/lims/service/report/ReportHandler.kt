@@ -83,7 +83,6 @@ class ReportHandler(
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
         val result = if(sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
-        println(result)
         val cancer1  = when(stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
             CancerRepo.결과.CONCERN -> AvoidDto.Cancer("기타암종")

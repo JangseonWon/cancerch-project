@@ -22,7 +22,6 @@ class IndexDao(private val repo: IndexRepository) {
         ).from(index)
     }
     fun findByPlate(plate: String): Flux<Index> {
-        println(plate)
         return repo.query{
             select(it).where(index.plate.eq(plate)).orderBy(index.type.desc(), index.position.asc())
         }.all()
