@@ -64,7 +64,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .build()
             val response3 = client.send(putRequest3, HttpResponse.BodyHandlers.ofString())
             println(response3)
-            batch.value[UUIDEnum.SAMPLE_SHEET.toUUID()] = response3.body()
+            batch2.value[UUIDEnum.SAMPLE_SHEET.toUUID()] = response3.body()
 
             val putRequest4 = HttpRequest
                 .newBuilder()
