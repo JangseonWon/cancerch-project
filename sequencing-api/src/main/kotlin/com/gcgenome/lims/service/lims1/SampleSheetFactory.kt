@@ -49,11 +49,11 @@ object SampleSheetFactory {
             .append("Chemistry,").append(batch.value[UUIDEnum.CHEMISTRY.toUUID()]).append("\r\n")
             .append("\r\n")
 
-        sb.append("[Settings]").append("\r\n")
+        // 어댑터 시퀀스 없이 돌린다고 함
+        /*sb.append("[Settings]").append("\r\n")
             .append("Adapter,").append("AGATCGGAAGAGCACACGTCTGAACTCCAGTCA").append("\r\n")
             .append("AdapterRead2,").append("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT").append("\r\n")
-            .append("\r\n")
-
+            .append("\r\n")*/
         sb.append("[Data]").append("\r\n")
             .append("Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description").append("\r\n")
 
