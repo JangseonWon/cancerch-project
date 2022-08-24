@@ -55,8 +55,12 @@ class AnalysisMapper {
                         entity.mrn,
                         entity.sex,
                         entity.birth.toString(),
-                        entity.customerName
+                        when(entity.customerName2){
+                            null -> entity.customerName
+                            else -> entity.customerName2
+                        }
                     )
+                    this.remark = entity.remark
                 }
             ).apply {
                 this.service = Service(entity.serviceId, entity.serviceNm)

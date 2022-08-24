@@ -17,6 +17,7 @@ public final class Sample {
 	private Double id;
 	private Patient patient;
 	private String barcode;
+	private String remark;
 	@JsOverlay
 	@JsIgnore
 	public Sample id(long id) {

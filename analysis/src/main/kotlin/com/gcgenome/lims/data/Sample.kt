@@ -5,5 +5,6 @@ data class Sample(
 ) {
     var patient: Patient?   = null
     var barcode: String?    = ""
+    var remark: String?     = ""
 
 }

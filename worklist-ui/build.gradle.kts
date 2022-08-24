@@ -15,7 +15,6 @@ dependencies {
     implementation("com.gcgenome:gateway-api:1.0")
     implementation("com.gcgenome:gateway-service:1.0")
     implementation("com.gcgenome:lims-icon:2.0")
-
     implementation(libs.bundles.gwt)
     compileOnly(libs.gwt.dev)
     implementation("net.sayaya:ui:4.0")

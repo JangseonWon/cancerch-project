@@ -4,9 +4,6 @@ import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
-import net.sayaya.ui.ButtonElement;
-import net.sayaya.ui.ButtonElementText;
-import net.sayaya.ui.Dialog;
 import net.sayaya.ui.HTMLElementBuilder;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
@@ -67,6 +64,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("의뢰일").build(),
 					column("TAT").build(),
 					column("의뢰기관").build(),
+					column("Labs 코드").build(),
 					column("분석일").build(),
 					column("Batch").build(),
 					column("Row").build(),
@@ -162,6 +160,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String requestDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateRequest()));
 		String tatDt		= DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateDue()));
 		String customer		= value.request().sample().patient().customer();
+		String customerCd   = value.request().sample().remark() == null ? "" : value.request().sample().remark();
 		String analysisDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.createAt()));
 		String batch		= value.batch();
 		String row			= String.valueOf(value.row());
@@ -216,6 +215,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("의뢰일",   				requestDt)
 				.put("TAT",      				tatDt)
 				.put("의뢰기관", 				customer)
+				.put("Labs 코드",               customerCd)
 				.put("분석일",   				analysisDt)
 				.put("Batch",    				batch)
 				.put("Row",      				row)
