@@ -12,7 +12,7 @@ import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.Painter
-import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
+import com.greencross.lims.report.kokr.SectionFooterGenome
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
@@ -129,7 +129,7 @@ class ReportHandler(
         val doc = PDDocument()
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
-        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenomeLabs()
+        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
         val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
         return if(TestInfo.N201 == test){
             var resource = AvoidResourceN201KoKr(doc)

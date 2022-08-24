@@ -41,8 +41,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		evt.stopPropagation();
 		Router.location("", true);
 	});
-	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("Analyzed").value(true);
-	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("Not complete only").value(true);
+	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("분석 완료 조회").style("min-width: 150px;").value(true);
+	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미완료 항목 조회").style("min-width: 150px;").value(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
@@ -71,6 +71,14 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		btnPublish.onClick(evt->publish());
 		btnPdf.enabled(false);
 		btnPublish.enabled(false);
+		btnAnalysisComplete.onClick(evt->{
+			if(btnAnalysisComplete.value()) btnAnalysisComplete.text("분석 완료 조회");
+			else 							btnAnalysisComplete.text("전체 항목 조회");
+		});
+		btnProgressOnly.onClick(evt->{
+			if(btnProgressOnly.value()) 	btnProgressOnly.text("미완료 항목 조회");
+			else 							btnProgressOnly.text("전체 항목 조회");
+		});
 		Scheduler.get().scheduleFixedDelay(()->{
 			initiailized = true;
 			update();

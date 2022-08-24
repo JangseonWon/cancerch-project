@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.imageio.ImageIO
 
-class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : Painter<T, D> {
+class SectionFooterGenome<T: Template<out HasSign>, D: AbstractReportDto> : Painter<T, D> {
     var img: PDImageXObject? = null
     val resource = File("/data/lims/resources")
     val color1 = Color(0, 54, 105)
@@ -23,7 +23,6 @@ class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : 
     val color3 = Color(146,196,29)
     val color4 = Color(0,143,73)
     val address1 = "www.gcgenome.com 경기도 용인시 기흥구 이현로 30번길 107 대표전화 031-280-9900 상담톡 https://gccs.channel.io/"
-    val address2 = "www.gclabs.co.kr"
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
@@ -47,7 +46,6 @@ class SectionFooterGenomeLabs<T: Template<out HasSign>, D: AbstractReportDto> : 
             .setNonStrokingColor(color1).setStrokingColor(color1).moveTo(0f, 0f).lineTo(449f, 0f).lineTo(464f, 21.5f).lineTo(0f, 21.5f).fill()
         val font = TextStyle().color(Color.WHITE).fontSize(8f).paragraph(false)
         stream.paragraph(30f, 12f, 500f, TextBlock(font, address1))
-        stream.paragraph(515f, 12f, 500f, TextBlock(font, address2))
         stream.restoreGraphicsState()
         return stream
     }
