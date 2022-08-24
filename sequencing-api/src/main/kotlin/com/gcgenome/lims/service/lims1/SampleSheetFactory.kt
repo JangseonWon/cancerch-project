@@ -31,7 +31,7 @@ object SampleSheetFactory {
         var mis = 0
         val cha = a.toCharArray()
         val chb = b.toCharArray()
-        for (i in 0 until a.length) if (cha[i] != chb[i]) ++mis
+        for (i in a.indices) if (cha[i] != chb[i]) ++mis
         return mis
     }
     fun toSampleSheet(batch: Batch): String {
@@ -73,6 +73,7 @@ object SampleSheetFactory {
                     .append(",").append("${r.patientId}-${r.code}")
                 sb.append(row.toString()).append("\r\n")
             }
+        println(sb.toString())
         return sb.toString()
     }
 }
