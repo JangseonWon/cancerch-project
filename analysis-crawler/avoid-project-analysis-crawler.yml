@@ -7,6 +7,7 @@ spring:
     username: avoid
     password: avoid1004
 server:
-  tmp-dir: /data/lims/avoid-tmp
-  out-dir: /data/lims/avoid-processed
   port: 0
+gcgenome:
+  tmp-dir: /data/lims/tmp/AVOID/v1
+  out-dir: /data/lims/processed-avoid

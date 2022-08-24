@@ -5,12 +5,13 @@ spring:
     zookeeper:
       connect-string: test:12181
       discovery.root: /avoid-project
-  datasource:
-    url: jdbc:postgresql://gemini:5432/lims
+  r2dbc:
+    url: r2dbc:postgresql://gemini:5432/lims
+    compatibility-mode: true
     username: avoid
     password: avoid1004
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    show-sql: true
 server:
   port: 0
+gcgenome:
+  tmp-dir: D:\\data\\lims\\tmp
+  out-dir: D:\\data\\lims\\avoid-processed
