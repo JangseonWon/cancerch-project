@@ -62,6 +62,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .header("Content-Type", entity.contentType.value)
                 .build()
             val response3 = client.send(putRequest3, HttpResponse.BodyHandlers.ofString())
+            println(response3)
             batch.value[UUIDEnum.SAMPLE_SHEET.toUUID()] = response3.body()
 
             val putRequest4 = HttpRequest
@@ -71,6 +72,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
                 .header("Content-Type", "application/json")
                 .build()
             val response4 = client.send(putRequest4, HttpResponse.BodyHandlers.ofString())
+            println(response4)
             Mono.just(response4.statusCode())
         }
     }
