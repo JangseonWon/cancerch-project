@@ -73,7 +73,6 @@ object SampleSheetFactory {
                     .append(",").append("${r.patientId}-${r.code}")
                 sb.append(row.toString()).append("\r\n")
             }
-        println(sb.toString())
         return sb.toString()
     }
 }
