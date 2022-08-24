@@ -27,8 +27,8 @@ class WorklistToBatch(val repo: SequencingRepository) {
                 it.value[UUIDEnum.APPLICATION.toUUID()] = "FASTQ Only"
                 it.value[UUIDEnum.CHEMISTRY.toUUID()] = "Amplicon"
                 it.value[UUIDEnum.ASSAY.toUUID()] = "Swift"
-                it.value[UUIDEnum.ADAPTOR1.toUUID()] = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
-                it.value[UUIDEnum.ADAPTOR2.toUUID()] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+                // it.value[UUIDEnum.ADAPTOR1.toUUID()] = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+                // it.value[UUIDEnum.ADAPTOR2.toUUID()] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
             }
         }
     }
