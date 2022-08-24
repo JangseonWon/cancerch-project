@@ -42,6 +42,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
             val response = client.send(putRequest, HttpResponse.BodyHandlers.ofString())
             if(response.statusCode() != 200) logger.error("Updated failed, Server sent response : \n" + response.statusCode() + "\n" + response.body())
             val batch2 = om.readValue(response.body(), Batch::class.java)
+            batch2.value.putAll(batch.value)
             for(analysis in batch.analysis) {
                 val putRequest2 = HttpRequest
                     .newBuilder()
