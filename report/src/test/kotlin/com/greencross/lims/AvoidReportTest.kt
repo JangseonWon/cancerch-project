@@ -8,12 +8,10 @@ import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.Painter
-import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
+import com.greencross.lims.report.kokr.SectionFooterGenome
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
-import java.awt.Desktop
-import java.io.File
 import java.time.LocalDate
 import java.time.Period
 import java.time.temporal.TemporalAdjusters
@@ -37,20 +35,20 @@ class AvoidReportTest {
     fun test() {
 //        for (cancer in cancers) {
 //            this.cancer = cancer
-//            for (sex in sexes) {
-//                this.sex = sex
-//                for (birth in birthes) {
-//                    this.birth = birth
-//                    val doc: PDDocument? = build(null, "ko-kr");
-//                    doc!!.save("./일반관리/일반관리_${this.sex}_${this.birth}.pdf")
-//                }
-//            }
-
-        val doc: PDDocument? = build(null, "ko-kr")
-        if (doc != null) {
-            doc.save("./"+this.barcode+".pdf")
-            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
-        }
+            for (sex in sexes) {
+                this.sex = sex
+                for (birth in birthes) {
+                    this.birth = birth
+                    val doc: PDDocument? = build(null, "ko-kr");
+                    doc!!.save("./일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+                }
+            }
+//        }
+//        val doc: PDDocument? = build(null, "ko-kr")
+//        if (doc != null) {
+//            doc.save("./"+this.barcode+".pdf")
+//            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
+//        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
@@ -58,16 +56,16 @@ class AvoidReportTest {
         val repo: CancerRepo = CancerRepo()
         return builder(
             TestInfo.N201, type,
-            AvoidDto("TT-5-412",
-                AvoidDto.Results.RISK,
-                AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
+//            AvoidDto("TT-5-412",
+//                AvoidDto.Results.RISK,
+//                AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
 //            AvoidDto("TT-5-412",
 //                AvoidDto.Results.CONCERN,
 //                AvoidDto.Cancer("기타암종")))?.build()
-//            AvoidDto(this.barcode,
-//                AvoidDto.Results.GENERAL,
-//                AvoidDto.Cancer()))?.build()
+            AvoidDto(this.barcode,
+                AvoidDto.Results.GENERAL,
+                AvoidDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
         val doc = PDDocument()
@@ -89,7 +87,7 @@ class AvoidReportTest {
         dto.age = age(dto.birthDate, dto.collectionDate)
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
-        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenomeLabs()
+        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
         val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
         return if(TestInfo.N201 == test){
             var resource = AvoidResourceN201KoKr(doc)
