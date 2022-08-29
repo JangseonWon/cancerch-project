@@ -114,7 +114,7 @@ class ReportHandler(
         avoidDto.barcode = barcode
         avoidDto.patientName = patient.name
         avoidDto.birthDate = patient.birth
-        avoidDto.age = age(avoidDto.birthDate).toString()
+        avoidDto.age = age(avoidDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
         avoidDto.sex = sex(patient.sex)
         avoidDto.requestNumber = requestNumber
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
@@ -127,10 +127,6 @@ class ReportHandler(
         avoidDto.specimenType = analysis.sampleType
 
         return avoidDto
-    }
-
-    private fun age(birth: LocalDate?): Int {
-        return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years
     }
 
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
