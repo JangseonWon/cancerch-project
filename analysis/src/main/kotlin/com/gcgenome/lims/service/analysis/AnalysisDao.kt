@@ -20,27 +20,33 @@ import java.util.*
 class AnalysisDao(private val repo: AnalysisRepository) {
     fun column(key: String): ComparableExpression<*> {
         return when {
-            key.trim().isEmpty()                -> analysis.analysisAt
-            "작성일".contentEquals(key)         -> analysis.analysisAt
+            key.trim().isEmpty()                -> analysis.sample.stringValue()
+            "분석일".contentEquals(key)         -> analysis.analysisAt
             "ID".contentEquals(key)             -> analysis.sample.stringValue()
-            else                                -> analysis.analysisAt
+            "batch".contentEquals(key)          -> analysis.batch
+            else                                -> analysis.sample.stringValue()
         }
     }
     fun predicate(key: String?, value: String?): Predicate? {
         return when {
             key == null || key.trim().isEmpty() -> {
                 val predicates = listOfNotNull(
-                    predicate("ID", value),
                     predicate("name", value),
-                    predicate("remark", value)
+                    predicate("remark", value),
+                    predicate("top5", value),
+                    predicate("top6", value),
+                    predicate("ID", value)
                 )
                 BooleanBuilder().andAnyOf(*predicates.toTypedArray())
             }
-            "ID".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.sample.eq(value.replace("-", "").toLong())
+            "ID".contentEquals(key, ignoreCase = true) -> return if(value != null)          analysis.sample.eq(value.replace("-", "").toLong())
              else null
-            "name".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.patientName.eq(value) else null
-            "published".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.publishAt.isNotNull
-             else null
+            "name".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.patientName.eq(value)          else null
+            "remark".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.remark.eq(value)               else null
+            "published".contentEquals(key, ignoreCase = true) -> return if(value != null)   analysis.publishAt.isNull               else null
+            "printed".contentEquals(key, ignoreCase = true) -> return if(value != null)     analysis.reportedAt.isNull              else null
+            "too5".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.too5Pred.eq(convert(value))    else null
+            "too6".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.too6Pred.eq(convert(value))    else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
                 return analysis.analysisAt.loe(date)
@@ -73,5 +79,14 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         }.all()
         val count = repo.query { it.select(Wildcard.count).from(analysis).where(predicates)}
         return count.one().map { PageReactive(it, param.limit, param.page, flux) }
+    }
+    private fun convert(cancer: String) = when(cancer){
+        "폐암"   -> "LuC"
+        "대장암" -> "colon"
+        "난소암" -> "OV"
+        "간암"   -> "HCC"
+        "식도암" -> "ESO"
+        "췌장암" -> "PanC"
+        else   -> cancer
     }
 }

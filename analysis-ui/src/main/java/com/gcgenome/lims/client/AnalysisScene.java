@@ -41,8 +41,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		evt.stopPropagation();
 		Router.location("", true);
 	});
-	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("분석 완료 조회").style("min-width: 150px;").value(true);
-	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미완료 항목 조회").style("min-width: 150px;").value(true);
+	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 미생성 목록 조회").style("min-width: 200px;").value(true);
+	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미배포 목록 조회").style("min-width: 200px;").value(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(today()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
@@ -72,12 +72,12 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		btnPdf.enabled(false);
 		btnPublish.enabled(false);
 		btnAnalysisComplete.onClick(evt->{
-			if(btnAnalysisComplete.value()) btnAnalysisComplete.text("분석 완료 조회");
-			else 							btnAnalysisComplete.text("전체 항목 조회");
+			if(!btnAnalysisComplete.value()) btnAnalysisComplete.text("결과지 전체 조회");
+			else 							btnAnalysisComplete.text("결과지 미생성 조회");
 		});
 		btnProgressOnly.onClick(evt->{
-			if(btnProgressOnly.value()) 	btnProgressOnly.text("미완료 항목 조회");
-			else 							btnProgressOnly.text("전체 항목 조회");
+			if(!btnProgressOnly.value()) 	btnProgressOnly.text("배포 전체 상태 조회");
+			else 							btnProgressOnly.text("미배포 목록 조회");
 		});
 		Scheduler.get().scheduleFixedDelay(()->{
 			initiailized = true;
@@ -98,7 +98,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
 		proxy.sortBy(this.sort());
 
-//		if(!this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
+		if(this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
+		if(this.btnAnalysisComplete.value()) filters.add(new Query.Filter().key("printed").value("true"));
 		proxy.limit(show()).page((int) page());
 		proxy.filters(filters.stream().toArray(Query.Filter[]::new));
 		ProgressApi.open(false);
@@ -153,7 +154,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	@Override
 	protected IsElement<?>[][] controls() {
 		return new IsElement<?>[][]{
-			new IsElement[] { btnProgressOnly, btnAnalysisComplete },
+			new IsElement[] { btnAnalysisComplete, btnProgressOnly },
 			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch},
 			new IsElement[] {btnPdf, btnPublish}
 		};
