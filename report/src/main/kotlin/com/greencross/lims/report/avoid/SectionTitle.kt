@@ -55,7 +55,7 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         stream.paragraph(445f, y+35, 100f, LEFT, TextBlock(style, dto.requestNumber))
         stream.paragraph(285f, y+20, 100f, LEFT, TextBlock(style, dto.patientName))
         stream.paragraph(445f, y+20, 100f, LEFT,
-            TextBlock(style, Util.dashIfEmpty(age(dto.birthDate, dto.collectionDate))),
+            TextBlock(style, Util.dashIfEmpty(dto.age!!)),
             TextBlock(style, " / "),
             TextBlock(style, Util.dashIfEmpty(sex(dto.sex)))
         )
