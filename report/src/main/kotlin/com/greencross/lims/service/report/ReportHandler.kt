@@ -133,12 +133,12 @@ class ReportHandler(
         if (birth == null) return 0
         return if (sampling == null) {
             val americanAge = LocalDateTime.now().minusYears(birth.year.toLong()).year.toLong()
-            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()
-            else americanAge.toInt()-1
+            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()-1
+            else americanAge.toInt()
         } else {
             val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
-            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()
-            else americanAge.toInt()-1
+            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()-1
+            else americanAge.toInt()
         }
     }
 
