@@ -96,10 +96,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		}
 		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
-		if(this.sort()!=null){
-			if("워크리스트 명".equalsIgnoreCase(this.sort())) proxy.sortBy("워크리스트 명");
-			else if("작성일".equalsIgnoreCase(this.sort())) proxy.sortBy("작성일");
-		}else proxy.sortBy("워크리스트 명").asc(false);
+		proxy.sortBy(this.sort());
+
 		if(!this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
 		proxy.limit(show()).page((int) page());
 		proxy.filters(filters.stream().toArray(Query.Filter[]::new));
@@ -163,13 +161,23 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		if(selection.length <= 0) return;
 		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
 		ProgressApi.open(false);
+
+//		AnalysisApi.print(selection).then(results->{
+//			Arrays.stream(results).anyMatch(result->!result.ok)
+//			DomGlobal.alert("완료되었습니다.");
+//			update();
+//			return null;
+//		}).finally_(ProgressApi::close);
+
 		for (Analysis analysis: selection) {
 			AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
-				.then(result-> {
-					DomGlobal.alert("완료되었습니다.");
-					update();
-					return null;
-				}).finally_(ProgressApi::close);
+					.then(result->{
+						if(result.ok) {
+							update();
+							return Promise.resolve(true);
+						}
+						else return Promise.resolve(false);
+					}).finally_(ProgressApi::close);
 		}
 	}
 	private void publish() {

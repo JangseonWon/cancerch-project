@@ -9,6 +9,8 @@ import elemental2.dom.Response;
 import elemental2.promise.Promise;
 import lombok.experimental.UtilityClass;
 
+import java.util.Arrays;
+
 import static elemental2.core.Global.JSON;
 import static elemental2.core.Global.encodeURI;
 
@@ -22,8 +24,8 @@ public class AnalysisApi {
 		request.setMethod("GET");
 
 		StringBuilder urlBuilder = new StringBuilder("/analysis/search");
-		urlBuilder.append("?page=").append(query.page)
-				.append("&limit=").append(query.limit)
+		urlBuilder.append("?page=").append(query.page())
+				.append("&limit=").append(query.limit())
 				.append("&sort_by=").append(query.sortBy)
 				.append("&asc=").append(query.asc);
 
@@ -36,6 +38,25 @@ public class AnalysisApi {
 			}); else return Promise.resolve(response);
 		});
 	}
+	/*public Promise<Response[]> print(Analysis[] analyses){
+		RequestInit request = RequestInit.create();
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		request.setMethod("PUT");
+
+		Promise[] promises = Arrays.stream(analyses).map(analysis -> {
+			return FetchApi.request("/samples/"+analysis.request().sample().id()+"/services/"+analysis.request().service().id()+"/print/"+"kokr", request)
+					.then(response -> {
+						if (!response.ok) return response.text().then(msg -> {
+							DomGlobal.alert(msg);
+							return Promise.reject(msg);
+						}); else return Promise.resolve(response);
+					});
+		}).toArray(Promise[]::new);
+
+		return Promise.all(promises);
+	}*/
 	public Promise<Response> print(String sample, String service, String lang){
 		RequestInit request = RequestInit.create();
 		request.setHeaders(new String[][] {
@@ -64,19 +85,6 @@ public class AnalysisApi {
 		return FetchApi.request(url, request)
 				.then(Response::blob)
 				.then(blob->Promise.resolve(blob.slice(0, blob.size, "application/pdf")));
-	}
-	public Promise<Analysis> pdf(String sample, String service){
-		RequestInit request = RequestInit.create();
-		request.setMethod("PUT");
-		request.setHeaders(new String[][] {
-				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-		});
-		return FetchApi.request("/samples/"+sample+"/services/"+service+"/print", request)
-				.then(Response::text)
-				.then(r->{
-					if(r!=null && !r.trim().isEmpty()) return Promise.resolve((Analysis)JSON.parse(r));
-					else return Promise.resolve((Analysis)null);
-				});
 	}
 	public Promise<Response> publish(String sample, String service, String createAt){
 		RequestInit request = RequestInit.create();
