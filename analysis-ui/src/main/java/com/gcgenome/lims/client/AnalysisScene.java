@@ -56,7 +56,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		super(query);
 		this.query = query;
 		initialize();
-		this.sortable("ID", "Serial").sort("Serial", true);;
+		this.sortable("ID", "Serial").sort("ID", true);;
 		((HTMLElement)iptDateFrom.element().parentElement).style.display = "flex";
 		((HTMLElement)btnPdf.element().parentElement).style.display = "flex";
 		grid.onSelectionChange(evt->{
