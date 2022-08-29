@@ -44,16 +44,18 @@ class ReportHandler(
     }
 
     @Transactional
-    fun print(sample: Long, service: String, lang: String) : Mono<com.greencross.lims.data.Report>{
-        return analysisDao.findById(sample, service).flatMap{
+    fun print(sample: Long, service: String, lang: String): Mono<com.greencross.lims.data.Report> {
+        return analysisDao.findById(sample, service).flatMap {
             val dto = analysisToAvoidDto(it)
             val baos = ByteArrayOutputStream()
             val doc = build(lang, dto)
             val createTime = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()), ZoneId.systemDefault()
+                Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
+                ZoneId.systemDefault()
             )
             doc?.save(baos)
-            val fileName = "${it.sample}_${it.service}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))}.pdf"
+            val fileName =
+                "${it.sample}_${it.service}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))}.pdf"
             val reportFile = ReportFile(UUID.randomUUID()).apply {
                 this.createTime = createTime
                 this.data = ByteBuffer.wrap(baos.toByteArray())
@@ -62,7 +64,7 @@ class ReportHandler(
                 this.size = baos.toByteArray().size.toLong()
             }
             fileRepo.save(reportFile)
-            val entity = com.greencross.lims.entity.Report(it.sample, it.service, createTime).apply{
+            val entity = com.greencross.lims.entity.Report(it.sample, it.service, createTime).apply {
                 this.file = reportFile.id
                 this.name = reportFile.name!!
                 this.size = reportFile.size
@@ -70,30 +72,42 @@ class ReportHandler(
             reportDao.create(entity).map(mapper::toDto)
         }
     }
+
     @Transactional
-    fun preview(sample: Long, service: String, createAt: Long): Mono<ByteArray>{
-        return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
+    fun preview(sample: Long, service: String, createAt: Long): Mono<ByteArray> {
+        return reportDao.findForCassandraReport(
+            sample,
+            service,
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
+        )
             .map {
                 fileRepo.findById(it.file)
             }
-            .map {it.get().data!!.array()}
+            .map { it.get().data!!.array() }
     }
-    private fun analysisToAvoidDto(analysis: Analysis) : AvoidDto{
+
+    private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
         val patient = analysis.patient
         val barcode = analysis.barcode.toString()
-        val (customerName, requestNumber) = if(patient.customerName2!=null) Pair(patient.customerName2, formatSampleId(
-            analysis.remark?.toLongOrNull()
-        ))
+        val (customerName, requestNumber) = if (patient.customerName2 != null) Pair(
+            patient.customerName2, formatSampleId(
+                analysis.remark?.toLongOrNull()
+            )
+        )
         else Pair(patient.customerName, formatSampleId(analysis.sample))
-        val result = if(sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
-        val cancer1  = when(stringToEnum(analysis.result)) {
+        val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
+        val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
             CancerRepo.결과.CONCERN -> AvoidDto.Cancer("기타암종")
-            else                    -> AvoidDto.Cancer(cancerToFileName(result),
-                        cancerRepo.findPPVbyAgeAndCancerAndSex(
-                            stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex))!!,
-                        cancerRepo.findASRbyAgeAndCancerAndSex(
-                            stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex))!!)
+            else -> AvoidDto.Cancer(
+                cancerToFileName(result),
+                cancerRepo.findPPVbyAgeAndCancerAndSex(
+                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!,
+                cancerRepo.findASRbyAgeAndCancerAndSex(
+                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!
+            )
         }
 
         val avoidDto = AvoidDto(barcode, stringToResult(analysis.result), cancer1)
@@ -115,9 +129,10 @@ class ReportHandler(
         return avoidDto
     }
 
-    private fun age(birth: LocalDate?) : Int {
+    private fun age(birth: LocalDate?): Int {
         return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years
     }
+
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
         if (birth == null) return 0
         return if (sampling == null) (Period.between(
@@ -129,21 +144,22 @@ class ReportHandler(
             sampling.with(TemporalAdjusters.firstDayOfYear())
         ).years + 1)
     }
-}
-    private fun sex(sex: String) : Sex{
+
+    private fun sex(sex: String): Sex {
         return Sex.valueOf(sex)
     }
+
     private fun build(lang: String, dto: AvoidDto): PDDocument? {
         return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
     }
 
-    private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
+    private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto): AvoidPageBuilder<*>? {
         val doc = PDDocument()
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
         val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
         val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
-        return if(TestInfo.N201 == test){
+        return if (TestInfo.N201 == test) {
             var resource = AvoidResourceN201KoKr(doc)
             var template = AvoidTemplateN201KoKr(resource, test)
 
@@ -152,34 +168,39 @@ class ReportHandler(
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
         } else null
     }
-    private fun stringToEnum(result: String) = when(result){
+
+    private fun stringToEnum(result: String) = when (result) {
         "GENERAL" -> CancerRepo.결과.GENERAL
         "CONCERN" -> CancerRepo.결과.CONCERN
-        else      -> CancerRepo.결과.RISK
+        else -> CancerRepo.결과.RISK
     }
-    private fun stringToCancer(result: String) = when(result){
-        "LuC"    -> CancerRepo.암종.폐암
-        "Panc"   -> CancerRepo.암종.췌장암
-        "HCC"    -> CancerRepo.암종.간암
-        "colon"  -> CancerRepo.암종.대장암
-        "etc"    -> CancerRepo.암종.기타암종
-        "ESO"    -> CancerRepo.암종.식도암
-        else     -> CancerRepo.암종.유방암
+
+    private fun stringToCancer(result: String) = when (result) {
+        "LuC" -> CancerRepo.암종.폐암
+        "Panc" -> CancerRepo.암종.췌장암
+        "HCC" -> CancerRepo.암종.간암
+        "colon" -> CancerRepo.암종.대장암
+        "etc" -> CancerRepo.암종.기타암종
+        "ESO" -> CancerRepo.암종.식도암
+        else -> CancerRepo.암종.유방암
     }
-    private fun cancerToFileName(cancer: String) = when(cancer){
-        "LuC"    -> "폐암"
-        "Panc"   -> "췌장암"
-        "HCC"    -> "간암"
-        "colon"  -> "대장암"
-        "etc"    -> "기타암종"
-        "ESO"    -> "식도암"
-        else     -> "유방암"
+
+    private fun cancerToFileName(cancer: String) = when (cancer) {
+        "LuC" -> "폐암"
+        "Panc" -> "췌장암"
+        "HCC" -> "간암"
+        "colon" -> "대장암"
+        "etc" -> "기타암종"
+        "ESO" -> "식도암"
+        else -> "유방암"
     }
-    private fun stringToResult(result:String) = when(result){
+
+    private fun stringToResult(result: String) = when (result) {
         "GENERAL" -> AvoidDto.Results.GENERAL
         "CONCERN" -> AvoidDto.Results.CONCERN
-        else      -> AvoidDto.Results.RISK
+        else -> AvoidDto.Results.RISK
     }
+
     private fun formatSampleId(id: Long?): String? {
         if (id == null) return null
         val cast = id.toString()
