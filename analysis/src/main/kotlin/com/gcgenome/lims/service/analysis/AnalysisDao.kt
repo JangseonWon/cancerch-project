@@ -33,9 +33,8 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 val predicates = listOfNotNull(
                     predicate("name", value),
                     predicate("remark", value),
-                    predicate("top5", value),
-                    predicate("top6", value),
-                    predicate("ID", value)
+                    predicate("ID", value),
+                    predicate("batch", value)
                 )
                 BooleanBuilder().andAnyOf(*predicates.toTypedArray())
             }
@@ -45,8 +44,6 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             "remark".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.remark.eq(value)               else null
             "published".contentEquals(key, ignoreCase = true) -> return if(value != null)   analysis.publishAt.isNull               else null
             "printed".contentEquals(key, ignoreCase = true) -> return if(value != null)     analysis.reportedAt.isNull              else null
-            "too5".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.too5Pred.eq(convert(value))    else null
-            "too6".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.too6Pred.eq(convert(value))    else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
                 return analysis.dateRequest.loe(date)
@@ -55,6 +52,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
                 return analysis.dateRequest.goe(date)
             } else null
+            "batch".contentEquals(key, ignoreCase = true) -> return if (value != null)      analysis.batch.eq(value)                else null
             else -> null
         }
     }
