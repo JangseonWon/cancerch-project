@@ -140,7 +140,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
-			elemSheet.values(data).refresh();
+			elemSheet.clear();
+			elemSheet.values(data);
 			return that();
 		} catch(Exception e){
 			throw new RuntimeException(e.getMessage(), e);
