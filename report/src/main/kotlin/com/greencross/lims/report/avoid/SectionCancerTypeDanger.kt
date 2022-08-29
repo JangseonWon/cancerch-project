@@ -101,7 +101,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         val age : Int = dto.age!!.toInt()
         var img = template.resource().imgCancerTypeContent()
         var width = img.width * DANGER_CANCER_CONTENT / img.height
-        val ppv = if(round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100 == 0.0) 0.1 else round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100
+        val ppv = if(round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100 == 0.0) 0.01 else round(repo.findASRbyAgeAndCancerAndSex(cancer, age, dto.sex!!)!!.div(1000)*100)/100
         stream.drawImage(img, x-width/2, y, width, DANGER_CANCER_CONTENT)
 
         img = template.resource().imgCancerTypeImage(cancer.name)
