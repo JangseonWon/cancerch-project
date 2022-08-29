@@ -137,7 +137,7 @@ class ReportHandler(
             else americanAge.toInt()-1
         } else {
             val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
-            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()
+            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()
             else americanAge.toInt()-1
         }
     }
