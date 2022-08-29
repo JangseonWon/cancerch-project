@@ -75,7 +75,6 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
         stream.paragraph(377f, y, 65f, TextBlock(styleHeaderTitle, lblAgeSex))
         stream.paragraph(135f, y, 86f, TextBlock(styleValueTitle, Util.dashIfEmpty(dto.patientName!!)))
         stream.paragraph(290f, y, 88f, TextBlock(styleValueTitle, Util.dashIfEmpty(dto.patientCode!!)))
-        println(dto.age)
         y = stream.paragraph(
             447f, y, 100f,
             TextBlock(styleValueTitle, Util.dashIfEmpty(dto.age!!)),
