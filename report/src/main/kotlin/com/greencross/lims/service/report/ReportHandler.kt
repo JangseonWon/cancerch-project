@@ -119,7 +119,7 @@ class ReportHandler(
         avoidDto.requestNumber = requestNumber
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
         avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
-        avoidDto.reportDate = analysis.dateDue.toLocalDate()
+        avoidDto.reportDate = LocalDate.now()
         avoidDto.medicalRecordNumber = patient.mrn
         avoidDto.barcode = barcode
         avoidDto.medicalInstitution = customerName
