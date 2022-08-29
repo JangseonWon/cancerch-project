@@ -44,7 +44,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("분석 완료 조회").style("min-width: 150px;").value(true);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미완료 항목 조회").style("min-width: 150px;").value(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
-	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(today()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
@@ -131,6 +131,11 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		yesterday.setDate(yesterday.getDate()-14);
 		yesterday.setHours(0, 0, 0, 0);
 		return yesterday;
+	}
+	private static JsDate today() {
+		JsDate today = new JsDate();
+		today.setHours(23,59,59);
+		return today;
 	}
 	@Override
 	protected IconElement icon() {

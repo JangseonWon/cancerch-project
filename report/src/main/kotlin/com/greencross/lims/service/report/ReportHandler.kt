@@ -91,9 +91,9 @@ class ReportHandler(
             CancerRepo.결과.CONCERN -> AvoidDto.Cancer("기타암종")
             else                    -> AvoidDto.Cancer(cancerToFileName(result),
                         cancerRepo.findPPVbyAgeAndCancerAndSex(
-                            stringToCancer(result), age(patient.birth), sex(patient.sex))!!,
+                            stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex))!!,
                         cancerRepo.findASRbyAgeAndCancerAndSex(
-                            stringToCancer(result), age(patient.birth), sex(patient.sex))!!)
+                            stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex))!!)
         }
 
         val avoidDto = AvoidDto(barcode, stringToResult(analysis.result), cancer1)
@@ -116,8 +116,20 @@ class ReportHandler(
     }
 
     private fun age(birth: LocalDate?) : Int {
-        return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years+1
+        return Period.between(birth, LocalDate.now().with(TemporalAdjusters.firstDayOfYear())).years
     }
+    private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
+        if (birth == null) return 0
+        return if (sampling == null) (Period.between(
+            birth,
+            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1)
+        else (Period.between(
+            birth,
+            sampling.with(TemporalAdjusters.firstDayOfYear())
+        ).years + 1)
+    }
+}
     private fun sex(sex: String) : Sex{
         return Sex.valueOf(sex)
     }

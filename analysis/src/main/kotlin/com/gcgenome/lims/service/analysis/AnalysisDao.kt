@@ -22,6 +22,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         return when {
             key.trim().isEmpty()                -> analysis.analysisAt
             "작성일".contentEquals(key)         -> analysis.analysisAt
+            "ID".contentEquals(key)             -> analysis.sample.stringValue()
             else                                -> analysis.analysisAt
         }
     }
@@ -29,13 +30,15 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         return when {
             key == null || key.trim().isEmpty() -> {
                 val predicates = listOfNotNull(
-                    predicate("title", value),
-                    predicate("id", value),
-                    predicate("status", value),
+                    predicate("ID", value),
+                    predicate("name", value),
                     predicate("remark", value)
                 )
                 BooleanBuilder().andAnyOf(*predicates.toTypedArray())
             }
+            "ID".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.sample.eq(value.replace("-", "").toLong())
+             else null
+            "name".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.patientName.eq(value) else null
             "published".contentEquals(key, ignoreCase = true) -> return if(value != null) analysis.publishAt.isNotNull
              else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
