@@ -41,7 +41,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		evt.stopPropagation();
 		Router.location("", true);
 	});
-	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 미생성 목록 조회").style("min-width: 200px;").value(true);
+	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 전체 조회").style("min-width: 200px;").value(false);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미배포 목록 조회").style("min-width: 200px;").value(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(today()).required(true);
@@ -56,7 +56,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		super(query);
 		this.query = query;
 		initialize();
-		this.sortable("ID", "Serial").sort("ID", true);;
+		this.sortable("ID", "의뢰일", "Batch").sort("ID", true);;
 		((HTMLElement)iptDateFrom.element().parentElement).style.display = "flex";
 		((HTMLElement)btnPdf.element().parentElement).style.display = "flex";
 		grid.onSelectionChange(evt->{

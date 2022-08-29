@@ -21,7 +21,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
     fun column(key: String): ComparableExpression<*> {
         return when {
             key.trim().isEmpty()                -> analysis.sample.stringValue()
-            "분석일".contentEquals(key)         -> analysis.analysisAt
+            "의뢰일".contentEquals(key)         -> analysis.dateRequest
             "ID".contentEquals(key)             -> analysis.sample.stringValue()
             "batch".contentEquals(key)          -> analysis.batch
             else                                -> analysis.sample.stringValue()
@@ -49,11 +49,11 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             "too6".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.too6Pred.eq(convert(value))    else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
-                return analysis.analysisAt.loe(date)
+                return analysis.dateRequest.loe(date)
             } else null
             "from".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
-                return analysis.analysisAt.goe(date)
+                return analysis.dateRequest.goe(date)
             } else null
             else -> null
         }
