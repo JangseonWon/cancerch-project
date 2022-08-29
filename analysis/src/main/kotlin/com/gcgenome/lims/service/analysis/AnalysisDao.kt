@@ -39,7 +39,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 )
                 BooleanBuilder().andAnyOf(*predicates.toTypedArray())
             }
-            "ID".contentEquals(key, ignoreCase = true) -> return if(value != null)          analysis.sample.eq(value.replace("-", "").toLong())
+            "ID".contentEquals(key, ignoreCase = true) -> return if(value != null)          analysis.sample.stringValue().eq(value.replace("-", ""))
              else null
             "name".contentEquals(key, ignoreCase = true) -> return if(value != null)        analysis.patientName.eq(value)          else null
             "remark".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.remark.eq(value)               else null
