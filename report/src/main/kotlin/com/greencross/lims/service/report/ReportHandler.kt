@@ -131,14 +131,15 @@ class ReportHandler(
 
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
         if (birth == null) return 0
-        return if (sampling == null) (Period.between(
-            birth,
-            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1)
-        else (Period.between(
-            birth,
-            sampling.with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1)
+        return if (sampling == null) {
+            val americanAge = LocalDateTime.now().minusYears(birth.year.toLong()).year.toLong()
+            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()
+            else americanAge.toInt()-1
+        } else {
+            val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
+            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()
+            else americanAge.toInt()-1
+        }
     }
 
     private fun sex(sex: String): Sex {
