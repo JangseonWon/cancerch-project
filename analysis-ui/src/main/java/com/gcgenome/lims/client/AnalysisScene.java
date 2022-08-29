@@ -44,13 +44,12 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 전체 조회").style("min-width: 200px;").value(false);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미배포 목록 조회").style("min-width: 200px;").value(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
-	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(today()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
 	private final Query query;
-	boolean initiailized = false;
 
 	public AnalysisScene(Query query) {
 		super(query);
@@ -79,22 +78,16 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			if(!btnProgressOnly.value()) 	btnProgressOnly.text("배포 전체 상태 조회");
 			else 							btnProgressOnly.text("미배포 목록 조회");
 		});
-		Scheduler.get().scheduleFixedDelay(()->{
-			initiailized = true;
-			update();
-			return false;
-		}, 1000);
 	}
 
 	private void update(Query query){
-		if(!initiailized) return;
 		Query proxy = new Query().asc(this.isAsc());
 		List<Query.Filter> filters = new LinkedList<>();
 		if(query.filters!=null){
 			Arrays.stream(query.filters).forEach(filter->filter.key(" "));
 			Collections.addAll(filters, query.filters);
 		}
-		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
+		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime()+86400000)));
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
 		proxy.sortBy(this.sort());
 
@@ -129,15 +122,9 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private static JsDate prevday() {
 		JsDate today = new JsDate();
 		JsDate yesterday = new JsDate(today);
-		yesterday.setDate(yesterday.getDate()-14);
+		yesterday.setDate(yesterday.getDate()-30);
 		yesterday.setHours(0, 0, 0, 0);
 		return yesterday;
-	}
-	private static JsDate today() {
-		JsDate today = new JsDate();
-		today.setDate(today.getDate()+1);
-		today.setHours(23,59,59);
-		return today;
 	}
 	@Override
 	protected IconElement icon() {
