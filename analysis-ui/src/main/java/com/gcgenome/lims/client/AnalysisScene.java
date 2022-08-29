@@ -98,7 +98,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
 		proxy.sortBy(this.sort());
 
-		if(!this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
+//		if(!this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
 		proxy.limit(show()).page((int) page());
 		proxy.filters(filters.stream().toArray(Query.Filter[]::new));
 		ProgressApi.open(false);
@@ -134,6 +134,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	}
 	private static JsDate today() {
 		JsDate today = new JsDate();
+		today.setDate(today.getDate()+1);
 		today.setHours(23,59,59);
 		return today;
 	}
