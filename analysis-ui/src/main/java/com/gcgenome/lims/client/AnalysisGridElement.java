@@ -41,6 +41,19 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			else return "#FFFFFF";
 		}).color("#FFFFFF");
 	}
+	private static ColumnString columnThreshold(String name, Code code, String type){
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+			if(code.equals(Code.FREEMIX)) {
+				if(Double.parseDouble(value) >= 1.0) return "#FF0000";
+				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+			}
+			else if(code.equals(Code.FINAL_READS)) {
+				if(Double.parseDouble(value) <= 40.0) return "#FF0000";
+				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+			}
+			else return type.equals("A") ? "#BF5C26" : "#8C7162";
+		}).color("#FFFFFF");
+	}
 	private static ColumnString columnPassOrFail(String name){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
 			if("PASS".equals(value)) return "#46BF26";
@@ -81,9 +94,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("top 6 FEMS prob").horizontal("right").build(),
 					column("iscore").horizontal("right").build(),
 					column("cad ensemble prob").horizontal("right").build(),
-					columnAndColor("freemix A", "A").build(),
+					columnThreshold("freemix A", Code.FREEMIX, "A").build(),
 					columnAndColor("raw read(Million) A", "A").build(),
-					columnAndColor("filtered reads A", "A").build(),
+					columnThreshold("filtered reads A", Code.FINAL_READS, "A").build(),
 					columnAndColor("dup rate A", "A").build(),
 					columnAndColor("gc A", "A").build(),
 					columnAndColor("mean is A", "A").build(),
@@ -94,9 +107,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnAndColor("chrY Count A", "A").build(),
 					columnAndColor("chrY Proportion A", "A").build(),
 					columnPassOrFail("Sex Prediction A").build(),
-					columnAndColor("freemix B", "B").build(),
+					columnThreshold("freemix B", Code.FREEMIX,  "B").build(),
 					columnAndColor("raw read(Million) B", "B").build(),
-					columnAndColor("filtered reads B", "B").build(),
+					columnThreshold("filtered reads B", Code.FINAL_READS, "B").build(),
 					columnAndColor("dup rate B", "B").build(),
 					columnAndColor("gc B", "B").build(),
 					columnAndColor("mean is B", "B").build(),
