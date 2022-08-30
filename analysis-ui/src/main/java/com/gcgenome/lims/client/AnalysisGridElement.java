@@ -44,11 +44,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	private static ColumnString columnThreshold(String name, Code code, String type){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
 			if(code.equals(Code.FREEMIX)) {
-				if(Double.parseDouble(value) >= 1.0) return "#FF0000";
+				if(Double.valueOf(value) >= 1.0) return "#FF0000";
 				else return type.equals("A") ? "#BF5C26" : "#8C7162";
 			}
 			else if(code.equals(Code.FINAL_READS)) {
-				if(Double.parseDouble(value) <= 40.0) return "#FF0000";
+				if(Double.valueOf(value) <= 40.0) return "#FF0000";
 				else return type.equals("A") ? "#BF5C26" : "#8C7162";
 			}
 			else return type.equals("A") ? "#BF5C26" : "#8C7162";
