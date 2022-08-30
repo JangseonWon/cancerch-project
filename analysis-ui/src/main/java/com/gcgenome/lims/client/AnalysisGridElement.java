@@ -43,16 +43,20 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		}).color("#FFFFFF");
 	}
 	private static ColumnString columnThreshold(String name, Code code, String type){
+//		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
+//			if(code.equals(Code.FREEMIX) && !value.equals("null")) {
+//				if(Double.valueOf(value) >= 1.0) return "#FF0000";
+//				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+//			}
+//			else if(code.equals(Code.FINAL_READS) && !value.equals("null")) {
+//				if(Double.valueOf(value) <= 40.0) return "#FF0000";
+//				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+//			}
+//			else return type.equals("A") ? "#BF5C26" : "#8C7162";
+//		}).color("#FFFFFF");
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-			if(code.equals(Code.FREEMIX) && !value.equals("null")) {
-				if(Double.valueOf(value).doubleValue() >= 1.0) return "#FF0000";
-				else return type.equals("A") ? "#BF5C26" : "#8C7162";
-			}
-			else if(code.equals(Code.FINAL_READS) && !value.equals("null")) {
-				if(Double.valueOf(value).doubleValue() <= 40.0) return "#FF0000";
-				else return type.equals("A") ? "#BF5C26" : "#8C7162";
-			}
-			else return type.equals("A") ? "#BF5C26" : "#8C7162";
+			if("A".equals(type)) return "#BF5C26";
+			else return "#8C7162";
 		}).color("#FFFFFF");
 	}
 	private static ColumnString columnPassOrFail(String name){
