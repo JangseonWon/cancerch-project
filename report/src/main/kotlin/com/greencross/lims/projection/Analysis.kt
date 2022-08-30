@@ -12,6 +12,8 @@ data class Analysis (
     val dateDue: LocalDateTime,
     val sampleType: String,
     val remark: String?,
+    val code: String?,
+    val value: String?,
     val patient: Patient,
     val barcode: Long,
     val result: String,
@@ -28,6 +30,8 @@ data class Analysis (
             val sampleType: String,
             val barcode: Long,
             val remark: String?,
+            val code: String?,
+            val value: String?,
             val patient: String,
             val patientName: String,
             val sex: String,
@@ -39,7 +43,7 @@ data class Analysis (
             val too5Pred: String,
             val too6Pred: String
         ){
-            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred)
+            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred)
         }
     }
 }

@@ -4,6 +4,7 @@ import com.greencross.lims.entity.QAnalysis.analysis
 import com.greencross.lims.entity.readonly.QSample.sample
 import com.greencross.lims.entity.readonly.QPatient.patient
 import com.greencross.lims.entity.readonly.QRequest.request
+import com.greencross.lims.entity.readonly.QRequestInfo.requestInfo
 import com.greencross.lims.projection.Analysis
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
@@ -24,6 +25,8 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 sample.sampleType.`as`("sampleType"),
                 sample.barcode,
                 sample.remark,
+                requestInfo.code,
+                requestInfo.value,
                 patient.id_SET.`as`("patient"),
                 patient.name.`as`("patientName"),
                 patient.sex,
@@ -39,6 +42,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             .leftJoin(sample).on(sample.id.eq(analysis.sample))
             .leftJoin(request).on(request.sample.eq(analysis.sample).and(request.service.eq(analysis.service)))
             .leftJoin(patient).on(patient.id_SET.eq(sample.patient))
+            .leftJoin(requestInfo).on(request.sample.eq(requestInfo.sample).and(request.service.eq(requestInfo.service)).and(requestInfo.code.eq("TA0023")))
     }
     fun findById(sample: Long, service: String) : Mono<Analysis> {
         return repo.query{
