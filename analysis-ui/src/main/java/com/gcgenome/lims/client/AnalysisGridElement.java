@@ -16,6 +16,7 @@ import org.jboss.elemento.HtmlContentBuilder;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
@@ -43,11 +44,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnThreshold(String name, Code code, String type){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-			if(code.equals(Code.FREEMIX)) {
+			if(code.equals(Code.FREEMIX) && !value.equals("null")) {
 				if(Double.valueOf(value).doubleValue() >= 1.0) return "#FF0000";
 				else return type.equals("A") ? "#BF5C26" : "#8C7162";
 			}
-			else if(code.equals(Code.FINAL_READS)) {
+			else if(code.equals(Code.FINAL_READS) && !value.equals("null")) {
 				if(Double.valueOf(value).doubleValue() <= 40.0) return "#FF0000";
 				else return type.equals("A") ? "#BF5C26" : "#8C7162";
 			}
