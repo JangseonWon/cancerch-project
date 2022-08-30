@@ -12,7 +12,10 @@ import com.greencross.lims.report.kokr.SectionFooterGenome
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
+import java.awt.Desktop
+import java.io.File
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
 import java.time.temporal.TemporalAdjusters
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
@@ -35,20 +38,20 @@ class AvoidReportTest {
     fun test() {
 //        for (cancer in cancers) {
 //            this.cancer = cancer
-            for (sex in sexes) {
-                this.sex = sex
-                for (birth in birthes) {
-                    this.birth = birth
-                    val doc: PDDocument? = build(null, "ko-kr");
-                    doc!!.save("./일반관리/일반관리_${this.sex}_${this.birth}.pdf")
-                }
-            }
+//            for (sex in sexes) {
+//                this.sex = sex
+//                for (birth in birthes) {
+//                    this.birth = birth
+//                    val doc: PDDocument? = build(null, "ko-kr");
+//                    doc!!.save("./일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+//                }
+//            }
 //        }
-//        val doc: PDDocument? = build(null, "ko-kr")
-//        if (doc != null) {
-//            doc.save("./"+this.barcode+".pdf")
-//            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
-//        }
+        val doc: PDDocument? = build(null, "ko-kr")
+        if (doc != null) {
+            doc.save("./"+this.barcode+".pdf")
+            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
+        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
@@ -80,11 +83,12 @@ class AvoidReportTest {
 
         dto.barcode = dto.barcode
         dto.medicalInstitution = "GC지놈"
-        dto.medicalRecordNumber = "-"
+        dto.medicalRecordNumber = "20220803-171-5000"
         dto.specimenType = "Whole Blood"
 
         dto.reportDate = LocalDate.of(2022,5,26)
-        dto.age = age(dto.birthDate, dto.collectionDate)
+        dto.age = age(LocalDate.of(1958,11,17), LocalDate.of(2022,8,1)).toString()
+        println(dto.age)
 
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
         val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
@@ -98,16 +102,19 @@ class AvoidReportTest {
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
         } else null
     }
-    private fun age(birth: LocalDate?, sampling: LocalDate?): String {
-        if (birth == null) return "-"
-        return if (sampling == null) (Period.between(
-            birth,
-            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString() else (Period.between(
-            birth,
-            sampling.with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString()
+    private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
+        if (birth == null) return 0
+        return if (sampling == null) {
+            val americanAge = LocalDateTime.now().minusYears(birth.year.toLong()).year.toLong()
+            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()-1
+            else americanAge.toInt()
+        } else {
+            val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
+            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()-1
+            else americanAge.toInt()
+        }
     }
+
 }
 
 fun main(){
