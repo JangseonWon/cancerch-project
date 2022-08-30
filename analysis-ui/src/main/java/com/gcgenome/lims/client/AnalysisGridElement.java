@@ -30,7 +30,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private static ColumnString columnAndColor(String name, String type) {
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-			if("A".equals(type)) return "#BF5C26";
+			if("A".equals(type)) return "#512939";
 			else return "#8C7162";
 		}).color("#FFFFFF");
 	}
@@ -46,18 +46,14 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
 			if(code.equals(Code.FREEMIX) && value != null) {
 				if(Double.valueOf(value) >= 1.0) return "#FF0000";
-				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+				else return type.equals("A") ? "#512939" : "#8C7162";
 			}
 			else if(code.equals(Code.FINAL_READS) && value != null) {
 				if(Double.valueOf(value) <= 40.0) return "#FF0000";
-				else return type.equals("A") ? "#BF5C26" : "#8C7162";
+				else return type.equals("A") ? "#512939" : "#8C7162";
 			}
-			else return type.equals("A") ? "#BF5C26" : "#8C7162";
+			else return type.equals("A") ? "#512939" : "#8C7162";
 		}).color("#FFFFFF");
-//		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
-//			if("A".equals(type)) return "#BF5C26";
-//			else return "#8C7162";
-//		}).color("#FFFFFF");
 	}
 	private static ColumnString columnPassOrFail(String name){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
