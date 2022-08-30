@@ -123,7 +123,6 @@ class ReportHandler(
         avoidDto.medicalRecordNumber = analysis.patient.mrn
         avoidDto.barcode = barcode
         avoidDto.medicalInstitution = customerName
-        avoidDto.medicalRecordNumber = patient.code
         avoidDto.specimenType = analysis.sampleType
 
         return avoidDto
