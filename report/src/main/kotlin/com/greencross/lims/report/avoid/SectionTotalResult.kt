@@ -52,7 +52,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
 
         if(dto.result == AvoidDto.Results.GENERAL) {
             stream.paragraph(
-                325f, y - 37, 400f, AlignHorizontal.LEFT,
+                325f, y - 31, 400f, AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblOverviewCommon()),
                 TextBlock(styleBold, dto.patientName),
                 TextBlock(styleRegular, template.lblOverviewBridgeWord()),
