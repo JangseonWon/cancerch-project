@@ -60,7 +60,7 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
 
 
         if(dto.result != AvoidDto.Results.GENERAL){
-            stream.paragraph(291f, y+24, 50f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientSir(dto.patientName!!)))
+            stream.paragraph(291f, y+24, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientSir(dto.patientName!!)))
             stream.paragraph(291f, y+14, 60f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientInfo(dto.age!!, dto.sex!!)))
             stream.paragraph(313f, y+48, 50f, AlignHorizontal.CENTER, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHedaerBot()))
         }
