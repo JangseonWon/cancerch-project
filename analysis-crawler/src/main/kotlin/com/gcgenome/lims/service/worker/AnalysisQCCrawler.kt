@@ -19,6 +19,7 @@ class AnalysisQCCrawler(
     private val logger = LoggerFactory.getLogger(AnalysisQCCrawler::class.java)
     @Scheduled(fixedDelay=1000*60*60)
     fun updateStatus(){
+        logger.info("QC Crawler : Started")
         crawler.getDTOs().forEach { (dtos, file) ->
             dtos.forEach {
                 val primaries = it.primary.split("_")
@@ -62,6 +63,7 @@ class AnalysisQCCrawler(
             val folderName = file.name.split("_")[0]
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
+            logger.info("QC Crwal : Ended")
         }
     }
     private fun sexMapper(sexPred: String) = when(sexPred){

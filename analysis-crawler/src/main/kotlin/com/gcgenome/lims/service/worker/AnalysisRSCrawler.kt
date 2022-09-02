@@ -17,6 +17,7 @@ class AnalysisRSCrawler(
     private val logger = LoggerFactory.getLogger(AnalysisRSCrawler::class.java)
     @Scheduled(fixedDelay=1000*60*60)
     fun updateStatus(){
+        logger.info("RS Crwal : Started")
         crawler.getDTOs().forEach{(dtos, file) ->
             dtos.forEach{
                 val primaries = it.primary.split("_")
@@ -41,6 +42,7 @@ class AnalysisRSCrawler(
             val folderName = file.name.split("_")[0]
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
+            logger.info("RS Crwal : Ended")
         }
     }
 
