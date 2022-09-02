@@ -23,20 +23,24 @@ class AnalysisRSCrawler(
                 val primaries = it.primary.split("_")
                 val batchRow = primaries[0].split("-")
                 val sampleId = primaries[1].replace("-","")
-                if(sampleId != "NTC" && sampleId != "CONTROL") Tests.values().forEach { test ->
-                    val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name).apply {
-                        this.batch              = batchRow[0]
-                        this.row                = batchRow[1].toInt()
-                        this.cadEnsembleProb    = it.cadEnsembleProb
-                        this.too5Pred           = it.too5Pred
-                        this.too5FemsProb       = it.too5Fems
-                        this.too6Pred           = it.too6Pred
-                        this.too6FemsProb       = it.too6Fems
-                        this.iscore             = it.iscore
-                        this.result             = it.result
+                try {
+                    Tests.values().forEach { test ->
+                        val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name).apply {
+                            this.batch = batchRow[0]
+                            this.row = batchRow[1].toInt()
+                            this.cadEnsembleProb = it.cadEnsembleProb
+                            this.too5Pred = it.too5Pred
+                            this.too5FemsProb = it.too5Fems
+                            this.too6Pred = it.too6Pred
+                            this.too6FemsProb = it.too6Fems
+                            this.iscore = it.iscore
+                            this.result = it.result
+                        }
+                        logger.info("RS Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
+                        dao.merge(entity).block()
                     }
-                    logger.info("RS Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
-                    dao.merge(entity).block()
+                } catch (except : NumberFormatException){
+                    logger.info("RS Crawl : ${except} : ${batchRow[0]} 배치 ${batchRow[1]} Sample은 NTC거나 CONTROL입니다.")
                 }
             }
             val folderName = file.name.split("_")[0]
