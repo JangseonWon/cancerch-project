@@ -16,8 +16,6 @@ import java.awt.Desktop
 import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Period
-import java.time.temporal.TemporalAdjusters
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
@@ -29,10 +27,10 @@ class AvoidReportTest {
 //    val sex: Sex = Sex.M
     var sex: Sex = Sex.F
     val receipt: LocalDate = collection
-    val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
+    val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)
     val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
-    var cancer= CancerRepo.암종.간암
+    var cancer= CancerRepo.암종.췌장담도암
     val barcode: String = "CR3-$code"
     val request: String = "2021109-971-0$code"
     fun test() {
@@ -59,16 +57,16 @@ class AvoidReportTest {
         val repo: CancerRepo = CancerRepo()
         return builder(
             TestInfo.N201, type,
-//            AvoidDto("TT-5-412",
-//                AvoidDto.Results.RISK,
-//                AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
+            AvoidDto("TT-5-412",
+                AvoidDto.Results.RISK,
+                AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
 //            AvoidDto("TT-5-412",
 //                AvoidDto.Results.CONCERN,
 //                AvoidDto.Cancer("기타암종")))?.build()
-            AvoidDto(this.barcode,
-                AvoidDto.Results.GENERAL,
-                AvoidDto.Cancer()))?.build()
+//            AvoidDto(this.barcode,
+//                AvoidDto.Results.GENERAL,
+//                AvoidDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
         val doc = PDDocument()
