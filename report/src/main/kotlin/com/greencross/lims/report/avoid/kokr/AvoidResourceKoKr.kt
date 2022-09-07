@@ -134,8 +134,8 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
                 (first == "간암")+".png"))
     }
     override fun imgPanc(first: String): PDImageXObject {
-        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/췌장암_"+
-                (first == "췌장암")+".png"))
+        return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/췌장담도암_"+
+                (first == "췌장담도암")+".png"))
     }
     override fun imgColon(first: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionCancerTypeDanger/대장암_"+

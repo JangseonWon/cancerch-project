@@ -169,7 +169,7 @@ class AvoidTemplateN201KoKr(
             "폐암" -> "3개월 후"
             "대장암" -> "3개월 후"
             "간암" -> "3개월 후"
-            "췌장암" -> "3개월 후"
+            "췌장담도암" -> "3개월 후"
             "식도암" -> "3개월 후"
             "유방암" -> "3개월 후"
             "난소암" -> "3개월 후"
@@ -230,7 +230,6 @@ class AvoidTemplateN201KoKr(
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
             cancer == "대장암" -> "AVOID 검사 대장암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
-                    "시행이 어려운 경우 대장이중조영검사를 통해서도 대장암 여부를 확인할 수 있습니다.\n" +
                     "정밀검사를 통해 대장암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
@@ -238,7 +237,7 @@ class AvoidTemplateN201KoKr(
                     "정밀검사를 통해 간암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
-            cancer == "췌장암" -> "AVOID 검사 췌장담도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+            cancer == "췌장담도암" -> "AVOID 검사 췌장담도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                     "정밀검사를 통해 췌장담도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
@@ -520,9 +519,20 @@ class AvoidTemplateN201KoKr(
         }
         return ageStream + "대 " + cut + " " + sexStr + " 평균"
     }
+    override fun lblPatientInfoWithCancer(age: String, sex: Sex, cancer: String) : String {
+        val ageStream: String = (age.toInt() / 10 * 10).toString()
+        val cut: String = when {
+            age.substring(age.length - 1, age.length).toInt() >= 5 -> "후반"
+            else -> "초반"
+        }
+        val sexStr: String = when {
+            sex == Sex.F -> "여성"
+            else -> "남성"
+        }
+        return ageStream + "대 " + cut + " " + sexStr + " " + cancer
+    }
     override fun lblPatientSir(name: String,) = "${name}님"
     override fun lblCancerToWord(cancer: String) = when(cancer){
-        "췌장암" -> "췌장담도암"
         "기타암종" -> "기타 암"
         else -> cancer
     }

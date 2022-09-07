@@ -31,11 +31,11 @@ data class Request(
         )
     }
 
-    override fun getId(): RequestPK? {
+    override fun getId(): RequestPK {
         return RequestPK(sample, service)
     }
 
     override fun isNew(): Boolean {
-        return false;
+        return false
     }
 }

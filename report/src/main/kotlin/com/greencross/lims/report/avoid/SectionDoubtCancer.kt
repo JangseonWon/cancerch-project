@@ -47,7 +47,7 @@ class SectionDoubtCancer (private val y: Float = 508f)  : Painter<AvoidTemplate<
         x = when(dto.result){
             AvoidDto.Results.GENERAL     -> 423f - width / 2
             AvoidDto.Results.CONCERN  -> 423f - width / 2
-            else                        -> 373f - width / 2
+            else                        -> 363f - width / 2
         }
         val ys = when(dto.result){
             AvoidDto.Results.GENERAL    -> y - DOUBT_SQUARE_RATE + 35

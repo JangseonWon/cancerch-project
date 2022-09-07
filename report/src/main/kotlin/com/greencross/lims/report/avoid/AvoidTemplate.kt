@@ -125,6 +125,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblReference(): String { return "References" }
     fun lblResultToWord(result: AvoidDto.Results): String
     fun lblPatientInfo(age: String, sex: Sex) : String
+    fun lblPatientInfoWithCancer(age: String, sex: Sex, cancer: String) : String
     fun lblPatientSir(name: String) : String
     fun lblCancerToWord(cancer: String): String
 }

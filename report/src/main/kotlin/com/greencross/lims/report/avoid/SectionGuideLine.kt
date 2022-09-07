@@ -41,7 +41,7 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
                     width = img.width * CONTENT_CANCER_RATE / img.height
                     stream.drawImage(img, 100f - width / 2, y + RESULT_CONTENT_RATE - 100, width, CONTENT_CANCER_RATE)
                     style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
-                    stream.paragraph(135f, y + RESULT_CONTENT_RATE - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.LEFT,
+                    stream.paragraph(125f, y + RESULT_CONTENT_RATE - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.LEFT,
                         TextBlock(style, dto.first.name))
                     stream.paragraph(290f, y + RESULT_CONTENT_RATE - 79 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f), template.lblGuideLineTableHeader1()))

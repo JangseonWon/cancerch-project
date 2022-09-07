@@ -26,7 +26,6 @@ import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.time.*
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 import java.util.*
 
 @Service
@@ -173,7 +172,7 @@ class ReportHandler(
 
     private fun stringToCancer(result: String) = when (result) {
         "LuC" -> CancerRepo.암종.폐암
-        "Panc" -> CancerRepo.암종.췌장암
+        "Panc" -> CancerRepo.암종.췌장담도암
         "HCC" -> CancerRepo.암종.간암
         "colon" -> CancerRepo.암종.대장암
         "etc" -> CancerRepo.암종.기타암종
@@ -183,7 +182,7 @@ class ReportHandler(
 
     private fun cancerToFileName(cancer: String) = when (cancer) {
         "LuC" -> "폐암"
-        "Panc" -> "췌장암"
+        "Panc" -> "췌장담도암"
         "HCC" -> "간암"
         "colon" -> "대장암"
         "etc" -> "기타암종"

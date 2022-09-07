@@ -45,7 +45,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         drawCancerIcon(   stream, template, 294f, y - DANGER_CANCER_CONTENT-112, dto,   CancerRepo.암종.폐암)
         drawCancerIcon(   stream, template, 297f, y - DANGER_CANCER_CONTENT-200, dto,   CancerRepo.암종.대장암)
         drawCancerIcon(   stream, template, 278f, y - DANGER_CANCER_CONTENT-150, dto,   CancerRepo.암종.간암)
-        drawCancerIcon(   stream, template, 342f, y - DANGER_CANCER_CONTENT-150, dto,   CancerRepo.암종.췌장암)
+        drawCancerIcon(   stream, template, 342f, y - DANGER_CANCER_CONTENT-150, dto,   CancerRepo.암종.췌장담도암)
         drawCancerIcon(   stream, template, 326f, y - DANGER_CANCER_CONTENT-80,  dto,   CancerRepo.암종.식도암)
 
         img = template.resource().imgLine("폐암")
@@ -59,12 +59,12 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         stream.drawImage(img, 235f-width/2, y- DANGER_CONTENT_RATE+75, width, 35f)
 
         if(dto.sex == Sex.F) {
-            drawCancerContent(stream, template, 460f, y - DANGER_CANCER_CONTENT -  70, dto, CancerRepo.암종.췌장암)
+            drawCancerContent(stream, template, 460f, y - DANGER_CANCER_CONTENT -  70, dto, CancerRepo.암종.췌장담도암)
             drawCancerContent(stream, template, 460f, y - DANGER_CANCER_CONTENT - 120, dto, CancerRepo.암종.식도암)
             drawCancerIcon(   stream, template, 343f, y - DANGER_CANCER_CONTENT - 195, dto, CancerRepo.암종.난소암)
             drawCancerContent(stream, template, 460f, y - DANGER_CANCER_CONTENT - 170, dto, CancerRepo.암종.난소암)
             drawCancerContent(stream, template, 460f, y - DANGER_CANCER_CONTENT - 220, dto, CancerRepo.암종.기타암종)
-            img = template.resource().imgLine("췌장암")
+            img = template.resource().imgLine("췌장담도암")
             width = img.width*75f / img.height
             stream.drawImage(img, 380f-width/2, y- DANGER_CONTENT_RATE+122, width, 75f)
 
@@ -76,7 +76,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
             width = img.width*25f / img.height
             stream.drawImage(img, 383f-width/2, y- DANGER_CONTENT_RATE+71, width, 25f)
         } else {
-            drawCancerContent(stream, template, 460f, y-DANGER_CANCER_CONTENT- 90, dto, CancerRepo.암종.췌장암)
+            drawCancerContent(stream, template, 460f, y-DANGER_CANCER_CONTENT- 90, dto, CancerRepo.암종.췌장담도암)
             drawCancerContent(stream, template, 460f, y-DANGER_CANCER_CONTENT-140, dto, CancerRepo.암종.식도암)
             drawCancerContent(stream, template, 460f, y-DANGER_CANCER_CONTENT-190, dto, CancerRepo.암종.기타암종)
             img = template.resource().imgLine("간암")
@@ -162,7 +162,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
             CancerRepo.암종.식도암 -> template.resource().imgEsop (dto.first.name)
             CancerRepo.암종.폐암   -> template.resource().imgLung (dto.first.name)
             CancerRepo.암종.간암   -> template.resource().imgLiver(dto.first.name)
-            CancerRepo.암종.췌장암 -> template.resource().imgPanc (dto.first.name)
+            CancerRepo.암종.췌장담도암 -> template.resource().imgPanc (dto.first.name)
             CancerRepo.암종.대장암 -> template.resource().imgColon(dto.first.name)
             else -> template.resource().imgOvary(dto.first.name)
         }
@@ -173,7 +173,7 @@ class SectionCancerTypeDanger(private val y: Float = 410f)  : Painter<AvoidTempl
         "폐암"     -> 1
         "대장암"   -> 2
         "간암"     -> 3
-        "췌장암"   -> 4
+        "췌장담도암"   -> 4
         "식도암"   -> 5
         "난소암"   -> 6
         "기타암종"-> 7
