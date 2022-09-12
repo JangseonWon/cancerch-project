@@ -1,5 +1,6 @@
 package com.gcgenome.lims.service.work
 
+import com.gcgenome.lims.SecurityContextRepository
 import com.gcgenome.lims.entity.QPreprocessing.preprocessing
 import com.gcgenome.lims.entity.QUser
 import com.gcgenome.lims.entity.QWork.work
@@ -7,6 +8,7 @@ import com.gcgenome.lims.projection.Work
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
+import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import java.util.*
@@ -61,6 +63,12 @@ class WorkDao(private val repo: WorkRepository) {
     fun findByWorklist(worklist: String): Flux<Work> {
         return repo.query{
             select(it).where(work.worklist.eq(worklist)).orderBy(work.index.asc())
-        }.all().map(Work.Companion.WorkBuilder::build)
+        }.all().zipWith(ReactiveSecurityContextHolder.getContext()).map {
+            val (work, context) = Pair(it.t1, it.t2)
+            if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) work.apply {
+                patientName = "*"
+                mrns = "*"
+            } else work
+        }.map(Work.Companion.WorkBuilder::build)
     }
 }
