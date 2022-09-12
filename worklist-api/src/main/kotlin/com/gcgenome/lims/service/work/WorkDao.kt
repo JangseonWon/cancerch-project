@@ -61,14 +61,17 @@ class WorkDao(private val repo: WorkRepository) {
             .leftJoin(modifyBy).on(modifyBy.id.eq(preprocessing.lastModifyBy))
     }
     fun findByWorklist(worklist: String): Flux<Work> {
-        return repo.query{
-            select(it).where(work.worklist.eq(worklist)).orderBy(work.index.asc())
-        }.all().zipWith(ReactiveSecurityContextHolder.getContext()).map {
-            val (work, context) = Pair(it.t1, it.t2)
-            if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) work.apply {
-                patientName = "*"
-                mrns = "*"
-            } else work
+        return ReactiveSecurityContextHolder.getContext().flatMapMany { context->
+            repo.query{
+                select(it).where(work.worklist.eq(worklist)).orderBy(work.index.asc())
+            }.all().map {
+                it.apply {
+                    if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) {
+                        patientName = "*"
+                        mrns = "*"
+                    }
+                }
+            }
         }.map(Work.Companion.WorkBuilder::build)
     }
 }
