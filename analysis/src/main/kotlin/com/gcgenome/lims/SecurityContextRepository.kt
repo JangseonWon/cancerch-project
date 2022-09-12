@@ -23,9 +23,14 @@ class SecurityContextRepository(
             .flatMap ( repo::findById )
             .map { u->SecurityContextImpl(UserAuthentication(u)) }
     }
+    companion object {
+        object RoleManager: GrantedAuthority {
+            override fun getAuthority(): String = "ROLE_MANAGER"
+        }
+    }
     class UserAuthentication(private val entity: User): Authentication {
         override fun getName (): String? = entity.name
-        override fun getAuthorities(): Collection<GrantedAuthority> = emptyList()
+        override fun getAuthorities(): Collection<GrantedAuthority> = if(entity.isMaster()) listOf(RoleManager) else emptyList()
         override fun getCredentials(): Any = TODO("Not yet implemented")
         override fun getDetails(): Any = TODO("Not yet implemented")
         override fun getPrincipal(): String? = entity.id
