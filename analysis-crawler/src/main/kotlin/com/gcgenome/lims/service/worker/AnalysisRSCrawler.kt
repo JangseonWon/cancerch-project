@@ -2,7 +2,8 @@ package com.gcgenome.lims.service.worker
 
 import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisResult
-import com.gcgenome.lims.service.analysisRS.AnalysisRSDao
+import com.gcgenome.lims.service.analysisRS.AnalysisRSRepository
+import com.gcgenome.querydsl.persist
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
@@ -11,7 +12,7 @@ import java.io.File
 @Configuration
 class AnalysisRSCrawler(
     val crawler : FileCrawler<AnalysisResult>,
-    val dao: AnalysisRSDao,
+    val dao: AnalysisRSRepository,
     val processed: File
     ) {
     private val logger = LoggerFactory.getLogger(AnalysisRSCrawler::class.java)
@@ -37,7 +38,7 @@ class AnalysisRSCrawler(
                             this.result = it.result
                         }
                         logger.info("RS Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
-                        dao.merge(entity).block()
+                        dao.persist(entity).block()
                     }
                 } catch (except : NumberFormatException){
                     logger.info("RS Crawl : ${except} : ${batchRow[0]} 배치 ${batchRow[1]} Sample은 NTC거나 CONTROL입니다.")

@@ -2,18 +2,17 @@ package com.gcgenome.lims.service.worker
 
 import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisQC
-import com.gcgenome.lims.service.analysisQC.AnalysisQCDao
+import com.gcgenome.lims.service.analysisQC.AnalysisQCRepository
+import com.gcgenome.querydsl.persist
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
 import java.io.File
-import java.time.LocalDateTime
 
 @Configuration
 class AnalysisQCCrawler(
     val crawler : FileCrawler<AnalysisQC>,
-    val dao: AnalysisQCDao,
+    val dao: AnalysisQCRepository,
     val processed: File
     ) {
     private val logger = LoggerFactory.getLogger(AnalysisQCCrawler::class.java)
@@ -58,7 +57,7 @@ class AnalysisQCCrawler(
                             this.predSexTmp = sexMapper(it.predSexFcB)
                         }
                         logger.info("QC Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
-                        dao.merge(entity).block()
+                        dao.persist(entity).block()
                     }
                 } catch (except : NumberFormatException){
                     logger.info("QC Crawl : ${except} : ${batchRow[0]} 배치 ${batchRow[1]} Sample은 NTC거나 CONTROL입니다.")

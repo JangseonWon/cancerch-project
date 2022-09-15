@@ -17,7 +17,7 @@ data class AnalysisResult(
     @Column("sample")  val sample: Long,
     @Column("service") val service: String
 ): Persistable<AnalysisResult.Companion.AnalysisResultPK> {
-    @Column("batch") lateinit var batch: String
+    @Column("batch")          var batch: String = ""
     @Column("row")            var row: Int = 0
     @CreatedDate
     @Column("create_at")
@@ -25,17 +25,17 @@ data class AnalysisResult(
     @Column("cad_ensemble_prob")
              var cadEnsembleProb: Double = 0.0
     @Column("too5_pred")
-    lateinit var too5Pred: String
+             var too5Pred: String = ""
     @Column("too5_rmd_fems_ensemble_prob")
              var too5FemsProb: Double = 0.0
     @Column("too6_pred")
-    lateinit var too6Pred: String
+             var too6Pred: String = ""
     @Column("too6_rmd_fems_ensemble_prob")
              var too6FemsProb: Double = 0.0
     @Column("iscore")
              var iscore: Double = 0.0
     @Column("result")
-    lateinit var result: String
+             var result: String = ""
 
     @Id @Transient
     lateinit var _id: AnalysisResultPK
