@@ -1,7 +1,9 @@
 package com.gcgenome.lims.entity
 
 import com.infobip.spring.data.jdbc.annotation.processor.Schema
-import org.springframework.data.annotation.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.annotation.Transient
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -67,10 +69,10 @@ data class Analysis(
     @Column("delete")                       val delete:                 Boolean,
     @Column("barcode")                      val barcode:                Long,
     @Column("remark")                       val remark:                 String?,
-    @Column("patient_name")                 val patientName:            String?,
-    @Column("mrn")                          val mrn:                    String?,
+    @Column("patient_name")                 var patientName:            String?,
+    @Column("mrn")                          var mrn:                    String?,
     @Column("sex")                          val sex:                    String,
-    @Column("birth")                        val birth:                  LocalDate,
+    @Column("birth")                        var birth:                  LocalDate,
     @Column("customer_name")                val customerName:           String,
     @Column("customer_name2")               val customerName2:          String?,
     @Column("report_name")                  val reportName:             String?,

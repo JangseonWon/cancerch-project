@@ -8,5 +8,8 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("user")
 data class User(
     @Id val id: String? = "",
-    val name: String? = ""
-)
+    val name: String? = "",
+    val role: String = ""
+) {
+    fun isMaster(): Boolean = role == "M"
+}

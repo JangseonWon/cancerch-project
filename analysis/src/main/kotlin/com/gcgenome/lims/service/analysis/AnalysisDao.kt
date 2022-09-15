@@ -1,5 +1,6 @@
 package com.gcgenome.lims.service.analysis
 
+import com.gcgenome.lims.SecurityContextRepository
 import com.gcgenome.lims.entity.Analysis
 import com.gcgenome.lims.entity.QAnalysis.analysis
 import com.gcgenome.lims.search.PageReactive
@@ -9,11 +10,10 @@ import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.Wildcard
 import com.querydsl.sql.SQLQuery
+import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.util.*
 
 @Component
@@ -67,17 +67,29 @@ class AnalysisDao(private val repo: AnalysisRepository) {
     fun from(query: SQLQuery<Analysis>, param: SearchParam): SQLQuery<Analysis> = query.from(analysis)
     fun search(param: SearchParam): Mono<PageReactive<Analysis>> {
         val predicates = predicate(param)
-        val flux = repo.query {
-            if(param.sortBy!=null) {
-                val expression = column(param.sortBy)
-                it.orderBy(if(param.asc!=null && param.asc) expression.asc() else expression.desc())
+        val flux = ReactiveSecurityContextHolder.getContext().flatMapMany { context ->
+            repo.query {
+                if (param.sortBy != null) {
+                    val expression = column(param.sortBy)
+                    it.orderBy(if (param.asc != null && param.asc) expression.asc() else expression.desc())
+                }
+                if (param.limit != null && param.page != null) it.limit(param.limit.toLong())
+                    .offset(param.page * param.limit.toLong())
+                from(it.select(repo.entityProjection()), param).where(predicates)
+            }.all().map {
+                it.apply {
+                    if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) {
+                        patientName = "*"
+                        mrn = "*"
+                        birth = LocalDate.of(1900, Month.JANUARY, 1)
+                    }
+                }
             }
-            if(param.limit!=null && param.page!=null) it.limit(param.limit.toLong()).offset(param.page*param.limit.toLong())
-            from(it.select(repo.entityProjection()), param).where(predicates)
-        }.all()
-        val count = repo.query { it.select(Wildcard.count).from(analysis).where(predicates)}
+        }
+        val count = repo.query { it.select(Wildcard.count).from(analysis).where(predicates) }
         return count.one().map { PageReactive(it, param.limit, param.page, flux) }
     }
+    //   if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) {
     private fun convert(cancer: String) = when(cancer){
         "폐암"   -> "LuC"
         "대장암" -> "colon"
