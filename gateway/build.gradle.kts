@@ -1,8 +1,8 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("org.springframework.boot") version "2.7.1"
-    id("io.spring.dependency-management") version "1.0.12.RELEASE"
+    id("org.springframework.boot") version "2.7.4"
+    id("io.spring.dependency-management") version "1.0.14.RELEASE"
 }
 dependencies {
     implementation("com.gcgenome:sample-data:1.0")

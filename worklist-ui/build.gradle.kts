@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.wisepersist.gwt") version "1.1.18"
+    id("org.wisepersist.gwt") version "1.1.19"
     id("java")
     id("war")
 }

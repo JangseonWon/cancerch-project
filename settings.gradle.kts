@@ -39,12 +39,12 @@ dependencyResolutionManagement {
             bundle("spring-client-without-security", listOf("spring-discovery", "spring-log4j2"))
 
             library("r2dbc", "org.springframework.boot", "spring-boot-starter-data-r2dbc").withoutVersion()
-            library("r2dbc-postgres", "io.r2dbc", "r2dbc-postgresql").version { require("0.8.12.RELEASE") }
+            library("r2dbc-postgres", "io.r2dbc", "r2dbc-postgresql").version { require("0.8.13.RELEASE") }
             bundle("r2dbc-postgres", listOf("r2dbc", "r2dbc-postgres"))
 
             library("querydsl-core", "com.querydsl", "querydsl-core").withoutVersion()
             library("querydsl-apt", "com.querydsl", "querydsl-apt").withoutVersion()
-            library("querydsl-r2dbc", "com.infobip", "infobip-spring-data-r2dbc-querydsl-boot-starter").version { require("7.0.0") }
+            library("querydsl-r2dbc", "com.infobip", "infobip-spring-data-r2dbc-querydsl-boot-starter").version { require("7.2.0") }
             library("querydsl-persist", "com.gcgenome", "query-dsl-persist").version { require("1.0") }
             bundle("r2dbc-querydsl", listOf("querydsl-core", "querydsl-apt", "querydsl-r2dbc", "querydsl-persist"))
 
@@ -55,7 +55,7 @@ dependencyResolutionManagement {
             library("kotlin-test", "org.jetbrains.kotlin", "kotlin-test").withoutVersion()
             bundle("test", listOf("spring-boot-test", "mockito-kotlin", "mockito-inline", "reactor-test", "kotlin-test"))
 
-            library("spring-cloud-bom", "org.springframework.cloud", "spring-cloud-dependencies").version { require("2021.0.3") }
+            library("spring-cloud-bom", "org.springframework.cloud", "spring-cloud-dependencies").version { require("2021.0.4") }
 
             library("elemento-core", "org.jboss.elemento", "elemento-core").version { require("1.0.10") }
             library("elemental2-svg", "com.google.elemental2", "elemental2-svg").version { require("1.1.0") }
