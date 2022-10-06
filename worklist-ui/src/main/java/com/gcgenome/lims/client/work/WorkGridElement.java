@@ -71,7 +71,10 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                                     ListElement.singleLine().label("COMPLETE"))
                             .color("#FFFFFF").colorBackground((td, row, prop, value)->{
                                 if("COMPLETE".equalsIgnoreCase(value)) return "#007B5F";
-                                else if(value.startsWith("HOLDING")) return "#AD1742";
+                                else if("HOLDING".equalsIgnoreCase(value)) return "#AD1742";
+                                else if("HOLDING_B".equalsIgnoreCase(value)) return "#D26263";
+                                else if("PENDING".equalsIgnoreCase(value)) return "#FF8200";
+                                else if("PENDING_B".equalsIgnoreCase(value)) return "#FF8200";
                                 else return "";
                             }).name(WorkModel.State.name()).horizontal("center").build());
     private final SheetElement elemSheet = config.build();
