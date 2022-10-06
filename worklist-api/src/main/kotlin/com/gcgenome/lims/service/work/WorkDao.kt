@@ -53,7 +53,8 @@ class WorkDao(private val repo: WorkRepository) {
                 preprocessing.indexI7.`as`("indexI7"),
                 preprocessing.sequenceI7.`as`("sequenceI7"),
                 preprocessing.indexI5.`as`("indexI5"),
-                preprocessing.sequenceI5.`as`("sequenceI5")
+                preprocessing.sequenceI5.`as`("sequenceI5"),
+                preprocessing.state.`as`("state")
             )
         ).from(work)
             .leftJoin(preprocessing).on(preprocessing.worklist.eq(work.worklist as Path<UUID>).and(preprocessing.index.eq(work.index)))
