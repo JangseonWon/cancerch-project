@@ -52,6 +52,8 @@ class Preprocessing {
     var qc: Boolean = true
     @Column(columnDefinition = "jsonb")
     var value: String? = null
+    @Column(name = "state", length=9)
+    var state: String? = null
     @Embeddable
     data class PreprocessingPK (
         @Column(name = "worklist", columnDefinition = "uuid", nullable = false, updatable = false)

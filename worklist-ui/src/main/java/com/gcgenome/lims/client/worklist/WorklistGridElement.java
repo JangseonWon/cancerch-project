@@ -77,7 +77,7 @@ public class WorklistGridElement extends HTMLElementBuilder<HTMLDivElement, Work
         if(value == null) return null;
         String serial = value.serial();
         if(value.serial() == null || value.serial().trim().isEmpty()) serial = "Create";
-        return new Data(value.id()).put("serial", value.serial())
+        return Data.create(value.id()).put("serial", value.serial())
                 .put("Batch#", serial)
                 .put("워크리스트 명", value.title())
                 .put("추출일", DataTransformUtil.formatDateTime((long) JsDate.parse(value.created())))

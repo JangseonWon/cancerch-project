@@ -3,6 +3,7 @@ package com.gcgenome.lims.data
 data class Preprocessing(
     val worklist: String,
     val index: Int,
+    val state: String,
     val concNa: Double?,
     val concInput: Double?,
     val libPrep: String?,

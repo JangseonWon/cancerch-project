@@ -17,7 +17,8 @@ public enum WorkModel {
     IndexI7(    "i7Index",          "I7 Index ID"),
     SequenceI7( "i7Seq",            "I7 Sequence"),
     IndexI5(    "i5Index",          "I5 Index ID"),
-    SequenceI5( "i5Seq",            "I5 Sequence");
+    SequenceI5( "i5Seq",            "I5 Sequence"),
+    State(      "state",            "State");
     final String id;
     final String label;
     WorkModel(String id, String label) {

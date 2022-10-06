@@ -44,7 +44,8 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
     }
     private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
     private final WorklistGridElement grid = WorklistGridElement.build();
-    private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence!").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
+    private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence A").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
+    private final ButtonElement btnSequencingB                   = ButtonElement.outline().css("button").text("Sequence B").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
     private final TextFieldElement<JsDate, TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("from").value(yesterday());
     private final TextFieldElement<JsDate, TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("to").value(today());
     private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("검색").before(IconElement.icon(IconElement.Type.Light, "fa-search")).style("display: inline-block;");

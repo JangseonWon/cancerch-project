@@ -26,6 +26,7 @@ class PreprocessingDao(private val repo: PreprocessingRepository) {
             sequenceI7   = dto.sequenceI7
             indexI5      = dto.indexI5
             sequenceI5   = dto.sequenceI5
+            state        = dto.state
         }
         return repo.persist(entity)
     }

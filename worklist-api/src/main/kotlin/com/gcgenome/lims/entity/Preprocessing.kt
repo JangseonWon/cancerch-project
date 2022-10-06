@@ -14,6 +14,7 @@ import java.util.*
 data class Preprocessing(
     @Column("worklist")             val worklist:               UUID,
     @Column("index")                val index:                  Int,
+    @Column("state")                var state:                  String = "PENDING",
     @Column("conc_na")              var concNa:                 Double? = null,
     @Column("conc_input")           var concInput:              Double? = null,
     @Column("lib_prep")             var libPrep:                String? = null,
@@ -45,7 +46,7 @@ data class Preprocessing(
     constructor(worklist: UUID, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, json: String,
                 concNa: Double?, concInput: Double?, libPrep: String?, libConcTape: Double?, libConcQubit: Double?,
                 fragmentSize: Double?, amount: Double?, dilution: Double?, volume: Double?, libVolume: Double?, bufferVolume: Double?, qc: Boolean,
-                indexI7: String?, sequenceI7: String?, indexI5: String?, sequenceI5: String?): this(worklist, index){
+                indexI7: String?, sequenceI7: String?, indexI5: String?, sequenceI5: String?, state: String): this(worklist, index){
         this.createBy = createBy
         this.createAt = createAt
         this.lastModifyBy = lastModifyBy
@@ -67,6 +68,7 @@ data class Preprocessing(
         this.sequenceI7 = sequenceI7
         this.indexI5 = indexI5
         this.sequenceI5 = sequenceI5
+        this.state = state
     }
     override fun getId(): PreprocessingPK = PreprocessingPK(worklist.toString(), index)
     override fun isNew(): Boolean = this::createAt.isInitialized.not()

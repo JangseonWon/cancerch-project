@@ -32,7 +32,8 @@ data class Work(
     var indexI7:        String?,
     var sequenceI7:     String?,
     var indexI5:        String?,
-    var sequenceI5:     String?
+    var sequenceI5:     String?,
+    var state:          String
 ) {
     companion object{
         data class WorkBuilder(
@@ -67,7 +68,8 @@ data class Work(
             var indexI7:        String?,
             var sequenceI7:     String?,
             var indexI5:        String?,
-            var sequenceI5:     String?
+            var sequenceI5:     String?,
+            var state:          String
         ){
             fun build(): Work = Work(
                 worklist = worklist,
@@ -98,7 +100,8 @@ data class Work(
                 indexI7 = indexI7,
                 sequenceI7 = sequenceI7,
                 indexI5 = indexI5,
-                sequenceI5 = sequenceI5
+                sequenceI5 = sequenceI5,
+                state = state
             )
         }
         fun toAddress(x: Short, y: Short): String {

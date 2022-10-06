@@ -47,10 +47,26 @@ public final class Work {
     public String indexI5;
     @JsProperty(name = "sequence_i5")
     public String sequenceI5;
+    private String state;
     @JsOverlay
     @JsIgnore
     public Integer index(){
         if(index == null) return null;
         return index.intValue();
+    }
+    @JsOverlay
+    @JsIgnore
+    public State state() {
+        if(state==null) return null;
+        return State.valueOf(state);
+    }
+    @JsOverlay
+    @JsIgnore
+    public Work state(State state) {
+        this.state = state.name();
+        return this;
+    }
+    public enum State {
+        COMPLETE, PENDING, HOLDING, PENDING_B, HOLDING_B
     }
 }

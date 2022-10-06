@@ -62,7 +62,18 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                     column(WorkModel.IndexI7.id).name(WorkModel.IndexI7.label).build(),
                     column(WorkModel.SequenceI7.id).name(WorkModel.SequenceI7.label).readOnly(true).build(),
                     column(WorkModel.IndexI5.id).name(WorkModel.IndexI5.label).build(),
-                    column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).readOnly(true).build());
+                    column(WorkModel.SequenceI5.id).name(WorkModel.SequenceI5.label).readOnly(true).build(),
+                    ColumnBuilder.dropdown(WorkModel.State.id,
+                                    ListElement.singleLine().label("PENDING"),
+                                    ListElement.singleLine().label("HOLDING"),
+                                    ListElement.singleLine().label("PENDING_B"),
+                                    ListElement.singleLine().label("HOLDING_B"),
+                                    ListElement.singleLine().label("COMPLETE"))
+                            .color("#FFFFFF").colorBackground((td, row, prop, value)->{
+                                if("COMPLETE".equalsIgnoreCase(value)) return "#007B5F";
+                                else if(value.startsWith("HOLDING")) return "#AD1742";
+                                else return "";
+                            }).name(WorkModel.State.name()).horizontal("center").build());
     private final SheetElement elemSheet = config.build();
     private final ListElement.SingleLineItem lblManager = ListElement.singleLine().label("담당자");
     private final ListElement.SingleLineItem lblPhone = ListElement.singleLine().label("연락처");
@@ -102,6 +113,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
             works[i].sequenceI7     = data[i].get(WorkModel.SequenceI7.id);
             works[i].indexI5        = data[i].get(WorkModel.IndexI5.id);
             works[i].sequenceI5     = data[i].get(WorkModel.SequenceI5.id);
+            works[i].state(Work.State.valueOf(data[i].get(WorkModel.State.id)));
         }
         return works;
     }
@@ -148,7 +160,7 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
     }
     private Data map(Work value){
         if(value == null) return null;
-        return new Data(value.worklist + "$" + value.index)
+        return Data.create(value.worklist + "$" + value.index)
                 .put("index",                           String.valueOf(value.index))
                 .put("G-ID",                            value.gid)
                 .put("의뢰번호",                         value.samples!=null?DataTransformUtil.formatSampleId(Long.parseLong(value.samples)):null)
@@ -170,7 +182,8 @@ public class WorkGridElement extends HTMLElementBuilder<HTMLDivElement, WorkGrid
                 .put(WorkModel.IndexI7.id,              toString(value.indexI7))
                 .put(WorkModel.SequenceI7.id,           toString(value.sequenceI7))
                 .put(WorkModel.IndexI5.id,              toString(value.indexI5))
-                .put(WorkModel.SequenceI5.id,           toString(value.sequenceI5));
+                .put(WorkModel.SequenceI5.id,           toString(value.sequenceI5))
+                .put(WorkModel.State.id,                value.state().name());
     }
 
     @Override
