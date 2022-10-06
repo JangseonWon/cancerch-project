@@ -54,6 +54,7 @@ data class Analysis(
     @Column("too6_rmd_fems_ensemble_prob")  val too6FemsProb:           Double = 0.0,
     @Column("iscore")                       val iscore:                 Double = 0.0,
     @Column("result")                       val result:                 String,
+    @Column("comment")                      val comment:                String?,
 
     @Column("analysis_at")                  val analysisAt:             LocalDateTime?,
     @LastModifiedDate

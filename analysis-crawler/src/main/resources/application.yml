@@ -12,6 +12,10 @@ spring:
     password: avoid1004
 server:
   port: 0
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: TRACE
+    io.r2dbc.postgresql.PARAM: TRACE
 gcgenome:
   tmp-dir: D:\\data\\lims\\tmp
   out-dir: D:\\data\\lims\\avoid-processed

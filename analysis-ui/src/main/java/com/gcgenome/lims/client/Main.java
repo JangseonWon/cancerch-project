@@ -11,7 +11,6 @@ public class Main extends AbstractEntryPoint {
 	}
 	@Override
 	protected AbstractScene<?> prepare(String param) {
-		elem.update();
 		return elem;
 	}
 	@Override

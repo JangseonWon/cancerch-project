@@ -48,8 +48,10 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
+	private final ButtonElement btnSave = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
 	private final Query query;
+	private Boolean isChanged = false;
 
 	public AnalysisScene(Query query) {
 		super(query);
@@ -66,6 +68,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		btnSearch.onClick(evt->{
 			update();
 		});
+		btnSave.onClick(evt->save());
 		btnPdf.onClick(evt->print());
 		btnPublish.onClick(evt->publish());
 		btnPdf.enabled(false);
@@ -79,7 +82,18 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			else 							btnProgressOnly.text("미배포 목록 조회");
 		});
 	}
-
+	private void save(){
+		if(Arrays.stream(grid.changed()).findAny().isEmpty()) {
+			DomGlobal.alert("변경사항이 없습니다.");
+		} else {
+			ProgressApi.open();
+			AnalysisApi.update(grid.changed()).then(response -> {
+				update();
+				DomGlobal.alert("저장이 완료되었습니다.");
+				return null;
+			}).finally_(ProgressApi::close);
+		}
+	}
 	private void update(Query query){
 		Query proxy = new Query().asc(this.isAsc());
 		List<Query.Filter> filters = new LinkedList<>();
@@ -143,7 +157,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		return new IsElement<?>[][]{
 			new IsElement[] { btnAnalysisComplete, btnProgressOnly },
 			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch},
-			new IsElement[] {btnPdf, btnPublish}
+			new IsElement[] {btnPdf, btnPublish, btnSave}
 		};
 	}
 	@Override

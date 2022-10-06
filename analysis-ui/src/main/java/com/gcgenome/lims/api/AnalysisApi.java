@@ -101,4 +101,36 @@ public class AnalysisApi {
 					else return Promise.resolve(response);
 				});
 	}
+	public Promise<Response> comment(String sample, String service, String comment){
+		RequestInit request = RequestInit.create();
+		request.setMethod("PATCH");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		request.setBody(comment);
+		return FetchApi.request("/analysis/"+sample+"/"+service+"/comment", request)
+				.then(response-> {
+					if (!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert(msg);
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
+	public Promise<Response> update(Analysis[] analyses){
+		RequestInit request = RequestInit.create();
+		request.setMethod("PATCH");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		request.setBody(JSON.stringify(analyses));
+		return FetchApi.request("/analysis/update", request)
+				.then(response->{
+					if (!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert(msg);
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
 }

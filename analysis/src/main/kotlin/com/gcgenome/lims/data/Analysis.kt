@@ -48,4 +48,5 @@ data class Analysis(
     var iscore:                 Double = 0.0
     var cadEnsembleProb:        Double = 0.0
     var result:                 String = ""
+    var comment:                String = ""
 }

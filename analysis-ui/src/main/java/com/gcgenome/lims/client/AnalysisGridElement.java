@@ -4,23 +4,26 @@ import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
-import net.sayaya.ui.HTMLElementBuilder;
+import elemental2.dom.EventListener;
+import elemental2.promise.Promise;
+import net.sayaya.ui.*;
 import net.sayaya.ui.chart.Data;
 import net.sayaya.ui.chart.SheetElement;
 import net.sayaya.ui.chart.SheetElementSelectableMulti;
 import net.sayaya.ui.chart.column.ColumnBuilder;
+import net.sayaya.ui.chart.column.ColumnDropDown;
 import net.sayaya.ui.chart.column.ColumnString;
 import net.sayaya.ui.event.HasSelectionChangeHandlers;
+import net.sayaya.ui.event.HasValueChangeHandlers;
 import org.gwtproject.event.shared.HandlerRegistration;
+import org.jboss.elemento.EventType;
 import org.jboss.elemento.HtmlContentBuilder;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
-import static org.jboss.elemento.Elements.div;
+import static org.jboss.elemento.Elements.*;
 import static org.jboss.elemento.EventType.bind;
 
 public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, AnalysisGridElement> implements HasSelectionChangeHandlers<Analysis[]> {
@@ -29,18 +32,56 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center");
 	}
 	private static ColumnString columnAndColor(String name, String type) {
-		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
+		return ColumnBuilder.string(name).width(100).name(name).readOnly(false).horizontal("right").colorBackground((td, row, prop, value) ->{
 			if("A".equals(type)) return "#512939";
 			else return "#8C7162";
 		}).color("#FFFFFF");
 	}
-	private static ColumnString columnResult(String name){
-		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("center").colorBackground((td, row, prop, value) ->{
+	private static ColumnDropDown columnResult(String name){
+		return ColumnBuilder.dropdown(name,
+				ListElement.singleLine().label("일반관리"),
+				ListElement.singleLine().label("관심관리"),
+				ListElement.singleLine().label("집중관리"))
+				.width(100).name(name).horizontal("center").colorBackground((td, row, prop, value) ->{
 			if("일반관리".equals(value)) return "#8DC556";
 			else if("관심관리".equals(value)) return "#EFA718";
 			else if("집중관리".equals(value)) return "#D9341D";
 			else return "#FFFFFF";
 		}).color("#FFFFFF");
+	}
+	private static ColumnDropDown columnResultDetail(String name, String type){
+		if(type.equals("top 5")) return ColumnBuilder.dropdown(name,
+				ListElement.singleLine().label("폐암"),
+				ListElement.singleLine().label("식도암"),
+				ListElement.singleLine().label("대장암"),
+				ListElement.singleLine().label("췌장암"),
+				ListElement.singleLine().label("간암"),
+				ListElement.singleLine().label("기타암"))
+				.width(100).name(name).horizontal("center").color((td, row, prop, value) ->{
+					if("폐암".equals(value)) return "#FF3846";
+					else if("식도암".equals(value)) return "#17B70D";
+					else if("대장암".equals(value)) return "#1E29C4";
+					else if("췌장암".equals(value)) return "#BC0D18";
+					else if("간암".equals(value)) return "#AD8105";
+					else return "#000000";
+				});
+		else return ColumnBuilder.dropdown(name,
+				ListElement.singleLine().label("폐암"),
+				ListElement.singleLine().label("식도암"),
+				ListElement.singleLine().label("대장암"),
+				ListElement.singleLine().label("췌장암"),
+				ListElement.singleLine().label("간암"),
+				ListElement.singleLine().label("난소암"),
+				ListElement.singleLine().label("기타암"))
+				.width(100).name(name).horizontal("center").color((td, row, prop, value) -> {
+					if("폐암".equals(value)) return "#FF3846";
+					else if("식도암".equals(value)) return "#17B70D";
+					else if("대장암".equals(value)) return "#1E29C4";
+					else if("췌장암".equals(value)) return "#BC0D18";
+					else if("간암".equals(value)) return "#AD8105";
+					else if("난소암".equals(value)) return "#E06F07";
+					else return "#000000";
+				});
 	}
 	private static ColumnString columnThreshold(String name, Code code, String type){
 		return ColumnBuilder.string(name).width(100).name(name).readOnly(true).horizontal("right").colorBackground((td, row, prop, value) ->{
@@ -83,15 +124,22 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					column("Batch").build(),
 					column("Row").build(),
 					columnResult("결과 분석").build(),
+					ColumnBuilder.link("소견", data->"#"+data.idx()).name("소견").readOnly(true).horizontal("center")
+									.onClick(data->
+										commentDialog(data).then(res->{
+											data.put("Comment", res);
+											data.put("소견", res.trim().equals("") ? "입력 필요" : "입력 완료");
+											return null;
+										})).build(),
 					columnPassOrFail("QC 분석").build(),
 					columnPassOrFail("성별 분석").build(),
 					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
 							.onClick(this::preview).build(),
 					column("결과발송일").build(),
 					column("발송자").build(),
-					column("top 5 prediction").build(),
+					columnResultDetail("top 5 prediction", "top 5").build(),
 					column("top 5 FEMS prob").horizontal("right").build(),
-					column("top 6 prediction").build(),
+					columnResultDetail("top 6 prediction", "top 6").build(),
 					column("top 6 FEMS prob").horizontal("right").build(),
 					column("iscore").horizontal("right").build(),
 					column("cad ensemble prob").horizontal("right").build(),
@@ -123,6 +171,52 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					columnPassOrFail("Sex Prediction B").build()
 			).data(new Data[10]);
 
+	private Promise<String> commentDialog(Data data) {
+		ButtonElementText ok =  ButtonElement.outline().text("OK");
+		ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
+		Dialog dialog = Dialog.confirmation("소견 입력", ok, cancel);
+		HTMLElement surface = (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
+		surface.style.minWidth = CSSProperties.MinWidthUnionType.of("600px");
+		TextAreaElement<String> iptComment = TextAreaElement.textBox().outlined().text("소견").css("button").style("width:100%;height:200px;");
+		HtmlContentBuilder<HTMLLabelElement> counter = label(data.get("Comment").length()+"/200");
+		iptComment.value(data.get("Comment"));
+		iptComment.on(EventType.keyup, evt->{
+			if(iptComment.value().length() > 200) {
+				iptComment.value(iptComment.value().substring(0, 200));
+				DomGlobal.alert("최대 글자수를 초과했습니다.");
+			}
+			counter.textContent(iptComment.value().length()+"/200");
+		});
+		return new Promise<>((resolve, reject)-> {
+			ok.onClick(evt->{
+				String value = iptComment.value().length() == 0 ? " " : iptComment.value();
+				AnalysisApi.comment(data.get("ID").replace("-",""), data.get("검사코드"), value)
+						.then(result -> {
+							if(result.ok) {
+								DomGlobal.alert("저장이 완료되었습니다.");
+								dialog.close();
+								dialog.element().remove();
+								resolve.onInvoke(value);
+								return null;
+							} else {
+								DomGlobal.alert("예기치 못한 오류 : LIMS 문의 \n (★창을 닫지 마세요★)");
+								resolve.onInvoke(data.get("comment"));
+								return null;
+							}
+						});
+			});
+			cancel.onClick(evt->{
+				dialog.close();
+				dialog.element().remove();
+				reject.onInvoke(false);
+			});
+			dialog.add(div().style("margin-top: 10px; display:flex; flex-direction: column; align-items: flex-end;").add(iptComment).add(counter));
+			body().add(dialog);
+			dialog.open();
+			iptComment.focus();
+		});
+	}
+
 	private void preview(Data data) {
 		String sample = data.get("ID");
 		String service = data.get("검사코드");
@@ -150,7 +244,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	public AnalysisGridElement update(Analysis[] values) {
 		this.values = Arrays.stream(values).collect(Collectors.toMap(a->a.sample() + "/" + a.request().service().id(), w->w));
-		return update(Arrays.stream(values).map(this::map).toArray(Data[]::new));
+		return update(Arrays.stream(values).map(this::map).peek(data->data.onValueChange(this::changeMap)).toArray(Data[]::new));
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
@@ -220,7 +314,10 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String top6FEMS		= convertFormat(value.too6FemsProb());
 		String iscore		= convertFormat(value.iscore());
 		String result		= convertResultName(value.result());
-		Data datum = new Data(idx)
+		String comment		= value.result().equals("RISK") && (value.too5Pred().equals("Others") || value.too6Pred().equals("Others")) ?
+				value.comment().equals("") || value.comment().equals(" ") ? "입력 필요" : "입력 완료" : "";
+		String comments     = value.comment().equals(" ") ? "" : value.comment();
+		Data datum = Data.create(idx)
 				.put("ID",       				id)
 				.put("검사코드", 				service)
 				.put("검사명",   				serviceNm)
@@ -236,6 +333,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("Row",      				row)
 				.put("reportCreated", 			reportCreateDt)
 				.put("결과 분석", 				result)
+				.put("소견",                    comment)
 				.put("QC 분석",					qcCheck)
 				.put("성별 분석",               sexCheck)
 				.put("결과지", 					reportNm  == null ? "" : reportNm)
@@ -273,14 +371,66 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("chrX Proportion B",       chrXPropT)
 				.put("chrY Count B",            chrYCntT)
 				.put("chrY Proportion B",       chrYPropT)
-				.put("Sex Prediction B",  		sexPredT);
+				.put("Sex Prediction B",  		sexPredT)
+				.put("Comment",                 comments);
 		return datum;
+	}
+	public Analysis[] changed(){
+		return Arrays.stream(elemSheet.values()).filter(value->value.isChanged("top 5 prediction") || value.isChanged("top 6 prediction")
+				|| value.isChanged("결과 분석")).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+	}
+	private void changeMap(HasValueChangeHandlers.ValueChangeEvent<Data> evt) {
+		Data d = evt.value();
+
+		Analysis value = values.get(d.get("ID").replace("-", "") + "/" + d.get("검사코드"));
+		value.too5Pred(convertForEntityData(d.get("top 5 prediction")));
+		value.too6Pred(convertForEntityData(d.get("top 6 prediction")));
+		value.result(convertForEntityData(d.get("결과 분석")));
+
+		values.put(d.get("ID").replace("-", "") + "/" + d.get("검사코드"), value);
 	}
 	@Override
 	public AnalysisGridElement that() {
 		return this;
 	}
-
+	private String convertCancerName(String pred){
+		switch (pred) {
+			case "ESO"  : 	return "식도암";
+			case "HCC"  : 	return "간암";
+			case "OV"   : 	return "난소암";
+			case "colon":   return "대장암";
+			case "LuC"  : 	return "폐암";
+			case "Panc" : 	return "췌장암";
+			case "Others":  return "기타암";
+			default     :	return "WTF";
+		}
+	}
+	private String convertResultName(String result){
+		switch (result) {
+			case "RISK"  	: 	return "집중관리";
+			case "GENERAL" 	: 	return "일반관리";
+			case "CONCERN"  : 	return "관심관리";
+			default  		: 	return "WTF";
+		}
+	}
+	private String convertFormat(Double data){
+		return data == 0 ? "" : String.valueOf(round(data*100f)/100f);
+	}
+	private String convertForEntityData(String data) {
+		switch (data) {
+			case "집중관리" :			return 	"RISK";
+			case "관심관리" :			return 	"CONCERN";
+			case "일반관리" :			return 	"GENERAL";
+			case "식도암"   :			return 	"ESO";
+			case "간암"		:			return	"HCC";
+			case "난소암"	:			return	"OV";
+			case "대장암"	:			return	"colon";
+			case "폐암"		:			return	"LuC";
+			case "췌장암"	:			return	"Panc";
+			case "기타암"   :			return  "Others";
+			default 		:			return  "null";
+		}
+	}
 	@Override
 	public Analysis[] selection() {
 		return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
@@ -294,26 +444,5 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		EventListener wrapper = evt->listener.handle(SelectionChangeEvent.event(evt, selection()));
 		return bind(dom, "selection-change", wrapper);
 	}
-	private String convertCancerName(String pred){
-		switch (pred) {
-			case "ESO" : 	return "식도암";
-			case "HCC" : 	return "간암";
-			case "OV"  : 	return "난소암";
-			case "colon"  : return "대장암";
-			case "LuC"  : 	return "폐암";
-			case "Panc"  : 	return "췌장암";
-			default  : 		return "WTF";
-		}
-	}
-	private String convertResultName(String result){
-		switch (result) {
-			case "RISK"  : 		return "집중관리";
-			case "GENERAL" : 	return "일반관리";
-			case "CONCERN"  : 	return "관심관리";
-			default  : 			return "WTF";
-		}
-	}
-	private String convertFormat(Double data){
-		return data == 0 ? "" : String.valueOf(round(data*100f)/100f);
-	}
 }
+

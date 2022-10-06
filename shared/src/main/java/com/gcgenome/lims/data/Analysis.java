@@ -74,6 +74,7 @@ public final class Analysis {
 	@JsProperty(name="cad_ensemble_prob")
 	private Double 			cadEnsembleProb;
 	private String 			result;
+	private String			comment;
 	@JsProperty(name="created_at")
 	private String 			createAt;
 	@JsProperty(name="last_modify_at")
