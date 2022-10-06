@@ -21,8 +21,8 @@ public class WorklistApi {
         request.setMethod("GET");
 
         StringBuilder urlBuilder = new StringBuilder("/worklist/search");
-        urlBuilder.append("?page=").append(query.page)
-                .append("&limit=").append(query.limit)
+        urlBuilder.append("?page=").append(query.page())
+                .append("&limit=").append(query.limit())
                 .append("&sort_by=").append(query.sortBy)
                 .append("&asc=").append(query.asc);
 
