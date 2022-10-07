@@ -64,6 +64,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         this.query = query;
         btnSearch.onClick(evt->update());
         btnSequencing.onClick(this::sequence);
+        btnSequencingB.onClick(this::sequenceB);
     }
     private Promise<Boolean> dialog(String title){
         ButtonElementText ok = ButtonElement.outline().text("OK");
@@ -85,10 +86,25 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         });
     }
     private void sequence(Event event) {
+        /* 선택한 Batch 내의 검체가 모두 'PENDING, HOLDING' 인지 체크한다. 그리고나서 Promise.then으로 아래 연결 */
         this.dialog("시퀀싱을 수행합니다.").then(result->{
             if(result){
                 ProgressApi.open(false);
                 SequencingApi.sequencing(grid.selection())
+                        .then(e->{
+                            DomGlobal.alert("시퀀싱 정보 전송을 완료했습니다.");
+                            return Promise.resolve(e);
+                        }).finally_(ProgressApi::close);
+            }
+            return null;
+        });
+    }
+    private void sequenceB(Event event) {
+        /* 선택한 Batch 내의 검체가 모두 'PENDING_B, HOLDING_B' 인지 체크한다. 그리고나서 Promise.then으로 아래 연결 */
+        this.dialog("시퀀싱을 수행합니다.").then(result->{
+            if(result){
+                ProgressApi.open(false);
+                SequencingApi.sequencingB(grid.selection())
                         .then(e->{
                             DomGlobal.alert("시퀀싱 정보 전송을 완료했습니다.");
                             return Promise.resolve(e);
@@ -157,7 +173,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
                 new IsElement<?>[] { iptDateFrom },
                 new IsElement<?>[] { label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;")},
                 new IsElement<?>[] { div().add(iptDateTo).add(btnSearch).style("display:flex;") },
-                new IsElement<?>[] { div().add(btnSequencing).style("display:flex;") }
+                new IsElement<?>[] { div().add(btnSequencing).add(btnSequencingB).style("display:flex;") }
         };
     }
     @Override

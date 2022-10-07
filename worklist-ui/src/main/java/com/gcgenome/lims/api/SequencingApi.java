@@ -40,4 +40,19 @@ public class SequencingApi {
             }); else return Promise.resolve(response);
         }).then(r->Promise.resolve((Void)null));
     }
+    public Promise<Void> sequencingB(Worklist[] worklists){
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+        });
+        request.setMethod("POST");
+        String ids = Arrays.stream(worklists).map(Worklist::id).collect(Collectors.joining(","));
+        request.setBody(ids);
+        return FetchApi.request("/sequencing-b", request).then(response -> {
+            if(!response.ok) return response.text().then(msg->{
+                DomGlobal.alert(msg);
+                return Promise.reject(msg);
+            }); else return Promise.resolve(response);
+        }).then(r->Promise.resolve((Void)null));
+    }
 }

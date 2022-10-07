@@ -13,10 +13,15 @@ class SequencingRouter(private val handler: SequencingHandler) {
     @Bean("SequencingRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
         POST("/sequencing",          contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::sequencing)
+        POST("/sequencing-b",          contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::sequencingB)
     }
     private fun sequencing(request: ServerRequest): Mono<ServerResponse> =
-        handler.sequencing(request.bodyToMono(String::class.java)
-            .flatMapMany { str-> Flux.fromIterable(str.split(",")) })
+        handler.sequencing(request.bodyToMono(String::class.java).flatMapMany { str-> Flux.fromIterable(str.split(",")) })
+            .flatMap { ServerResponse.ok().build() }
+            .doOnError { it.printStackTrace() }
+            .onErrorResume(Exception::class.java) { ServerResponse.badRequest().bodyValue(it.localizedMessage) }
+    private fun sequencingB(request: ServerRequest): Mono<ServerResponse> =
+        handler.sequencingB(request.bodyToMono(String::class.java).flatMapMany { str-> Flux.fromIterable(str.split(",")) })
             .flatMap { ServerResponse.ok().build() }
             .doOnError { it.printStackTrace() }
             .onErrorResume(Exception::class.java) { ServerResponse.badRequest().bodyValue(it.localizedMessage) }

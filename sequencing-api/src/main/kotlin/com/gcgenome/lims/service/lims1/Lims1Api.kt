@@ -75,4 +75,9 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
             Mono.just(response4.statusCode())
         }
     }
+    @Synchronized
+    fun createB(worklist: List<Worklist>): Mono<Int> {
+        //for(w in worklist) w.
+        return create(worklist)
+    }
 }
