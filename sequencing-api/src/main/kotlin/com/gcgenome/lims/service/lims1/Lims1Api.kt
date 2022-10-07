@@ -77,7 +77,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
     }
     @Synchronized
     fun createB(worklist: List<Worklist>): Mono<Int> {
-        //for(w in worklist) w.
+        for(w in worklist) w.serial = w.serial!!.replace("AVD-A", "AVD-B")
         return create(worklist)
     }
 }

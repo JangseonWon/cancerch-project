@@ -19,7 +19,7 @@ data class Worklist(
     @Column("last_modify_at") val lastModifyAt: LocalDateTime? = null,
     val prefix:    String? = null,
     val remark:    String? = null,
-    val serial:    String? = null,
+    var serial:    String? = null,
     val status:    Status? = null,
     val title:     String? = null
 ) : Serializable {
