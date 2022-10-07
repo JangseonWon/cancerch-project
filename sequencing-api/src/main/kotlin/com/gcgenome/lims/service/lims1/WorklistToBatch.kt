@@ -35,6 +35,7 @@ class WorklistToBatch(val repo: SequencingRepository) {
     private fun map(row: AtomicInteger, worklist: Worklist): Flux<Analysis> = repo.findAllByWorklist(worklist.id)
         .sort(Comparator.comparing(Sequencing::index))
         .filter(Sequencing::qc)
+        .filter{ it.state.startsWith("PENDING") }
         .map {
             val serial = worklist.serial
             check(serial!=null)
