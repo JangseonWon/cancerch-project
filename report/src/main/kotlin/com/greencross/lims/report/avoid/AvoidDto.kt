@@ -18,6 +18,7 @@ data class AvoidDto(
         val name: String = "",
         val ppv: Double = 0.0,
         val asr: Double = 0.0,
-        val score: Double? = 0.0
+        val score: Double? = 0.0,
+        val comment: String? = ""
     )
 }

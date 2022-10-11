@@ -178,14 +178,14 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		HTMLElement surface = (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
 		surface.style.minWidth = CSSProperties.MinWidthUnionType.of("600px");
 		TextAreaElement<String> iptComment = TextAreaElement.textBox().outlined().text("소견").css("button").style("width:100%;height:200px;");
-		HtmlContentBuilder<HTMLLabelElement> counter = label(data.get("Comment").length()+"/200");
+		HtmlContentBuilder<HTMLLabelElement> counter = label(data.get("Comment").length()+"/180");
 		iptComment.value(data.get("Comment"));
 		iptComment.on(EventType.keyup, evt->{
-			if(iptComment.value().length() > 200) {
-				iptComment.value(iptComment.value().substring(0, 200));
+			if(iptComment.value().length() > 180) {
+				iptComment.value(iptComment.value().substring(0, 180));
 				DomGlobal.alert("최대 글자수를 초과했습니다.");
 			}
-			counter.textContent(iptComment.value().length()+"/200");
+			counter.textContent(iptComment.value().length()+"/180");
 		});
 		return new Promise<>((resolve, reject)-> {
 			ok.onClick(evt->{

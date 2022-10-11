@@ -21,7 +21,7 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         stream.paragraph(305f, y+7, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblDetailResultAnalysisHeader(dto!!.patientName!!)))
 
         y = y-RESULT_CONTENT_RATE-10
-        img = template.resource().imgDetailResultTable(dto.result)
+        img = if(dto.first.name == "기타암종") template.resource().imgDetailResultTable("OTHERS") else template.resource().imgDetailResultTable(dto.result.name)
         width = img.width * RESULT_CONTENT_RATE / img.height
         stream.drawImage(img, 305f - width / 2, y, width, RESULT_CONTENT_RATE)
 
@@ -37,8 +37,8 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         val styleBold    = template.resource().styleContentBold().clone().fontSize(26f)
 
         val colors = when(dto.result){
-            AvoidDto.Results.GENERAL     -> Color(141, 197, 86)
-            AvoidDto.Results.CONCERN  -> Color(239, 167, 24)
+            AvoidDto.Results.GENERAL    -> Color(141, 197, 86)
+            AvoidDto.Results.CONCERN    -> Color(239, 167, 24)
             else                        -> Color(217,  52, 29)
         }
 
@@ -48,8 +48,12 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
         stream.paragraph(312f, y+79, 50f, AlignHorizontal.CENTER,
             TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(8f), template.lblDetailResultAnalysisTableHeaderTop()))
         if(dto.result == AvoidDto.Results.RISK){
-            stream.paragraph(403f, y+79, 100f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent(dto.first.name)))
-            stream.paragraph(498f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent()))
+            if(dto.first.name == "기타암종"){
+                stream.paragraph(441f, y+79, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(67, 72, 142)).clone().fontSize(8f), template.lblDetailResultAnalysisTableConcent(dto.first.name)))
+            } else {
+                stream.paragraph(403f, y+79, 100f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent(dto.first.name)))
+                stream.paragraph(498f, y+79, 50f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(9f), template.lblDetailResultAnalysisTableConcent()))
+            }
         } else {
             val results = when(dto.result){
                 AvoidDto.Results.GENERAL -> template.lblDetailResultAnalysisTableNone1()
@@ -57,7 +61,6 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
             }
             stream.paragraph(441f, y+79, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(67, 72, 142)).clone().fontSize(8f), results))
         }
-
 
         if(dto.result != AvoidDto.Results.GENERAL){
             stream.paragraph(291f, y+24, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0,0,0)).fontSize(6f), template.lblPatientSir(dto.patientName!!)))
@@ -128,34 +131,43 @@ class SectionDetailResultAnalysis(private var y: Float = 685f)  : Painter<AvoidT
                 AlignHorizontal.CENTER,
                 TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG2())
             )
+            if(dto.first.name != "기타암종") {
+                img = template.resource().imgBackgroundCancer("기타암종")
+                width = img.width * RESULT_IMAGE_LOW_RATE / img.height
+                stream.drawImage(img, 498 - width / 2, y + 7, width, RESULT_IMAGE_LOW_RATE)
 
-            img = template.resource().imgBackgroundCancer("기타암종")
-            width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-            stream.drawImage(img, 498 - width/2, y+7, width, RESULT_IMAGE_LOW_RATE)
+                img = template.resource().imgBarGray()
+                width = img.width * CONTENT_SQUARE_RATE / img.height
 
-            img = template.resource().imgBarGray()
-            width = img.width * CONTENT_SQUARE_RATE / img.height
+                height = CONTENT_SQUARE_RATE
+                stream.drawImage(img, 483 - width / 2, y, width, height)
+                stream.paragraph(
+                    483f,
+                    y + height + 5,
+                    60f,
+                    AlignHorizontal.CENTER,
+                    TextBlock(
+                        styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f),
+                        template.lblDetailResultAnlaysisTableContentCom()
+                    )
+                )
 
-            height = CONTENT_SQUARE_RATE
-            stream.drawImage(img, 483 - width / 2, y, width, height)
-            stream.paragraph(
-                483f,
-                y + height + 5,
-                60f,
-                AlignHorizontal.CENTER,
-                TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(8f), template.lblDetailResultAnlaysisTableContentCom())
-            )
-
-            img = template.resource().imgBarDanger()
-            height = CONTENT_SQUARE_RATE * 3f
-            stream.drawImage(img, 513 - width / 2, y, width, height)
-            stream.paragraph(
-                513f,
-                y + height + 5,
-                60f,
-                AlignHorizontal.CENTER,
-                TextBlock(styleBold.clone().color(colors).fontSize(8f), template.lblDetailResultAnalysisTableContentHIG1())
-            )
+                img = template.resource().imgBarDanger()
+                height = CONTENT_SQUARE_RATE * 3f
+                stream.drawImage(img, 513 - width / 2, y, width, height)
+                stream.paragraph(
+                    513f,
+                    y + height + 5,
+                    60f,
+                    AlignHorizontal.CENTER,
+                    TextBlock(
+                        styleBold.clone().color(colors).fontSize(8f),
+                        template.lblDetailResultAnalysisTableContentHIG1()
+                    )
+                )
+            } else {
+                stream.paragraph(495f, y+41, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11,11,11)).clone().fontSize(6f), template.lblDetailResultAnalysisTableOthRisk()))
+            }
         }
         return stream
     }

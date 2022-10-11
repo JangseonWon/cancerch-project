@@ -30,10 +30,19 @@ class AvoidReportTest {
     val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)
     val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
-    var cancer= CancerRepo.암종.췌장담도암
+    var cancer= CancerRepo.암종.기타암종
     val barcode: String = "CR3-$code"
     val request: String = "2021109-971-0$code"
+    val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
     fun test() {
+        for (sex in sexes){
+            this.sex = sex
+            for (birth in birthes) {
+                this.birth = birth
+                val doc: PDDocument? = build(null, "ko-kr");
+                doc!!.save("./기타암종/집중관리_${this.sex}_${this.birth}.pdf")
+            }
+        }
 //        for (cancer in cancers) {
 //            this.cancer = cancer
 //            for (sex in sexes) {
@@ -45,11 +54,11 @@ class AvoidReportTest {
 //                }
 //            }
 //        }
-        val doc: PDDocument? = build(null, "ko-kr")
-        if (doc != null) {
-            doc.save("./"+this.barcode+".pdf")
-            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
-        }
+//        val doc: PDDocument? = build(null, "ko-kr")
+//        if (doc != null) {
+//            doc.save("./"+this.barcode+".pdf")
+//            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
+//        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
@@ -60,7 +69,7 @@ class AvoidReportTest {
             AvoidDto("TT-5-412",
                 AvoidDto.Results.RISK,
                 AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5)))?.build()
+                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
 //            AvoidDto("TT-5-412",
 //                AvoidDto.Results.CONCERN,
 //                AvoidDto.Cancer("기타암종")))?.build()

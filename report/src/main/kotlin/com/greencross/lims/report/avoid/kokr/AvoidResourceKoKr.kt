@@ -155,10 +155,11 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
     }
 
     override fun imgDetailResultOverview(): PDImageXObject { return imgDetailResultOverview }
-    override fun imgDetailResultTable(result: AvoidDto.Results): PDImageXObject = when(result){
-        AvoidDto.Results.RISK    -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_CONCENT.png"))
-        AvoidDto.Results.CONCERN  -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_ATTENTION.png"))
-        else                        -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_NORMAL.png"))
+    override fun imgDetailResultTable(result: String): PDImageXObject = when(result){
+        "RISK"     -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_CONCENT.png"))
+        "CONCERN"  -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_ATTENTION.png"))
+        "NORMAL"   -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_NORMAL.png"))
+        else       -> img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/detailResultLayout_OTHERS.png"))
     }
 
     override fun imgDetailResultRisk(risk: String): PDImageXObject {
@@ -173,9 +174,10 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
         return img(File(AvoidResource.resource, "img/avoid/SectionDetailResultAnalysis/background_$cancer.png"))
     }
 
-    override fun imgGuideLineTable(risk: AvoidDto.Results) = when(risk){
-        AvoidDto.Results.RISK -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table.png"))
-        else                  -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table_notRisk.png"))
+    override fun imgGuideLineTable(risk: String) = when(risk){
+        "RISK"   -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table.png"))
+        "OTHERS" -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table_with_others.png"))
+        else     -> img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/img_table_notRisk.png"))
     }
     override fun imgGuideLineCancer(cancer: String): PDImageXObject {
         return img(File(AvoidResource.resource, "img/avoid/SectionGuideLine/cancer_$cancer.png"))

@@ -46,6 +46,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblDetailResultAnalysisTableNone2(): String
     fun lblDetailResultAnalysisTableMidRisk1(): String
     fun lblDetailResultAnalysisTableMidRisk2(): String
+    fun lblDetailResultAnalysisTableOthRisk(): String
     fun lblDetailResultAnlaysisTableContentCom(): String
     fun lblDetailResultAnalysisTableContentMID(): String
     fun lblDetailResultAnalysisTableContentHIG1(): String
@@ -128,4 +129,6 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblPatientInfoWithCancer(age: String, sex: Sex, cancer: String) : String
     fun lblPatientSir(name: String) : String
     fun lblCancerToWord(cancer: String): String
+    fun lblCancerForOthers(): String
+    fun lblDetailResultAnalysisContentOther(patient: String?): String
 }

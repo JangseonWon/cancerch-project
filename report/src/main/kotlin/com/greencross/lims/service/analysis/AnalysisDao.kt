@@ -36,7 +36,8 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 patient.mrn,
                 analysis.result,
                 analysis.too5Pred.`as`("too5Pred"),
-                analysis.too6Pred.`as`("too6Pred")
+                analysis.too6Pred.`as`("too6Pred"),
+                analysis.comment
             )
         ).from(analysis)
             .leftJoin(sample).on(sample.id.eq(analysis.sample))

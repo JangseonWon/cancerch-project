@@ -29,18 +29,14 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         //region □ Header 좌측 로고, 아래 설명
         var img = template.resource().imgTitle()
         var width = img.width * TITLE_HEIGHT / img.height
-        stream.drawImage(img, 127f - width/2, y, width, TITLE_HEIGHT)
-
-        var style = template.resource().styleContentRegualar().clone().fontSize(7.4f).color(Color(114,113,113))
-        stream.paragraph(127f, y-img.height/10, 200f, CENTER, TextBlock(style, template.lblTitleSmallLogo()))
+        stream.drawImage(img, 134f - width/2, y-10, width, TITLE_HEIGHT)
         //endregion
 
         //region □ HeaderBox, 내부 내용
         img = template.resource().imgHeaderBox()
         width = img.width * TITLE_HEADERBOX_HEIGHT / img.height
         stream.drawImage(img, 385f - width/2, y-25, width, TITLE_HEADERBOX_HEIGHT)
-
-        style = template.resource().styleContentBold()
+        var style = template.resource().styleContentBold()
         stream.paragraph(235f, y+35, 50f, LEFT, TextBlock(style, template.lblMedicalInstitution()))
         stream.paragraph(385f, y+35, 50f, LEFT, TextBlock(style, template.lblRequestNumber()))
         stream.paragraph(235f, y+20, 50f, LEFT, TextBlock(style, template.lblPatientName()))
@@ -74,7 +70,7 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
     }
 
     companion object {
-        private const val TITLE_HEIGHT = 41f
+        private const val TITLE_HEIGHT = 46f
         private const val TITLE_HEADERBOX_HEIGHT = 78f
     }
     fun date(date: LocalDate?): String? {

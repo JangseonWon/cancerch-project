@@ -21,14 +21,16 @@ data class Analysis(
     @Column("result")           lateinit var result:         String
     @Column("too5_pred")        lateinit var too5Pred:       String
     @Column("too6_pred")        lateinit var too6Pred:       String
+    @Column("comment")                   var comment:        String = ""
     @Id @Transient lateinit var _id: AnalysisPK
-    constructor(sample: Long, service: String, batch: String, row: Long, file: String, result: String, too5Pred: String, too6Pred: String) : this(sample, service) {
+    constructor(sample: Long, service: String, batch: String, row: Long, file: String, result: String, too5Pred: String, too6Pred: String, comment: String) : this(sample, service) {
         this.row = row
         this.batch = batch
         this.file = file
         this.result = result
         this.too5Pred = too5Pred
         this.too6Pred = too6Pred
+        this.comment = comment
     }
     override fun getId(): AnalysisPK {
         return AnalysisPK(sample, service)

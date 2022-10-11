@@ -7,17 +7,17 @@ import com.greencross.lims.report.func.Painter
 import java.awt.Color
 
 class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
-    override fun paint(
+        override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: AvoidTemplate<AvoidResource>?,
         dto: AvoidDto?
     ): PDPageContentStreamPageAccessible {
         stream!!.saveGraphicsState()
-
+        if(dto!!.first.name == "기타암종") y = 330f
         var style = template!!.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(12f)
         var styleBold = template.resource().styleContentBold().clone().fontSize(9f)
         var styleRegular = template.resource().styleContentRegualar().clone().fontSize(8f)
-        y -= CONTENT_TITLE_RATE+10+if(dto!!.result == AvoidDto.Results.GENERAL)-17 else 0
+        y -= CONTENT_TITLE_RATE+10+if(dto.result == AvoidDto.Results.GENERAL)-17 else 0
 
         var img = template.resource().imgContentTitle()
         var width = img.width * CONTENT_TITLE_RATE / img.height
@@ -27,35 +27,36 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
         if(dto.result != AvoidDto.Results.GENERAL) {
             when(dto.result){
                 AvoidDto.Results.RISK -> {
-                    img = template.resource().imgGuideLineTable(AvoidDto.Results.RISK)
-                    width = img.width * RESULT_CONTENT_RATE / img.height
-                    y -= RESULT_CONTENT_RATE + 10
+                    img = template.resource().imgGuideLineTable(if(dto.first.name == "기타암종") "OTHERS" else dto.result.name)
+                    val rate = if(dto.first.name == "기타암종") RESULT_CONTENT_OTH_RATE else RESULT_CONTENT_RATE
+                    width = img.width * rate / img.height
+                    y -= rate + 10
                     val cancer = when {
                         dto.first.name == "기타암종" -> "기타 암"
                         else -> dto.first.name
                     }
-                    stream.drawImage(img, 305f - width / 2, y, width, RESULT_CONTENT_RATE)
-                    stream.paragraph(305f, y + RESULT_CONTENT_RATE - 17, 400f, AlignHorizontal.CENTER, TextBlock(styleBold, template.lblGuideLineTop(dto.result, cancer)))
+                    stream.drawImage(img, 305f - width / 2, y, width, rate)
+                    stream.paragraph(305f, y + rate - 17, 400f, AlignHorizontal.CENTER, TextBlock(styleBold, template.lblGuideLineTop(dto.result, cancer)))
 
                     img = template.resource().imgGuideLineCancer(dto.first.name)
                     width = img.width * CONTENT_CANCER_RATE / img.height
-                    stream.drawImage(img, 100f - width / 2, y + RESULT_CONTENT_RATE - 100, width, CONTENT_CANCER_RATE)
+                    stream.drawImage(img, 100f - width / 2, y + rate - 100, width, CONTENT_CANCER_RATE)
                     style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
-                    stream.paragraph(125f, y + RESULT_CONTENT_RATE - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.LEFT,
-                        TextBlock(style, dto.first.name))
-                    stream.paragraph(290f, y + RESULT_CONTENT_RATE - 79 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
+                    stream.paragraph(125f, y + rate - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.LEFT,
+                        TextBlock(style, template.lblCancerToWord(dto.first.name)))
+                    stream.paragraph(290f, y + rate - 79 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f), template.lblGuideLineTableHeader1()))
-                    stream.paragraph(462f, y + RESULT_CONTENT_RATE - 79 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
+                    stream.paragraph(462f, y + rate - 79 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f),  template.lblGuideLineTableHeader2()))
-                    stream.paragraph(255f, y+RESULT_CONTENT_RATE-77, 200f, AlignHorizontal.LEFT,
+                    stream.paragraph(255f, y+rate-77, 200f, AlignHorizontal.LEFT,
                         TextBlock(styleRegular.clone().fontSize(9.5f), template.lblGuideLineDetection()))
-                    stream.paragraph(462f, y+RESULT_CONTENT_RATE-77, 160f, AlignHorizontal.CENTER,
+                    stream.paragraph(462f, y+rate-77, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleRegular.clone().fontSize(10f), template.lblGuideLineTime(dto.first.name)))
-                    stream.paragraph(153f, y+64, 400f, AlignHorizontal.LEFT,
+                    stream.paragraph(153f, if(dto.first.name == "기타암종") y+54 else y+64, 400f, AlignHorizontal.LEFT,
                         TextBlock(styleRegular.clone().fontSize(9f), template.lblGuideLineComment(dto.first.name)))
                 }
                 else -> {
-                    img = template.resource().imgGuideLineTable(AvoidDto.Results.CONCERN)
+                    img = template.resource().imgGuideLineTable(AvoidDto.Results.CONCERN.name)
                     width = img.width * RESULT_CONTENT_RATE / img.height
                     y -= RESULT_CONTENT_RATE + 10
                     val cancer = when {
@@ -129,6 +130,7 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
         private const val CONTENT_TITLE_RATE = 21f
         private const val CONTENT_CANCER_RATE = 70f
         private const val RESULT_CONTENT_RATE = 199f
+        private const val RESULT_CONTENT_OTH_RATE = 182f
         private const val RESULT_CONTENT_LOW_RATE = 216f
     }
 }

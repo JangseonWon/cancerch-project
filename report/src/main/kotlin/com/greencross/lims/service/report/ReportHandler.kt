@@ -105,7 +105,9 @@ class ReportHandler(
                 )!!,
                 cancerRepo.findASRbyAgeAndCancerAndSex(
                     stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
-                )!!
+                )!!,
+                null,
+                analysis.comment?:"comment"
             )
         }
 
@@ -175,7 +177,7 @@ class ReportHandler(
         "Panc" -> CancerRepo.암종.췌장담도암
         "HCC" -> CancerRepo.암종.간암
         "colon" -> CancerRepo.암종.대장암
-        "etc" -> CancerRepo.암종.기타암종
+        "Others" -> CancerRepo.암종.기타암종
         "ESO" -> CancerRepo.암종.식도암
         else -> CancerRepo.암종.유방암
     }
@@ -185,7 +187,7 @@ class ReportHandler(
         "Panc" -> "췌장담도암"
         "HCC" -> "간암"
         "colon" -> "대장암"
-        "etc" -> "기타암종"
+        "Others" -> "기타암종"
         "ESO" -> "식도암"
         else -> "유방암"
     }

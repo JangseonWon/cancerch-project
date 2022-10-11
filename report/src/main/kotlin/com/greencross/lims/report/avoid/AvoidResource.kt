@@ -66,12 +66,12 @@ interface AvoidResource : HasSign {
     fun imgBarDanger(): PDImageXObject
     fun imgDetailResultOverview(): PDImageXObject
     fun imgDetailResultRisk(risk : String) : PDImageXObject
-    fun imgDetailResultTable(result: AvoidDto.Results): PDImageXObject
+    fun imgDetailResultTable(result: String): PDImageXObject
     fun imgSmallSquareAverage() : PDImageXObject
     fun imgSmallSquarePatient() : PDImageXObject
     fun imgAnalysisContentBox() : PDImageXObject
     fun imgBackgroundCancer(cancer: String) : PDImageXObject
-    fun imgGuideLineTable(risk: AvoidDto.Results) : PDImageXObject
+    fun imgGuideLineTable(risk: String) : PDImageXObject
     fun imgGuideLineCancer(cancer: String) : PDImageXObject
     fun imgGuideLineTotalCancer() : PDImageXObject
     fun imgProcess() : PDImageXObject

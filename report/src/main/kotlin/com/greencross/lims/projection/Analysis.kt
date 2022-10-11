@@ -18,7 +18,8 @@ data class Analysis (
     val barcode: Long,
     val result: String,
     val too5Pred: String,
-    val too6Pred: String
+    val too6Pred: String,
+    val comment: String?
 ) {
     companion object {
         data class AnalysisBuilder(
@@ -41,9 +42,10 @@ data class Analysis (
             val mrn: String?,
             val result: String,
             val too5Pred: String,
-            val too6Pred: String
+            val too6Pred: String,
+            val comment: String?
         ){
-            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred)
+            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred, comment)
         }
     }
 }
