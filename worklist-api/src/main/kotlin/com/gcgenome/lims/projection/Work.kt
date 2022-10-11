@@ -69,7 +69,7 @@ data class Work(
             var sequenceI7:     String?,
             var indexI5:        String?,
             var sequenceI5:     String?,
-            var state:          String
+            var state:          String?
         ){
             fun build(): Work = Work(
                 worklist = worklist,
@@ -101,7 +101,7 @@ data class Work(
                 sequenceI7 = sequenceI7,
                 indexI5 = indexI5,
                 sequenceI5 = sequenceI5,
-                state = state
+                state = state?:"PENDING"
             )
         }
         fun toAddress(x: Short, y: Short): String {
