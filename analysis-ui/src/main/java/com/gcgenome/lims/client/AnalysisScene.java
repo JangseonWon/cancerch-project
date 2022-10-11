@@ -13,10 +13,7 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.Response;
 import elemental2.promise.Promise;
-import net.sayaya.ui.BreadcrumbElement;
-import net.sayaya.ui.ButtonElement;
-import net.sayaya.ui.ButtonElementToggle;
-import net.sayaya.ui.TextFieldElement;
+import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
@@ -43,6 +40,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	});
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 전체 조회").style("min-width: 200px;").value(false);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미배포 목록 조회").style("min-width: 200px;").value(true);
+	private final CheckBoxElement chkOnlyPass = CheckBoxElement.checkBox(true).text("PASS ONLY").style("margin-right: 30px;");
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
@@ -107,6 +105,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 
 		if(this.btnProgressOnly.value()) filters.add(new Query.Filter().key("published").value("true"));
 		if(this.btnAnalysisComplete.value()) filters.add(new Query.Filter().key("printed").value("true"));
+		if(this.chkOnlyPass.value()) filters.add(new Query.Filter().key("pass").value("true"));
 		proxy.limit(show()).page((int) page());
 		proxy.filters(filters.stream().toArray(Query.Filter[]::new));
 		ProgressApi.open(false);
@@ -155,7 +154,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	@Override
 	protected IsElement<?>[][] controls() {
 		return new IsElement<?>[][]{
-			new IsElement[] { btnAnalysisComplete, btnProgressOnly },
+			new IsElement[] { chkOnlyPass, btnAnalysisComplete, btnProgressOnly },
 			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch},
 			new IsElement[] {btnPdf, btnPublish, btnSave}
 		};

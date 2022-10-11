@@ -24,7 +24,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             "의뢰일".contentEquals(key)         -> analysis.dateRequest
             "ID".contentEquals(key)             -> analysis.sample.stringValue()
             "batch".contentEquals(key)          -> analysis.batch
-            "index".contentEquals(key)          -> analysis.row.stringValue()
+            "row".contentEquals(key)            -> analysis.row.stringValue()
             else                                -> analysis.sample.stringValue()
         }
     }
@@ -37,7 +37,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                     predicate("ID", value),
                     predicate("batch", value),
                     predicate("result", value),
-                    predicate("cancer", value)
+                    predicate("cancer", value),
                 )
                 BooleanBuilder().andAnyOf(*predicates.toTypedArray())
             }
@@ -48,7 +48,9 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             "published".contentEquals(key, ignoreCase = true) -> return if(value != null)   analysis.publishAt.isNull               else null
             "printed".contentEquals(key, ignoreCase = true) -> return if(value != null)     analysis.reportedAt.isNull              else null
             "result".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.result.eq(mapResult(value))    else null
+            "batch".contentEquals(key, ignoreCase = true) -> return if (value != null)      analysis.batch.eq(value)                else null
             "cancer".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.too5Pred.eq(convert(value)).or(analysis.too6Pred.eq(convert(value))) else null
+            "pass".contentEquals(key, ignoreCase = true) -> return if (value != null)       analysis.qc.eq("P").and(analysis.qcTmp.eq("P")) else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
                 return analysis.dateRequest.loe(date)
@@ -57,7 +59,6 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
                 return analysis.dateRequest.goe(date)
             } else null
-            "batch".contentEquals(key, ignoreCase = true) -> return if (value != null)      analysis.batch.eq(value)                else null
             else -> null
         }
     }
@@ -102,7 +103,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         "간암"   -> "HCC"
         "식도암" -> "ESO"
         "췌장암" -> "PanC"
-        else   -> "Other"
+        else   -> "Others"
     }
     private fun mapResult(result: String) = when(result){
         "집중관리", "집중" -> "RISK"
