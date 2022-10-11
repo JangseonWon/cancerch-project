@@ -24,8 +24,8 @@ class AvoidReportTest {
     val patient: String = "김승전"
     var birth: Int = 1970
     val collection: LocalDate = LocalDate.of(2022,3,25)
-//    val sex: Sex = Sex.M
-    var sex: Sex = Sex.F
+    val sex: Sex = Sex.M
+//    var sex: Sex = Sex.F
     val receipt: LocalDate = collection
     val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)
@@ -35,14 +35,14 @@ class AvoidReportTest {
     val request: String = "2021109-971-0$code"
     val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
     fun test() {
-        for (sex in sexes){
-            this.sex = sex
-            for (birth in birthes) {
-                this.birth = birth
-                val doc: PDDocument? = build(null, "ko-kr");
-                doc!!.save("./기타암종/집중관리_${this.sex}_${this.birth}.pdf")
-            }
-        }
+//        for (sex in sexes){
+//            this.sex = sex
+//            for (birth in birthes) {
+//                this.birth = birth
+//                val doc: PDDocument? = build(null, "ko-kr");
+//                doc!!.save("./기타암종/집중관리_${this.sex}_${this.birth}.pdf")
+//            }
+//        }
 //        for (cancer in cancers) {
 //            this.cancer = cancer
 //            for (sex in sexes) {
@@ -54,11 +54,11 @@ class AvoidReportTest {
 //                }
 //            }
 //        }
-//        val doc: PDDocument? = build(null, "ko-kr")
-//        if (doc != null) {
-//            doc.save("./"+this.barcode+".pdf")
-//            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
-//        }
+        val doc: PDDocument? = build(null, "ko-kr")
+        if (doc != null) {
+            doc.save("./"+this.barcode+".pdf")
+            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
+        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {

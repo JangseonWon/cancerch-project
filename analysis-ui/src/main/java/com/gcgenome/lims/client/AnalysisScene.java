@@ -49,7 +49,6 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final ButtonElement btnSave = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
 	private final Query query;
-	private Boolean isChanged = false;
 
 	public AnalysisScene(Query query) {
 		super(query);
