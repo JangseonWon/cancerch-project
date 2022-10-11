@@ -57,7 +57,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		super(query);
 		this.query = query;
 		initialize();
-		this.sortable("ID", "의뢰일", "Batch").sort("ID", true);;
+		this.sortable("ID", "의뢰일", "Batch", "row").sort("ID", true);
 		((HTMLElement)iptDateFrom.element().parentElement).style.display = "flex";
 		((HTMLElement)btnPdf.element().parentElement).style.display = "flex";
 		grid.onSelectionChange(evt->{
@@ -166,7 +166,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	}
 	private void print() {
 		Analysis[] selection = grid.selection();
-		if(selection.length <= 0) return;
+		if(selection.length == 0) return;
 		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
 		ProgressApi.open(false);
 
@@ -183,7 +183,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	}
 	private void publish() {
 		Analysis[] selection = grid.selection();
-		if(selection.length <= 0) return;
+		if(selection.length == 0) return;
 		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 전송합니다.")) return;
 		ProgressApi.open(false);
 		for (Analysis analysis: selection) {

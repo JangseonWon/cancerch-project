@@ -111,7 +111,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			.stretchH("all")
 			.columns(
 					ColumnBuilder.link("ID", data->"#"+data.idx()).name("ID").readOnly(true).horizontal("center")
-							.onClick(data->{DomGlobal.window.open("../sample.html#"+data.get("ID"));}).build(),
+							.onClick(data->{DomGlobal.window.open("../sample.html#"+data.get("ID"));}).width(2000).build(),
 					column("검사명").build(),
 					column("수진자명").build(),
 					column("성별").build(),
@@ -433,7 +433,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	@Override
 	public Analysis[] selection() {
-		return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+		return Arrays.stream(wrapper.selection()).filter(d->d.get("QC 분석").equals("PASS") && d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
