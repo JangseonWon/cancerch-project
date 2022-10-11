@@ -75,7 +75,7 @@ class SectionDetailResultComment (private var y: Float = 581f)  : Painter<AvoidT
                 TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine1()), TextBlock(styleBold, dto.patientName),
                 TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine2HIG()),
                 TextBlock(styleBold, template.lblResultToWord(dto.result)), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine2END()),
-                TextBlock(styleBold, dto.patientName), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_1()),
+                TextBlock(styleBold, dto.patientName), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_1_OTH()),
                 TextBlock(styleBold, template.lblCancerToWord(dto.first.name)),  TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_2()),
                 TextBlock(styleBold, template.lblPatientInfoWithCancer(dto.age!!, dto.sex!!, dto.first.name)), TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine3HIG_3()),
                 TextBlock(styleBold, (round(dto.first.asr.div(1000) * 10000) / 10000).toString()+"%"),

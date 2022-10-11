@@ -79,7 +79,7 @@ class SectionTotalResult(private val y: Float = 612f) : Painter<AvoidTemplate<Av
                 TextBlock(styleBold, template.lblResultToWord(dto.result)),
                 TextBlock(styleRegular, template.lblOverviewRiskBridge()),
                 TextBlock(styleBold, template.lblOverViewRisk()),
-                TextBlock(styleRegular, template.lblOverViewHighRisk()),
+                TextBlock(styleRegular, template.lblOverViewHighRisk(dto.first.name)),
                 TextBlock(styleBold, template.lblCancerToWord(dto.first.name)),
                 TextBlock(styleRegular, template.lblOverViewHighRiskEnd()),
                 TextBlock(styleRegular7, template.lblOverviewMidHighEnd(dto.result))

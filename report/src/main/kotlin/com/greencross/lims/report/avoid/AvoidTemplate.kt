@@ -18,7 +18,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblOverviewRiskBridge(): String
     fun lblOverViewRisk(): String
     fun lblOverViewMiddleRisk(): String
-    fun lblOverViewHighRisk(): String
+    fun lblOverViewHighRisk(cancer: String): String
     fun lblOverViewHighRiskEnd(): String
     fun lblOverviewMidHighEnd(risk: AvoidDto.Results): String
 
@@ -62,6 +62,7 @@ interface AvoidTemplate<R: AvoidResource>: AbstractReportTemplate<R> {
     fun lblDetailResultAnalysisContentLine3MID_3(): String
     fun lblDetailResultAnalysisContentLine3MID_4(): String
     fun lblDetailResultAnalysisContentLine3HIG_1(): String
+    fun lblDetailResultAnalysisContentLine3HIG_1_OTH(): String
     fun lblDetailResultAnalysisContentLine3HIG_2(): String
     fun lblDetailResultAnalysisContentLine3HIG_3(): String
     fun lblDetailResultAnalysisContentLine3HIG_4(): String

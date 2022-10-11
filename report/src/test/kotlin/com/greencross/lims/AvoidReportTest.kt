@@ -24,8 +24,8 @@ class AvoidReportTest {
     val patient: String = "김승전"
     var birth: Int = 1970
     val collection: LocalDate = LocalDate.of(2022,3,25)
-    val sex: Sex = Sex.M
-//    var sex: Sex = Sex.F
+//    val sex: Sex = Sex.M
+    var sex: Sex = Sex.F
     val receipt: LocalDate = collection
     val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)

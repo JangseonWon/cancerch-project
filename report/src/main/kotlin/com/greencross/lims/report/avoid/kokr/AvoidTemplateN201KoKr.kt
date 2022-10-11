@@ -40,7 +40,10 @@ class AvoidTemplateN201KoKr(
     override fun lblOverviewRiskBridge() = " 대상자 입니다.\n 암환자군과 다소 유사한 "
     override fun lblOverViewRisk() = "이상 패턴이 발견"
     override fun lblOverViewMiddleRisk() = "되었으나,\n정확한 암종에 대한 구분은 어렵습니다.\n"
-    override fun lblOverViewHighRisk() = "되었으며,\n6종 암 중 가장 의심되는 암종은 "
+    override fun lblOverViewHighRisk(cancer: String) = when(cancer){
+        "기타암종" -> "되었으며,\n가장 의심되는 암종은 6종 암 외 "
+        else       -> "되었으며,\n6종 암 중 가장 의심되는 암종은 "
+    }
     override fun lblOverViewHighRiskEnd() = "입니다.\n"
     override fun lblOverviewMidHighEnd(risk: AvoidDto.Results) : String {
         val case = when(risk){
@@ -61,7 +64,7 @@ class AvoidTemplateN201KoKr(
     override fun lblDoubtContentTitle() = "6종 암 중 인공지능 예측 암종"
     override fun lblDoubtContentLarge(result: AvoidDto.Results, name: String) = when (result) {
         AvoidDto.Results.CONCERN -> "해당없음 : 추적관찰 권장"
-        AvoidDto.Results.RISK -> "6종 암 중 "+ lblCancerToWord(name) + "의 DNA 패턴과 가장 유사합니다."
+        AvoidDto.Results.RISK -> (if(name == "기타암종") "6종 암 외 " else "6종 암 중 ") + lblCancerToWord(name) + "의 DNA 패턴과 가장 유사합니다."
         else -> "해당없음"
     }
 
@@ -130,7 +133,8 @@ class AvoidTemplateN201KoKr(
 
     override fun lblDetailResultAnalysisContentLine3HIG_1() =
         "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장담도암, 식도암, 난소암) 중\n"
-
+    override fun lblDetailResultAnalysisContentLine3HIG_1_OTH() =
+        "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장담도암, 식도암, 난소암) 외\n"
     override fun lblDetailResultAnalysisContentLine3HIG_2() = " 환자의 DNA 이상 패턴과 가장 유사합니다.\n일반적으로 "
     override fun lblDetailResultAnalysisContentLine3HIG_3() = " 환자는 "
     override fun lblDetailResultAnalysisContentLine3HIG_4() = "(10만명 중에 "
@@ -138,7 +142,7 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisContentLine3HIG_5() = ")의 확률로 발생하지만,\n아이캔서치 검사 결과 "
     override fun lblDetailResultAnalysisContentLine3HIG_6() = "군인 "
     override fun lblDetailResultAnalysisContentLine3HIG_7() = "님은 "
-    override fun lblDetailResultAnalysisContentLine3HIG_8() = "일 확률이 "
+    override fun lblDetailResultAnalysisContentLine3HIG_8() = "일 확률이 약 "
     override fun lblDetailResultAnalysisContentLine3HIG_9() = "로\n일반인 대비 "
     override fun lblDetailResultAnalysisContentLine3HIG_10() = " 존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n" +
             "집중관리 대상자여도 암이 아닐 수 있으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
@@ -255,7 +259,7 @@ class AvoidTemplateN201KoKr(
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
             else -> "아이캔서치 검사 기타 암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
-                    "정밀검사를 통해 기타 암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
+                    "정밀검사를 통해 암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
         }
