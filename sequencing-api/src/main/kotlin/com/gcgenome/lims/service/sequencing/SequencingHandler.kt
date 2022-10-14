@@ -10,20 +10,18 @@ import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 
 @Service
 class SequencingHandler(val repo: WorklistRepository, val repo2: PreprocessingRepository, val repo3: SequencingRepository, val lims1: Lims1Api) {
     @Transactional
     fun sequencing(worklist: Flux<String>): Mono<Boolean> {
         return repo2.findSequencingMax().flatMap { idx ->
-            val seq = AtomicInteger(idx)
+            val seq = idx+1
             worklist.map(UUID::fromString)
                 .collectList().flatMap {
                     validation(it, "PENDING", "HOLDING").flatMap { valid -> if (valid) Mono.just(it) else Mono.error(RuntimeException()) }
                 }.flatMapMany { toParam(it) }.sort().map { it.apply {
-                    val row = seq.incrementAndGet()
-                    it.sequencing.stream().forEach { it.sequencing_ = row }
+                    it.sequencing.stream().forEach { it.sequencing_ = seq }
                 } }.collectList()
                 .flatMap { param ->
                     lims1.createA(param)
