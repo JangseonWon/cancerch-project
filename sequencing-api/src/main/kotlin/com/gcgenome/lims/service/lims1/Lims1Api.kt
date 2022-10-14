@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.gcgenome.lims.entity.Worklist
+import com.gcgenome.lims.service.sequencing.PreprocessingRepository
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.HttpMultipartMode
 import org.apache.http.entity.mime.MultipartEntityBuilder
@@ -20,7 +20,7 @@ import java.net.http.HttpResponse
 
 
 @Component
-class Lims1Api(private val worklistToBatch: WorklistToBatch) {
+class Lims1Api(private val worklistToBatch: WorklistToBatch, val repo: PreprocessingRepository) {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val client: HttpClient = HttpClient.newHttpClient()
     private val om = ObjectMapper()
@@ -28,9 +28,8 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         .registerModule(JavaTimeModule())
         .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
-    @Synchronized
-    fun create(worklist: List<Worklist>): Mono<Int> {
-        return worklistToBatch.map(0, worklist).flatMap { batch->
+    private fun create(worklists: List<WorklistToBatch.Companion.WorklistToBatchParam>): Mono<Int> {
+        return worklistToBatch.map(0, worklists).flatMap { batch->
             SampleSheetFactory.validation(batch.analysis)
             val samplesheet = SampleSheetFactory.toSampleSheet(batch)
             val putRequest = HttpRequest
@@ -76,8 +75,13 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch) {
         }
     }
     @Synchronized
-    fun createB(worklist: List<Worklist>): Mono<Int> {
-        for(w in worklist) w.serial = w.serial!!.replace("AVD-A", "AVD-B")
-        return create(worklist)
+    fun createA(params: List<WorklistToBatch.Companion.WorklistToBatchParam>): Mono<Int> {
+        return create(params)
     }
+    @Synchronized
+    fun createB(params: List<WorklistToBatch.Companion.WorklistToBatchParam>): Mono<Int> {
+        for(param in params) param.worklist.serial = param.worklist.serial!!.replace("AVD-A", "AVD-B")
+        return create(params)
+    }
+
 }

@@ -14,6 +14,7 @@ import java.util.*
 data class Preprocessing(
     @Column("worklist")             val worklist:               UUID,
     @Column("index")                val index:                  Int,
+    @Column("sequencing")           var sequencing:             Int,
     @Column("state")                var state:                  String = "PENDING"
 ): Persistable<Preprocessing.Companion.PreprocessingPK> {
     @CreatedBy
@@ -26,7 +27,7 @@ data class Preprocessing(
     @Column("last_modify_at")       lateinit var lastModifyAt:  LocalDateTime
     @Id @Transient                  lateinit var _id:           PreprocessingPK
 
-    constructor(worklist: UUID, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, state: String): this(worklist, index){
+    constructor(worklist: UUID, index: Int, createBy: String, createAt: LocalDateTime, lastModifyBy: String, lastModifyAt: LocalDateTime, state: String, sequencing: Int): this(worklist, index, sequencing){
         this.createBy = createBy
         this.createAt = createAt
         this.lastModifyBy = lastModifyBy

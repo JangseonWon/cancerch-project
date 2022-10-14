@@ -12,7 +12,14 @@ import java.util.*
 @Repository
 interface PreprocessingRepository: QuerydslR2dbcRepository<Preprocessing, Preprocessing.Companion.PreprocessingPK> {
     fun findAllByWorklistIn(worklists: List<UUID>): Flux<Preprocessing>
+    @Query("SELECT max(sequencing) FROM preprocessing")
+    fun findSequencingMax(): Mono<Int>
+    @Query("SELECT distinct sequencing FROM preprocessing WHERE worklist IN(:worklists)")
+    fun findSequencingByWorklists(worklists: List<UUID>): Mono<Int>
     @Modifying
     @Query("UPDATE preprocessing SET state=:next WHERE worklist=:worklist AND state=:current")
     fun shiftPreprocessingState(worklist:UUID, current: String, next:String): Mono<*>
+    @Modifying
+    @Query("UPDATE preprocessing SET sequencing=:sequencing WHERE worklist=:worklist AND index=:index")
+    fun updatePreprocessingSequencingIdx(worklist:UUID, index: Int, sequencing: Int): Mono<*>
 }
