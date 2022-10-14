@@ -20,6 +20,7 @@ class ReportRouter(
     fun router() = router{
         PUT("/samples/{sample}/services/{service}/print/{lang}", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::print)
         GET("/samples/{sample}/services/{service}/reports/{createAt}", contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
+
     }
     private fun print(request: ServerRequest): Mono<ServerResponse>{
         val sample = request.pathVariable("sample")

@@ -6,23 +6,19 @@ import com.gcgenome.lims.api.RouteApi;
 import com.gcgenome.lims.data.Analysis;
 import com.gcgenome.lims.dto.Query;
 import com.gcgenome.lims.ui.IconElement;
-import com.google.gwt.core.client.Scheduler;
 import elemental2.core.JsDate;
-import elemental2.dom.DomGlobal;
-import elemental2.dom.HTMLElement;
-import elemental2.dom.HTMLLabelElement;
-import elemental2.dom.Response;
+import elemental2.dom.*;
 import elemental2.promise.Promise;
 import net.sayaya.ui.*;
 import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static elemental2.core.Global.JSON;
+import static org.jboss.elemento.Elements.body;
 import static org.jboss.elemento.Elements.label;
 
 public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
@@ -165,19 +161,33 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private void print() {
 		Analysis[] selection = grid.selection();
 		if(selection.length == 0) return;
-		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.")) return;
-		ProgressApi.open(false);
+		ButtonElementText ok = ButtonElement.outline().text("OK");
+		ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
+		Dialog dialog = Dialog.confirmation("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.", ok, cancel);
+		HTMLElement surface = (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
+		surface.style.minWidth = CSSProperties.MinWidthUnionType.of("600px");
 
-		for (Analysis analysis: selection) {
-			AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
+		ok.onClick(evt->{
+			for(Analysis analysis: selection){
+				AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
 					.then(result->{
 						if(result.ok) {
-							update();
 							return Promise.resolve(true);
 						}
-						else return Promise.resolve(false);
-					}).finally_(ProgressApi::close);
-		}
+						else return Promise.reject(false);
+					});
+			}
+
+
+		});
+
+		cancel.onClick(evt->{
+			dialog.close();
+			dialog.element().remove();
+		});
+		body().add(dialog);
+		dialog.open();
+
 	}
 	private void publish() {
 		Analysis[] selection = grid.selection();

@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)
     implementation(libs.bundles.r2dbc.querydsl)
+    implementation(libs.spring.kafka)
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     kapt(libs.bundles.r2dbc.querydsl)
     testImplementation(libs.bundles.test)

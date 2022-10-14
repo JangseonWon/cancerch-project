@@ -34,7 +34,8 @@ dependencyResolutionManagement {
             library("spring-gateway", "org.springframework.cloud", "spring-cloud-starter-gateway").withoutVersion()
             library("spring-discovery", "org.springframework.cloud", "spring-cloud-starter-zookeeper-discovery").withoutVersion()
             library("spring-log4j2", "org.springframework.boot", "spring-boot-starter-log4j2").withoutVersion()
-            library("spring-security", "org.springframework.boot", "spring-boot-starter-security").withoutVersion()
+            library("spring-security", "org.springframework.boot", "spring-boo-starter-security").withoutVersion()
+            library("spring-kafka", "org.springframework.cloud", "spring-cloud-starter-stream-kafka").withoutVersion()
             bundle("spring-client", listOf("spring-discovery", "spring-log4j2", "spring-security"))
             bundle("spring-client-without-security", listOf("spring-discovery", "spring-log4j2"))
 
