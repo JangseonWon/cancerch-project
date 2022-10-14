@@ -41,10 +41,10 @@ class SequencingHandler(val repo: WorklistRepository, val repo2: PreprocessingRe
     @Transactional(readOnly = true)
     fun sequencingB(worklist: Flux<String>): Mono<Boolean> =  worklist.map(UUID::fromString)
         .collectList().flatMap {
-            validation(it, "PENDING", "HOLDING").flatMap { valid -> if (valid) Mono.just(it) else Mono.error(RuntimeException()) }
+            validation(it, "PENDING_B", "HOLDING_B").flatMap { valid -> if (valid) Mono.just(it) else Mono.error(RuntimeException()) }
         }.flatMapMany { toParam(it) }.sort().collectList()
         .flatMap{ param ->
-            lims1.createA(param)
+            lims1.createB(param)
                 .then(shift(param.stream().map { it.worklist }.toList(), "PENDING_B", "HOLDING_B"))
         }
 
