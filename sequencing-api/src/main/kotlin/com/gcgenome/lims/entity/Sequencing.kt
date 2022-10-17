@@ -26,7 +26,8 @@ data class Sequencing(
     @Column("i7_sequence")          val sequenceI7:             String,
     @Column("i5_index")             val indexI5:                String,
     @Column("i5_sequence")          val sequenceI5:             String,
-    @Column("state")                var state:                  String
+    @Column("state")                var state:                  String,
+    @Column("sequencing")           var sequencing_:            Int
 ) {
     @Id @Transient                  lateinit var _id:           SequencingPK
     companion object {

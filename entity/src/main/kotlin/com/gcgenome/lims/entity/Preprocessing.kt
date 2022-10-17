@@ -6,7 +6,9 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "preprocessing")
+@Table(name = "preprocessing", indexes = [
+    Index(columnList = "sequencing")
+])
 class Preprocessing {
     @EmbeddedId
     val pk : PreprocessingPK = PreprocessingPK()
@@ -54,6 +56,7 @@ class Preprocessing {
     var value: String? = null
     @Column(name = "state", length=9)
     var state: String? = null
+    @Column var sequencing: Int? = null
     @Embeddable
     data class PreprocessingPK (
         @Column(name = "worklist", columnDefinition = "uuid", nullable = false, updatable = false)

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://aries:5432/lims
+    url: jdbc:postgresql://gemini:5432/lims
     username: avoid
     password: avoid1004
     driver-class-name: org.postgresql.Driver

@@ -12,14 +12,29 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 
 @Component
-class WorklistToBatch(val repo: SequencingRepository) {
+class WorklistToBatch {
+    companion object {
+        data class WorklistToBatchParam (
+            val worklist: Worklist,
+            val sequencing: List<Sequencing>
+        ): Comparable<WorklistToBatchParam> {
+            override operator fun compareTo(other: WorklistToBatchParam): Int {
+                if(worklist.serial == null && other.worklist.serial==null) return 0
+                else if(worklist.serial == null) return 1
+                else if(other.worklist.serial == null) return -1
+                else return worklist.serial!!.compareTo(other.worklist.serial!!)
+            }
+        }
+    }
+
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd")
-    fun map(idx: Int, worklist: List<Worklist>): Mono<Batch> {
+    fun map(idx: Int, params: List<WorklistToBatchParam>): Mono<Batch> {
         val row = AtomicInteger(1)
-        return Flux.fromIterable(worklist).flatMap { map(row, it) }.collectList()
+        return Flux.fromIterable(params).sort()
+            .flatMap { map(row, it) }.collectList()
             .map { analysis->
             val today = LocalDate.now()
-            val title = "${formatter.format(today)}_${worklist.stream().map(Worklist::serial).distinct().collect(Collectors.joining("_"))}"
+            val title = "${formatter.format(today)}_${params.stream().map { it.worklist }.map(Worklist::serial).distinct().collect(Collectors.joining("_"))}"
             Batch(idx=idx).also {
                 it.title = title
                 it.analysis.addAll(analysis)
@@ -32,21 +47,17 @@ class WorklistToBatch(val repo: SequencingRepository) {
             }
         }
     }
-    private fun map(row: AtomicInteger, worklist: Worklist): Flux<Analysis> = repo.findAllByWorklist(worklist.id)
-        .sort(Comparator.comparing(Sequencing::index))
-        .filter(Sequencing::qc)
-        .filter{ it.state.startsWith("PENDING") }
+    private fun map(row: AtomicInteger, param: WorklistToBatchParam): Flux<Analysis> = Flux.fromIterable(param.sequencing)
         .map {
-            val serial = worklist.serial
-            check(serial!=null)
-            map(row.getAndIncrement(), serial, it)
+            check(param.worklist.serial!=null)
+            map(row.getAndIncrement(), param.worklist.serial!!, it)
         }
     private fun map(row: Int, worklistSerial: String, sequencing: Sequencing): Analysis {
         val samples = if(sequencing.samples!=null) sequencing.samples.split("ː") else emptyList()
         val services = if(sequencing.services!=null) sequencing.services.split("ː") else emptyList()
         val samplePickOne = samples.stream().filter(Objects::nonNull).filter(String::isNotBlank).findFirst().orElse(null)
         val servicePickOne = services.stream().filter(Objects::nonNull).filter(String::isNotBlank).findFirst().orElse(null)
-        val serial = "$worklistSerial-${sequencing.index.toString().padStart(2, '0')}"
+        val serial = "$worklistSerial-${sequencing.sequencing_.toString().padStart(4, '0')}-${sequencing.index.toString().padStart(2, '0')}"
         val sort = (row*5).toString().padStart(4, '0')
         val seqname = if(samplePickOne!=null) {
             serial + "_" + samplePickOne.substring(0, 8) + "-" + samplePickOne.substring(8, 11) + "-" + samplePickOne.substring(11)
