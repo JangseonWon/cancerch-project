@@ -1,9 +1,7 @@
 package com.greencross.lims.service.report
 
-import com.gcgenome.querydsl.PersistQuerydslR2dbcRepo
 import com.greencross.lims.entity.Report
-import reactor.core.publisher.Flux
+import com.infobip.spring.data.r2dbc.QuerydslR2dbcRepository
 
-interface ReportRepository : PersistQuerydslR2dbcRepo<Report, Report.Companion.ReportPK> {
-    fun findTop10ByIsPrinted(isPrinted: String): Flux<Report>
+interface ReportRepository : QuerydslR2dbcRepository<Report, Report.Companion.ReportPK>{
 }

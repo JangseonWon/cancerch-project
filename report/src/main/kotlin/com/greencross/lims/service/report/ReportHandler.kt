@@ -18,7 +18,6 @@ import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
 import com.greencross.lims.service.reportfile.ReportFileRepository
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -32,69 +31,45 @@ import java.util.*
 @Service
 class ReportHandler(
     private val analysisDao: AnalysisDao,
-    private val reportDao: ReportDao,
+    private val reportDao : ReportDao,
     private val cancerRepo: CancerRepo,
     private val fileRepo: ReportFileRepository,
     private val mapper: ReportMapper,
-    private val om: ObjectMapper
+    private val om : ObjectMapper
 ) {
-    private val logger = LoggerFactory.getLogger("ReportSearch")
-
     @Transactional
     fun reports(sample: Long, service: String): Flux<Report> {
         return reportDao.findBySampleAndService(sample, service)
     }
 
     @Transactional
-    fun print(sample: Long, service: String, lang: String): Mono<Void> {
-        val createTime = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
-            ZoneId.systemDefault()
-        )
-        val entity =
-            com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
-                language = lang
-                isPrinted = "PREPARE"
+    fun print(sample: Long, service: String, lang: String): Mono<com.greencross.lims.data.Report> {
+        return analysisDao.findById(sample, service).flatMap {
+            val dto = analysisToAvoidDto(it)
+            val baos = ByteArrayOutputStream()
+            val doc = build(lang, dto)
+            val createTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
+                ZoneId.systemDefault()
+            )
+            doc?.save(baos)
+            val fileName =
+                "${it.sample}_${it.service}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))}.pdf"
+            val reportFile = ReportFile(UUID.randomUUID()).apply {
+                this.createTime = createTime
+                this.data = ByteBuffer.wrap(baos.toByteArray())
+                this.extension = "pdf"
+                this.name = fileName
+                this.size = baos.toByteArray().size.toLong()
             }
-        return reportDao.create(entity).flatMap { Mono.empty() }
-    }
-
-    @Transactional
-    fun searchReports(): Mono<Void> {
-        logger.info("CronJob Running: Period 10 sec.")
-        return reportDao.findReport().flatMap {
-            analysisDao.findById(it.sample, it.service).zipWith(Mono.just(it)).flatMap { zipped ->
-                logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + "is printing.")
-                val dto = analysisToAvoidDto(zipped.t1)
-                val baos = ByteArrayOutputStream()
-                val doc = zipped.t2.language?.let { it1 -> build(it1, dto) }
-                val createTime = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
-                    ZoneId.systemDefault()
-                )
-                doc?.save(baos)
-                val fileName =
-                    "${zipped.t1.sample}_${zipped.t1.service}_${
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))
-                    }.pdf"
-                val reportFile = ReportFile(UUID.randomUUID()).apply {
-                    this.createTime = createTime
-                    this.data = ByteBuffer.wrap(baos.toByteArray())
-                    this.extension = "pdf"
-                    this.name = fileName
-                    this.size = baos.toByteArray().size.toLong()
-                }
-                baos.close()
-                fileRepo.save(reportFile)
-                zipped.t2.apply{
-                    this.file = reportFile.id
-                    this.name = reportFile.name!!
-                    this.size = reportFile.size
-                    this.isPrinted="COMPLETED"
-                }
-                reportDao.merge(zipped.t2)
+            fileRepo.save(reportFile)
+            val entity = com.greencross.lims.entity.Report(it.sample, it.service, createTime).apply {
+                this.file = reportFile.id
+                this.name = reportFile.name!!
+                this.size = reportFile.size
             }
-        }.then(Mono.empty())
+            reportDao.create(entity).map(mapper::toDto)
+        }
     }
 
     @Transactional
@@ -132,7 +107,7 @@ class ReportHandler(
                     stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
                 null,
-                analysis.comment ?: "comment"
+                analysis.comment?:"comment"
             )
         }
 
@@ -158,11 +133,11 @@ class ReportHandler(
         if (birth == null) return 0
         return if (sampling == null) {
             val americanAge = LocalDateTime.now().minusYears(birth.year.toLong()).year.toLong()
-            if (birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt() - 1
+            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()-1
             else americanAge.toInt()
         } else {
             val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
-            if (birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt() - 1
+            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()-1
             else americanAge.toInt()
         }
     }

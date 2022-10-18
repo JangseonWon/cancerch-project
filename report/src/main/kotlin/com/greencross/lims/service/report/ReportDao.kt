@@ -1,9 +1,9 @@
 package com.greencross.lims.service.report
 
-import com.gcgenome.querydsl.persist
-import com.greencross.lims.entity.QReport.report
 import com.greencross.lims.entity.readonly.QUser
+import com.greencross.lims.entity.QReport.report
 import com.greencross.lims.projection.Report
+import com.greencross.lims.service.reportfile.ReportFileRepository
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Component
@@ -47,6 +47,7 @@ class ReportDao(private val repo: ReportRepository) {
         }.all().map(Report.Companion.ReportBuilder::build)
     }
     fun findForCassandraReport(sample: Long, service: String, createdAt: LocalDateTime): Mono<Report>{
+        print(createdAt)
         return repo.query{
             select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))
         }.one().map(Report.Companion.ReportBuilder::build)
@@ -54,11 +55,29 @@ class ReportDao(private val repo: ReportRepository) {
     fun create(new: com.greencross.lims.entity.Report): Mono<com.greencross.lims.entity.Report> {
         return repo.save(new)
     }
-    fun merge(entity: com.greencross.lims.entity.Report): Mono<Void>{
-        return repo.persist(entity).then(Mono.empty())
-    }
-    fun findReport():Flux<com.greencross.lims.entity.Report>{
-        return repo.findTop10ByIsPrinted("PREPARE")
+    fun merge(sample: Long, service: String, createdAt: LocalDateTime) : Mono<Any>{
+        return repo.query { it.select(
+            constructor(
+                com.greencross.lims.entity.Report::class.java,
+                report.sample,
+                report.service,
+                report.file,
+                report.createAt,
+                report.createBy,
+                report.lastModifyAt,
+                report.lastModifyBy,
+                report.name,
+                report.size,
+                report.publishAt,
+                report.publishBy,
+                report.publishLog
+                )
+            ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)))
+        }.one().switchIfEmpty(Mono.just(com.greencross.lims.entity.Report(sample, service, createdAt)))
+            .map { it.apply {
+                it.publishLog = publishLog
+            }}
+            .flatMap { repo.save(it) }
     }
 
 }
