@@ -41,8 +41,8 @@ class SectionGuideLine (private var y: Float = 375f)  : Painter<AvoidTemplate<Av
                     img = template.resource().imgGuideLineCancer(dto.first.name)
                     width = img.width * CONTENT_CANCER_RATE / img.height
                     stream.drawImage(img, 100f - width / 2, y + rate - 100, width, CONTENT_CANCER_RATE)
-                    style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
-                    stream.paragraph(125f, y + rate - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.LEFT,
+                    style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(if(dto.first.name == "췌장담도암") 12f else 14f)
+                    stream.paragraph(165f, y + rate - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(style, template.lblCancerToWord(dto.first.name)))
                     stream.paragraph(290f, y + rate - 79 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f), template.lblGuideLineTableHeader1()))
