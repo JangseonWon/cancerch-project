@@ -66,7 +66,7 @@ class ReportHandler(
     }
 
     @Transactional
-    fun searchReports(): Mono<Void> {
+    fun scheduleReports(): Mono<Void> {
         logger.info("CronJob Running: Period 10 sec.")
         return reportDao.findReport().flatMap {
             analysisDao.findById(it.sample, it.service).zipWith(Mono.just(it)).flatMap { zipped ->

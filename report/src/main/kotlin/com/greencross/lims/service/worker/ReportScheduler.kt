@@ -9,6 +9,6 @@ import reactor.core.scheduler.Schedulers
 class ReportScheduler(private val reportHandler: ReportHandler) {
     @Scheduled(fixedDelay = 10000)
     fun print(){
-        reportHandler.searchReports().subscribeOn(Schedulers.immediate()).subscribe()
+        reportHandler.scheduleReports().subscribeOn(Schedulers.immediate()).subscribe()
     }
 }
