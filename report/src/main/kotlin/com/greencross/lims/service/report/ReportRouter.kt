@@ -5,22 +5,26 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.router
 import org.springframework.http.MediaType
+import org.springframework.http.codec.ServerSentEvent
+import org.springframework.web.reactive.function.BodyInserter
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.server.RequestPredicate
+import org.springframework.web.reactive.function.server.RequestPredicates.contentType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
-import java.time.Instant
-import java.time.LocalDateTime
 import java.util.*
 
 @Configuration
 class ReportRouter(
     private val handler: ReportHandler
 ) {
-    @Bean("com.greencross.lims.service.Report.ReportRouter")
+    private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
+        @Bean("com.greencross.lims.service.Report.ReportRouter")
     fun router() = router{
-        PUT("/samples/{sample}/services/{service}/print/{lang}", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::print)
-        GET("/samples/{sample}/services/{service}/reports/{createAt}", contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
-
+        PUT("/samples/{sample}/services/{service}/print/{lang}",        contentType, ::print)
+        GET("/samples/{sample}/services/{service}/reports/{createAt}",  contentType, ::preview)
+        GET("/samples/queue",                                           contentType, ::subscribe)
     }
     private fun print(request: ServerRequest): Mono<ServerResponse>{
         val sample = request.pathVariable("sample")
@@ -37,5 +41,12 @@ class ReportRouter(
         return handler.preview(sample.toLong(), service, createAt.toLong())
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)::bodyValue)
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
+    }
+    private fun subscribe(request: ServerRequest): Mono<ServerResponse>{
+        return ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM)
+            .body(BodyInserters.fromServerSentEvents(handler.subscribe().map { msg ->
+                ServerSentEvent.builder<com.gcgenome.lims.data.Report>(msg.data).event(msg.type.name)
+                    .id(msg.data.sample().toString()+"$"+msg.data.service()+"$"+msg.data.createAt()).build()
+            }))
     }
 }

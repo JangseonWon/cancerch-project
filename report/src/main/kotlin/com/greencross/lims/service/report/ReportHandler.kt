@@ -2,6 +2,7 @@ package com.greencross.lims.service.report
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.avoid.TestInfo
+import com.gcgenome.lims.data.MessageReport
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
 import com.greencross.lims.projection.Report
@@ -18,58 +19,88 @@ import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
 import com.greencross.lims.service.reportfile.ReportFileRepository
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.Sinks
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.function.Consumer
+import java.util.function.Supplier
 
 @Service
 class ReportHandler(
     private val analysisDao: AnalysisDao,
-    private val reportDao : ReportDao,
+    private val reportDao: ReportDao,
     private val cancerRepo: CancerRepo,
     private val fileRepo: ReportFileRepository,
     private val mapper: ReportMapper,
-    private val om : ObjectMapper
+    private val om: ObjectMapper
 ) {
+    private val logger      = LoggerFactory.getLogger("ReportSearch")
+    private val publisher   = Sinks.many().unicast().onBackpressureBuffer<MessageReport>()
+    private val subscriber  = Sinks.many().multicast().directAllOrNothing<MessageReport>()
     @Transactional
     fun reports(sample: Long, service: String): Flux<Report> {
         return reportDao.findBySampleAndService(sample, service)
     }
 
     @Transactional
-    fun print(sample: Long, service: String, lang: String): Mono<com.greencross.lims.data.Report> {
-        return analysisDao.findById(sample, service).flatMap {
-            val dto = analysisToAvoidDto(it)
-            val baos = ByteArrayOutputStream()
-            val doc = build(lang, dto)
-            val createTime = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
-                ZoneId.systemDefault()
-            )
-            doc?.save(baos)
-            val fileName =
-                "${it.sample}_${it.service}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))}.pdf"
-            val reportFile = ReportFile(UUID.randomUUID()).apply {
-                this.createTime = createTime
-                this.data = ByteBuffer.wrap(baos.toByteArray())
-                this.extension = "pdf"
-                this.name = fileName
-                this.size = baos.toByteArray().size.toLong()
+    fun print(sample: Long, service: String, lang: String): Mono<Void> {
+        val createTime = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
+            ZoneId.systemDefault()
+        )
+        val entity =
+            com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
+                language = lang
+                isPrinted = "PREPARE"
             }
-            fileRepo.save(reportFile)
-            val entity = com.greencross.lims.entity.Report(it.sample, it.service, createTime).apply {
-                this.file = reportFile.id
-                this.name = reportFile.name!!
-                this.size = reportFile.size
+        return reportDao.create(entity).flatMap { Mono.empty() }
+    }
+
+    @Transactional
+    fun searchReports(): Mono<Void> {
+        logger.info("CronJob Running: Period 10 sec.")
+        return reportDao.findReport().flatMap {
+            analysisDao.findById(it.sample, it.service).zipWith(Mono.just(it)).flatMap { zipped ->
+                logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + "is printing.")
+                val dto = analysisToAvoidDto(zipped.t1)
+                val baos = ByteArrayOutputStream()
+                val doc = zipped.t2.language?.let { it1 -> build(it1, dto) }
+                val createTime = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
+                    ZoneId.systemDefault()
+                )
+                doc?.save(baos)
+                val fileName =
+                    "${zipped.t1.sample}_${zipped.t1.service}_${
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))
+                    }.pdf"
+                val reportFile = ReportFile(UUID.randomUUID()).apply {
+                    this.createTime = createTime
+                    this.data = ByteBuffer.wrap(baos.toByteArray())
+                    this.extension = "pdf"
+                    this.name = fileName
+                    this.size = baos.toByteArray().size.toLong()
+                }
+                baos.close()
+                fileRepo.save(reportFile)
+                zipped.t2.apply{
+                    this.file = reportFile.id
+                    this.name = reportFile.name!!
+                    this.size = reportFile.size
+                    this.isPrinted="COMPLETED"
+                }
+                reportDao.merge(zipped.t2)
             }
-            reportDao.create(entity).map(mapper::toDto)
-        }
+        }.then(Mono.empty())
     }
 
     @Transactional
@@ -84,7 +115,17 @@ class ReportHandler(
             }
             .map { it.get().data!!.array() }
     }
-
+    @Bean("publish-reports")
+    fun publishReports(): Supplier<Flux<String>> {
+        return Supplier { publisher.asFlux().map(this::messageToString)}
+    }
+    @Bean("broadcast-reports")
+    fun broadcastReports(): Consumer<String> {
+        return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
+    }
+    fun subscribe(): Flux<MessageReport> {
+        return subscriber.asFlux()
+    }
     private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
         val patient = analysis.patient
         val barcode = analysis.value
@@ -107,7 +148,7 @@ class ReportHandler(
                     stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
                 null,
-                analysis.comment?:"comment"
+                analysis.comment ?: "comment"
             )
         }
 
@@ -133,11 +174,11 @@ class ReportHandler(
         if (birth == null) return 0
         return if (sampling == null) {
             val americanAge = LocalDateTime.now().minusYears(birth.year.toLong()).year.toLong()
-            if(birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt()-1
+            if (birth.plusYears(americanAge).isAfter(LocalDate.now())) americanAge.toInt() - 1
             else americanAge.toInt()
         } else {
             val americanAge = sampling.minusYears(birth.year.toLong()).year.toLong()
-            if(birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt()-1
+            if (birth.plusYears(americanAge).isAfter(sampling)) americanAge.toInt() - 1
             else americanAge.toInt()
         }
     }
@@ -203,5 +244,12 @@ class ReportHandler(
         val cast = id.toString()
         return if (cast.length == 15) "${cast.substring(0, 8)}-${cast.substring(8, 11)}-${cast.substring(11)}"
         else cast
+    }
+
+    private fun messageToString(msg: MessageReport): String {
+        return om.writeValueAsString(msg)
+    }
+    private fun stringToMessage(str: String): MessageReport {
+        return om.readValue(str, MessageReport::class.java)
     }
 }
