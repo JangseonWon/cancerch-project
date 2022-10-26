@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)
     implementation(libs.bundles.r2dbc.querydsl)
+    implementation(libs.spring.kafka)
     kapt(libs.bundles.r2dbc.querydsl)
     testImplementation(libs.bundles.test)
 }

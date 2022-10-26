@@ -6,6 +6,6 @@ data class MessageReport(
 ){
     constructor() : this(MessageType._NULL, Report())
     enum class MessageType {
-        _NULL, CREATE, UPDATE, FINISH
+        _NULL, CREATE, PRINTING, FINISH
     }
 }

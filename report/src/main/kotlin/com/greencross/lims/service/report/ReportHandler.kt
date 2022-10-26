@@ -62,7 +62,11 @@ class ReportHandler(
                 language = lang
                 isPrinted = "PREPARE"
             }
-        return reportDao.create(entity).flatMap { Mono.empty() }
+        return reportDao.create(entity).flatMap {
+            logger.info("$sample/$service is created.")
+            publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(entity)))
+            Mono.empty()
+        }
     }
 
     @Transactional
@@ -70,7 +74,8 @@ class ReportHandler(
         logger.info("CronJob Running: Period 10 sec.")
         return reportDao.findReport().flatMap {
             analysisDao.findById(it.sample, it.service).zipWith(Mono.just(it)).flatMap { zipped ->
-                logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + "is printing.")
+                logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is printing.")
+                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val dto = analysisToAvoidDto(zipped.t1)
                 val baos = ByteArrayOutputStream()
                 val doc = zipped.t2.language?.let { it1 -> build(it1, dto) }
@@ -98,7 +103,10 @@ class ReportHandler(
                     this.size = reportFile.size
                     this.isPrinted="COMPLETED"
                 }
-                reportDao.merge(zipped.t2)
+                reportDao.merge(zipped.t2).doOnSuccess {
+                    logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is finished.")
+                    publisher.tryEmitNext(MessageReport(MessageReport.MessageType.FINISH, mapper.toMessageDto(zipped.t2)))
+                }
             }
         }.then(Mono.empty())
     }
@@ -115,11 +123,11 @@ class ReportHandler(
             }
             .map { it.get().data!!.array() }
     }
-    @Bean("publish-reports")
+    @Bean("publish-printing")
     fun publishReports(): Supplier<Flux<String>> {
         return Supplier { publisher.asFlux().map(this::messageToString)}
     }
-    @Bean("broadcast-reports")
+    @Bean("broadcast-printing")
     fun broadcastReports(): Consumer<String> {
         return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
     }

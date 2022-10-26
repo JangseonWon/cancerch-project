@@ -8,6 +8,19 @@ spring:
       connect-string: test:12181
       discovery:
         root: /avoid-service
+    stream:
+      function:
+        definition: publish-printing; broadcast-printing;
+      bindings:
+        broadcast-printing-events-in-0:
+          destination: avoid-printing-events
+          group: broadcast-printing-events
+        publish-printing-events-out-0:
+          destination: avoid-printing-events
+      kafka:
+        binder:
+          brokers: gemini, pisces, aries, taurus, libra
+          auto-add-partitions: true
   r2dbc:
     url: r2dbc:postgresql://gemini:5432/lims
     compatibility-mode : true
@@ -26,7 +39,7 @@ spring:
       read-timeout-millis: 10000s
       connect-timeout: 10000s
       read-timeout: 10000s
-      pool.pool-timeout: 10000s
+      pool-timeout: 10000s
 server:
   port: 0
 

@@ -1,18 +1,19 @@
 package com.greencross.lims.entity
 
+import com.gcgenome.querydsl.Version
+import com.gcgenome.querydsl.Versioned
 import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import io.r2dbc.postgresql.codec.Json
 import org.springframework.data.annotation.*
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.*
 
 @Schema("avoid")
 @Table("report")
+@Versioned
 data class Report(
     @Column("sample")                 val sample:        Long,
     @Column("service")                val service:       String,
@@ -32,6 +33,7 @@ data class Report(
     @Column("publish_log")            var publishLog:    Json? = null
     @Column("is_printed")             var isPrinted:     String?=null
     @Column("language")               var language:      String?=null
+    @Version @Column("version")       var version:       Long = 0
     @Id @Transient           lateinit var _id:           ReportPK
 
     companion object{
