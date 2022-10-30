@@ -13,10 +13,10 @@ import java.time.LocalDateTime
 @Table("analysis_qc")
 data class AnalysisQC(
     @Column("sample")                 val sample:          Long,
-    @Column("service")                val service:         String
+    @Column("service")                val service:         String,
+    @Column("batch")                  val batch:           String,
+    @Column("row")                    val row:             Int
 ): Persistable<AnalysisQC.Companion.AnalysisQCPK> {
-    @Column("batch")                  var batch:           String = ""
-    @Column("row")                    var row:             Int = 0
     @CreatedDate
     @Column("create_at")     lateinit var createAt:        LocalDateTime
     @Column("file")          lateinit var filePath:        String
@@ -51,10 +51,12 @@ data class AnalysisQC(
     companion object {
         data class AnalysisQCPK(
             val sample:  Long,
-            val service: String
+            val service: String,
+            val batch:   String,
+            val row:     Int
         )
     }
 
-    override fun getId(): AnalysisQCPK = AnalysisQCPK(sample, service)
+    override fun getId(): AnalysisQCPK = AnalysisQCPK(sample, service, batch, row)
     override fun isNew(): Boolean = !this::createAt.isInitialized
 }

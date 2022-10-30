@@ -26,9 +26,7 @@ class AnalysisRSCrawler(
                 val sampleId = primaries[1].replace("-","")
                 try {
                     Tests.values().forEach { test ->
-                        val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name).apply {
-                            this.batch = batchRow[0]
-                            this.row = batchRow[1].toInt()
+                        val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name, batchRow[0], batchRow[1].toInt()).apply {
                             this.cadEnsembleProb = it.cadEnsembleProb
                             this.too5Pred = it.too5Pred
                             this.too5FemsProb = it.too5Fems

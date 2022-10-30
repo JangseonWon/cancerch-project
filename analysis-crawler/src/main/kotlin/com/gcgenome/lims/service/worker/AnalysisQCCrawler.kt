@@ -26,9 +26,7 @@ class AnalysisQCCrawler(
                 val sampleId = primaries[1].replace("-", "")
                 try {
                     AnalysisRSCrawler.Tests.values().forEach { test ->
-                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), test.name).apply {
-                            this.batch = batchRow[0]
-                            this.row = batchRow[1].toInt()
+                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), test.name, batchRow[0], batchRow[1].toInt()).apply {
                             this.freemix = it.freeMixFcA
                             this.rawReads = it.rawReadsMillFcA
                             this.dupRate = it.dupRateFcA

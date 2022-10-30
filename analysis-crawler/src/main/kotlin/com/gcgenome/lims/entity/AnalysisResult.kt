@@ -14,11 +14,12 @@ import java.time.LocalDateTime
 @Schema("avoid")
 @Table("analysis_result")
 data class AnalysisResult(
-    @Column("sample")  val sample: Long,
-    @Column("service") val service: String
+    @Column("sample")  val sample:  Long,
+    @Column("service") val service: String,
+
+    @Column("batch")   val batch:   String,
+    @Column("row")     val row:     Int
 ): Persistable<AnalysisResult.Companion.AnalysisResultPK> {
-    @Column("batch")          var batch: String = ""
-    @Column("row")            var row: Int = 0
     @CreatedDate
     @Column("create_at")
     lateinit var createAt: LocalDateTime
@@ -40,13 +41,15 @@ data class AnalysisResult(
     @Id @Transient
     lateinit var _id: AnalysisResultPK
 
-    override fun getId(): AnalysisResultPK = AnalysisResultPK(sample, service)
+    override fun getId(): AnalysisResultPK = AnalysisResultPK(sample, service, batch, row)
     override fun isNew(): Boolean = !this::createAt.isInitialized
 
     companion object {
         data class AnalysisResultPK(
             val sample:  Long,
-            val service: String
+            val service: String,
+            val batch:   String,
+            val row:     Int
         )
     }
 }
