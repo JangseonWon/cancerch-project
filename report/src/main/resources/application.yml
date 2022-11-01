@@ -12,10 +12,10 @@ spring:
       function:
         definition: publish-printing; broadcast-printing;
       bindings:
-        broadcast-printing-events-in-0:
+        broadcast-printing-in-0:
           destination: avoid-printing-events
           group: broadcast-printing-events
-        publish-printing-events-out-0:
+        publish-printing-out-0:
           destination: avoid-printing-events
       kafka:
         binder:

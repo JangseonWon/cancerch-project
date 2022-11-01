@@ -1,6 +1,7 @@
 package com.gcgenome.lims.client;
 
 import com.gcgenome.lims.api.AnalysisApi;
+import com.gcgenome.lims.api.SampleApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
 import elemental2.dom.*;
@@ -221,7 +222,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String sample = data.get("ID");
 		String service = data.get("검사코드");
 		String report = data.get("reportCreated");
-		AnalysisApi.download(sample, service, report)
+		SampleApi.download(sample, service, report)
 				.then(blob->{
 					String url = URL.createObjectURL(blob);
 					DomGlobal.window.open(url);

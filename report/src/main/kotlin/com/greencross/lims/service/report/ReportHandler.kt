@@ -3,6 +3,7 @@ package com.greencross.lims.service.report
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.avoid.TestInfo
 import com.gcgenome.lims.data.MessageReport
+import com.greencross.lims.data.Report_
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
 import com.greencross.lims.projection.Report
@@ -122,6 +123,10 @@ class ReportHandler(
                 fileRepo.findById(it.file)
             }
             .map { it.get().data!!.array() }
+    }
+    @Transactional
+    fun works(): Flux<Report_> {
+        return reportDao.findRequestQueue().map(mapper::toDto)
     }
     @Bean("publish-printing")
     fun publishReports(): Supplier<Flux<String>> {

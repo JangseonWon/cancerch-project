@@ -1,15 +1,13 @@
 package com.gcgenome.lims.api;
 
 import com.gcgenome.lims.data.Analysis;
+import com.gcgenome.lims.data.Report;
 import com.gcgenome.lims.dto.Query;
-import elemental2.dom.Blob;
-import elemental2.dom.DomGlobal;
-import elemental2.dom.RequestInit;
-import elemental2.dom.Response;
+import elemental2.dom.*;
 import elemental2.promise.Promise;
+import jsinterop.base.Js;
 import lombok.experimental.UtilityClass;
-
-import java.util.Arrays;
+import net.sayaya.ui.event.HasValueChangeHandlers;
 
 import static elemental2.core.Global.JSON;
 import static elemental2.core.Global.encodeURI;
@@ -37,69 +35,6 @@ public class AnalysisApi {
 				return Promise.reject(msg);
 			}); else return Promise.resolve(response);
 		});
-	}
-	/*public Promise<Response[]> print(Analysis[] analyses){
-		RequestInit request = RequestInit.create();
-		request.setHeaders(new String[][] {
-				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-		});
-		request.setMethod("PUT");
-
-		Promise[] promises = Arrays.stream(analyses).map(analysis -> {
-			return FetchApi.request("/samples/"+analysis.request().sample().id()+"/services/"+analysis.request().service().id()+"/print/"+"kokr", request)
-					.then(response -> {
-						if (!response.ok) return response.text().then(msg -> {
-							DomGlobal.alert(msg);
-							return Promise.reject(msg);
-						}); else return Promise.resolve(response);
-					});
-		}).toArray(Promise[]::new);
-
-		return Promise.all(promises);
-	}*/
-	public Promise<Response> print(String sample, String service, String lang){
-		RequestInit request = RequestInit.create();
-		request.setHeaders(new String[][] {
-				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-		});
-		request.setMethod("PUT");
-
-		return FetchApi.request("/samples/"+sample+"/services/"+service+"/print/"+lang, request)
-				.then(response -> {
-					if (!response.ok) return response.text().then(msg -> {
-						DomGlobal.alert(msg);
-						return Promise.reject(msg);
-					}); else return Promise.resolve(response);
-				});
-	}
-	public Promise<Blob> download(String sample, String service, String report) {
-		return download("/samples/" + sample + "/services/" + service + "/reports/" + report);
-	}
-	public Promise<Blob> download(String url) {
-		RequestInit request = RequestInit.create();
-		request.setMethod("GET");
-		request.setHeaders(new String[][] {
-				new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
-		});
-
-		return FetchApi.request(url, request)
-				.then(Response::blob)
-				.then(blob->Promise.resolve(blob.slice(0, blob.size, "application/pdf")));
-	}
-	public Promise<Response> publish(String sample, String service, String createAt){
-		RequestInit request = RequestInit.create();
-		request.setMethod("PUT");
-		request.setHeaders(new String[][] {
-				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-		});
-		return FetchApi.request("/samples/"+sample+"/services/"+service+"/reports/"+createAt+"/publish", request)
-				.then(response-> {
-					if (!response.ok) return response.text().then(msg -> {
-						DomGlobal.alert(msg);
-						return Promise.reject(msg);
-					});
-					else return Promise.resolve(response);
-				});
 	}
 	public Promise<Response> comment(String sample, String service, String comment){
 		RequestInit request = RequestInit.create();

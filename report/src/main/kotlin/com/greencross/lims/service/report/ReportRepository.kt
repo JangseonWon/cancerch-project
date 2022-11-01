@@ -6,4 +6,5 @@ import reactor.core.publisher.Flux
 
 interface ReportRepository : PersistQuerydslR2dbcRepo<Report, Report.Companion.ReportPK> {
     fun findTop10ByIsPrinted(isPrinted: String): Flux<Report>
+    fun findAllByIsPrinted(isPrinted: String): Flux<Report>
 }

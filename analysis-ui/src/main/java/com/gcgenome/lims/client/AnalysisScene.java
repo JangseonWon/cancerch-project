@@ -3,7 +3,11 @@ package com.gcgenome.lims.client;
 import com.gcgenome.lims.api.AnalysisApi;
 import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.api.RouteApi;
+import com.gcgenome.lims.api.SampleApi;
+import com.gcgenome.lims.client.dialogInner.PRTPUBDialogInnerElement;
+import com.gcgenome.lims.client.dialogInner.QueueDialogInnerElement;
 import com.gcgenome.lims.data.Analysis;
+import com.gcgenome.lims.data.Report;
 import com.gcgenome.lims.dto.Query;
 import com.gcgenome.lims.ui.IconElement;
 import elemental2.core.JsDate;
@@ -14,12 +18,9 @@ import org.jboss.elemento.HtmlContentBuilder;
 import org.jboss.elemento.IsElement;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import static elemental2.core.Global.JSON;
-import static org.jboss.elemento.Elements.body;
-import static org.jboss.elemento.Elements.label;
+import static org.jboss.elemento.Elements.*;
 
 public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Analysis");
@@ -39,10 +40,11 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final CheckBoxElement chkOnlyPass = CheckBoxElement.checkBox(true).text("PASS ONLY").style("margin-right: 30px;");
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
 	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
-	private final ButtonElement btnSearch = ButtonElement.outline().css("button").text("Search").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
+	private final ButtonElement btnSearch = ButtonElement.outline().css("button").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
 	private final ButtonElement btnSave = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
+	private final ButtonElement btnQueue = ButtonElement.outline().css("button").text("대기열");
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
 	private final Query query;
 
@@ -67,14 +69,16 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		btnPdf.enabled(false);
 		btnPublish.enabled(false);
 		btnAnalysisComplete.onClick(evt->{
-			if(!btnAnalysisComplete.value()) btnAnalysisComplete.text("결과지 전체 조회");
+			if(!btnAnalysisComplete.value())btnAnalysisComplete.text("결과지 전체 조회");
 			else 							btnAnalysisComplete.text("결과지 미생성 조회");
 		});
 		btnProgressOnly.onClick(evt->{
 			if(!btnProgressOnly.value()) 	btnProgressOnly.text("배포 전체 상태 조회");
 			else 							btnProgressOnly.text("미배포 목록 조회");
 		});
+		btnQueue.onClick(evt->list());
 	}
+
 	private void save(){
 		if(Arrays.stream(grid.changed()).findAny().isEmpty()) {
 			DomGlobal.alert("변경사항이 없습니다.");
@@ -122,6 +126,10 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		if(json!=null && !json.trim().isEmpty()) return Promise.resolve((Analysis[])JSON.parse(json));
 		else return Promise.resolve((Analysis[])null);
 	}
+	private Promise<Report[]> map2(String json) {
+		if(json!=null && !json.trim().isEmpty()) return Promise.resolve((Report[])JSON.parse(json));
+		else return Promise.resolve((Report[])null);
+	}
 	@Override
 	protected IsElement<?> grid() {
 		return grid;
@@ -150,7 +158,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	protected IsElement<?>[][] controls() {
 		return new IsElement<?>[][]{
 			new IsElement[] { chkOnlyPass, btnAnalysisComplete, btnProgressOnly },
-			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch},
+			new IsElement<?>[]{ iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch, btnQueue},
 			new IsElement[] {btnPdf, btnPublish, btnSave}
 		};
 	}
@@ -158,49 +166,121 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	public void update() {
 		update(query);
 	}
+	private void list() {
+		ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
+		Dialog dialog 					= Dialog.confirmation("출력, 전송 대기열", null, cancel);
+		QueueDialogInnerElement inner   = QueueDialogInnerElement.instance();
+		HTMLElement surface 			= (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
+		surface.style.minWidth 			= CSSProperties.MinWidthUnionType.of("1200px");
+		surface.style.minHeight			= CSSProperties.MinHeightUnionType.of("800px");
+		SampleApi.works().then(Response::text).then(this::map2)
+				.then(reports->{
+					inner.init(reports);
+					return null;
+				});
+
+		SampleApi.PrintPublishEvent.listen()
+				.onCreate(inner::onCreate)
+				.onUpdate(inner::onPrinting)
+				.onFinish(evt->{
+					inner.onFinish(evt);
+					update();
+				});
+
+		cancel.onClick(evt->{
+			SampleApi.PrintPublishEvent.close();
+			dialog.close();
+			dialog.element().remove();
+		});
+		dialog.add(inner);
+
+		body().add(dialog);
+		dialog.open();
+	}
 	private void print() {
 		Analysis[] selection = grid.selection();
 		if(selection.length == 0) return;
-		ButtonElementText ok = ButtonElement.outline().text("OK");
-		ButtonElementText cancel = ButtonElement.outline().text("CANCEL");
-		Dialog dialog = Dialog.confirmation("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.", ok, cancel);
-		HTMLElement surface = (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
-		surface.style.minWidth = CSSProperties.MinWidthUnionType.of("600px");
+		ButtonElementText ok 			= ButtonElement.outline().text("OK").enabled(false);
+		ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
+		CheckBoxElement chkConfirm 		= CheckBoxElement.checkBox(false).text("위 내용을 확인했습니다.");
+		Dialog dialog 					= Dialog.confirmation("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.", ok, cancel);
+		HTMLElement surface 			= (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
+		surface.style.minWidth 			= CSSProperties.MinWidthUnionType.of("1200px");
+		long countGeneral 				= Arrays.stream(selection).filter(d->d.result().equals("GENERAL")).count();
+		long countConcern 				= Arrays.stream(selection).filter(d->d.result().equals("CONCERN")).count();
+		long countRisk	  				= Arrays.stream(selection).filter(d->d.result().equals("RISK")).count();
+		PRTPUBDialogInnerElement inner 	= PRTPUBDialogInnerElement.build(selection);
 
+		chkConfirm.onValueChange(evt->{ok.enabled(evt.value());});
 		ok.onClick(evt->{
 			for(Analysis analysis: selection){
-				AnalysisApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr")
-					.then(result->{
-						if(result.ok) {
-							return Promise.resolve(true);
-						}
-						else return Promise.reject(false);
-					});
+				Promise<Boolean> response = SampleApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+				response.then(res->{
+					if(res.equals(true)){
+						inner.remove(analysis.request().sample().id(), analysis.request().service().id());
+					}
+					else {
+						DomGlobal.console.log("retry");
+						SampleApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+					}
+					return null;
+				});
 			}
-
-
+			dialog.close();
+			dialog.element().remove();
 		});
-
 		cancel.onClick(evt->{
 			dialog.close();
 			dialog.element().remove();
 		});
+		dialog.add(div().add(label("일반관리 : "+countGeneral+"건").style("margin-right: 1em;"))
+						.add(label("관심관리 : "+countConcern+"건").style("margin-right: 1em;"))
+						.add(label("집중관리 : "+countRisk+"건")))
+				.add(inner).add(chkConfirm);
 		body().add(dialog);
 		dialog.open();
-
 	}
 	private void publish() {
 		Analysis[] selection = grid.selection();
 		if(selection.length == 0) return;
-		if(!DomGlobal.confirm("선택한 " + selection.length + "개의 검사 결과지를 전송합니다.")) return;
+		ButtonElementText ok 			= ButtonElement.outline().text("OK").enabled(false);
+		ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
+		CheckBoxElement chkConfirm 		= CheckBoxElement.checkBox(false).text("위 내용을 확인했습니다.");
+		Dialog dialog 					= Dialog.confirmation("선택한 " + selection.length + "개의 검사 결과지를 전송합니다.", ok, cancel);
+		HTMLElement surface 			= (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
+		surface.style.minWidth 			= CSSProperties.MinWidthUnionType.of("1200px");
+		long countGeneral 				= Arrays.stream(selection).filter(d->d.result().equals("GENERAL")).count();
+		long countConcern 				= Arrays.stream(selection).filter(d->d.result().equals("CONCERN")).count();
+		long countRisk	  				= Arrays.stream(selection).filter(d->d.result().equals("RISK")).count();
+		PRTPUBDialogInnerElement inner 	= PRTPUBDialogInnerElement.build(selection);
+
+		chkConfirm.onValueChange(evt->{ok.enabled(evt.value());});
 		ProgressApi.open(false);
-		for (Analysis analysis: selection) {
-			AnalysisApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), String.valueOf((long) JsDate.parse(analysis.report().createAt())))
-					.then(result-> {
-						update();
-						return null;
-					}).finally_(ProgressApi::close);
-		}
+		ok.onClick(evt-> {
+			for (Analysis analysis : selection) {
+				Promise<Boolean> response = SampleApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), String.valueOf((long) JsDate.parse(analysis.report().createAt())));
+				response.then(res->{
+					if(res.equals(true)){
+						inner.remove(analysis.request().sample().id(), analysis.request().service().id());
+					}
+					else {
+						DomGlobal.console.log("retry");
+						SampleApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+					}
+					return null;
+				});
+			}
+		});
+		cancel.onClick(evt ->{
+			dialog.close();
+			dialog.element().remove();
+		});
+		dialog.add(div().add(label("일반관리 : "+countGeneral+"건").style("margin-right: 1em;"))
+						.add(label("관심관리 : "+countConcern+"건").style("margin-right: 1em;"))
+						.add(label("집중관리 : "+countRisk+"건")))
+				.add(inner).add(chkConfirm);
+		body().add(dialog);
+		dialog.open();
 	}
 	@Override
 	public AnalysisScene that() {

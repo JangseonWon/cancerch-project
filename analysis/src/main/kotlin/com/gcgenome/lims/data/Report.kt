@@ -10,5 +10,7 @@ data class Report(
     var createBy: User? = null,
     var publishAt: String? = "",
     var publisher: User? = null
-)
+) {
+    var isPrinted: String = ""
+}
 
