@@ -19,7 +19,7 @@ class FileCrawlerConfig {
 
     @Bean
     fun qc() : FileCrawler<AnalysisQC> {
-        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}__qc\\.txt", AnalysisQC::class.java)
+        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}_qc\\.txt", AnalysisQC::class.java)
     }
 
     @Bean
