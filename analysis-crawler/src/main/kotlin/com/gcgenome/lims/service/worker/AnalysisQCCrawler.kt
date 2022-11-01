@@ -23,10 +23,12 @@ class AnalysisQCCrawler(
             dtos.forEach {
                 val primaries = it.primary.split("_")
                 val batchRow = primaries[0].split("-")
-                val sampleId = primaries[1].replace("-", "")
+                val sampleId = primaries[1].replace("-","")
+                val batch = batchRow[0]+"-"+batchRow[1]
+                val row = batchRow[2]
                 try {
                     AnalysisRSCrawler.Tests.values().forEach { test ->
-                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), test.name, batchRow[0], batchRow[1].toInt()).apply {
+                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), test.name, batch, row.toInt()).apply {
                             this.freemix = it.freeMixFcA
                             this.rawReads = it.rawReadsMillFcA
                             this.dupRate = it.dupRateFcA
@@ -54,11 +56,11 @@ class AnalysisQCCrawler(
                             this.chrYPropTmp = it.chrYPropFcB
                             this.predSexTmp = sexMapper(it.predSexFcB)
                         }
-                        logger.info("QC Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
+                        logger.info("QC Crawl : $batch 배치 $row Sample")
                         dao.persist(entity).block()
                     }
                 } catch (except : NumberFormatException){
-                    logger.info("QC Crawl : ${except} : ${batchRow[0]} 배치 ${batchRow[1]} Sample은 NTC거나 CONTROL입니다.")
+                    logger.info("QC Crawl : $except : $batch 배치 $row Sample은 NTC거나 CONTROL입니다.")
                 }
             }
             val folderName = file.name.split("_")[0]

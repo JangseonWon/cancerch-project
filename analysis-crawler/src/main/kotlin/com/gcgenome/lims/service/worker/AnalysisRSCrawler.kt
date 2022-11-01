@@ -24,9 +24,11 @@ class AnalysisRSCrawler(
                 val primaries = it.primary.split("_")
                 val batchRow = primaries[0].split("-")
                 val sampleId = primaries[1].replace("-","")
+                val batch = batchRow[0]+"-"+batchRow[1]
+                val row = batchRow[2]
                 try {
                     Tests.values().forEach { test ->
-                        val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name, batchRow[0], batchRow[1].toInt()).apply {
+                        val entity = com.gcgenome.lims.entity.AnalysisResult(sampleId.toLong(), test.name, batch, row.toInt()).apply {
                             this.cadEnsembleProb = it.cadEnsembleProb
                             this.too5Pred = it.too5Pred
                             this.too5FemsProb = it.too5Fems
@@ -35,11 +37,11 @@ class AnalysisRSCrawler(
                             this.iscore = it.iscore
                             this.result = it.result
                         }
-                        logger.info("RS Crawl : ${batchRow[0]} 배치 ${batchRow[1]} Sample")
+                        logger.info("RS Crawl : $batch 배치 $row Sample")
                         dao.persist(entity).block()
                     }
                 } catch (except : NumberFormatException){
-                    logger.info("RS Crawl : ${except} : ${batchRow[0]} 배치 ${batchRow[1]} Sample은 NTC거나 CONTROL입니다.")
+                    logger.info("RS Crawl : $except : $batch 배치 $row Sample은 NTC거나 CONTROL입니다.")
                 }
             }
             val folderName = file.name.split("_")[0]
