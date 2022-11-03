@@ -122,8 +122,8 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         }
         filters.add(new Query.Filter().key("domain").value("AVOID"));
         filters.add(new Query.Filter().key("confirmed").value(String.valueOf(true)));
-        filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime())));
-        filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime())));
+        filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime()+86400000)));
+        filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime()-32400000)));
         if(this.sort()!=null){
             if("워크리스트 명".equalsIgnoreCase(this.sort())) proxy.sortBy("워크리스트 명");
             else if("작성일".equalsIgnoreCase(this.sort())) proxy.sortBy("작성일");
