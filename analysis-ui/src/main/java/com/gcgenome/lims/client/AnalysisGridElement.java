@@ -249,6 +249,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
+			Arrays.stream(data).forEach(DomGlobal.console::log);
 			elemSheet.clear();
 			elemSheet.values(data);
 			return that();
@@ -415,7 +416,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		}
 	}
 	private String convertFormat(Double data){
-		return data == 0 ? "" : String.valueOf(round(data*100f)/100f);
+		return data == 0 ? "0" : String.valueOf(round(data*100f)/100f);
 	}
 	private String convertForEntityData(String data) {
 		switch (data) {
