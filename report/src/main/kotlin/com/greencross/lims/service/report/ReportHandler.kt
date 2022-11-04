@@ -171,13 +171,13 @@ class ReportHandler(
         avoidDto.birthDate = patient.birth
         avoidDto.age = age(avoidDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
         avoidDto.sex = sex(patient.sex)
-        avoidDto.requestNumber = requestNumber
+        avoidDto.requestNumber = requestNumber?:""
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
         avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
         avoidDto.reportDate = LocalDate.now()
-        avoidDto.medicalRecordNumber = analysis.patient.mrn
+        avoidDto.medicalRecordNumber = analysis.patient.mrn?:""
         avoidDto.barcode = barcode
-        avoidDto.medicalInstitution = customerName
+        avoidDto.medicalInstitution = customerName?:""
         avoidDto.specimenType = analysis.sampleType
 
         return avoidDto
