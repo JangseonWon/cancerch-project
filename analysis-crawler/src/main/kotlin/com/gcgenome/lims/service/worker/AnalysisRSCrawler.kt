@@ -4,6 +4,8 @@ import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisResult
 import com.gcgenome.lims.service.analysisRS.AnalysisRSRepository
 import com.gcgenome.querydsl.persist
+import com.greencross.lims.jandiwebhook.Webhook
+import com.greencross.lims.jandiwebhook.dto.ConnectInfo
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
@@ -13,10 +15,11 @@ import java.io.File
 class AnalysisRSCrawler(
     val crawler : FileCrawler<AnalysisResult>,
     val dao: AnalysisRSRepository,
-    val processed: File
+    val processed: File,
+    val jandi: Webhook
     ) {
     private val logger = LoggerFactory.getLogger(AnalysisRSCrawler::class.java)
-    @Scheduled(fixedDelay=1000*60*60)
+    @Scheduled(fixedDelay=600000)
     fun updateStatus(){
         logger.info("RS Crwal : Started")
         crawler.getDTOs().forEach{(dtos, file) ->
@@ -48,6 +51,7 @@ class AnalysisRSCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("RS Crwal : Ended")
+            jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다. ヽ(✿ﾟ▽ﾟ)ノ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
 

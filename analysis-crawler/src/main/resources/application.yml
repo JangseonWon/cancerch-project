@@ -19,3 +19,6 @@ logging:
 gcgenome:
   tmp-dir: D:\\data\\lims\\tmp
   out-dir: D:\\data\\lims\\avoid-processed
+
+webhook:
+  url: https://wh.jandi.com/connect-api/webhook/17558388/69834a4cb47d80f9c339a0ce83ab7c90

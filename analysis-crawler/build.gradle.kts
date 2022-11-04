@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
     implementation("com.gcgenome:dtoConverter:1.0")
+    implementation("com.greencross:jandi-webhook:1.0")
     implementation(libs.bundles.spring.client)
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)

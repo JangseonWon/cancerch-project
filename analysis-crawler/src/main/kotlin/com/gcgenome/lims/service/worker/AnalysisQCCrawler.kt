@@ -4,6 +4,8 @@ import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisQC
 import com.gcgenome.lims.service.analysisQC.AnalysisQCRepository
 import com.gcgenome.querydsl.persist
+import com.greencross.lims.jandiwebhook.Webhook
+import com.greencross.lims.jandiwebhook.dto.ConnectInfo
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
@@ -13,10 +15,11 @@ import java.io.File
 class AnalysisQCCrawler(
     val crawler : FileCrawler<AnalysisQC>,
     val dao: AnalysisQCRepository,
-    val processed: File
+    val processed: File,
+    val jandi: Webhook
     ) {
     private val logger = LoggerFactory.getLogger(AnalysisQCCrawler::class.java)
-    @Scheduled(fixedDelay=1000*60*60)
+    @Scheduled(fixedDelay=600000)
     fun updateStatus(){
         logger.info("QC Crawler : Started")
         crawler.getDTOs().forEach { (dtos, file) ->
@@ -67,6 +70,7 @@ class AnalysisQCCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("QC Crwal : Ended")
+            jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
     private fun sexMapper(sexPred: String) = when(sexPred){
