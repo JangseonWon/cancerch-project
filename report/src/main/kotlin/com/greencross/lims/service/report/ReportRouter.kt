@@ -3,15 +3,12 @@ package com.greencross.lims.service.report
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
-import org.springframework.web.reactive.function.server.router
 import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.web.reactive.function.BodyInserter
 import org.springframework.web.reactive.function.BodyInserters
-import org.springframework.web.reactive.function.server.RequestPredicate
+import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RequestPredicates.contentType
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 import java.util.*
 
@@ -25,7 +22,7 @@ class ReportRouter(
         GET("/samples/queue",                                                        ::subscribe)
         GET("/samples/works",                                           contentType, ::works)
         PUT("/samples/{sample}/services/{service}/print/{lang}",        contentType, ::print)
-        GET("/samples/{sample}/services/{service}/reports/{createAt}",  contentType, ::preview)
+        GET("/samples/{sample}/services/{service}/reports/{createAt}",  contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
 
     }
     private fun print(request: ServerRequest): Mono<ServerResponse>{
