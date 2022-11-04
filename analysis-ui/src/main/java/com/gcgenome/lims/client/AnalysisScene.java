@@ -228,6 +228,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			}
 			dialog.close();
 			dialog.element().remove();
+			update();
 		});
 		cancel.onClick(evt->{
 			dialog.close();
@@ -270,6 +271,9 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 					return null;
 				});
 			}
+			dialog.close();
+			dialog.element().remove();
+			update();
 		});
 		cancel.onClick(evt ->{
 			dialog.close();
