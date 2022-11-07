@@ -249,7 +249,6 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	private AnalysisGridElement update(Data[] data){
 		try {
-			Arrays.stream(data).forEach(DomGlobal.console::log);
 			elemSheet.clear();
 			elemSheet.values(data);
 			return that();
