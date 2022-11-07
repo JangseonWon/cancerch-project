@@ -60,7 +60,7 @@ class ReportDao(private val repo: ReportRepository) {
         return repo.persist(entity).then(Mono.empty())
     }
     fun findReport():Flux<com.greencross.lims.entity.Report> {
-        return repo.findTop10ByIsPrinted("PREPARE")
+        return repo.findTop5ByIsPrinted("PREPARE")
     }
     fun findRequestQueue(): Flux<com.greencross.lims.entity.Report> {
         return repo.findAllByIsPrinted("PREPARE")
