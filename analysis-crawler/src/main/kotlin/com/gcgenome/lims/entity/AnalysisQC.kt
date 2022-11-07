@@ -19,7 +19,6 @@ data class AnalysisQC(
 ): Persistable<AnalysisQC.Companion.AnalysisQCPK> {
     @CreatedDate
     @Column("create_at")     lateinit var createAt:        LocalDateTime
-    @Column("file")          lateinit var filePath:        String
     @Column("freemix")                var freemix:         Double = 0.0
     @Column("gc")                     var gc:              Double = 0.0
     @Column("raw_reads_millions")     var rawReads:        Double = 0.0
