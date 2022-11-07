@@ -53,28 +53,41 @@ class ReportHandler(
     }
 
     @Transactional
-    fun print(sample: Long, service: String, lang: String): Mono<Void> {
+    fun print(sample: Long, service: String, batch: String, row: String, lang: String): Mono<Void> {
         val createTime = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
             ZoneId.systemDefault()
         )
         val entity =
             com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
-                language = lang
-                isPrinted = "PREPARE"
+                this.batch = batch
+                this.row = row.toLong()
+                this.language = lang
+                this.isPrinted = "PREPARE"
             }
         return reportDao.create(entity).flatMap {
             logger.info("$sample/$service is created.")
             publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(entity)))
             Mono.empty()
         }
+//        return ReactiveSecurityContextHolder.getContext().map{
+//            com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
+//                language = lang
+//                isPrinted = "PREPARE"
+//                createBy = it.authentication.principal.toString()
+//            }
+//        }.flatMap {
+//            logger.info("$sample/$service 출력 요청 수신")
+//            publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(it)))
+//            Mono.empty()
+//        }
     }
 
     @Transactional
     fun scheduleReports(): Mono<Void> {
-        logger.info("CronJob Running: Period 10 sec.")
+        logger.info("CronJob Running: Period 1 Min.")
         return reportDao.findReport().flatMap {
-            analysisDao.findById(it.sample, it.service).zipWith(Mono.just(it)).flatMap { zipped ->
+            analysisDao.findById(it.sample, it.service, it.batch, it.row).zipWith(Mono.just(it)).flatMap { zipped ->
                 logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is printing.")
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val dto = analysisToAvoidDto(zipped.t1)

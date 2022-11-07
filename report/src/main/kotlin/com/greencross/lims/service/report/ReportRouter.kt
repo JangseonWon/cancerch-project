@@ -19,24 +19,26 @@ class ReportRouter(
     private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
         @Bean("com.greencross.lims.service.Report.ReportRouter")
     fun router() = router{
-        GET("/samples/queue",                                                        ::subscribe)
-        GET("/samples/works",                                           contentType, ::works)
-        PUT("/samples/{sample}/services/{service}/print/{lang}",        contentType, ::print)
-        GET("/samples/{sample}/services/{service}/reports/{createAt}",  contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
+        GET("/samples/queue",                                                                         ::subscribe)
+        GET("/samples/works",                                                            contentType, ::works)
+        PUT("/samples/{sample}/services/{service}/batch/{batch}/row/{row}/print/{lang}", contentType, ::print)
+        GET("/samples/{sample}/services/{service}/reports/{createAt}"                  , contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
 
     }
     private fun print(request: ServerRequest): Mono<ServerResponse>{
-        val sample = request.pathVariable("sample")
+        val sample  = request.pathVariable("sample")
         val service = request.pathVariable("service")
-        val lang = request.pathVariable("lang")
-        return handler.print(sample.toLong(), service, lang)
+        val lang    = request.pathVariable("lang")
+        val batch   = request.pathVariable("batch")
+        val row     = request.pathVariable("row")
+        return handler.print(sample.toLong(), service, batch, row, lang)
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
     private fun preview(request: ServerRequest): Mono<ServerResponse>{
-        val sample = request.pathVariable("sample").toString().replace("-", "")
-        val service = request.pathVariable("service")
-        val createAt = request.pathVariable("createAt")
+        val sample      = request.pathVariable("sample").toString().replace("-", "")
+        val service     = request.pathVariable("service")
+        val createAt    = request.pathVariable("createAt")
         return handler.preview(sample.toLong(), service, createAt.toLong())
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)::bodyValue)
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())

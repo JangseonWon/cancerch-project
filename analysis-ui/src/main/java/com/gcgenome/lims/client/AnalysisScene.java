@@ -38,14 +38,17 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	private final ButtonElementToggle btnAnalysisComplete = ButtonElement.toggle().css("button").text("결과지 전체 조회").style("min-width: 200px;").value(false);
 	private final ButtonElementToggle btnProgressOnly = ButtonElement.toggle().css("button").text("미배포 목록 조회").style("min-width: 200px;").value(true);
 	private final CheckBoxElement chkOnlyPass = CheckBoxElement.checkBox(true).text("PASS ONLY").style("margin-right: 30px;");
-	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 125px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
-	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 125px; height:36px;").text("Date to").value(new JsDate()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateFrom = TextFieldElement.dateBox().outlined().css("button").style("width: 155px;border-right: 0px !important; height:36px;").text("Date from").value(prevday()).required(true);
+	private final TextFieldElement<JsDate, TextFieldElement.TextFieldOutlined<JsDate>> iptDateTo = TextFieldElement.dateBox().outlined().css("button").style("width: 155px; height:36px;").text("Date to").value(new JsDate()).required(true);
 	private final ButtonElement btnSearch = ButtonElement.outline().css("button").before(IconElement.icon(IconElement.Type.Light, "fa-search"));
 	private final ButtonElement btnPdf = ButtonElement.outline().css("button").text("Print").before(IconElement.icon(IconElement.Type.Light, "fa-file-pdf"));
 	private final ButtonElement btnPublish = ButtonElement.outline().css("button").text("Publish").before(IconElement.icon(IconElement.Type.Light, "fa-upload"));
 	private final ButtonElement btnSave = ButtonElement.outline().css("button").text("Save").before(IconElement.icon(IconElement.Type.Regular, "fa-save"));
 	private final ButtonElement btnQueue = ButtonElement.outline().css("button").text("대기열");
 	private final AnalysisGridElement grid = AnalysisGridElement.build();
+	private final ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
+	private final Dialog dialog 				= Dialog.confirmation("출력, 전송 대기열", null, cancel);
+	private final QueueDialogInnerElement inner = QueueDialogInnerElement.instance();
 	private final Query query;
 
 	public AnalysisScene(Query query) {
@@ -60,9 +63,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			btnPdf.enabled(selected);
 			btnPublish.enabled(selected);
 		});
-		btnSearch.onClick(evt->{
-			update();
-		});
+		btnSearch.onClick(evt->{update();});
 		btnSave.onClick(evt->save());
 		btnPdf.onClick(evt->print());
 		btnPublish.onClick(evt->publish());
@@ -76,7 +77,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			if(!btnProgressOnly.value()) 	btnProgressOnly.text("배포 전체 상태 조회");
 			else 							btnProgressOnly.text("미배포 목록 조회");
 		});
-		btnQueue.onClick(evt->list());
+		dialogInit();
+		btnQueue.onClick(evt->dialog.open());
 	}
 
 	private void save(){
@@ -166,10 +168,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 	public void update() {
 		update(query);
 	}
-	private void list() {
-		ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
-		Dialog dialog 					= Dialog.confirmation("출력, 전송 대기열", null, cancel);
-		QueueDialogInnerElement inner   = QueueDialogInnerElement.instance();
+	private void dialogInit() {
 		HTMLElement surface 			= (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
 		surface.style.minWidth 			= CSSProperties.MinWidthUnionType.of("1200px");
 		surface.style.minHeight			= CSSProperties.MinHeightUnionType.of("800px");
@@ -188,14 +187,10 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 				});
 
 		cancel.onClick(evt->{
-			SampleApi.PrintPublishEvent.close();
 			dialog.close();
-			dialog.element().remove();
 		});
 		dialog.add(inner);
-
 		body().add(dialog);
-		dialog.open();
 	}
 	private void print() {
 		Analysis[] selection = grid.selection();
@@ -214,14 +209,25 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		chkConfirm.onValueChange(evt->{ok.enabled(evt.value());});
 		ok.onClick(evt->{
 			for(Analysis analysis: selection){
-				Promise<Boolean> response = SampleApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+				Promise<Boolean> response = SampleApi.print(
+						String.valueOf(analysis.request().sample().id()),
+						analysis.request().service().id(),
+						analysis.batch(),
+						String.valueOf(analysis.row()),
+						"kokr"
+				);
 				response.then(res->{
 					if(res.equals(true)){
 						inner.remove(analysis.request().sample().id(), analysis.request().service().id());
 					}
 					else {
 						DomGlobal.console.log("retry");
-						SampleApi.print(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+						SampleApi.print(
+								String.valueOf(analysis.request().sample().id()),
+								analysis.request().service().id(),
+								analysis.batch(),
+								String.valueOf(analysis.row()),
+								"kokr");
 					}
 					return null;
 				});

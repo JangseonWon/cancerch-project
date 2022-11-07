@@ -20,6 +20,8 @@ data class Report(
     @Column("create_at")              val createAt:      LocalDateTime
 ): Persistable<Report.Companion.ReportPK> {
     @Column("file")                   var file:          UUID? = null
+    @Column("batch")                  var batch:         String = ""
+    @Column("row")                    var row:           Long = 0
     @CreatedBy
     @Column("create_by")     lateinit var createBy:      String
     @LastModifiedDate

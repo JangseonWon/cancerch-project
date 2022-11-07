@@ -11,14 +11,14 @@ import static elemental2.core.Global.JSON;
 
 @UtilityClass
 public class SampleApi {
-    public Promise<Boolean> print(String sample, String service, String lang){
+    public Promise<Boolean> print(String sample, String service, String batch, String row, String lang){
         RequestInit request = RequestInit.create();
         request.setHeaders(new String[][] {
                 new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
         });
         request.setMethod("PUT");
 
-        return FetchApi.request("/samples/"+sample+"/services/"+service+"/print/"+lang, request)
+        return FetchApi.request("/samples/"+sample+"/services/"+service+"/batch/"+batch+"/row/"+row+"/print/"+lang, request)
                 .then(result->{
                     if(result.ok) {
                         return Promise.resolve(true);

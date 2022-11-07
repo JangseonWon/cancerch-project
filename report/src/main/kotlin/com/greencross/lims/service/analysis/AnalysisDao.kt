@@ -45,9 +45,9 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             .leftJoin(patient).on(patient.id_SET.eq(sample.patient))
             .leftJoin(requestInfo).on(request.sample.eq(requestInfo.sample).and(request.service.eq(requestInfo.service)).and(requestInfo.code.eq("TA0023")))
     }
-    fun findById(sample: Long, service: String) : Mono<Analysis> {
+    fun findById(sample: Long, service: String, batch: String, row: Long) : Mono<Analysis> {
         return repo.query{
-            select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)))
+            select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)).and(analysis.batch.eq(batch)).and(analysis.row.eq(row)))
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
     }
 }

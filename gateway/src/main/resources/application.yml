@@ -30,7 +30,7 @@ spring:
         - id: report-api
           uri: lb://report-api
           predicates:
-            - Path=/samples/*/services/*/print/*, /samples/*/services/*/reports/*, /samples/works, /samples/queue
+            - Path=/samples/*/services/*/batch/*/row/*/print/*, /samples/*/services/*/reports/*, /samples/works, /samples/queue
 
 
 server:
