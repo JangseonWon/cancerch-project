@@ -27,7 +27,9 @@ public class QueueDialogInnerElement extends HTMLElementBuilder<HTMLDivElement, 
     }
     public QueueDialogInnerElement onCreate(HasValueChangeHandlers.ValueChangeEvent<Report> evt){
         Report report = evt.value();
-        values.get(report.sample()+"$"+report.service()).change(InnerCardElement.Status.PREPARE);
+        InnerCardElement child = InnerCardElement.instance(report);
+        deckIn(child);
+        _this.add(child);
         return that();
     }
     public QueueDialogInnerElement onPrinting(HasValueChangeHandlers.ValueChangeEvent<Report> evt){
