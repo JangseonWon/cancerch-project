@@ -98,7 +98,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 			Arrays.stream(query.filters).forEach(filter->filter.key(" "));
 			Collections.addAll(filters, query.filters);
 		}
-		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime()+86400000)));
+		filters.add(new Query.Filter().key("to").value(String.valueOf(iptDateTo.value().getTime()+53940000)));
 		filters.add(new Query.Filter().key("from").value(String.valueOf(iptDateFrom.value().getTime()-32400000)));
 		proxy.sortBy(this.sort());
 
