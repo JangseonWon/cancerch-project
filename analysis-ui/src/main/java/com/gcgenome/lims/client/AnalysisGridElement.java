@@ -244,7 +244,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		e.add(table);
 	}
 	public AnalysisGridElement update(Analysis[] values) {
-		this.values = Arrays.stream(values).collect(Collectors.toMap(a->a.sample() + "/" + a.request().service().id(), w->w));
+		this.values = Arrays.stream(values).collect(Collectors.toMap(a->a.request().sample().id() + "$" + a.request().service().id() + "$" + a.batch() + "$" + a.row(), w->w));
 		return update(Arrays.stream(values).map(this::map).peek(data->data.onValueChange(this::changeMap)).toArray(Data[]::new));
 	}
 	private AnalysisGridElement update(Data[] data){
@@ -260,7 +260,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		if(value == null) return null;
 		String id 			= (value.request()!=null && value.request().sample()!=null) ? DataTransformUtil.formatSampleId(value.request().sample().id()):null;
 		String service 		= value.request().service().id();
-		String idx 			= id+"$"+service;
+		String row			= String.valueOf(value.row());
+		String batch		= value.batch();
+		String idx 			= id+"$"+service+"$"+batch+"$"+row;
 		String serviceNm 	= value.request().service().name();
 
 		//Nullable
@@ -271,14 +273,11 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String tatDt		= DataTransformUtil.formatDate((long) JsDate.parse(value.request().dateDue()));
 		String customer		= value.request().sample().patient().customer();
 		String customerCd   = value.request().sample().remark() == null ? "" : value.request().sample().remark();
-		String analysisDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.createAt()));
-		String batch		= value.batch();
-		String row			= String.valueOf(value.row());
 		String reportCreateDt = String.valueOf((long) JsDate.parse(value.report().createAt()));
 		String reportNm		= value.report().fileName();
 		String publishNm	= value.report().publisher().name();
 		String publishDt 	= value.report().publishAt().equals("null") ? "" : DataTransformUtil.formatDate((long) JsDate.parse(value.report().publishAt()));
-
+		String analysisDt	= DataTransformUtil.formatDate((long) JsDate.parse(value.createAt()));
 		String freemix		= convertFormat(value.freemix());
 		String rawReadMil	= convertFormat(value.rawReadsMillions());
 		String duprate      = convertFormat(value.dupRate());
@@ -378,17 +377,18 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	public Analysis[] changed(){
 		return Arrays.stream(elemSheet.values()).filter(value->value.isChanged("top 5 prediction") || value.isChanged("top 6 prediction")
-				|| value.isChanged("결과 분석")).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+				|| value.isChanged("결과 분석")).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row"))
+				.map(values::get).toArray(Analysis[]::new);
 	}
 	private void changeMap(HasValueChangeHandlers.ValueChangeEvent<Data> evt) {
 		Data d = evt.value();
 
-		Analysis value = values.get(d.get("ID").replace("-", "") + "/" + d.get("검사코드"));
+		Analysis value = values.get(d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row"));
 		value.too5Pred(convertForEntityData(d.get("top 5 prediction")));
 		value.too6Pred(convertForEntityData(d.get("top 6 prediction")));
 		value.result(convertForEntityData(d.get("결과 분석")));
 
-		values.put(d.get("ID").replace("-", "") + "/" + d.get("검사코드"), value);
+		values.put(d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row"), value);
 	}
 	@Override
 	public AnalysisGridElement that() {
@@ -434,7 +434,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	@Override
 	public Analysis[] selection() {
-		return Arrays.stream(wrapper.selection()).filter(d->d.get("QC 분석").equals("PASS") && d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "/" + d.get("검사코드")).map(values::get).toArray(Analysis[]::new);
+		return Arrays.stream(wrapper.selection()).filter(d->d.get("QC 분석").equals("PASS") && d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
