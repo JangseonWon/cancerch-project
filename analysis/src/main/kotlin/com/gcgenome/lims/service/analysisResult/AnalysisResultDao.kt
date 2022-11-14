@@ -13,7 +13,7 @@ class AnalysisResultDao(
     fun update(entity: AnalysisResult): Mono<AnalysisResult>{
         return repo.persist(entity)
     }
-    fun findBySampleAndService(sample: Long, service: String): Flux<AnalysisResult> {
-        return repo.findBySampleAndService(sample, service)
+    fun findBySampleAndService(sample: Long, service: String, batch: String, row: Int): Flux<AnalysisResult> {
+        return repo.findBySampleAndServiceAndBatchAndRow(sample, service, batch, row)
     }
 }

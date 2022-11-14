@@ -14,7 +14,9 @@ import java.time.LocalDateTime
 @Table("analysis_result")
 data class AnalysisResult(
     @Column("sample")                    val sample:         Long,
-    @Column("service")                   val service:        String
+    @Column("service")                   val service:        String,
+    @Column("batch")                     val batch:          String,
+    @Column("row")                       val row:            Int
 ): Persistable<AnalysisResult.Companion.AnalysisResultPK> {
     @Column("result")                    var result:        String = ""
     @Column("too5_pred")                 var too5Pred:      String = ""
@@ -28,12 +30,14 @@ data class AnalysisResult(
     companion object{
         data class AnalysisResultPK(
             val sample: Long,
-            val service: String
+            val service: String,
+            val batch: String,
+            val row: Int
         )
     }
 
     override fun getId(): AnalysisResultPK {
-        return AnalysisResultPK(sample, service)
+        return AnalysisResultPK(sample, service, batch, row)
     }
     override fun isNew(): Boolean = false
 }

@@ -191,7 +191,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		return new Promise<>((resolve, reject)-> {
 			ok.onClick(evt->{
 				String value = iptComment.value().length() == 0 ? " " : iptComment.value();
-				AnalysisApi.comment(data.get("ID").replace("-",""), data.get("검사코드"), value)
+				AnalysisApi.comment(data.get("ID").replace("-",""), data.get("검사코드"), data.get("Batch"), data.get("Row"), value)
 						.then(result -> {
 							if(result.ok) {
 								DomGlobal.alert("저장이 완료되었습니다.");

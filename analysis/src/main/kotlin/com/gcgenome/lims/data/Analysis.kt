@@ -1,11 +1,11 @@
 package com.gcgenome.lims.data
 
 data class Analysis(
-    val sample: Long,
-    val service: String
+    val sample:                 Long,
+    val service:                String,
+    val batch:                  String,
+    val row:                    Int,
 ) {
-    var batch:                  String? = ""
-    var row:                    Int? = 0
     var request:                Request? = null
     var report:                 Report? = null
     var file:                   String? = ""

@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class AnalysisMapper {
     fun toDto(entity: Analysis) : com.gcgenome.lims.data.Analysis{
-        return com.gcgenome.lims.data.Analysis(entity.sample, entity.serviceId).apply{
-            this.batch                          = entity.batch
-            this.row                            = entity.row
-
+        return com.gcgenome.lims.data.Analysis(entity.sample, entity.serviceId, entity.batch, entity.row).apply{
             this.freemix                        = entity.freemix
             this.rawReadsMillions               = entity.rawReadsMillions
             this.dupRate                        = entity.dupRate

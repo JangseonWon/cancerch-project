@@ -20,9 +20,9 @@ class AnalysisRouter(
 ) {
     @Bean("com.greencross.lims.service.AnalysisRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        GET("/analysis/search", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::search)
-        PATCH("/analysis/{sample}/{service}/comment", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateComment)
-        PATCH("/analysis/update", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateAll)
+        GET("/analysis/search",                                     contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::search)
+        PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateComment)
+        PATCH("/analysis/update",                                   contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateAll)
     }
     private fun search(request: ServerRequest): Mono<ServerResponse>{
         return handler.search(searchParam(om, request.queryParams()))
@@ -36,8 +36,10 @@ class AnalysisRouter(
     private fun updateComment(request: ServerRequest): Mono<ServerResponse>{
         val sample = request.pathVariable("sample").toLong()
         val service = request.pathVariable("service")
+        val batch = request.pathVariable("batch")
+        val row = request.pathVariable("row").toInt()
         return  request.bodyToMono(String::class.java)
-            .flatMapMany{ handler.updateComment(sample, service, it) }
+            .flatMapMany{ handler.updateComment(sample, service, batch, row, it) }
             .then(ServerResponse.ok().build())
             .switchIfEmpty(ServerResponse.noContent().build())
     }

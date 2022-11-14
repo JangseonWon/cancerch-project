@@ -84,7 +84,6 @@ class PublishHandler(
                     }
                 .switchIfEmpty(Mono.just(false))
             }
-
     }
     private fun sendToAlis(user: String, data: ByteArray, request: Request, flg: String, page: String) : Mono<Boolean> {
         val prefix = request.requestDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))

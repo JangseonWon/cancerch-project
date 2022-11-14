@@ -36,14 +36,14 @@ public class AnalysisApi {
 			}); else return Promise.resolve(response);
 		});
 	}
-	public Promise<Response> comment(String sample, String service, String comment){
+	public Promise<Response> comment(String sample, String service, String batch, String row, String comment){
 		RequestInit request = RequestInit.create();
 		request.setMethod("PATCH");
 		request.setHeaders(new String[][] {
 				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
 		});
 		request.setBody(comment);
-		return FetchApi.request("/analysis/"+sample+"/"+service+"/comment", request)
+		return FetchApi.request("/analysis/"+sample+"/"+service+"/"+batch+"/"+row+"/comment", request)
 				.then(response-> {
 					if (!response.ok) return response.text().then(msg -> {
 						DomGlobal.alert(msg);

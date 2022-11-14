@@ -8,5 +8,5 @@ import reactor.core.publisher.Flux
 
 @Repository
 interface AnalysisResultRepository: PersistQuerydslR2dbcRepo<AnalysisResult, AnalysisResult.Companion.AnalysisResultPK>{
-    fun findBySampleAndService(sample: Long, service: String): Flux<AnalysisResult>
+    fun findBySampleAndServiceAndBatchAndRow(sample: Long, service: String, batch: String, row: Int): Flux<AnalysisResult>
 }
