@@ -1,11 +1,11 @@
 package com.greencross.lims.service.report
 
+import com.greencross.lims.data.MessageQueue
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
-import org.springframework.web.reactive.function.BodyInserter
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RequestPredicates.contentType
@@ -46,8 +46,7 @@ class ReportRouter(
     private fun subscribe(request: ServerRequest): Mono<ServerResponse>{
         return ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM)
             .body(BodyInserters.fromServerSentEvents(handler.subscribe().map { msg ->
-                ServerSentEvent.builder<com.gcgenome.lims.data.Report>(msg.data).event(msg.type.name)
-                    .id(msg.data.sample().toString()+"$"+msg.data.service()+"$"+msg.data.createAt()).build()
+                ServerSentEvent.builder(MessageQueue(msg)).build()
             }))
     }
     private fun works(request: ServerRequest): Mono<ServerResponse>{
