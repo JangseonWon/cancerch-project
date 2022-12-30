@@ -25,4 +25,14 @@ class PublishRouter(private val handler: PublishHandler) {
                 else ServerResponse.status(HttpStatus.NO_CONTENT).build()
             }
     }
+//    private fun publishToSender(request: ServerRequest): Mono<ServerResponse>{
+//        val sample = request.pathVariable("sample").toLong()
+//        val service = request.pathVariable("service")
+//        val createAt = request.pathVariable("createAt").toLong()
+//
+//        return handler.publish2(sample, service, createAt).flatMap{
+//            if(it) ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).build()
+//            else ServerResponse.status(HttpStatus.NO_CONTENT).build()
+//        }
+//    }
 }

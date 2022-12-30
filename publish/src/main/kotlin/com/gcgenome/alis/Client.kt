@@ -1,47 +1,42 @@
 package com.gcgenome.alis
 
+import com.gcgenome.alis.models.*
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 @Service
 class Client(webClientBuilder: WebClient.Builder) {
-    val webClient: WebClient = webClientBuilder.baseUrl("http://alis-api/alis/").build()
-    fun fileUpload(fileUpload: FileUpload) : Mono<Boolean>{
-        println("PUT fileUpload")
-        return webClient.put().uri("fileUpload")
-            .headers{ it.add("Content-Type", "application/json") }
-            .body(BodyInserters.fromValue(fileUpload))
+    val webClient: WebClient = webClientBuilder.baseUrl("http://lims/alis-queue/").build()
+    fun send(sample : Long, service : String, file : UUID, user : Authentication) : Mono<AlisResponse> {
+        val date = LocalDate.parse(sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val subSample = sample.toString().substring(8).toLong()
+        val publishInfo = PublishRequest(date, subSample, service)
+        val requests = listOf(
+            AlisRequest(
+                fileId = file,
+                operation = Operation.CREATE_IMG_DIV
+            ),
+            AlisRequest(
+                fileId = file,
+                operation = Operation.SEND_PDF
+            ),
+            AlisRequest(
+                fileId = file,
+                operation = Operation.CREATE_IMG_TOTAL
+            ),
+        )
+        return webClient.post()
+            .header("Content-Type", "application/json")
+            .body(Mono.just(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo)), RequestBundle::class.java)
             .exchangeToMono{
-                Mono.just(it.statusCode().is2xxSuccessful)
-            }
-    }
-    fun state(request: Request, state: String, member: String?, machine: String?): Mono<Boolean> {
-        println("PUT state/${state}/member/${member}/machine/${machine}/state")
-        return webClient.put().uri("state/${state}/member/${member}/machine/${machine}/state")
-            .headers{ it.add("Content-Type", "application/json") }
-            .body(BodyInserters.fromValue(request))
-            .exchangeToMono{
-                Mono.just(it.statusCode().is2xxSuccessful)
-            }
-    }
-    fun chkWorklist(request: Request) : Mono<Boolean>{
-        println("PUT chkWorklist")
-       return webClient.put().uri("chkWorklist")
-            .headers{ it.add("Content-Type", "application/json") }
-            .body(BodyInserters.fromValue(request))
-            .exchangeToMono{
-                Mono.just(it.statusCode().is2xxSuccessful)
-            }
-    }
-    fun cancelPublish(request: Request) : Mono<Boolean> {
-        return webClient.put().uri("cancelPublish")
-            .headers{ it.add("Content-Type", "application/json") }
-            .body(BodyInserters.fromValue(request))
-            .exchangeToMono{
-                Mono.just(it.statusCode().is2xxSuccessful)
+                it.bodyToMono(AlisResponse::class.java)
             }
     }
 }
