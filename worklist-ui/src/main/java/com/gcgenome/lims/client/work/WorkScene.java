@@ -128,7 +128,7 @@ public class WorkScene extends AbstractScene<WorkScene> {
         return new IsElement[][]{
                 new IsElement<?>[] { div().add(iptnMOfDilution).add(iptLibraryVol).add(btnAccept).style("display:flex;")},
                 new IsElement<?>[] { btnCalc },
-                new IsElement<?>[] {btnIndexAuto},
+                new IsElement<?>[] { btnIndexAuto },
                 new IsElement<?>[] { btnSave, btnBack }
         };
     }

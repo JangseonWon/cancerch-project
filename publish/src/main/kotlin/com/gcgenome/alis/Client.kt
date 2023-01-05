@@ -1,6 +1,7 @@
 package com.gcgenome.alis
 
 import com.gcgenome.alis.models.*
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
@@ -32,8 +33,9 @@ class Client(webClientBuilder: WebClient.Builder) {
                 operation = Operation.CREATE_IMG_TOTAL
             ),
         )
-        return webClient.post()
-            .header("Content-Type", "application/json")
+        return webClient
+            .post()
+            .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo)), RequestBundle::class.java)
             .exchangeToMono{
                 it.bodyToMono(AlisResponse::class.java)
