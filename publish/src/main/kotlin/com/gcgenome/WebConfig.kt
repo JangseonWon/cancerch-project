@@ -1,10 +1,13 @@
 package com.gcgenome
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.netty.handler.ssl.SslContextBuilder
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.CacheControl
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.http.codec.json.Jackson2JsonDecoder
@@ -17,7 +20,9 @@ import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
 import java.util.concurrent.TimeUnit
+
 
 @Configuration
 @EnableAsync
@@ -33,6 +38,23 @@ class WebConfig(private val objectMapper: ObjectMapper) : WebFluxConfigurer {
                     configurer.defaultCodecs().jackson2JsonEncoder(Jackson2JsonEncoder(objectMapper))
                     configurer.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
                 }.build())
+    }
+
+    @Bean("httpWebClient")
+    fun regularWebClient(): WebClient {
+        val sslContext = SslContextBuilder
+            .forClient()
+            .trustManager(InsecureTrustManagerFactory.INSTANCE)
+            .build()
+
+        return WebClient.builder()
+            .clientConnector(ReactorClientHttpConnector(HttpClient.create().secure{it.sslContext(sslContext)}))
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer: ClientCodecConfigurer ->
+                        configurer.defaultCodecs().jackson2JsonEncoder(Jackson2JsonEncoder(objectMapper))
+                        configurer.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
+                    }.build()).build()
     }
 
     @Bean

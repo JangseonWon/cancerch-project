@@ -1,20 +1,26 @@
 package com.gcgenome.alis
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.alis.models.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.UUID
+import java.util.*
 
 @Service
-class Client(webClientBuilder: WebClient.Builder) {
-    val webClient: WebClient = webClientBuilder.baseUrl("http://lims/alis-queue/").build()
+class Client (
+    @Qualifier("httpWebClient")
+    private val webClient: WebClient
+){
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
     fun send(sample : Long, service : String, file : UUID, user : Authentication) : Mono<AlisResponse> {
         val date = LocalDate.parse(sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
         val subSample = sample.toString().substring(8).toLong()
@@ -35,10 +41,10 @@ class Client(webClientBuilder: WebClient.Builder) {
         )
         return webClient
             .post()
+            .uri("https://lims/alis-queue/sync")
             .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo)), RequestBundle::class.java)
-            .exchangeToMono{
-                it.bodyToMono(AlisResponse::class.java)
-            }
+            .body(Mono.just(listOf(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo))), List::class.java)
+            .exchangeToMono { it.bodyToMono(object : ParameterizedTypeReference<List<AlisResponse>>(){}) }
+            .map { it.first() }
     }
 }
