@@ -20,7 +20,7 @@ class PublishRouter(private val handler: PublishHandler) {
         val sample = request.pathVariable("sample").toLong()
         val service = request.pathVariable("service")
         val createAt = request.pathVariable("createAt").toLong()
-        return handler.publish(sample, service, createAt).flatMap{
+        return handler.publish(sample, service, createAt, request).flatMap{
                 if(it) ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).build()
                 else ServerResponse.status(HttpStatus.NO_CONTENT).build()
             }

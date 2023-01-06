@@ -272,7 +272,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 					}
 					else {
 						DomGlobal.console.log("retry");
-						SampleApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), "kokr");
+						SampleApi.publish(String.valueOf(analysis.request().sample().id()), analysis.request().service().id(), String.valueOf((long) JsDate.parse(analysis.report().createAt())));
 					}
 					return null;
 				});

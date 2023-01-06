@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.server.ServerRequest
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
@@ -32,14 +33,15 @@ class PublishHandler(
 //                Mono.empty()
 //            }
 //    }
-    fun publish(sample: Long, service: String, createAt: Long) : Mono<Boolean> {
+    fun publish(sample: Long, service: String, createAt: Long, request: ServerRequest) : Mono<Boolean> {
         return reportDao.findForCassandraReport(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             .zipWith(getUser())
             .flatMap {
                 val file = it.t1.file
                 val user = it.t2.authentication
-                client.send(sample, service, file, user)
-            }.filter{it.outcome == "SUCCESS"}
+                client.send(sample, service, file, user, request)
+            }
+            .filter{it.outcome == "SUCCESS"}
             .flatMap {
                 reportDao.merge(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             }.map { true }
