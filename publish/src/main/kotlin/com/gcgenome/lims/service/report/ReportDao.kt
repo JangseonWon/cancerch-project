@@ -69,9 +69,9 @@ class ReportDao(private val repo: ReportRepository) {
             .zipWith(ReactiveSecurityContextHolder.getContext())
             .flatMap { repo.merge(it.t1, it.t2.authentication.principal.toString()) }
     }
-    private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, user : String): Mono<Void>{
+    private fun ReportRepository.merge(entity: com.gcgenome.lims.entity.Report, user : String): Mono<com.gcgenome.lims.entity.Report>{
         val now = LocalDateTime.now()
-        return if(entity.isNew) repo.save(entity).then()
+        return if(entity.isNew) repo.save(entity).then(Mono.just(entity))
         else update {
             Expressions.stringPath(report.publishLog.metadata)
             it.set(report.publishAt, now)
@@ -79,6 +79,6 @@ class ReportDao(private val repo: ReportRepository) {
             .set(report.lastModifyAt, now)
             .set(report.lastModifyBy, user)
                 .where(report.sample.eq(entity.sample).and(report.service.eq(entity.service)).and(Expressions.predicate(Ops.EQ, report.createAt, Expressions.asDateTime(entity.createAt.toString().replace("T", " ")))))
-        }.then()
+        }.then(Mono.just(entity))
     }
 }

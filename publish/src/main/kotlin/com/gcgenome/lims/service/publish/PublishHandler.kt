@@ -41,7 +41,9 @@ class PublishHandler(
                 val user = it.t2.authentication
                 client.send(sample, service, file, user, request)
             }
-            .filter{it.outcome == "SUCCESS"}
+            .filter{
+                it.outcome == "SUCCESS"
+            }
             .flatMap {
                 reportDao.merge(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             }.map { true }
