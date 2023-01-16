@@ -178,14 +178,17 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 					return null;
 				});
 
-		SampleApi.PrintPublishEvent.listen()
+		SampleApi.PrintEvent.listen()
 				.onCreate(inner::onCreate)
 				.onUpdate(inner::onPrinting)
 				.onFinish(evt->{
 					inner.onFinish(evt);
 					update();
 				});
-
+		SampleApi.PublishEvent.listen()
+						.onFinish(evt->{
+							update();
+						});
 		cancel.onClick(evt->{
 			dialog.close();
 		});

@@ -1,5 +1,6 @@
 package com.gcgenome.lims.api;
 
+import com.gcgenome.lims.data.AlisResponse;
 import com.gcgenome.lims.data.Report;
 import elemental2.dom.*;
 import elemental2.promise.Promise;
@@ -68,14 +69,46 @@ public class SampleApi {
                     else return Promise.resolve(response);
                 });
     }
-    public static class PrintPublishEvent {
+    public static class PublishEvent{
         private static EventSource listener;
         public static void close(){
             if(listener!=null) listener.close();
         }
-        public static PrintPublishEvent listen(){
+        public static PublishEvent listen(){
             if(listener!=null) listener.close();
-            PrintPublishEvent instance = new PrintPublishEvent();
+            PublishEvent instance = new PublishEvent();
+            instance.listener().then(evt->{
+                listener = evt;
+                return null;
+            });
+            return instance;
+        }
+        private HasValueChangeHandlers.ValueChangeEventListener<AlisResponse> finishCallback;
+
+        public PublishEvent onFinish(HasValueChangeHandlers.ValueChangeEventListener<AlisResponse> callback){
+            finishCallback = callback;
+            return this;
+        }
+        private Promise<EventSource> listener(){
+            return FetchApi.url("/samples/publishoutcome").then(url->{
+                EventSource src = new EventSource(url);
+                src.addEventListener("cancerch", evt->{
+                    String json = (String) Js.asPropertyMap(evt).get("data");
+                    AlisResponse response = (AlisResponse) JSON.parse(json);
+                    if(finishCallback != null) finishCallback.handle(HasValueChangeHandlers.ValueChangeEvent.event(evt, response));
+                });
+                return Promise.resolve(src);
+            });
+        }
+    }
+    public static class PrintEvent {
+        private static EventSource listener;
+        public static void close(){
+            if(listener!=null) listener.close();
+        }
+        public static PrintEvent listen(){
+            if(listener!=null) listener.close();
+            PrintEvent instance = new PrintEvent();
             instance.listener().then(evt->{
                 listener = evt;
                 return null;
@@ -86,15 +119,15 @@ public class SampleApi {
         private HasValueChangeHandlers.ValueChangeEventListener<Report> updateCallback;
         private HasValueChangeHandlers.ValueChangeEventListener<Report> finishCallback;
 
-        public PrintPublishEvent onCreate(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
+        public PrintEvent onCreate(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
             createCallback = callback;
             return this;
         }
-        public PrintPublishEvent onUpdate(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
+        public PrintEvent onUpdate(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
             updateCallback = callback;
             return this;
         }
-        public PrintPublishEvent onFinish(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
+        public PrintEvent onFinish(HasValueChangeHandlers.ValueChangeEventListener<Report> callback) {
             finishCallback = callback;
             return this;
         }

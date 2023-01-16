@@ -14,7 +14,7 @@ internal class SimpleTest{
     @Autowired
     lateinit var client : WebTestClient
     private val requests = listOf(
-        "/samples/202210049713009/services/N201/reports/1667540964620/publish",
+        "/samples/202210049713005/services/N201/reports/1667540964440/publish",
         )
 
     @Test

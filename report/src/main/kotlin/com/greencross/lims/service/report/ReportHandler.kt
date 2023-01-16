@@ -42,8 +42,7 @@ class ReportHandler(
     private val cancerRepo: CancerRepo,
     private val fileRepo: ReportFileRepository,
     private val mapper: ReportMapper,
-    private val om: ObjectMapper,
-    private val messageHandler: MessageHandler
+    private val om: ObjectMapper
 ) {
     private val logger      = LoggerFactory.getLogger("ReportSearch")
     private val publisher   = Sinks.many().unicast().onBackpressureBuffer<MessageReport>()
@@ -150,7 +149,7 @@ class ReportHandler(
     fun broadcastReports(): Consumer<String> {
         return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
     }
-    fun subscribe(): Flux<List<MessageReport>> = subscriber.asFlux().map(messageHandler::consumeMessageAndGetQueue)
+    fun subscribe(): Flux<MessageReport> = subscriber.asFlux()
 
     private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
         val patient = analysis.patient

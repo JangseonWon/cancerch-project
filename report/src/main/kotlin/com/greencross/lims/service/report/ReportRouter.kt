@@ -17,13 +17,12 @@ class ReportRouter(
     private val handler: ReportHandler
 ) {
     private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
-        @Bean("com.greencross.lims.service.Report.ReportRouter")
+    @Bean("com.greencross.lims.service.Report.ReportRouter")
     fun router() = router{
         GET("/samples/queue",                                                                         ::subscribe)
         GET("/samples/works",                                                            contentType, ::works)
         PUT("/samples/{sample}/services/{service}/batch/{batch}/row/{row}/print/{lang}", contentType, ::print)
         GET("/samples/{sample}/services/{service}/reports/{createAt}"                  , contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
-
     }
     private fun print(request: ServerRequest): Mono<ServerResponse>{
         val sample  = request.pathVariable("sample")
@@ -46,7 +45,8 @@ class ReportRouter(
     private fun subscribe(request: ServerRequest): Mono<ServerResponse>{
         return ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM)
             .body(BodyInserters.fromServerSentEvents(handler.subscribe().map { msg ->
-                ServerSentEvent.builder(MessageQueue(msg)).build()
+                ServerSentEvent.builder<com.gcgenome.lims.data.Report>(msg.data).event(msg.type.name)
+                    .id(msg.data.sample().toString()+"$"+msg.data.service()+"$"+msg.data.createAt()).build()
             }))
     }
     private fun works(request: ServerRequest): Mono<ServerResponse>{

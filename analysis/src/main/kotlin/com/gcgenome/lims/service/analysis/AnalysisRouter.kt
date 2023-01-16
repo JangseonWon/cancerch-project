@@ -2,15 +2,13 @@ package com.gcgenome.lims.service.analysis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.data.Analysis
-import com.gcgenome.lims.data.AnalysisResult
 import com.gcgenome.lims.service.searchParam
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.awaitBody
+import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.RequestPredicates.contentType
 import reactor.core.publisher.Mono
 
 @Configuration
@@ -18,12 +16,14 @@ class AnalysisRouter(
     private val handler: AnalysisHandler,
     private val om: ObjectMapper
 ) {
+    private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
     @Bean("com.greencross.lims.service.AnalysisRouter")
-    fun router() = org.springframework.web.reactive.function.server.router {
-        GET("/analysis/search",                                     contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::search)
-        PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateComment)
-        PATCH("/analysis/update",                                   contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::updateAll)
+    fun router() = router{
+        GET("/analysis/search",                                    contentType, ::search)
+        PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment",contentType, ::updateComment)
+        PATCH("/analysis/update",                                  contentType, ::updateAll)
     }
+
     private fun search(request: ServerRequest): Mono<ServerResponse>{
         return handler.search(searchParam(om, request.queryParams()))
             .flatMap { page->
