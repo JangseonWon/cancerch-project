@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Setter(onMethod_={@JsOverlay, @JsIgnore})
 @Getter(onMethod_={@JsOverlay, @JsIgnore})
 @Accessors(fluent=true)
-public class AlisResponse {
+public final class AlisResponse {
     private String id;
     private String publishModule;
     private String outcome;
