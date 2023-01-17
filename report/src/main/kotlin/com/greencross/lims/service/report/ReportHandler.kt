@@ -62,17 +62,19 @@ class ReportHandler(
     }
 
     @Transactional
-    fun print(sample: Long, service: String, batch: String, row: String, lang: String): Mono<Void> {
+    fun print(sample: Long, service: String, batch: String, row: String, lang: String, description: String): Mono<Void> {
         val createTime = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
             ZoneId.systemDefault()
         )
+
         val entity =
             com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
                 this.batch = batch
                 this.row = row.toLong()
                 this.language = lang
                 this.isPrinted = "PREPARE"
+                this.description = description
             }
         return reportDao.create(entity).flatMap {
             logger.info("$sample/$service is created.")

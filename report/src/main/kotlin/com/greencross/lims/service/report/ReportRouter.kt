@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
+import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RequestPredicates.contentType
@@ -47,7 +48,9 @@ class ReportRouter(
         val lang    = request.pathVariable("lang")
         val batch   = request.pathVariable("batch")
         val row     = request.pathVariable("row")
-        return handler.print(sample.toLong(), service, batch, row, lang)
+        return request.bodyToMono(String::class.java)
+            .switchIfEmpty(Mono.just("최초보고"))
+            .flatMap { handler.print(sample.toLong(), service, batch, row, lang, it) }
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
             .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
