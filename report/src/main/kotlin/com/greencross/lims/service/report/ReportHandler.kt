@@ -3,6 +3,9 @@ package com.greencross.lims.service.report
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.avoid.TestInfo
 import com.gcgenome.lims.data.MessageReport
+import com.gcgenome.report.versions.log.Log
+import com.gcgenome.report.versions.log.ReactiveLogService
+import com.gcgenome.report.versions.report.ReactiveReportVersionService
 import com.greencross.lims.data.Report_
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
@@ -42,11 +45,17 @@ class ReportHandler(
     private val cancerRepo: CancerRepo,
     private val fileRepo: ReportFileRepository,
     private val mapper: ReportMapper,
+    private val logService: ReactiveLogService,
+    private val reportVersionService: ReactiveReportVersionService,
     private val om: ObjectMapper
 ) {
     private val logger      = LoggerFactory.getLogger("ReportSearch")
     private val publisher   = Sinks.many().unicast().onBackpressureBuffer<MessageReport>()
     private val subscriber  = Sinks.many().multicast().directAllOrNothing<MessageReport>()
+    fun getLogs(sample: Long, service: String)  = logService.getLogs(sample, service)
+    fun getReports(sample: Long, service: String) = reportVersionService.getReportLogPdf(sample, service)
+
+
     @Transactional
     fun reports(sample: Long, service: String): Flux<Report> {
         return reportDao.findBySampleAndService(sample, service)
