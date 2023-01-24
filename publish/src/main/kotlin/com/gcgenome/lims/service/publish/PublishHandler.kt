@@ -53,13 +53,10 @@ class PublishHandler(
     }
 
     @Bean("broadcast-publishing")
-    fun broadcastPublish(): Supplier<Flux<String>> {
-        return Supplier { publisher.asFlux().map(this::messageToString)}
+    fun broadcastPublish(): Consumer<String> {
+        return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
     }
     private fun stringToMessage(str: String): AlisResponse {
         return om.readValue(str, AlisResponse::class.java)
-    }
-    private fun messageToString(msg: AlisResponse): String {
-        return om.writeValueAsString(msg)
     }
 }
