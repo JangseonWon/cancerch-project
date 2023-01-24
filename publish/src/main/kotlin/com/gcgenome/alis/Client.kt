@@ -47,7 +47,7 @@ class Client (
         )
         return webClient
             .post()
-            .uri("https://lims/alis-queue/sync")
+            .uri("https://lims/alis-queue/async")
             .cookies{it.addAll(cookieMap)}
             .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(listOf(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo))), List::class.java)
