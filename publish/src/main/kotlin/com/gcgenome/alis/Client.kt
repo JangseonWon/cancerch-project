@@ -26,7 +26,7 @@ class Client (
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    fun send(sample : Long, service : String, file : UUID, user : Authentication, serverRequest : ServerRequest) : Mono<Void> {
+    fun send(sample : Long, service : String, file : UUID, user : Authentication, serverRequest : ServerRequest) : Mono<Boolean> {
         val date = LocalDate.parse(sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
         val subSample = sample.toString().substring(8).toLong()
         val publishInfo = PublishRequest(date, subSample, service)
@@ -51,7 +51,8 @@ class Client (
             .cookies{it.addAll(cookieMap)}
             .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(listOf(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo))), List::class.java)
-            .exchangeToMono { it.bodyToMono(object : ParameterizedTypeReference<List<AlisResponse>>(){}) }
-            .then()
+            .exchangeToMono{
+                Mono.just(it.statusCode().is2xxSuccessful)
+            }
     }
 }

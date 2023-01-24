@@ -28,7 +28,7 @@ class PublishHandler(
     private val client: Client,
     private val om: ObjectMapper
     ) {
-    private val publisher = Sinks.many().unicast().onBackpressureBuffer<AlisRequest>()
+    private val publisher = Sinks.many().unicast().onBackpressureBuffer<AlisResponse>()
     private val subscriber = Sinks.many().multicast().directAllOrNothing<AlisResponse>()
 
     fun subscribe(): Flux<AlisResponse> = subscriber.asFlux()
@@ -40,6 +40,9 @@ class PublishHandler(
                 val user = it.t2.authentication
                 client.send(sample, service, file, user, request)
             }
+            .filter{
+                it == true
+            }
             .flatMap {
                 reportDao.merge(sample, service, LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId()))
             }.map { true }
@@ -50,10 +53,13 @@ class PublishHandler(
     }
 
     @Bean("broadcast-publishing")
-    fun broadcastPublish(): Consumer<String> {
-        return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
+    fun broadcastPublish(): Supplier<Flux<String>> {
+        return Supplier { publisher.asFlux().map(this::messageToString)}
     }
     private fun stringToMessage(str: String): AlisResponse {
         return om.readValue(str, AlisResponse::class.java)
+    }
+    private fun messageToString(msg: AlisResponse): String {
+        return om.writeValueAsString(msg)
     }
 }
