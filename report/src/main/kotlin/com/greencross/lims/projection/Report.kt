@@ -19,7 +19,8 @@ data class Report(
     val publishBy: User?,
     val publishLog: String?,
     val isPrinted: String?,
-    val language: String?
+    val language: String?,
+    val description: String?
 ) {
     companion object{
         data class ReportBuilder(
@@ -39,12 +40,13 @@ data class Report(
             val publishBy:      String?,
             val publishLog:     Json?,
             val isPrinted:      String?,
-            val language:       String?
+            val language:       String?,
+            val description:    String?
         ){
             fun build() : Report{
                 val publishUser : User? = if(publishId == null || publishBy == null) null else User(publishId, publishBy)
                 val log : String? = if(publishLog == null) "" else publishLog.asString()
-                return Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, publishUser, log, isPrinted, language)
+                return Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, publishUser, log, isPrinted, language, description)
             }
         }
     }

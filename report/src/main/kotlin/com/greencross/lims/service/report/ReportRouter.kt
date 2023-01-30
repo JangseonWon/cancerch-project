@@ -1,13 +1,11 @@
 package com.greencross.lims.service.report
 
 import com.gcgenome.report.versions.log.Log
-import com.greencross.lims.data.MessageQueue
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
-import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RequestPredicates.contentType
@@ -24,21 +22,21 @@ class ReportRouter(
         GET("/samples/queue",                                                                         ::subscribe)
         GET("/samples/works",                                                            contentType, ::works)
         GET("/samples/{sample}/services/{service}/log",                                  contentType, ::getLog)
-        GET("/samples/{sample}/services/{service}/reportTotal",                          contentType, ::reportTotal)
+        GET("/samples/{sample}/services/{service}/reportTotal",                          contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::reportTotal)
         PUT("/samples/{sample}/services/{service}/batch/{batch}/row/{row}/print/{lang}", contentType, ::print)
         GET("/samples/{sample}/services/{service}/reports/{createAt}"                  , contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
     }
     private fun getLog(request: ServerRequest): Mono<ServerResponse> {
         val (sample, service)  = request.pathVariable("sample") to request.pathVariable("service")
         return Mono.just(ServerResponse.ok()).flatMap {
-            it.body(handler.getLogs(sample.toLong(), service), Log::class.java)
+            it.body(handler.getLogs(sample.replace("-", "").toLong(), service), Log::class.java)
         }.onErrorResume { ServerResponse.badRequest().body(Mono.just("Bad Request, check path parameters")) }
     }
 
     private fun reportTotal(request: ServerRequest): Mono<ServerResponse> {
         val (sample, service)  = request.pathVariable("sample") to request.pathVariable("service")
         return Mono.just(ServerResponse.ok()).flatMap {
-            it.body(handler.getReports(sample.toLong(), service), ByteArray::class.java)
+            it.body(handler.getReports(sample.replace("-", "").toLong(), service), ByteArray::class.java)
         }.onErrorResume { ServerResponse.badRequest().body(Mono.just("Bad Request, check path parameters")) }
     }
 
