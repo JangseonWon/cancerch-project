@@ -35,52 +35,7 @@ public class TestInfo implements HasCode, HasGenes, MayBeNationalInsurance {
     @Builder.Default
     private final boolean isNationalInsuranceTest = false;
     public static final TestInfo N201 = TestInfo.builder()
-            .code("N201")
-            .interpretationCode("N075440")
-            .cores(new TestInfo.Gene[]{
-                    TestInfo.Gene.builder().code("N075010").gene("COL3A1").build(),
-                    TestInfo.Gene.builder().code("N075020").gene("FBN1").build(),
-                    TestInfo.Gene.builder().code("N075030").gene("TGFBR1").build(),
-                    TestInfo.Gene.builder().code("N075040").gene("SMAD3").build(),
-                    TestInfo.Gene.builder().code("N075050").gene("TGFBR2").build(),
-                    TestInfo.Gene.builder().code("N075060").gene("ACTA2").build(),
-                    TestInfo.Gene.builder().code("N075070").gene("MYH11").build(),
-                    TestInfo.Gene.builder().code("N075120").gene("MYBPC3").build(),
-                    TestInfo.Gene.builder().code("N075130").gene("MYH7").build(),
-                    TestInfo.Gene.builder().code("N075150").gene("TNNI3").build(),
-                    TestInfo.Gene.builder().code("N075160").gene("TPM1").build(),
-                    TestInfo.Gene.builder().code("N075170").gene("MYL3").build(),
-                    TestInfo.Gene.builder().code("N075180").gene("ACTC1").build(),
-                    TestInfo.Gene.builder().code("N075190").gene("PRKAG2").build(),
-                    TestInfo.Gene.builder().code("N075200").gene("MYL2").build(),
-                    TestInfo.Gene.builder().code("N075210").gene("LMNA").build(),
-                    TestInfo.Gene.builder().code("N075220").gene("GLA").build(),
-                    TestInfo.Gene.builder().code("N075080").gene("RYR2").build(),
-                    TestInfo.Gene.builder().code("N075090").gene("KCNQ1").build(),
-                    TestInfo.Gene.builder().code("N075100").gene("KCNH2").build(),
-                    TestInfo.Gene.builder().code("N075110").gene("SCN5A").build(),
-                    TestInfo.Gene.builder().code("N075230").gene("PKP2").build(),
-                    TestInfo.Gene.builder().code("N075240").gene("DSP").build(),
-                    TestInfo.Gene.builder().code("N075250").gene("DSC2").build(),
-                    TestInfo.Gene.builder().code("N075260").gene("TMEM43").build(),
-                    TestInfo.Gene.builder().code("N075270").gene("DSG2").build(),
-                    TestInfo.Gene.builder().code("N075280").gene("LDLR").build(),
-                    TestInfo.Gene.builder().code("N075290").gene("APOB").build(),
-                    TestInfo.Gene.builder().code("N075300").gene("PCSK9").build(),
-                    TestInfo.Gene.builder().code("N075310").gene("PROC").build(),
-                    TestInfo.Gene.builder().code("N075320").gene("PROS1").build(),
-                    TestInfo.Gene.builder().code("N075330").gene("약물 SLC47A2").build(),
-                    TestInfo.Gene.builder().code("N075340").gene("약물 CYP2C9").build(),
-                    TestInfo.Gene.builder().code("N075350").gene("약물 TCF7L2").build(),
-                    TestInfo.Gene.builder().code("N075360").gene("약물 COQ2").build(),
-                    TestInfo.Gene.builder().code("N075370").gene("약물 CACNA1C").build(),
-                    TestInfo.Gene.builder().code("N075380").gene("약물 AGTR1").build(),
-                    TestInfo.Gene.builder().code("N075390").gene("약물 ADRB1").build(),
-                    TestInfo.Gene.builder().code("N075400").gene("약물 ACE").build(),
-                    TestInfo.Gene.builder().code("N075410").gene("약물 NEDD4L").build(),
-                    TestInfo.Gene.builder().code("N075420").gene("약물 CYP2C19").build()
-            }).build();
-
+            .code("N201").build();
     @Data
     @Accessors(fluent = true)
     @Builder
