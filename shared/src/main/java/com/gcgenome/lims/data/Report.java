@@ -27,6 +27,7 @@ public final class Report {
 	private String publishAt;
 	@JsProperty(name="publisher")
 	private User publisher;
+	private String description;
 	@JsOverlay
 	@JsIgnore
 	public Report sample(long sample) {

@@ -1,6 +1,7 @@
 package com.gcgenome.lims.client;
 
 import com.gcgenome.lims.api.AnalysisApi;
+import com.gcgenome.lims.api.ProgressApi;
 import com.gcgenome.lims.api.SampleApi;
 import com.gcgenome.lims.data.Analysis;
 import com.google.gwt.core.client.JsDate;
@@ -134,8 +135,9 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 										})).build(),
 					columnPassOrFail("QC 분석").build(),
 					columnPassOrFail("성별 분석").build(),
-					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center")
-							.onClick(this::preview).build(),
+					ColumnBuilder.link("결과지", data->"#"+data.idx()).name("결과지").readOnly(true).horizontal("center").onClick(this::preview).build(),
+					ColumnBuilder.link("수정이력", data->"#"+data.idx()).name("수정이력").readOnly(true).horizontal("center").onClick(this::logs).build(),
+					ColumnBuilder.link("일괄출력", data->"#"+data.idx()).name("일괄출력").readOnly(true).horizontal("center").onClick(this::download).build(),
 					column("결과발송일").build(),
 					column("발송자").build(),
 					columnResultDetail("top 5 prediction", "top 5").build(),
@@ -230,6 +232,33 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 					return null;
 				});
 	}
+	private static native String blobDownload(Blob blob, String fileName) /*-{
+		var a = document.createElement("a");
+		document.body.appendChild(a);
+    	a.style = "display: none";
+    	var url = $wnd.URL.createObjectURL(blob);
+    	a.href = url;
+    	a.download = fileName;
+    	a.click();
+    	$wnd.URL.revokeObjectURL(url);
+    	a.remove();
+    	return "";
+    }-*/;
+	private void logs(Data data){
+		String sample = data.get("ID");
+		String service = data.get("검사코드");
+		SampleApi.getLogs(sample, service).then(log ->{
+			DomGlobal.alert(log);
+			return null;
+		});
+	}
+	private void download(Data data) {
+		String sample = data.get("ID");
+		String service = data.get("검사코드");
+		ProgressApi.open(false);
+		SampleApi.downloadAllReports(sample, service).then(b->Promise.resolve(blobDownload(b, sample+"-"+service+".pdf")))
+				.finally_(ProgressApi::close);
+	}
 
 	private final SheetElement elemSheet = config.build();
 	private SheetElementSelectableMulti wrapper;
@@ -264,6 +293,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String batch		= value.batch();
 		String idx 			= id+"$"+service+"$"+batch+"$"+row;
 		String serviceNm 	= value.request().service().name();
+		String changeLog	= value.report().description()!="최초보고" ? "변경이력" : "";
+		String downloadAll	= value.report().description()!="최초보고" ? "다운로드" : "";
 
 		//Nullable
 		String sex 			= value.request().sample().patient().sex();
@@ -337,6 +368,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 				.put("QC 분석",					qcCheck)
 				.put("성별 분석",               sexCheck)
 				.put("결과지", 					reportNm  == null ? "" : reportNm)
+				.put("수정이력",				changeLog)
+				.put("일괄출력",				downloadAll)
 				.put("발송자", 					publishNm == null ? "" : publishNm)
 				.put("결과발송일", 				publishDt)
 				.put("top 5 prediction",		top5Pred)

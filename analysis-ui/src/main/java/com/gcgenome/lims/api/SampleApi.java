@@ -27,6 +27,23 @@ public class SampleApi {
                     else return Promise.resolve(false);
                 });
     }
+    public Promise<Blob> downloadAllReports(String sample, String service) {
+        RequestInit request = RequestInit.create();
+        request.setMethod("GET");
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
+        });
+        return FetchApi.request("/samples/"+sample+"/services/"+service+"/reportTotal", request)
+                .then(Response::blob);
+    }
+    public Promise<String> getLogs(String sample, String service) {
+        RequestInit request = RequestInit.create();
+        request.setHeaders(new String[][] {
+                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+        });
+        return FetchApi.request("/samples/"+sample+"/services/"+service+"/log", request)
+                .then(Response::text);
+    }
     public Promise<Blob> download(String sample, String service, String report) {
         return download("/samples/" + sample + "/services/" + service + "/reports/" + report);
     }
