@@ -174,4 +174,17 @@ body {
 .finished {
     background-color: darkseagreen;
 }
+.twinkle {
+    animation: blink 800ms ease-in-out infinite alternate;
+
+}
+@-webkit-keyframes blink{
+    0% {
+        background-color: var(--mdc-theme-secondary);
+    }
+    100% {
+        background-color: #FFFFFF;
+    }
+}
+
 

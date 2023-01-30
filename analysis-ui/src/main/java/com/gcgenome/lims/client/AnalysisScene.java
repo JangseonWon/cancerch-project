@@ -207,33 +207,43 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		long countGeneral 				= Arrays.stream(selection).filter(d->d.result().equals("GENERAL")).count();
 		long countConcern 				= Arrays.stream(selection).filter(d->d.result().equals("CONCERN")).count();
 		long countRisk	  				= Arrays.stream(selection).filter(d->d.result().equals("RISK")).count();
+		long countNeedLog				= Arrays.stream(selection).filter(d->d.report().fileName() != null).count();
 		PRTPUBDialogInnerElement inner 	= PRTPUBDialogInnerElement.build(selection);
 
 		chkConfirm.onValueChange(evt->{ok.enabled(evt.value());});
 		ok.onClick(evt->{
 			for(Analysis analysis: selection){
-				Promise<Boolean> response = SampleApi.print(
-						String.valueOf(analysis.request().sample().id()),
-						analysis.request().service().id(),
-						analysis.batch(),
-						String.valueOf(analysis.row()),
-						"kokr"
-				);
-				response.then(res->{
-					if(res.equals(true)){
-						inner.remove(analysis.request().sample().id(), analysis.request().service().id());
+				if(analysis.report().fileName() != null) {
+					String description = DomGlobal.prompt("변경 사유 입력이 필요한 ("+analysis.sample()+")검사 결과입니다.(3자 이상)");
+					if(description.length() < 2) {
+						DomGlobal.alert("2자 이하 입력으로 해당 결과의 결과지 생성이 취소됩니다.");
 					}
 					else {
-						DomGlobal.console.log("retry");
-						SampleApi.print(
+						Promise<Boolean> response = SampleApi.print(
 								String.valueOf(analysis.request().sample().id()),
 								analysis.request().service().id(),
 								analysis.batch(),
 								String.valueOf(analysis.row()),
-								"kokr");
+								"kokr",
+								description
+						);
+						response.then(res -> {
+							if (res.equals(true)) {
+								inner.remove(analysis.request().sample().id(), analysis.request().service().id());
+							} else {
+								DomGlobal.console.log("retry");
+								SampleApi.print(
+										String.valueOf(analysis.request().sample().id()),
+										analysis.request().service().id(),
+										analysis.batch(),
+										String.valueOf(analysis.row()),
+										"kokr",
+										description);
+							}
+							return null;
+						});
 					}
-					return null;
-				});
+				}
 			}
 			dialog.close();
 			dialog.element().remove();
@@ -245,7 +255,8 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 		});
 		dialog.add(div().add(label("일반관리 : "+countGeneral+"건").style("margin-right: 1em;"))
 						.add(label("관심관리 : "+countConcern+"건").style("margin-right: 1em;"))
-						.add(label("집중관리 : "+countRisk+"건")))
+						.add(label("집중관리 : "+countRisk+"건").style("margin-right: 1em;"))
+						.add(label("이력입력 필요 : "+countNeedLog+"건").style("color: #FF0000;")))
 				.add(inner).add(chkConfirm);
 		body().add(dialog);
 		dialog.open();
