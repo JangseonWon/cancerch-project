@@ -9,7 +9,8 @@ data class Report(
     var fileUrl: String? = null,
     var createBy: User? = null,
     var publishAt: String? = "",
-    var publisher: User? = null
+    var publisher: User? = null,
+    var description: String? = ""
 ) {
     var isPrinted: String = ""
 }

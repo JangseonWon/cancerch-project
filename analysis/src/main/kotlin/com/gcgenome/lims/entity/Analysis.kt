@@ -83,6 +83,7 @@ data class Analysis(
     @Column("reported_at")                  val reportedAt:             LocalDateTime?,
     @Column("reported_by_id")               val reportedById:           String?,
     @Column("reported_by_nm")               val reportedByNm:           String?,
+    @Column("report_description")           val reportDescription:      String?,
     @Column("publish_at")                   val publishAt:              LocalDateTime?,
     @Column("publish_by_id")                val publishById:            String?,
     @Column("publish_by_nm")                val publishByNm:            String?

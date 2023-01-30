@@ -71,8 +71,16 @@ class AnalysisMapper {
                 this.deleted = entity.delete.toString()
             }
             this.report = Report(
-                entity.sample, entity.serviceId, entity.reportedAt.toString(), entity.reportName, entity.size, entity.reportUrl,
-                User(entity.reportedById, entity.reportedByNm), entity.publishAt.toString(), User(entity.publishById, entity.publishByNm)
+                entity.sample,
+                entity.serviceId,
+                entity.reportedAt.toString(),
+                entity.reportName,
+                entity.size,
+                entity.reportUrl,
+                User(entity.reportedById, entity.reportedByNm),
+                entity.publishAt.toString(),
+                User(entity.publishById, entity.publishByNm),
+                entity.reportDescription ?: "최초보고"
             )
             this.file = entity.analysisFile
             this.createdAt = entity.analysisAt.toString()
