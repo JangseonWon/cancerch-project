@@ -293,8 +293,8 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String batch		= value.batch();
 		String idx 			= id+"$"+service+"$"+batch+"$"+row;
 		String serviceNm 	= value.request().service().name();
-		String changeLog	= value.report().description()!="최초보고" ? "변경이력" : "";
-		String downloadAll	= value.report().description()!="최초보고" ? "다운로드" : "";
+		String changeLog	= value.report().publishAt()!="null" ? "변경이력" : "";
+		String downloadAll	= value.report().publishAt()!="null" ? "다운로드" : "";
 
 		//Nullable
 		String sex 			= value.request().sample().patient().sex();
