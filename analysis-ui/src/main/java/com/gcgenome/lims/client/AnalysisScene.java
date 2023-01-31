@@ -200,12 +200,15 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 
 		for(Analysis analysis: selection){
 			if( analysis.report().description() != "" ){
+				String description = DomGlobal.prompt("이력 입력 ");
+				if(description.length() != 0)
 				SampleApi.print(String.valueOf(analysis.request().sample().id()),
 						analysis.request().service().id(),
 						analysis.batch(),
 						String.valueOf(analysis.row()),
 						"kokr",
-						DomGlobal.prompt("이력 입력 "));
+						description
+						);
 			} else {
 				SampleApi.print(String.valueOf(analysis.request().sample().id()),
 						analysis.request().service().id(),
