@@ -8,6 +8,8 @@ import jsinterop.base.Js;
 import lombok.experimental.UtilityClass;
 import net.sayaya.ui.event.HasValueChangeHandlers;
 
+import java.util.Objects;
+
 import static elemental2.core.Global.JSON;
 
 @UtilityClass
@@ -18,7 +20,7 @@ public class SampleApi {
                 new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
         });
         request.setMethod("PUT");
-        request.setBody(description);
+        if(!Objects.equals(description, "")) request.setBody(description);
 
         return FetchApi.request("/samples/"+sample+"/services/"+service+"/batch/"+batch+"/row/"+row+"/print/"+lang, request)
                 .then(result->{

@@ -465,6 +465,13 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 			default 		:			return  "null";
 		}
 	}
+	public boolean chkMulti() {
+		return Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).allMatch(a -> a.report().description() == "");
+	}
+	public boolean chkSingle() {
+		Analysis[] chk = Arrays.stream(wrapper.selection()).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).toArray(Analysis[]::new);
+		return Arrays.stream(chk).allMatch(a -> a.report().description() != "") && Arrays.stream(chk).filter(a -> a.report().description() != "").count() == 1;
+	}
 	@Override
 	public Analysis[] selection() {
 		return Arrays.stream(wrapper.selection()).filter(d->d.get("QC 분석").equals("PASS") && d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).toArray(Analysis[]::new);
