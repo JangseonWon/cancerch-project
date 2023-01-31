@@ -40,7 +40,7 @@ public class PRTPUBDialogInnerElement extends HTMLElementBuilder<HTMLDivElement,
         private InnerCardElement(HtmlContentBuilder<HTMLDivElement> e, Analysis value) {
             super(e.css("print-publish-card"));
             e.style("background-color:"+resultToBgColor(value.result()));
-            if(value.report().fileName() != null) e.css("twinkle");
+//            if(value.report().fileName() != null) e.css("twinkle");
             e.add(innerHeader).add(hr().style("width:95%;")).add(innerBody);
             innerHeader.add(label(DataTransformUtil.formatSampleId(value.request().sample().id())).css("print-publish-card-header-sample"))
                     .add(label(value.request().service().name()).css("print-publish-card-header-service"));
