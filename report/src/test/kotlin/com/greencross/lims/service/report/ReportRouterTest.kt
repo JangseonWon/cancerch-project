@@ -34,7 +34,7 @@ class ReportRouterTest{
             .codecs { it.defaultCodecs().maxInMemorySize(-1) }.build()
         val response = client.get()
             .uri("/samples/202208011715501/services/N201/reportTotal")
-            .headers { it.set("X-USER-ID", "219926"); it.set("Content-Type", "application/vnd.avoid.v1+json") }
+            .headers { it.set("X-USER-ID", "219926"); it.set("Content-Type", "application/vnd.avoid.v1") }
             .exchange()
             .expectBody()
             .returnResult().responseBody
