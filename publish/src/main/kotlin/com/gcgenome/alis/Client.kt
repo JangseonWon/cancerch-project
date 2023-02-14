@@ -33,15 +33,15 @@ class Client (
         val cookieMap = MultiValueMapAdapter(serverRequest.cookies().map { it.key to it.value.map(HttpCookie::getValue) }.toMap())
         val requests = listOf(
             AlisRequest(
-                fileId = file,
-                operation = Operation.CREATE_IMG_DIV
+                fileId = file.toString(),
+                operation = Operation.CREATE_IMG_DIV_PAR
             ),
             AlisRequest(
-                fileId = file,
+                fileId = file.toString(),
                 operation = Operation.SEND_PDF
             ),
             AlisRequest(
-                fileId = file,
+                fileId = file.toString(),
                 operation = Operation.CREATE_IMG_TOTAL
             ),
         )
