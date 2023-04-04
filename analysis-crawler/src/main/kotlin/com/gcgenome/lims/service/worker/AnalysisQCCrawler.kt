@@ -74,7 +74,7 @@ class AnalysisQCCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("QC Crwal : Ended")
-//            jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
+            jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
     private fun sexMapper(sexPred: String) = when(sexPred){

@@ -56,7 +56,7 @@ class AnalysisRSCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("RS Crwal : Ended")
-//            jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다. ヽ(✿ﾟ▽ﾟ)ノ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
+            jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다. ヽ(✿ﾟ▽ﾟ)ノ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
 
