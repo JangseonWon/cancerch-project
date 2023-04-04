@@ -3,12 +3,14 @@ package com.gcgenome.lims.service.worker
 import com.gcgenome.file_reader.FileCrawler
 import com.gcgenome.lims.data.AnalysisQC
 import com.gcgenome.lims.service.analysisQC.AnalysisQCRepository
+import com.gcgenome.lims.service.request.RequestRepository
 import com.gcgenome.querydsl.persist
 import com.greencross.lims.jandiwebhook.Webhook
 import com.greencross.lims.jandiwebhook.dto.ConnectInfo
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.Scheduled
+import reactor.core.scheduler.Schedulers
 import java.io.File
 
 @Configuration
@@ -16,7 +18,8 @@ class AnalysisQCCrawler(
     val crawler : FileCrawler<AnalysisQC>,
     val dao: AnalysisQCRepository,
     val processed: File,
-    val jandi: Webhook
+    val jandi: Webhook,
+    val repo: RequestRepository
     ) {
     private val logger = LoggerFactory.getLogger(AnalysisQCCrawler::class.java)
     @Scheduled(fixedDelay=600000)
@@ -30,8 +33,9 @@ class AnalysisQCCrawler(
                 val batch = batchRow[0]+"-"+batchRow[1]
                 val row = batchRow[2]
                 try {
-                    AnalysisRSCrawler.Tests.values().forEach { test ->
-                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), test.name, batch, row.toInt()).apply {
+                    repo.findBySample(sampleId.toLong()).map { request->
+                        logger.info("QC Crawl : ${request.sample} : ${request.service}")
+                        val entity = com.gcgenome.lims.entity.AnalysisQC(sampleId.toLong(), request.service, batch, row.toInt()).apply {
                             this.freemix = it.freeMixFcA
                             this.rawReads = it.rawReadsMillFcA
                             this.dupRate = it.dupRateFcA
@@ -60,9 +64,9 @@ class AnalysisQCCrawler(
                             this.predSexTmp = sexMapper(it.predSexFcB)
                         }
                         logger.info("QC Crawl : $batch 배치 $row Sample")
-                        dao.persist(entity).block()
-                    }
-                } catch (except : NumberFormatException){
+                        dao.persist(entity).subscribeOn(Schedulers.boundedElastic()).subscribe()
+                    }.subscribeOn(Schedulers.boundedElastic()).subscribe()
+                } catch (except : NumberFormatException) {
                     logger.info("QC Crawl : $except : $batch 배치 $row Sample은 NTC거나 CONTROL입니다.")
                 }
             }
@@ -70,7 +74,7 @@ class AnalysisQCCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("QC Crwal : Ended")
-            jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
+//            jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
     private fun sexMapper(sexPred: String) = when(sexPred){
