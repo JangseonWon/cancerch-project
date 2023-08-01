@@ -6,10 +6,10 @@ plugins {
 subprojects {
     repositories {
         mavenCentral()
+        mavenLocal()
         maven(url = "http://gemini/api/packages/LIMS/maven"){
             isAllowInsecureProtocol = true
         }
-        mavenLocal()
     }
     group = "com.gcgenome"
     version = "1.0"
