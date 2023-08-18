@@ -195,9 +195,9 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     }
 
     override fun imgGuideLineTable(risk: String) = when(risk){
-        "RISK"   -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
-        "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
-        else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203_middle.png"))
+        "RISK"   -> img(File(CancerchResource.resource, "img/avoid/SectionGuideline/img_table_n203.png"))
+        "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideline/img_table_n203.png"))
+        else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideline/img_table_n203_middle.png"))
     }
     override fun imgGuideLineCancer(cancer: String): PDImageXObject {
         return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/cancer_$cancer.png"))
