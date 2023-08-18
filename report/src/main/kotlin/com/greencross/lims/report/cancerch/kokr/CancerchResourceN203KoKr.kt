@@ -1,12 +1,12 @@
-package com.greencross.lims.report.avoid.kokr
+package com.greencross.lims.report.cancerch.kokr
 
 import com.greencross.lims.report.avoid.AvoidResource
-import com.greencross.lims.report.avoid.AvoidResourceN201
+import com.greencross.lims.report.cancerch.CancerchResourceN203
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.font.PDFont
 import java.io.File
 
-class AvoidResourceN201KoKr(doc: PDDocument) : AvoidResourceKoKr(doc), AvoidResourceN201 {
+class CancerchResourceN203KoKr(doc: PDDocument) : CancerchResourceKoKr(doc), CancerchResourceN203 {
     val fontDefault: PDFont
 
     init {

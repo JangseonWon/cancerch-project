@@ -30,7 +30,8 @@ class AvoidN201(
 
     override fun pages(): Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
         return template().and(intro).and(totalResult).and(doubtCancer).and(cancerTypeDanger).and(barcode)
-            .and { s, t, d -> newPage(s) }.and(template()).and(detailResultAnalysis).and(detailResultComment).and(guideLine)
+            .and { s, t, d -> newPage(s) }.and(template()).and(detailResultAnalysis).and(detailResultComment)
+            .and(guideLine)
             .and { s, t, d -> newPage(s) }.and(template()).and(detailProcess)
             .and { s, t, d -> newPage(s) }.and(template()).and(limitation)
             .and(page)
