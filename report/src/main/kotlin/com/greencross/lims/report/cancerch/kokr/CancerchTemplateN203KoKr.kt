@@ -1,18 +1,19 @@
-package com.greencross.lims.report.avoid.kokr
+package com.greencross.lims.report.cancerch.kokr
 
 import com.gcgenome.lims.avoid.TestInfo
 import com.greencross.lims.report.avoid.AvoidDto
-import com.greencross.lims.report.avoid.AvoidTemplateN201
 import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.cancerch.CancerchDto
+import com.greencross.lims.report.cancerch.CancerchTemplateN203
 
-class AvoidTemplateN201KoKr(
-    resource: AvoidResourceN201KoKr,
-    testInfo: TestInfo
-) : AvoidTemplateKoKr<AvoidResourceN201KoKr>(testInfo),
-    AvoidTemplateN201<AvoidResourceN201KoKr> {
-    private val resource: AvoidResourceN201KoKr = resource
+class CancerchTemplateN203KoKr(
+    resource: CancerchResourceN203KoKr,
+    testInfo: TestInfo,
+) : CancerchTemplateKoKr<CancerchResourceN203KoKr>(testInfo),
+    CancerchTemplateN203<CancerchResourceN203KoKr> {
+    private val resource: CancerchResourceN203KoKr = resource
 
-    override fun resource(): AvoidResourceN201KoKr {
+    override fun resource(): CancerchResourceN203KoKr {
         return resource
     }
 
@@ -26,9 +27,8 @@ class AvoidTemplateN201KoKr(
     override fun lblSpecimenDate() = "검체채취일"
     override fun lblReceiptReportDate() = "접수일/보고일"
     override fun lblIntroHeader() = "인공지능 액체생검 주요 6종 암 선별검사"
-    override fun lblIntroContent() = "아이캔서치 검사는 약 2,500명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 " +
-            "학습한 인공지능으로 수검자의 DNA\n패턴을 분석하여 주요 6종 암의 존재 가능성을 예측합니다. " +
-            "본 검사의 결과는 암의 진단 혹은 완전한 배제를 의미하지 않습니다."
+    override fun lblIntroContent() = "아이캔서치 검사는 약 3,500명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 학습한 인공지능으로 수검자의 DNA\n" +
+            "패턴을 분석하여 주요 6종 암의 존재 가능성을 예측합니다. 본 검사의 결과는 암의 진단 혹은 완전한 배제를 의미하지 않습니다."
 
     override fun lblOverviewTitle() = "종 합 결 과"
     override fun lblOverviewCommon() = "인공지능 알고리즘을 통해 DNA를 분석한 결과,\n"
@@ -46,9 +46,9 @@ class AvoidTemplateN201KoKr(
     }
 
     override fun lblOverViewHighRiskEnd() = "입니다.\n"
-    override fun lblOverviewMidHighEnd(risk: AvoidDto.Results): String {
+    override fun lblOverviewMidHighEnd(risk: CancerchDto.Results): String {
         val case = when (risk) {
-            AvoidDto.Results.CONCERN -> "약 5%는 관심관리"
+            CancerchDto.Results.CONCERN -> "약 5%는 관심관리"
             else -> "약 1%는 집중관리"
         }
         return "\n본 검사는 암의 존재 가능성을 예측하는 검사로\n" +
@@ -57,21 +57,21 @@ class AvoidTemplateN201KoKr(
     }
 
     override fun lblDoubtSquareTitle() = "이상 패턴 검출 여부"
-    override fun lblDoubtSquareContent(result: AvoidDto.Results) = when (result) {
-        AvoidDto.Results.GENERAL -> "미검출"
+    override fun lblDoubtSquareContent(result: CancerchDto.Results) = when (result) {
+        CancerchDto.Results.GENERAL -> "미검출"
         else -> "검 출"
     }
 
     override fun lblDoubtContentTitle() = "6종 암 중 인공지능 예측 암종"
-    override fun lblDoubtContentLarge(result: AvoidDto.Results, name: String) = when (result) {
-        AvoidDto.Results.CONCERN -> "해당없음 : 추적관찰 권장"
-        AvoidDto.Results.RISK -> (if (name == "기타암종") "6종 암 외 " else "6종 암 중 ") + lblCancerToWord(name) + "의 DNA 패턴과 가장 유사합니다."
+    override fun lblDoubtContentLarge(result: CancerchDto.Results, name: String) = when (result) {
+        CancerchDto.Results.CONCERN -> "해당없음 : 추적관찰 권장"
+        CancerchDto.Results.RISK -> (if (name == "기타암종") "6종 암 외 " else "6종 암 중 ") + lblCancerToWord(name) + "의 DNA 패턴과 가장 유사합니다."
         else -> "해당없음"
     }
 
-    override fun lblDoubtContentSmall(result: AvoidDto.Results) = when (result) {
-        AvoidDto.Results.GENERAL -> "DNA 패턴 분석 결과, 암 존재 가능성이 낮게 예측되었습니다."
-        AvoidDto.Results.RISK -> "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
+    override fun lblDoubtContentSmall(result: CancerchDto.Results) = when (result) {
+        CancerchDto.Results.GENERAL -> "DNA 패턴 분석 결과, 암 존재 가능성이 낮게 예측되었습니다."
+        CancerchDto.Results.RISK -> "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
                 "타 암종에 대해서는 정확한 분석이 어렵습니다."
 
         else -> "DNA 패턴 분석 결과, 6종 암으로 예측되지는 않습니다.\n " +
@@ -112,43 +112,45 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisTableContentMID() = "약 2배 이상"
     override fun lblDetailResultAnalysisTableContentHIG1() = "약 5배 이상"
     override fun lblDetailResultAnalysisTableContentHIG2() = "약 10배 이상"
-    override fun lblDetailResultAnalysisContentLine1() = "혈액 속 암세포에서 유래된 DNA를 인공지능 알고리즘을 통해 분석한 결과,\n"
-    override fun lblDetailResultAnalysisContentLine2NRM() = "님은 암의 존재 가능성이 낮을 것으로 예측되어 "
-    override fun lblDetailResultAnalysisContentLine2MID() = "님은 암의 존재 가능성이 다소 높을 것으로 예측되어 "
-    override fun lblDetailResultAnalysisContentLine2HIG() = "님은 암의 존재 가능성이 높을 것으로 예측되어 "
-    override fun lblDetailResultAnalysisContentLine2END() = " 대상자 입니다.\n\n"
+    override fun lblDetailResultAnalysisContentLine1() = "아이캔서치 검사 결과 "
+    override fun lblDetailResultAnalysisContentLine1Risk(result: CancerchDto.Results) = lblResultToWord(result)+"군"
+    override fun lblDetailResultAnalysisContentLine2NRM() = "님은 건강인의 DNA패턴과 유사합니다.\n"
+    override fun lblDetailResultAnalysisContentLine2MID() = "님은 암 환자의 이상 DNA패턴과 다소 유사합니다.\n"
+    override fun lblDetailResultAnalysisContentLine2HIG() = "님은 "
+    override fun lblDetailResultAnalysisContentLine2END() = " 환자의 이상 DNA패턴과 가장 유사합니다.\n" +
+            "혈액 속 암세포에서 유래된 DNA를 인공지능 알고리즘을 통해 분석한 결과, "
     override fun lblDetailResultAnalysisContentLine3NRM() =
-        "아이캔서치 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성능이 달라질 수 있습니다.\n" +
-                "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아닙니다.\n\n" +
-                "현재 암 일반관리군이더라도 암에 걸리지 않는 것은 아니므로,\n" +
+        "단, 아이캔서치 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성능이 달라질 수 있습니다.\n" +
+                "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아니며,\n" +
+                "확진을 위해서는 의료진 상담을 통한 정밀 검사를 권장합니다.\n\n"
+    override fun lblDetailResultAnalysisContentLine3NRMLast() =
+        "현재 암 일반관리군으로 분류된 것이 미래에 암이 발병하지 않음을 의미하는 것은 아니므로,\n" +
                 "정기적인 건강검진과 생활습관 관리를 통해 암을 예방할 것을 권장합니다."
+    override fun lblDetailResultAnalysisContentLine3MID_1() = "혈액 속 암세포에서 유래된 DNA를 인공지능 알고리즘을 통해 분석한 결과, "
 
-    override fun lblDetailResultAnalysisContentLine3MID_1() = "님의 암세포 유래 DNA 이상 패턴은 암환자와 다소 유사하여\n" +
-            "암 존재 가능성이 "
+    override fun lblDetailResultAnalysisContentLine3MID_2() = "님은 암의 존재 가능성이\n"
 
-    override fun lblDetailResultAnalysisContentLine3MID_2() = " 높을 것으로 예측되나, 암종을 예측하기에는 불분명합니다.\n" +
-            "관심관리 대상자여도 암이 아닐 수 있으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
-            "정상인 대비 DNA 패턴이 암환자와 유사하지만 추적 관찰을 통한 확인이 필요한 경우 "
-
-    override fun lblDetailResultAnalysisContentLine3MID_3() = " 대상자로 보고됩니다.\n 하지만"
+    override fun lblDetailResultAnalysisContentLine3MID_3() = " 높을 것으로 예측되나, 암 종을 예측하기에는 불분명합니다.\n\n" +
+            "관심관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "
     override fun lblDetailResultAnalysisContentLine3MID_4() =
-        " 정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다(약 5%).\n"
+        "정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다(약 5%).\n"
 
     override fun lblDetailResultAnalysisContentLine3HIG_1() =
-        "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장담도암, 식도암, 난소암) 중\n"
+        "님은 암의 존재 가능성이 다소 높을 것으로\n예측되어 일반인 대비 "
 
     override fun lblDetailResultAnalysisContentLine3HIG_1_OTH() =
         "님의 암세포 유래 DNA 이상 패턴은 주요 6종 암(대장암, 폐암, 간암, 췌장담도암, 식도암, 난소암) 외\n"
 
-    override fun lblDetailResultAnalysisContentLine3HIG_2() = " 환자의 DNA 이상 패턴과 가장 유사합니다.\n일반적으로 "
+    override fun lblDetailResultAnalysisContentLine3HIG_2() = " 존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n 일반적으로 "
     override fun lblDetailResultAnalysisContentLine3HIG_3() = " 환자는 "
     override fun lblDetailResultAnalysisContentLine3HIG_4() = "(10만명 중에 "
     override fun lblDetailResultAnalysisContentLine3ASR(asr: String) = "${asr}명"
-    override fun lblDetailResultAnalysisContentLine3HIG_5() = ")의 확률로 발생하지만,\n아이캔서치 검사 결과 "
+    override fun lblDetailResultAnalysisContentLine3HIG_5() = ")의 확률로 발생하지만,\n"
     override fun lblDetailResultAnalysisContentLine3HIG_6() = "군인 "
     override fun lblDetailResultAnalysisContentLine3HIG_7() = "님은 "
-    override fun lblDetailResultAnalysisContentLine3HIG_8() = "일 확률이 약 "
-    override fun lblDetailResultAnalysisContentLine3HIG_9() = "로\n일반인 대비 "
+    override fun lblDetailResultAnalysisContentLine3HIG_8() = "일 확률은 약 "
+    override fun lblDetailResultAnalysisContentLine3HIG_9() = "입니다.\n\n" +
+            "집중관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "
     override fun lblDetailResultAnalysisContentLine3HIG_10() = " 존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n" +
             "집중관리 대상자여도 암이 아닐 수 있으며, 암으로 확진되기까지 수 개월이 걸릴 수도 있습니다.\n\n" +
             "정상인 대비 DNA 패턴이 암환자와 유사한 경우 "
@@ -160,15 +162,15 @@ class AvoidTemplateN201KoKr(
     override fun lblDetailResultAnalysisContentLine3MIDHIG() = "본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아니며,\n" +
             "확진을 위해서는 의료진 상담을 통한 정밀 검사를 권장합니다."
 
-    override fun lblGuideLineHeader(type: AvoidDto.Results, name: String) = when (type) {
-        AvoidDto.Results.GENERAL -> "암 검진 가이드라인"
+    override fun lblGuideLineHeader(type: CancerchDto.Results, name: String) = when (type) {
+        CancerchDto.Results.GENERAL -> "암 검진 가이드라인"
         else -> name + "님의 맞춤 가이드라인"
     }
 
     override fun lblGuideLineTableHeader1() = "정밀검사"
     override fun lblGuideLineTableHeader2() = "아이캔서치 검사 모니터링 권장 기간"
-    override fun lblGuideLineTop(type: AvoidDto.Results, cancer: String) = when (type) {
-        AvoidDto.Results.CONCERN -> "관심관리군 맞춤 가이드라인은 다음과 같습니다"
+    override fun lblGuideLineTop(type: CancerchDto.Results, cancer: String) = when (type) {
+        CancerchDto.Results.CONCERN -> "관심관리군 맞춤 가이드라인은 다음과 같습니다"
         else -> "$cancer 집중관리군 맞춤 가이드라인은 다음과 같습니다."
     }
 
@@ -276,9 +278,14 @@ class AvoidTemplateN201KoKr(
                     "정밀검사를 통해 암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                     "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                     "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
+
         }
     }
-
+    override fun lblGuideLineConcern() = "아이캔서치 검사 관심관리군은 3개월 후 본 검사를 통해 암 DNA를 추적할 것을 권장합니다.\n" +
+            "관심관리군은 암환자와 다소 유사한 DNA 이상 패턴이 관찰되었으나,\n" +
+            "건강상태(양성질환, 자가면역질환 등)에 따른 일시적인 이상 패턴 검출의 가능성을 배재할 수 없는 경우입니다.\n" +
+            "3개월 주기로 본 검사를 통해 암 DNA에 의한 이상 패턴을 추적할 것을 권장합니다.\n" +
+            "증상 등이 동반되어 특정 암종이 의심될 경우 의료진 상담을 통한 해당 암종에 대한 정밀 검사를 권장합니다."
     override fun lblDetailProcessHeader() = "검 사 상 세 설 명"
     override fun lblDetailProcessTitle() = "[ 아이캔서치 검사 과정 ]"
     override fun lblDetailProcessContentCode(code: Int) = when (code) {
@@ -532,9 +539,9 @@ class AvoidTemplateN201KoKr(
 
     override fun lblPerformanceBasic(): String = "기존 선별검사 성능"
 
-    override fun lblResultToWord(result: AvoidDto.Results) = when (result) {
-        AvoidDto.Results.GENERAL -> "일반관리"
-        AvoidDto.Results.CONCERN -> "관심관리"
+    override fun lblResultToWord(result: CancerchDto.Results) = when (result) {
+        CancerchDto.Results.GENERAL -> "일반관리"
+        CancerchDto.Results.CONCERN -> "관심관리"
         else -> "집중관리"
     }
 

@@ -1,15 +1,14 @@
 package com.greencross.lims
 
 import com.gcgenome.lims.avoid.TestInfo
-import com.greencross.lims.report.avoid.*
-import com.greencross.lims.report.avoid.kokr.AvoidResourceN201KoKr
-import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
 import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.cancerch.*
+import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
+import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenome
-import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -20,7 +19,7 @@ import java.time.LocalDateTime
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
-class AvoidReportTest {
+class CancerchReportTest {
     val birthyears = arrayOf(64, 60, 62, 60, 60, 64, 67, 67, 71, 67, 61, 57, 59, 59, 59, 53, 45, 56, 59)
     val patients = arrayOf("김미희", "한종수", "한은수", "이용탁", "신일용", "허옥상", "신유진", "안미자", "송윤하", "김의수", "김금순", "김양순", "김명순", "김승주", "홍순철", "김옥남", "임경천", "김창수", "심오복")
     val codes = arrayOf(345,346,147,148,152,153,290,291,364,365,366,367,368,369,370,371,372,374,375)
@@ -31,39 +30,39 @@ class AvoidReportTest {
         LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),
         LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),LocalDate.of(2021,11,20),LocalDate.of(2021,11,20))
     var code = "375"
-    var patient: String = "심오복"
+    var patient: String = "샘플테스트"
     var birth: Int = 1959
     var collection: LocalDate = LocalDate.of(2021,11,20)
-//    val sex: Sex = Sex.M
+    //    val sex: Sex = Sex.M
     var sex: Sex = Sex.F
     var receipt: LocalDate = collection
     val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)
     val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
-    var cancer= CancerRepo.암종.폐암
+    var cancer= CancerRepo.암종.기타암종
     var barcode: String = "CR3-$code"
     var request: String = "20211109-971-0$code"
     val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
     fun test() {
-//        for (sex in sexes){
-//            this.sex = sex
-//            for (birth in birthes) {
-//                this.birth = birth
-//                val doc: PDDocument? = build(null, "ko-kr");
-//                doc!!.save("./기타암종/집중관리_${this.sex}_${this.birth}.pdf")
-//            }
-//        }
-//        for (cancer in cancers) {
-//            this.cancer = cancer
-//            for (sex in sexes) {
-//                this.sex = sex
-//                for (birth in birthes) {
-//                    this.birth = birth
-//                    val doc: PDDocument? = build(null, "ko-kr");
-//                    doc!!.save("./일반관리/일반관리_${this.sex}_${this.birth}.pdf")
-//                }
-//            }
-//        }
+        for (sex in sexes){
+            this.sex = sex
+            for (birth in birthes) {
+                this.birth = birth
+                val doc: PDDocument? = build(null, "ko-kr");
+                doc!!.save("./N203/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
+            }
+        }
+        for (cancer in cancers) {
+            this.cancer = cancer
+            for (sex in sexes) {
+                this.sex = sex
+                for (birth in birthes) {
+                    this.birth = birth
+                    val doc: PDDocument? = build(null, "ko-kr");
+                    doc!!.save("./N203/집중관리/집중관리_${this.cancer}_${this.sex}_${this.birth}.pdf")
+                }
+            }
+        }
 //        for (i in sexes2.indices){
 //            this.code = codes[i].toString()
 //            this.birth = birthyears[i]+1900
@@ -75,32 +74,32 @@ class AvoidReportTest {
 //            this.request = "20211109-971-0$code"
 //            val doc: PDDocument? = build(null, "ko-kr")
 //            doc!!.save("./"+this.barcode+".pdf")
-//            print(barcode)
+//            println(barcode)
 //        }
-        val doc: PDDocument? = build(null, "ko-kr")
-        if (doc != null) {
-            doc.save("./"+this.barcode+".pdf")
-            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
-        }
+//        val doc: PDDocument? = build(null, "ko-kr")
+//        if (doc != null) {
+//            doc.save("./"+this.barcode+".pdf")
+//            Desktop.getDesktop().open(File("./"+this.barcode+".pdf"))
+//        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
         val type: LogoType = LogoType.DEPENDENT
         val repo: CancerRepo = CancerRepo()
         return builder(
-            TestInfo.N201, type,
-            AvoidDto("TT-5-412",
-                AvoidDto.Results.RISK,
-                AvoidDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+            TestInfo.N203, type,
+            CancerchDto("TT-5-412",
+                CancerchDto.Results.RISK,
+                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
                     repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
-//            AvoidDto("TT-5-412",
-//                AvoidDto.Results.CONCERN,
-//                AvoidDto.Cancer("기타암종")))?.build()
-//            AvoidDto("",
-//                AvoidDto.Results.GENERAL,
-//                AvoidDto.Cancer()))?.build()
+//            CancerchDto("TT-5-412",
+//                CancerchDto.Results.CONCERN,
+//                CancerchDto.Cancer("기타암종")))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.GENERAL,
+//                CancerchDto.Cancer()))?.build()
     }
-    private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto) : AvoidPageBuilder<*>? {
+    private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         //변경점
@@ -119,16 +118,16 @@ class AvoidReportTest {
         dto.reportDate = LocalDate.of(2022,11,3)
         dto.age = age( dto.birthDate, dto.collectionDate).toString()
 
-        val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
-        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()//SectionFooterGenomeLabs()
-        val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
-        return if(TestInfo.N201 == test){
-            var resource = AvoidResourceN201KoKr(doc)
-            var template = AvoidTemplateN201KoKr(resource, test)
+        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenome()//SectionFooterGenomeLabs()
+        val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
+        return if(TestInfo.N203 == test){
+            var resource = CancerchResourceN203KoKr(doc)
+            var template = CancerchTemplateN203KoKr(resource, test)
 
             page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
+            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else null
     }
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
@@ -147,6 +146,6 @@ class AvoidReportTest {
 }
 
 fun main(){
-    val test = AvoidReportTest()
+    val test = CancerchReportTest()
     test.test()
 }
