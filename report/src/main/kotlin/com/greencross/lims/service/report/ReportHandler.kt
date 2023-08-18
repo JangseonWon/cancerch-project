@@ -3,7 +3,6 @@ package com.greencross.lims.service.report
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.avoid.TestInfo
 import com.gcgenome.lims.data.MessageReport
-import com.gcgenome.report.versions.log.Log
 import com.gcgenome.report.versions.log.ReactiveLogService
 import com.gcgenome.report.versions.report.ReactiveReportVersionService
 import com.greencross.lims.data.Report_
@@ -16,6 +15,9 @@ import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
 import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.cancerch.*
+import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
+import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenome
 import com.greencross.lims.report.kokr.SectionPage
@@ -101,9 +103,11 @@ class ReportHandler(
             analysisDao.findById(it.sample, it.service, it.batch, it.row).zipWith(Mono.just(it)).flatMap { zipped ->
                 logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is printing.")
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
-                val dto = analysisToAvoidDto(zipped.t1)
                 val baos = ByteArrayOutputStream()
-                val doc = zipped.t2.language?.let { it1 -> build(it1, dto) }
+                val doc = zipped.t2.language?.let { it1 ->
+                    if(zipped.t1.service == "N201") build(it1, analysisToAvoidDto(zipped.t1))
+                    else build(it1, analysisToCancerchDto(zipped.t1))
+                }
                 val createTime = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
                     ZoneId.systemDefault()
@@ -188,7 +192,7 @@ class ReportHandler(
             )
         }
 
-        val avoidDto = AvoidDto(barcode, stringToResult(analysis.result), cancer1)
+        val avoidDto = AvoidDto(barcode, stringToAvoidResult(analysis.result), cancer1)
         avoidDto.barcode = barcode
         avoidDto.patientName = patient.name
         avoidDto.birthDate = patient.birth
@@ -205,7 +209,49 @@ class ReportHandler(
 
         return avoidDto
     }
+    private fun analysisToCancerchDto(analysis: Analysis): CancerchDto {
+        val patient = analysis.patient
+        val barcode = analysis.value
+        val (customerName, requestNumber) = if (patient.customerName2 != null) Pair(
+            patient.customerName2, formatSampleId(
+                analysis.remark?.toLongOrNull()
+            )
+        )
+        else Pair(patient.customerName, formatSampleId(analysis.sample))
+        val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
+        val cancer1 = when (stringToEnum(analysis.result)) {
+            CancerRepo.결과.GENERAL -> CancerchDto.Cancer()
+            CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종")
+            else -> CancerchDto.Cancer(
+                cancerToFileName(result),
+                cancerRepo.findPPVbyAgeAndCancerAndSex(
+                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!,
+                cancerRepo.findASRbyAgeAndCancerAndSex(
+                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!,
+                null,
+                analysis.comment ?: "comment"
+            )
+        }
 
+        val cancerchDto = CancerchDto(barcode, stringToCancerchResult(analysis.result), cancer1)
+        cancerchDto.barcode = barcode
+        cancerchDto.patientName = patient.name
+        cancerchDto.birthDate = patient.birth
+        cancerchDto.age = age(cancerchDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
+        cancerchDto.sex = sex(patient.sex)
+        cancerchDto.requestNumber = requestNumber?:""
+        cancerchDto.collectionDate = analysis.dateSampling.toLocalDate()
+        cancerchDto.receiptDate = analysis.dateRequest.toLocalDate()
+        cancerchDto.reportDate = LocalDate.now()
+        cancerchDto.medicalRecordNumber = analysis.patient.mrn?:""
+        cancerchDto.barcode = barcode
+        cancerchDto.medicalInstitution = customerName?:""
+        cancerchDto.specimenType = analysis.sampleType
+
+        return cancerchDto
+    }
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
         if (birth == null) return 0
         return if (sampling == null) {
@@ -226,6 +272,9 @@ class ReportHandler(
     private fun build(lang: String, dto: AvoidDto): PDDocument? {
         return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
     }
+    private fun build(lang: String, dto: CancerchDto): PDDocument? {
+        return builder(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
+    }
 
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto): AvoidPageBuilder<*>? {
         val doc = PDDocument()
@@ -240,6 +289,20 @@ class ReportHandler(
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
+        } else null
+    }
+    private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+        val doc = PDDocument()
+
+        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenome()
+        val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
+        return if (TestInfo.N203 == test) {
+            var resource = CancerchResourceN203KoKr(doc)
+            var template = CancerchTemplateN203KoKr(resource, test)
+            page = SectionPage(547f, 65f, resource.fontDefault())
+
+            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else null
     }
 
@@ -269,10 +332,15 @@ class ReportHandler(
         else -> "유방암"
     }
 
-    private fun stringToResult(result: String) = when (result) {
+    private fun stringToAvoidResult(result: String): AvoidDto.Results = when (result) {
         "GENERAL" -> AvoidDto.Results.GENERAL
         "CONCERN" -> AvoidDto.Results.CONCERN
         else -> AvoidDto.Results.RISK
+    }
+    private fun stringToCancerchResult(result: String): CancerchDto.Results = when (result) {
+        "GENERAL" -> CancerchDto.Results.GENERAL
+        "CONCERN" -> CancerchDto.Results.CONCERN
+        else -> CancerchDto.Results.RISK
     }
 
     private fun formatSampleId(id: Long?): String? {
