@@ -1,12 +1,11 @@
 package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.avoid.repository.CancerRepo
+import com.greencross.lims.report.cancerch.repository.CancerRepo
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
-import org.apache.kafka.common.protocol.types.Field.Bool
 import java.awt.Color
 import kotlin.math.round
 
