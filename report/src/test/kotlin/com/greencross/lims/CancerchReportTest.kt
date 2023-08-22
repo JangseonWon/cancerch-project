@@ -44,14 +44,14 @@ class CancerchReportTest {
     var request: String = "20211109-971-0$code"
     val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
     fun test() {
-        for (sex in sexes){
-            this.sex = sex
-            for (birth in birthes) {
-                this.birth = birth
-                val doc: PDDocument? = build(null, "ko-kr");
-                doc!!.save("./N203/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
-            }
-        }
+//        for (sex in sexes){
+//            this.sex = sex
+//            for (birth in birthes) {
+//                this.birth = birth
+//                val doc: PDDocument? = build(null, "ko-kr");
+//                doc!!.save("./N203/기타암종/집중관리_${this.sex}_${this.birth}.pdf")
+//            }
+//        }
         for (cancer in cancers) {
             this.cancer = cancer
             for (sex in sexes) {
@@ -60,6 +60,7 @@ class CancerchReportTest {
                     this.birth = birth
                     val doc: PDDocument? = build(null, "ko-kr");
                     doc!!.save("./N203/집중관리/집중관리_${this.cancer}_${this.sex}_${this.birth}.pdf")
+                    println("./N203/집중관리/집중관리_${this.cancer}_${this.sex}_${this.birth}.pdf")
                 }
             }
         }
@@ -88,11 +89,11 @@ class CancerchReportTest {
         val repo: CancerRepo = CancerRepo()
         return builder(
             TestInfo.N203, type,
-            CancerchDto("TT-5-412",
+            CancerchDto("",
                 CancerchDto.Results.RISK,
                 CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
                     repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
-//            CancerchDto("TT-5-412",
+//            CancerchDto("",
 //                CancerchDto.Results.CONCERN,
 //                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
