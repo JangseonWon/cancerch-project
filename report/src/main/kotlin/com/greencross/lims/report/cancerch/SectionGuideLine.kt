@@ -41,21 +41,21 @@ class SectionGuideLine(private var y: Float = 329f) : Painter<CancerchTemplate<C
 
                     img = template.resource().imgGuideLineCancer(dto.first.name)
                     width = img.width * CONTENT_CANCER_RATE / img.height
-                    stream.drawImage(img, 75f - width / 2, y + rate - 100, width, CONTENT_CANCER_RATE)
+                    stream.drawImage(img, 75f - width / 2, y + rate - 90, width, CONTENT_CANCER_RATE)
                     style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(if(dto.first.name == "췌장담도암") 12f else 14f)
-                    stream.paragraph(148f, y + rate - 102 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
+                    stream.paragraph(148f, y + rate - 97 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(style, template.lblCancerToWord(dto.first.name))
                     )
-                    stream.paragraph(280f, y + rate - 73 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
+                    stream.paragraph(280f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 100f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f), template.lblGuideLineTableHeader1())
                     )
-                    stream.paragraph(468f, y + rate - 73 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
+                    stream.paragraph(468f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f),  template.lblGuideLineTableHeader2())
                     )
                     stream.paragraph(238f, y+rate-74, 200f, AlignHorizontal.LEFT,
                         TextBlock(styleRegular.clone().fontSize(9.5f), template.lblGuideLineDetection())
                     )
-                    stream.paragraph(468f, y+rate-75, 160f, AlignHorizontal.CENTER,
+                    stream.paragraph(468f, y+rate-74, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleRegular.clone().fontSize(10f), template.lblGuideLineTime(dto.first.name))
                     )
                     stream.paragraph(144f, y+34, 400f, AlignHorizontal.LEFT,
@@ -83,7 +83,7 @@ class SectionGuideLine(private var y: Float = 329f) : Painter<CancerchTemplate<C
                     stream.paragraph(380f, y + RESULT_CONTENT_OTH_RATE - 129 + RESULT_CONTENT_OTH_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleBold.clone().color(Color(255, 255, 255)).fontSize(10f),  template.lblGuideLineTableHeader2())
                     )
-                    stream.paragraph(380f, y+ RESULT_CONTENT_OTH_RATE -77, 160f, AlignHorizontal.CENTER,
+                    stream.paragraph(380f, y+ RESULT_CONTENT_OTH_RATE -75, 160f, AlignHorizontal.CENTER,
                         TextBlock(styleRegular.clone().fontSize(10f), template.lblGuideLineTime(dto.first.name))
                     )
                     stream.paragraph(134f, y+50, 500f, AlignHorizontal.LEFT,
@@ -141,7 +141,7 @@ class SectionGuideLine(private var y: Float = 329f) : Painter<CancerchTemplate<C
     }
     companion object {
         private const val CONTENT_TITLE_RATE = 28f
-        private const val CONTENT_CANCER_RATE = 70f
+        private const val CONTENT_CANCER_RATE = 60f
         private const val RESULT_CONTENT_RATE = 164.5f
         private const val RESULT_CONTENT_OTH_RATE = 182f
         private const val RESULT_CONTENT_LOW_RATE = 225f

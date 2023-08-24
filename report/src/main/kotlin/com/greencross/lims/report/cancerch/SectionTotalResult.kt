@@ -63,27 +63,12 @@ class SectionTotalResult(private val y: Float = 580f) : Painter<CancerchTemplate
                 img, 272f - width / 2, y - CONTENT_TITLE_RATE - 64, width,
                 RESULT_IMAGE_HIGH_RATE
             )
-            stream.paragraph(
-                177f,
-                y - CONTENT_TITLE_RATE - 41,
-                200f,
-                AlignHorizontal.RIGHT,
-                TextBlock(style.clone().fontSize(27f).color(Color(239, 167, 24)), template.lblResultToWord(dto.result))
-            )
+            stream.paragraph(177f, y - CONTENT_TITLE_RATE - 41, 200f, AlignHorizontal.RIGHT, TextBlock(style.clone().fontSize(27f).color(Color(239, 167, 24)), template.lblResultToWord(dto.result)))
         } else {
             img = template.resource().imgTotalResultHighRisk()
             width = img.width * RESULT_IMAGE_HIGH_RATE / img.height
-            stream.drawImage(
-                img, 272f - width / 2, y - CONTENT_TITLE_RATE - 64, width,
-                RESULT_IMAGE_HIGH_RATE
-            )
-            stream.paragraph(
-                177f,
-                y - CONTENT_TITLE_RATE - 41,
-                200f,
-                AlignHorizontal.RIGHT,
-                TextBlock(style.clone().fontSize(27f).color(Color(217, 52, 29)), template.lblResultToWord(dto.result))
-            )
+            stream.drawImage(img, 272f - width / 2, y - CONTENT_TITLE_RATE - 64, width, RESULT_IMAGE_HIGH_RATE)
+            stream.paragraph(177f, y - CONTENT_TITLE_RATE - 41, 200f, AlignHorizontal.RIGHT, TextBlock(style.clone().fontSize(27f).color(Color(217, 52, 29)), template.lblResultToWord(dto.result)))
         }
 
         //endregion

@@ -1,6 +1,7 @@
 package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.TextBlock
+import com.greencross.lims.report.TextStyle
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
@@ -36,7 +37,7 @@ class SectionPredictCancer(private val y: Float = 457f) : Painter<CancerchTempla
             CancerchDto.Results.GENERAL -> y - DOUBT_SQUARE_RATE + 75
             else -> y - DOUBT_SQUARE_RATE + 75
         }
-        style = template.resource().styleContentSpecial().clone().color(Color(67, 72, 142)).fontSize(13f)
+        style = TextStyle().color(template.resource().colorText()).fonts(template.resource().fontHeader(), template.resource().fontDefault()).color(Color(67, 72, 142)).fontSize(13f)
         stream.paragraph(
             x + 130, ys, 400f, horizontal,
             TextBlock(style, template.lblDoubtContentLarge(dto.result, dto.first.name))

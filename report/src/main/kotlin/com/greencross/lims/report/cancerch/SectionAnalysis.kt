@@ -16,7 +16,6 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
         stream.line(35f, y+67, 560f, y+67).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
         stream.line(35f, y-98, 560f, y-98).setStrokingColor(Color(67, 72, 142)).setLineWidth(1f).stroke()
         stream.line(195f, y+113, 195f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
-        stream.line(560f, y+113, 560f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
 
 
         val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(6f)
@@ -28,20 +27,12 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
             else -> Color(217, 52, 29)
         }
         stream.paragraph(113f,y +85,200f,AlignHorizontal.CENTER,
-            TextBlock(
-                styleRegular.clone().color(Color(0, 0, 0)).fontSize(13f),
-                template.lblDetailResultAnalysisTableHeaderTop()
-            )
+            TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(13f), template.lblDetailResultAnalysisTableHeaderTop())
         )
         if (dto.result == CancerchDto.Results.RISK) {
             if (dto.first.name == "기타암종") {
                 stream.line(375f,  y+67, 375f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
-                stream.paragraph(
-                    365f,
-                    y + 85,
-                    200f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(
+                stream.paragraph(365f, y + 85, 200f, AlignHorizontal.CENTER, TextBlock(
                         styleBold.color(Color(67, 72, 142)).clone().fontSize(13f),
                         template.lblDetailResultAnalysisTableConcent(dto.first.name)
                     )
@@ -83,16 +74,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
             if(dto.result == CancerchDto.Results.RISK) stream.rect(56f, y-40.5f, 10f, 10f).setNonStrokingColor(Color(217,  52, 29)).fill()
             else stream.rect(56f, y-40.5f, 10f, 10f).setNonStrokingColor(Color(239, 167, 24)).fill()
             stream.rect(56f, y-59f, 10f, 10f).setNonStrokingColor(Color(108,109,112)).fill()
-            stream.paragraph(
-                71f,
-                y - 49,
-                200f,
-                AlignHorizontal.LEFT,
-                TextBlock(
-                    styleRegular.clone().color(Color(0, 0, 0)).fontSize(10.5f),
-                    template.lblPatientSir(dto.patientName!!)
-                )
-            )
+            stream.paragraph(71f, y - 49, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(0, 0, 0)).fontSize(10.5f), template.lblPatientSir(dto.patientName!!)))
             stream.paragraph(
                 71f,
                 y - 67,
@@ -123,7 +105,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
                 50f,
                 AlignHorizontal.CENTER,
                 TextBlock(
-                    styleBold.color(Color(67, 72, 142)).clone().fontSize(13f),
+                    styleBold.color(Color(67, 72, 142)).clone().fontSize(11f),
                     template.lblDetailResultAnalysisTableNone1()
                 )
             )
@@ -133,7 +115,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
                 200f,
                 AlignHorizontal.CENTER,
                 TextBlock(
-                    styleBold.color(Color(128, 128, 128)).clone().fontSize(13f),
+                    styleBold.color(Color(128, 128, 128)).clone().fontSize(11f),
                     template.lblDetailResultAnalysisTableNone2()
                 )
             )
@@ -150,7 +132,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
         } else if (dto.result == CancerchDto.Results.CONCERN) {
             var img = template.resource().imgBackgroundCancer(dto.first.name)
             var width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-            stream.drawImage(img, 290 - width / 2, y-88, width, RESULT_IMAGE_LOW_RATE)
+            stream.drawImage(img, 290 - width / 2, y-68, width, RESULT_IMAGE_LOW_RATE)
 
             img = template.resource().imgBarGray()
             width = img.width * CONTENT_SQUARE_RATE / img.height
@@ -187,14 +169,14 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
                 300f,
                 AlignHorizontal.CENTER,
                 TextBlock(
-                    styleRegular.color(Color(11, 11, 11)).clone().fontSize(12f),
+                    styleRegular.color(Color(11, 11, 11)).clone().fontSize(11f),
                     template.lblDetailResultAnalysisTableMidRisk2()
                 )
             )
         } else {
             var img = template.resource().imgBackgroundCancer(dto.first.name)
             var width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-            stream.drawImage(img, 290 - width / 2, y-88, width, RESULT_IMAGE_LOW_RATE)
+            stream.drawImage(img, 290 - width / 2, y-68, width, RESULT_IMAGE_LOW_RATE)
 
             img = template.resource().imgBarGray()
             width = img.width * CONTENT_SQUARE_RATE / img.height
@@ -228,7 +210,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
             if (dto.first.name != "기타암종") {
                 img = template.resource().imgBackgroundCancer("기타암종")
                 width = img.width * RESULT_IMAGE_LOW_RATE / img.height
-                stream.drawImage(img, 468 - width / 2, y-88, width, RESULT_IMAGE_LOW_RATE)
+                stream.drawImage(img, 468 - width / 2, y-68, width, RESULT_IMAGE_LOW_RATE)
 
                 img = template.resource().imgBarGray()
                 width = img.width * CONTENT_SQUARE_RATE / img.height
@@ -266,7 +248,7 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
                     300f,
                     AlignHorizontal.CENTER,
                     TextBlock(
-                        styleRegular.color(Color(11, 11, 11)).clone().fontSize(12f),
+                        styleRegular.color(Color(11, 11, 11)).clone().fontSize(11f),
                         template.lblDetailResultAnalysisTableOthRisk()
                     )
                 )
@@ -277,6 +259,6 @@ class SectionAnalysis(private val y: Float = 200f) : Painter<CancerchTemplate<Ca
 
     companion object {
         private const val CONTENT_SQUARE_RATE = 12f
-        private const val RESULT_IMAGE_LOW_RATE = 130f
+        private const val RESULT_IMAGE_LOW_RATE = 110f
     }
 }

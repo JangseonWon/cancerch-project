@@ -34,7 +34,7 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         img = template.resource().imgLimitationTableTitle()
         width = img.width * CONTENT_TABLE_TITLE / img.height
         stream.drawImage(img, 123f-width/2, y, width, CONTENT_TABLE_TITLE)
-        stream.paragraph(123f, y+7, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), template.lblPerformance()))
+        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), template.lblPerformance()))
 
         y -= CONTENT_TABLE+10
         img = template.resource().imgLimitationTable1()
@@ -43,7 +43,7 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         styleBold = styleBold.clone().color(Color(255,255,255)).fontSize(9f)
         var styleRegularInner = styleRegular.clone().color(Color(81,81,81)).fontSize(8f)
         stream.drawImage(img, 297f-width/2, y, width, CONTENT_TABLE)
-        stream.paragraph(88f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, template.lblLimitationTableHeader(0)))
+        stream.paragraph(88f, y+117, 100f, AlignHorizontal.CENTER,  TextBlock(styleRegular, template.lblLimitationTableHeader(0)))
         stream.paragraph(188f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(1)))
         stream.paragraph(293f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(2)))
         stream.paragraph(392f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(3)))
@@ -103,13 +103,13 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         styleRegular = styleRegular.clone().color(Color(255,255,255)).fontSize(8f)
         width = img.width * CONTENT_TABLE_TITLE / img.height
         stream.drawImage(img, 123f-width/2, y, width, CONTENT_TABLE_TITLE)
-        stream.paragraph(123f, y+7, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), template.lblPerformanceBasic()))
+        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), template.lblPerformanceBasic()))
 
         y -= CONTENT_TABLE2 + 7
         img = template.resource().imgLimitationTable2()
         width = img.width * CONTENT_TABLE2 / img.height
         stream.drawImage(img, 297f-width/2, y, width, CONTENT_TABLE2)
-        stream.paragraph(88f,  y+118, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, template.lblLimitationTable2Header(0)))
+        stream.paragraph(88f,  y+118, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTable2Header(0)))
         stream.paragraph(205f, y+118, 150f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTable2Header(1)))
         stream.paragraph(316f, y+118, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTable2Header(2)))
         stream.paragraph(383f, y+118, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTable2Header(3)))
@@ -175,8 +175,8 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         stream.line(33f, y-36, 560f, y-36).setLineWidth(0.3f).setStrokingColor(Color(67,72,142)).stroke()
         stream.line(293f, y+32, 293f, y-26).setLineWidth(0.3f).setLineDashPattern(floatArrayOf(1f, 1.5f), 1f).setStrokingColor(Color.GRAY).stroke()
         styleRegular = styleRegular.clone().color(Color(81,81,81)).fontSize(6.5f)
-        stream.paragraph(57f, y+20, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblReferenceLeft()))
-        stream.paragraph(312f, y+20, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblReferenceRight()))
+        stream.paragraph(57f, y+22, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblReferenceLeft()))
+        stream.paragraph(312f, y+22, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblReferenceRight()))
 
         y -= 50
         styleRegular = styleRegular.clone().color(Color(151,151,151)).fontSize(6.5f)

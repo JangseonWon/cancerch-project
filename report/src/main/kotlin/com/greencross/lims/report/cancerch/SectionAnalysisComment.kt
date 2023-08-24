@@ -64,7 +64,7 @@ class SectionAnalysisComment(private val y: Float = 480f) : Painter<CancerchTemp
         else {
             if (dto.first.name != "기타암종") stream.paragraph(
                 52f,
-                y + RESULT_IMAGE_COMMENT_RATE - 105,
+                y + RESULT_IMAGE_COMMENT_RATE - 102,
                 480f,
                 AlignHorizontal.LEFT,
                 TextBlock(styleRegular, template.lblDetailResultAnalysisContentLine1()),
@@ -93,7 +93,7 @@ class SectionAnalysisComment(private val y: Float = 480f) : Painter<CancerchTemp
                 TextBlock(blackbold, template.lblDetailResultAnalysisContentLine3HIG_12())
             )
             else {
-                stream.line(47f,491f, 542f, 491f).setLineWidth(0.4f).setStrokingColor(Color.BLACK).stroke()
+                stream.line(47f,493f, 542f, 493f).setLineWidth(0.4f).setStrokingColor(Color.BLACK).stroke()
                 stream.paragraph(
                     52f,
                     y + RESULT_IMAGE_COMMENT_RATE+275,

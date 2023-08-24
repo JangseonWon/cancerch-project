@@ -28,7 +28,7 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
             AlignHorizontal.CENTER,
             TextBlock(style, template.lblDangerTitle())
         )
-        stream.rect(139f, y + 24, 315f, 16f).setStrokingColor(Color(108, 109, 112)).setNonStrokingColor(Color.WHITE)
+        stream.rect(139f, y + 24, 315f, 16f).setStrokingColor(Color(108, 109, 112)).setNonStrokingColor(Color.WHITE).setLineWidth(0.2f)
             .setLineDashPattern(floatArrayOf(2.5f, 1.5f), 2f).fillAndStroke()
 
         style = template.resource().styleContentRegualar().clone().fontSize(7.3f).color(Color(72, 71, 71))
@@ -46,60 +46,41 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
             img, 298f - width / 2, y - DANGER_HUMAN_RATE - 15, width,
             DANGER_HUMAN_RATE
         )
+        stream.restoreGraphicsState()
+
         drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 35, dto!!, CancerRepo.암종.폐암)
         drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 95, dto, CancerRepo.암종.대장암)
         drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.간암)
-        drawCancerIcon(stream, template, 282f, y - DANGER_CANCER_CONTENT - 59, dto, CancerRepo.암종.폐암)
-        drawCancerIcon(stream, template, 289f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.대장암)
-        drawCancerIcon(stream, template, 263f, y - DANGER_CANCER_CONTENT - 108, dto, CancerRepo.암종.간암)
-        drawCancerIcon(stream, template, 325f, y - DANGER_CANCER_CONTENT - 100, dto, CancerRepo.암종.췌장담도암)
-        drawCancerIcon(stream, template, 317f, y - DANGER_CANCER_CONTENT - 19, dto, CancerRepo.암종.식도암)
-
-        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 35, 260f, y - DANGER_CANCER_CONTENT / 2 - 67)
-        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 95, 269f, y - DANGER_CANCER_CONTENT / 2 - 164)
-        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 155, 243f, y - DANGER_CANCER_CONTENT / 2 - 122)
-
         if (dto.sex == Sex.F) {
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT, dto, CancerRepo.암종.췌장담도암)
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 60, dto, CancerRepo.암종.식도암)
             drawCancerIcon(stream, template, 337f, y - DANGER_CANCER_CONTENT - 150, dto, CancerRepo.암종.난소암)
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 120, dto, CancerRepo.암종.난소암)
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 180, dto, CancerRepo.암종.기타암종)
-
-            drawCancerDashLine(stream, 344f, y - DANGER_CANCER_CONTENT / 2 - 100, 396f, y - DANGER_CANCER_CONTENT / 2)
-            drawCancerDashLine(
-                stream,
-                337f,
-                y - DANGER_CANCER_CONTENT / 2 - 30,
-                396f,
-                y - DANGER_CANCER_CONTENT / 2 - 60
-            )
-            drawCancerDashLine(
-                stream,
-                353f,
-                y - DANGER_CANCER_CONTENT / 2 - 145,
-                396f,
-                y - DANGER_CANCER_CONTENT / 2 - 120
-            )
-
         } else {
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 35, dto, CancerRepo.암종.췌장담도암)
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 95, dto, CancerRepo.암종.식도암)
             drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.기타암종)
-            drawCancerDashLine(
-                stream,
-                344f,
-                y - DANGER_CANCER_CONTENT / 2 - 100,
-                396f,
-                y - DANGER_CANCER_CONTENT / 2 - 35
-            )
-            drawCancerDashLine(
-                stream,
-                337f,
-                y - DANGER_CANCER_CONTENT / 2 - 30,
-                396f,
-                y - DANGER_CANCER_CONTENT / 2 - 95
-            )
+        }
+        drawCancerIcon(stream, template, 282f, y - DANGER_CANCER_CONTENT - 59, dto, CancerRepo.암종.폐암)
+        drawCancerIcon(stream, template, 289f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.대장암)
+        drawCancerIcon(stream, template, 263f, y - DANGER_CANCER_CONTENT - 108, dto, CancerRepo.암종.간암)
+        drawCancerIcon(stream, template, 325f, y - DANGER_CANCER_CONTENT - 100, dto, CancerRepo.암종.췌장담도암)
+        drawCancerIcon(stream, template, 317f, y - DANGER_CANCER_CONTENT - 19, dto, CancerRepo.암종.식도암)
+
+        stream.setNonStrokingColor(Color.GRAY).setStrokingColor(Color.GRAY)
+            .setLineWidth(0.3f) .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f)
+        stream.saveGraphicsState()
+        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 35, 260f, y - DANGER_CANCER_CONTENT / 2 - 67)
+        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 95, 269f, y - DANGER_CANCER_CONTENT / 2 - 164)
+        drawCancerDashLine(stream, 195f, y - DANGER_CANCER_CONTENT / 2 - 155, 243f, y - DANGER_CANCER_CONTENT / 2 - 122)
+        if(dto.sex == Sex.F) {
+            drawCancerDashLine(stream, 344f, y - DANGER_CANCER_CONTENT / 2 - 100, 396f, y - DANGER_CANCER_CONTENT / 2)
+            drawCancerDashLine(stream, 337f, y - DANGER_CANCER_CONTENT / 2 - 30,  396f, y - DANGER_CANCER_CONTENT / 2 - 60)
+            drawCancerDashLine(stream, 353f, y - DANGER_CANCER_CONTENT / 2 - 145, 396f, y - DANGER_CANCER_CONTENT / 2 - 120)
+        } else {
+            drawCancerDashLine(stream, 344f, y - DANGER_CANCER_CONTENT / 2 - 100, 396f, y - DANGER_CANCER_CONTENT / 2 - 35)
+            drawCancerDashLine(stream, 337f, y - DANGER_CANCER_CONTENT / 2 - 30,  396f, y - DANGER_CANCER_CONTENT / 2 - 95)
         }
 
         style = template.resource().styleContentRegualar().clone().fontSize(6.5f).color(Color(159, 160, 160))
@@ -122,10 +103,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
         ex: Float,
         ey: Float
     ) {
-        stream.circle(sx, sy, 1f).setNonStrokingColor(Color.GRAY).fill()
-        stream.line(sx, sy, ex, ey).setStrokingColor(Color.GRAY).setLineWidth(0.3f)
-            .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f).stroke()
-        stream.circle(ex, ey, 1f).setNonStrokingColor(Color.GRAY).fill()
+        stream.circle(sx, sy, 1f).fill()
+        stream.line(sx, sy, ex, ey).stroke()
+        stream.circle(ex, ey, 1f).fill()
     }
 
     private fun drawCancerContent(
@@ -145,30 +125,17 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
 
         img = template.resource().imgCancerTypeImage(cancer.name)
         width = img.width * DANGER_CANCER_ICON / img.height
-        stream.drawImage(img, x - width / 2 - 40, y + 15, width, DANGER_CANCER_ICON)
+        stream.drawImage(img, x - width / 2 - 35, y + 17, width, DANGER_CANCER_ICON)
 
-        var style = template.resource().styleContentRegualar().clone().fontSize(9f).color(Color(35, 24, 15))
-
-        stream.paragraph(
-            x - 41,
-            y + 7,
-            100f,
-            AlignHorizontal.CENTER,
-            TextBlock(style, template.lblDangerCancerName(convNameToNum(cancer.name)))
-        )
+        var style = template.resource().styleContentRegualar().clone().fontSize(8f).color(Color(35, 24, 15))
+        stream.paragraph(x - 36, y + 9, 100f, AlignHorizontal.CENTER, TextBlock(style, template.lblDangerCancerName(convNameToNum(cancer.name))))
 
         style = template.resource().styleContentRegualar().clone().fontSize(6.5f).color(Color(114, 113, 113))
         stream.paragraph(x + 21, y + 7, 100f, AlignHorizontal.CENTER, TextBlock(style, template.lblDangerGraphGuide()))
 
         img = template.resource().imgBarGray()
         width = img.width * DANGER_BAR_RATE / img.height
-        stream.paragraph(
-            x - width / 2 + 17,
-            y + 18 + DANGER_BAR_RATE,
-            100f,
-            AlignHorizontal.CENTER,
-            TextBlock(style, "${ppv}" + "%")
-        )
+        stream.paragraph(x - width / 2 + 17, y + 18 + DANGER_BAR_RATE, 100f, AlignHorizontal.CENTER, TextBlock(style, "${ppv}" + "%"))
         stream.drawImage(img, x - width / 2 + 9, y + 14, width, DANGER_BAR_RATE)
 
         when (dto.result) {
@@ -202,7 +169,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                         .setStrokingColor(Color(217, 52, 29))
                         .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f).stroke()
                 }
-                stream.line(x-7, y + 14, x + 60, y + 14).setLineDashPattern(floatArrayOf(0f, 0f), 0f).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
+                stream.restoreGraphicsState()
+                stream.saveGraphicsState()
+                stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
 
             CancerchDto.Results.CONCERN -> {
@@ -216,7 +185,7 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     TextBlock(style, "평균 초과")
                 )
                 stream.drawImage(img, x - width / 2 + 41, y + 14, width, DANGER_BAR_RATE + 10)
-                stream.line(x-7, y + 14, x + 60, y + 14).setLineDashPattern(floatArrayOf(0f, 0f), 0f).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
+                stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
 
             else -> {
@@ -230,7 +199,7 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     TextBlock(style, "평균 이하")
                 )
                 stream.drawImage(img, x - width / 2 + 41, y + 14, width, DANGER_BAR_RATE)
-                stream.line(x-7, y + 14, x + 60, y + 14).setLineDashPattern(floatArrayOf(0f, 0f), 0f).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
+                stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
         }
     }
