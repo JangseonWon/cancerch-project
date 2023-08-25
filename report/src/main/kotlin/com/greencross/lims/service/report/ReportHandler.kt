@@ -105,7 +105,7 @@ class ReportHandler(
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val baos = ByteArrayOutputStream()
                 val doc = zipped.t2.language?.let { it1 ->
-                    if(zipped.t1.service == "N201") build(it1, analysisToAvoidDto(zipped.t1))
+                    if(zipped.t1.service == "N201" || zipped.t1.service == "N205") build(it1, analysisToAvoidDto(zipped.t1))
                     else build(it1, analysisToCancerchDto(zipped.t1))
                 }
                 val createTime = LocalDateTime.ofInstant(
