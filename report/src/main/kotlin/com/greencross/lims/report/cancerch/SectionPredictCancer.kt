@@ -16,7 +16,8 @@ class SectionPredictCancer(private val y: Float = 457f) : Painter<CancerchTempla
         var img = template!!.resource().imgDoubtContentBox()
         var width = 527f
         var style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
-        stream!!.drawImage(img, 298f - width / 2, y - DOUBT_SQUARE_RATE+10, width, 131f)
+        stream!!.saveGraphicsState()
+        stream.drawImage(img, 298f - width / 2, y - DOUBT_SQUARE_RATE+10, width, 131f)
         stream.paragraph(
             562f - width / 2, y - DOUBT_SQUARE_RATE + 121, 300f, AlignHorizontal.CENTER,
             TextBlock(style, template.lblDoubtContentTitle())
@@ -52,7 +53,7 @@ class SectionPredictCancer(private val y: Float = 457f) : Painter<CancerchTempla
             img = template.resource().imgDoubtCancer(dto.first.name)
             width = img.width * DOUBT_CANCER_RATE / img.height
             stream.drawImage(
-                img, 105f - width / 2f, y - DOUBT_CANCER_RATE - 30, width,
+                img, 105f - width / 2f, y - DOUBT_CANCER_RATE - 42, width,
                 DOUBT_CANCER_RATE
             )
         }
@@ -62,6 +63,6 @@ class SectionPredictCancer(private val y: Float = 457f) : Painter<CancerchTempla
 
     companion object {
         private const val DOUBT_SQUARE_RATE = 141f
-        private const val DOUBT_CANCER_RATE = 96f
+        private const val DOUBT_CANCER_RATE = 76f
     }
 }

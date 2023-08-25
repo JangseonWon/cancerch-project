@@ -1,7 +1,7 @@
 package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.cancerch.repository.CancerRepo
+import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
@@ -46,27 +46,26 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
             img, 298f - width / 2, y - DANGER_HUMAN_RATE - 15, width,
             DANGER_HUMAN_RATE
         )
-        stream.restoreGraphicsState()
 
-        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 35, dto!!, CancerRepo.암종.폐암)
-        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 95, dto, CancerRepo.암종.대장암)
-        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.간암)
+        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 35, dto!!, CancerchRepo.암종.폐암)
+        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 95, dto, CancerchRepo.암종.대장암)
+        drawCancerContent(stream, template, 129f, y - DANGER_CANCER_CONTENT - 155, dto, CancerchRepo.암종.간암)
         if (dto.sex == Sex.F) {
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT, dto, CancerRepo.암종.췌장담도암)
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 60, dto, CancerRepo.암종.식도암)
-            drawCancerIcon(stream, template, 337f, y - DANGER_CANCER_CONTENT - 150, dto, CancerRepo.암종.난소암)
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 120, dto, CancerRepo.암종.난소암)
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 180, dto, CancerRepo.암종.기타암종)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT, dto, CancerchRepo.암종.췌장담도암)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 60, dto, CancerchRepo.암종.식도암)
+            drawCancerIcon(stream, template, 337f, y - DANGER_CANCER_CONTENT - 150, dto, CancerchRepo.암종.난소암)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 120, dto, CancerchRepo.암종.난소암)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 180, dto, CancerchRepo.암종.기타암종)
         } else {
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 35, dto, CancerRepo.암종.췌장담도암)
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 95, dto, CancerRepo.암종.식도암)
-            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.기타암종)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 35, dto, CancerchRepo.암종.췌장담도암)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 95, dto, CancerchRepo.암종.식도암)
+            drawCancerContent(stream, template, 464f, y - DANGER_CANCER_CONTENT - 155, dto, CancerchRepo.암종.기타암종)
         }
-        drawCancerIcon(stream, template, 282f, y - DANGER_CANCER_CONTENT - 59, dto, CancerRepo.암종.폐암)
-        drawCancerIcon(stream, template, 289f, y - DANGER_CANCER_CONTENT - 155, dto, CancerRepo.암종.대장암)
-        drawCancerIcon(stream, template, 263f, y - DANGER_CANCER_CONTENT - 108, dto, CancerRepo.암종.간암)
-        drawCancerIcon(stream, template, 325f, y - DANGER_CANCER_CONTENT - 100, dto, CancerRepo.암종.췌장담도암)
-        drawCancerIcon(stream, template, 317f, y - DANGER_CANCER_CONTENT - 19, dto, CancerRepo.암종.식도암)
+        drawCancerIcon(stream, template, 282f, y - DANGER_CANCER_CONTENT - 59, dto, CancerchRepo.암종.폐암)
+        drawCancerIcon(stream, template, 289f, y - DANGER_CANCER_CONTENT - 155, dto, CancerchRepo.암종.대장암)
+        drawCancerIcon(stream, template, 263f, y - DANGER_CANCER_CONTENT - 108, dto, CancerchRepo.암종.간암)
+        drawCancerIcon(stream, template, 325f, y - DANGER_CANCER_CONTENT - 100, dto, CancerchRepo.암종.췌장담도암)
+        drawCancerIcon(stream, template, 317f, y - DANGER_CANCER_CONTENT - 19, dto, CancerchRepo.암종.식도암)
 
         stream.setNonStrokingColor(Color.GRAY).setStrokingColor(Color.GRAY)
             .setLineWidth(0.3f) .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f)
@@ -111,9 +110,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
     private fun drawCancerContent(
         stream: PDPageContentStreamPageAccessible,
         template: CancerchTemplate<CancerchResource>,
-        x: Float, y: Float, dto: CancerchDto, cancer: CancerRepo.암종
+        x: Float, y: Float, dto: CancerchDto, cancer: CancerchRepo.암종
     ) {
-        val repo = CancerRepo()
+        val repo = CancerchRepo()
         val age: Int = dto.age!!.toInt()
         var img = template.resource().imgCancerTypeContent()
         var width = img.width * DANGER_CANCER_CONTENT / img.height
@@ -168,9 +167,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     stream.line(x-width/2+19, y+14+ DANGER_BAR_RATE, x-width/2+34, y+14+ DANGER_BAR_RATE)
                         .setStrokingColor(Color(217, 52, 29))
                         .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f).stroke()
+
+                    stream.restoreGraphicsState()
                 }
-                stream.restoreGraphicsState()
-                stream.saveGraphicsState()
                 stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
 
@@ -207,14 +206,14 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
     private fun drawCancerIcon(
         stream: PDPageContentStreamPageAccessible,
         template: CancerchTemplate<CancerchResource>,
-        x: Float, y: Float, dto: CancerchDto, cancer: CancerRepo.암종
+        x: Float, y: Float, dto: CancerchDto, cancer: CancerchRepo.암종
     ) {
         val img = when (cancer) {
-            CancerRepo.암종.식도암 -> template.resource().imgEsop(dto.first.name)
-            CancerRepo.암종.폐암 -> template.resource().imgLung(dto.first.name)
-            CancerRepo.암종.간암 -> template.resource().imgLiver(dto.first.name)
-            CancerRepo.암종.췌장담도암 -> template.resource().imgPanc(dto.first.name)
-            CancerRepo.암종.대장암 -> template.resource().imgColon(dto.first.name)
+            CancerchRepo.암종.식도암 -> template.resource().imgEsop(dto.first.name)
+            CancerchRepo.암종.폐암 -> template.resource().imgLung(dto.first.name)
+            CancerchRepo.암종.간암 -> template.resource().imgLiver(dto.first.name)
+            CancerchRepo.암종.췌장담도암 -> template.resource().imgPanc(dto.first.name)
+            CancerchRepo.암종.대장암 -> template.resource().imgColon(dto.first.name)
             else -> template.resource().imgOvary(dto.first.name)
         }
         val width = img.width * DANGER_ICON_RATE / img.height

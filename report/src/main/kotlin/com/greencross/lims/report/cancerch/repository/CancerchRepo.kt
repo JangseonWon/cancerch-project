@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository
 import java.util.*
 import java.util.stream.Collectors
 
-class CancerRepo(
+@Repository
+class CancerchRepo(
     private val ppv: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>,
     private val asr: Map<암종, TreeRangeMap<Int, Map<Sex, Double?>>>
 ) {
