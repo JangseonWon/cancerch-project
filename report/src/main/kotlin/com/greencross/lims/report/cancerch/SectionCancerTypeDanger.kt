@@ -167,9 +167,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     stream.line(x-width/2+19, y+14+ DANGER_BAR_RATE, x-width/2+34, y+14+ DANGER_BAR_RATE)
                         .setStrokingColor(Color(217, 52, 29))
                         .setLineDashPattern(floatArrayOf(1f, 1.5f), 1f).stroke()
-
-                    stream.restoreGraphicsState()
                 }
+                stream.restoreGraphicsState()
+                stream.saveGraphicsState()
                 stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
 
@@ -183,6 +183,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     AlignHorizontal.CENTER,
                     TextBlock(style, "평균 초과")
                 )
+
+                stream.restoreGraphicsState()
+                stream.saveGraphicsState()
                 stream.drawImage(img, x - width / 2 + 41, y + 14, width, DANGER_BAR_RATE + 10)
                 stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }
@@ -197,6 +200,9 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                     AlignHorizontal.CENTER,
                     TextBlock(style, "평균 이하")
                 )
+
+                stream.restoreGraphicsState()
+                stream.saveGraphicsState()
                 stream.drawImage(img, x - width / 2 + 41, y + 14, width, DANGER_BAR_RATE)
                 stream.line(x-7, y + 14, x + 60, y + 14).setStrokingColor(Color.BLACK).setLineWidth(0.1f).stroke()
             }

@@ -353,56 +353,56 @@ class CancerchTemplateN203KoKr(
         0 -> "전체"
         1 -> "96.5%"
         2 -> "81.1%"
-        3 -> "85.7%"
-        else -> "95.2%"
+        3 -> "74.4%"
+        else -> "97.6%"
     }
 
     override fun lblLimitationTableLungCancer(col: Int) = when (col) {
         0 -> "폐암"
         1 -> "96.5%"
         2 -> "73.1%"
-        3 -> "42.7%"
-        else -> "99.0%"
+        3 -> "12.7%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTableColorCancer(col: Int) = when (col) {
         0 -> "대장암"
         1 -> "96.5%"
         2 -> "70.1%"
-        3 -> "61.7%"
-        else -> "97.6%"
+        3 -> "17.8%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTableLiverCancer(col: Int) = when (col) {
         0 -> "간암"
         1 -> "96.5%"
         2 -> "94.5%"
-        3 -> "62.8%"
-        else -> "99.6%"
+        3 -> "9.8%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTablePanCancer(col: Int) = when (col) {
         0 -> "췌장담도암"
         1 -> "96.5%"
         2 -> "91.3%"
-        3 -> "45.2%"
-        else -> "99.7%"
+        3 -> "6.8%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTableEsopCancer(col: Int) = when (col) {
         0 -> "식도암"
         1 -> "96.5%"
         2 -> "88.4%"
-        3 -> "42.7%"
-        else -> "99.6%"
+        3 -> "2.0%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTableOverCancer(col: Int) = when (col) {
         0 -> "난소암"
         1 -> "96.5%"
         2 -> "70.4%"
-        3 -> "27.1%"
-        else -> "99.4%"
+        3 -> "1.7%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTable2Header(col: Int) = when (col) {

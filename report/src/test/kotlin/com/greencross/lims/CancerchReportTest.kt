@@ -39,7 +39,7 @@ class CancerchReportTest {
     val cancers = arrayOf(CancerRepo.암종.폐암, CancerRepo.암종.췌장담도암, CancerRepo.암종.대장암, CancerRepo.암종.난소암, CancerRepo.암종.식도암, CancerRepo.암종.간암)
     val sexes = arrayOf(Sex.M, Sex.F)
     val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
-    var cancer= CancerRepo.암종.대장암
+    var cancer= CancerRepo.암종.기타암종
     var barcode: String = "CR3-$code"
     var request: String = "20211109-971-0$code"
     val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
@@ -77,11 +77,11 @@ class CancerchReportTest {
 //            doc!!.save("./"+this.barcode+".pdf")
 //            println(barcode)
 //        }
-//        val doc: PDDocument? = build(null, "ko-kr")
-//        if (doc != null) {
-//            doc.save("./N203/테슽흐.pdf")
-//            Desktop.getDesktop().open(File("./N203/테슽흐.pdf"))
-//        }
+        val doc: PDDocument? = build(null, "ko-kr")
+        if (doc != null) {
+            doc.save("./N203/샘플테스트_집중(기타).pdf")
+            Desktop.getDesktop().open(File("./N203/샘플테스트_집중(기타).pdf"))
+        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
