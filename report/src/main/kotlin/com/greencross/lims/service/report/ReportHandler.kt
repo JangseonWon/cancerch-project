@@ -309,7 +309,7 @@ class ReportHandler(
     private fun builderLabsGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenome()
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabs()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         return if (TestInfo.N203 == test) {
             var resource = CancerchResourceN203KoKr(doc)
