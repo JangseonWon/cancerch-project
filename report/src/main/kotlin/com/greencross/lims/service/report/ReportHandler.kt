@@ -20,6 +20,7 @@ import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenome
+import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
@@ -106,7 +107,7 @@ class ReportHandler(
                 val baos = ByteArrayOutputStream()
                 val doc = zipped.t2.language?.let { it1 ->
                     if(zipped.t1.service == "N201" || zipped.t1.service == "N205") build(it1, analysisToAvoidDto(zipped.t1))
-                    else build(it1, analysisToCancerchDto(zipped.t1))
+                    else build(it1, analysisToCancerchDto(zipped.t1), if(zipped.t1.patient.customerName2 != null) "labs" else "genome")
                 }
                 val createTime = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
@@ -272,8 +273,9 @@ class ReportHandler(
     private fun build(lang: String, dto: AvoidDto): PDDocument? {
         return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
     }
-    private fun build(lang: String, dto: CancerchDto): PDDocument? {
-        return builder(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
+    private fun build(lang: String, dto: CancerchDto, type: String): PDDocument? {
+        return if(type == "genome") builderGenome(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
+        else builderLabsGenome(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
     }
 
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto): AvoidPageBuilder<*>? {
@@ -291,7 +293,7 @@ class ReportHandler(
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
         } else null
     }
-    private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+    private fun builderGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
@@ -301,7 +303,18 @@ class ReportHandler(
             var resource = CancerchResourceN203KoKr(doc)
             var template = CancerchTemplateN203KoKr(resource, test)
             page = SectionPage(547f, 65f, resource.fontDefault())
-
+            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+        } else null
+    }
+    private fun builderLabsGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+        val doc = PDDocument()
+        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenome()
+        val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
+        return if (TestInfo.N203 == test) {
+            var resource = CancerchResourceN203KoKr(doc)
+            var template = CancerchTemplateN203KoKr(resource, test)
+            page = SectionPage(547f, 65f, resource.fontDefault())
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else null
     }
