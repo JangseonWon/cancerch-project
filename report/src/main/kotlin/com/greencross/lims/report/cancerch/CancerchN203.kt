@@ -24,13 +24,13 @@ class CancerchN203(
         return title.and { stream, template, dto ->
             stream.font(template.resource().fontDefault())
             return@and stream
-        }.and(sign).and(footer)
+        }.and(sign)
     }
     private fun templateWithoutTitle(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return sign.and { stream, template, dto ->
             stream.font(template.resource().fontDefault())
             return@and stream
-        }.and(footer)
+        }
     }
 
     override fun pages(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
