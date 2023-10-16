@@ -19,9 +19,7 @@ import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.func.Painter
-import com.greencross.lims.report.kokr.SectionFooterGenome
-import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
-import com.greencross.lims.report.kokr.SectionPage
+import com.greencross.lims.report.kokr.*
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
 import com.greencross.lims.service.reportfile.ReportFileRepository
@@ -297,7 +295,7 @@ class ReportHandler(
         val doc = PDDocument()
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenome()
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         return if (TestInfo.N203 == test) {
             var resource = CancerchResourceN203KoKr(doc)
@@ -309,7 +307,7 @@ class ReportHandler(
     private fun builderLabsGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabs()
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         return if (TestInfo.N203 == test) {
             var resource = CancerchResourceN203KoKr(doc)
