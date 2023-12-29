@@ -59,8 +59,4 @@ class AnalysisRSCrawler(
             jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다. ヽ(✿ﾟ▽ﾟ)ノ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
-
-    enum class Tests{
-        N201
-    }
 }
