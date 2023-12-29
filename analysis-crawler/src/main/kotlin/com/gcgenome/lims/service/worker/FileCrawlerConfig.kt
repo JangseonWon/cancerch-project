@@ -17,22 +17,22 @@ class FileCrawlerConfig {
     @Value("\${gcgenome.out-dir}")
     lateinit var processed: String
 
+//    @Bean
+//    fun qc() : FileCrawler<AnalysisQC> {
+//        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}_qc\\.txt", AnalysisQC::class.java)
+//    }
+//
+//    @Bean
+//    fun result() : FileCrawler<AnalysisResult> {
+//        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}_results\\.txt", AnalysisResult::class.java)
+//    }
     @Bean
-    fun qc_AVD() : FileCrawler<AnalysisQC> {
-        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}_qc\\.txt", AnalysisQC::class.java)
-    }
-
-    @Bean
-    fun result_AVD() : FileCrawler<AnalysisResult> {
-        return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AVD[0-9]{3}-[0-9]{4}_results\\.txt", AnalysisResult::class.java)
-    }
-    @Bean
-    fun qc_AIC() : FileCrawler<AnalysisQC> {
+    fun qc() : FileCrawler<AnalysisQC> {
         return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AIC[0-9]{3}-[0-9]{4}_qc\\.txt", AnalysisQC::class.java)
     }
 
     @Bean
-    fun result_AIC() : FileCrawler<AnalysisResult> {
+    fun result() : FileCrawler<AnalysisResult> {
         return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AIC[0-9]{3}-[0-9]{4}_results\\.txt", AnalysisResult::class.java)
     }
     @Bean
