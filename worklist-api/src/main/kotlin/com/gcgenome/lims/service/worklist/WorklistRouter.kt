@@ -26,7 +26,6 @@ class WorklistRouter(private val handler: WorklistHandler, private val om: Objec
                     .header("X-Total-Page", page.totalPages()?.toString())
                     .body(page.data, List::class.java)
             }.switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
-           // .onErrorResume(Exception::class.java) { ServerResponse.badRequest().bodyValue(it.localizedMessage) }
     }
     private fun current(request: ServerRequest): Mono<ServerResponse>{
         return handler.current()
