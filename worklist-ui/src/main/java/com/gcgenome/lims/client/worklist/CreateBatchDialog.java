@@ -28,7 +28,7 @@ public class CreateBatchDialog {
     public CreateBatchDialog(String worklistId) {
         this.worklistId = worklistId;
         ListElement<ListElement.SingleLineItem> iptBatchNames = ListElement.singleLineList();
-        iptBatchNames.add(ListElement.singleLine().label("AIC"));
+        iptBatchNames.add(ListElement.singleLine().label("AIC-A"));
         iptBatchName = DropDownElement.outlined(iptBatchNames).css("button", "input").text("Name").enabled(false).style("min-width:25%; max-width:34%; width:34%;");
         WorklistApi.batchCurrent().then(result ->{
             iptBatchName.select(result.substring(2));

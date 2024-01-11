@@ -12,7 +12,7 @@ import java.util.*
 @Repository
 interface PreprocessingRepository: QuerydslR2dbcRepository<Preprocessing, Preprocessing.Companion.PreprocessingPK> {
     fun findAllByWorklistIn(worklists: List<UUID>): Flux<Preprocessing>
-    @Query("SELECT max(sequencing) FROM preprocessing")
+    @Query("SELECT COALESCE(MAX(sequencing), 0) FROM preprocessing WHERE EXTRACT(YEAR FROM create_at) >= EXTRACT(YEAR FROM CURRENT_DATE)")
     fun findSequencingMax(): Mono<Int>
     @Query("SELECT distinct sequencing FROM preprocessing WHERE worklist IN(:worklists)")
     fun findSequencingByWorklists(worklists: List<UUID>): Mono<Int>
