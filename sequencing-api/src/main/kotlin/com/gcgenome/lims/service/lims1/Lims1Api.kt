@@ -80,7 +80,7 @@ class Lims1Api(private val worklistToBatch: WorklistToBatch, val repo: Preproces
     }
     @Synchronized
     fun createB(params: List<WorklistToBatch.Companion.WorklistToBatchParam>): Mono<Int> {
-        for(param in params) param.worklist.serial = param.worklist.serial!!.replace("AVD-A", "AVD-B")
+        for(param in params) param.worklist.serial = param.worklist.serial!!.replace("AIC-A", "AIC-B")
         return create(params)
     }
 

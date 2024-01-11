@@ -42,7 +42,7 @@ public class WorklistScene extends AbstractScenePageable<WorklistScene> {
         today.setHours(23, 59, 59);
         return today;
     }
-    private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Avoid");
+    private final HtmlContentBuilder<HTMLLabelElement> title = label().add("Cancerch");
     private final WorklistGridElement grid = WorklistGridElement.build();
     private final ButtonElement btnSequencing                   = ButtonElement.outline().css("button").text("Sequence A").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
     private final ButtonElement btnSequencingB                   = ButtonElement.outline().css("button").text("Sequence B").before(IconElement.icon(IconElement.Type.Regular, "fa-running"));
