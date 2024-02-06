@@ -16,8 +16,11 @@ import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
+import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
+import com.greencross.lims.report.cancerch.enus.CancerchTemplateON203EnUs
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
+import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.*
@@ -44,7 +47,6 @@ import java.util.function.Supplier
 class ReportHandler(
     private val analysisDao: AnalysisDao,
     private val reportDao: ReportDao,
-    private val cancerRepo: CancerRepo,
     private val fileRepo: ReportFileRepository,
     private val mapper: ReportMapper,
     private val logService: ReactiveLogService,
@@ -167,14 +169,12 @@ class ReportHandler(
     fun subscribe(): Flux<MessageReport> = subscriber.asFlux()
 
     private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
+        val cancerRepo = CancerRepo()
         val patient = analysis.patient
         val barcode = analysis.value
-        val (customerName, requestNumber) = if (patient.customerName2 != null) Pair(
-            patient.customerName2, formatSampleId(
-                analysis.remark?.toLongOrNull()
-            )
-        )
-        else Pair(patient.customerName, formatSampleId(analysis.sample))
+        val (customerName, requestNumber) =
+            if (patient.customerName2 != null) Pair(patient.customerName2, formatSampleId(analysis.remark?.toLongOrNull()))
+            else Pair(patient.customerName, formatSampleId(analysis.sample))
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
@@ -210,6 +210,7 @@ class ReportHandler(
         return avoidDto
     }
     private fun analysisToCancerchDto(analysis: Analysis): CancerchDto {
+        val cancerRepo = CancerchRepo()
         val patient = analysis.patient
         val barcode = analysis.value
         val (customerName, requestNumber) = if (patient.customerName2 != null) Pair(
@@ -225,10 +226,10 @@ class ReportHandler(
             else -> CancerchDto.Cancer(
                 cancerToFileName(result),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
-                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                    stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
                 cancerRepo.findASRbyAgeAndCancerAndSex(
-                    stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                    stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
                 null,
                 analysis.comment ?: ""
@@ -306,8 +307,8 @@ class ReportHandler(
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else if (TestInfo.ON203.name() == service){
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
-            var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, TestInfo.ON203)
+            var resource = CancerchResourceON203EnUs(doc)
+            var template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
@@ -325,11 +326,11 @@ class ReportHandler(
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else if (TestInfo.ON203.name() == service) {
-            var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, TestInfo.ON203)
+            var resource = CancerchResourceON203EnUs(doc)
+            var template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
             page = SectionPage(547f, 65f, resource.fontDefault())
-            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+            return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
         } else null
     }
 
@@ -347,6 +348,16 @@ class ReportHandler(
         "Others" -> CancerRepo.암종.기타암종
         "ESO" -> CancerRepo.암종.식도암
         else -> CancerRepo.암종.유방암
+    }
+
+    private fun stringToCancer2(result: String) = when (result) {
+        "LuC" -> CancerchRepo.암종.폐암
+        "Panc" -> CancerchRepo.암종.췌장담도암
+        "HCC" -> CancerchRepo.암종.간암
+        "colon" -> CancerchRepo.암종.대장암
+        "Others" -> CancerchRepo.암종.기타암종
+        "ESO" -> CancerchRepo.암종.식도암
+        else -> CancerchRepo.암종.유방암
     }
 
     private fun cancerToFileName(cancer: String) = when (cancer) {
