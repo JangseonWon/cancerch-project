@@ -298,28 +298,29 @@ class ReportHandler(
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-        return if (TestInfo.N203.name() == service || TestInfo.N204.name() == service || TestInfo.N205.name() == service) {
+        return if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
             var resource = CancerchResourceN203KoKr(doc)
             var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
-        } else if (TestInfo.ON203.name() == service){
+        } else if (TestInfo.ON203.code() == service){
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
             var resource = CancerchResourceON203EnUs(doc)
             var template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
-        } else null
+        } else {
+            logger.warn("ERROR : Unknown Service Code : " + service)
+            return null
+        }
     }
     private fun builderLabsGenome(service: String, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-
-        print(service)
 
         return if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
