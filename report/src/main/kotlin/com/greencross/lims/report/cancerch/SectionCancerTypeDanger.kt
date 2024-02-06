@@ -4,6 +4,7 @@ import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.func.AlignHorizontal
+import com.greencross.lims.report.func.AlignVertical
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
 import java.awt.Color
@@ -20,25 +21,11 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
         var width = img.width * rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") / img.height
         var style = template.resource().styleContentSpecial().fontSize(15f).color(Color(255, 255, 255))
         stream.drawImage(img, 298f - width / 2, y - rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") + 63, width, rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종"))
-
-        stream.paragraph(
-            560f - width / 2,
-            y + 45,
-            120f,
-            AlignHorizontal.CENTER,
-            TextBlock(style, template.lblDangerTitle())
-        )
+        template.lblDangerTitle(stream, y, width)
         stream.rect(139f, y + 24, 315f, 16f).setStrokingColor(Color(108, 109, 112)).setNonStrokingColor(Color.WHITE).setLineWidth(0.2f)
             .setLineDashPattern(floatArrayOf(2.5f, 1.5f), 2f).fillAndStroke()
 
-        style = template.resource().styleContentRegualar().clone().fontSize(7.3f).color(Color(72, 71, 71))
-        val bold = template.resource().styleContentBold().clone().fontSize(7.3f)
-        stream.paragraph(
-            295f, y + 13, 300f, AlignHorizontal.CENTER,
-            TextBlock(style, template.lblDangerIntroStart()),
-            TextBlock(bold, template.lblDangerIntroBridge()),
-            TextBlock(style, template.lblDangerIntroEnd())
-        )
+        template.lblDangerIntro(stream, y)
 
         img = template.resource().imgHuman()
         width = img.width * DANGER_HUMAN_RATE / img.height
@@ -82,14 +69,7 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
             drawCancerDashLine(stream, 337f, y - DANGER_CANCER_CONTENT / 2 - 30,  396f, y - DANGER_CANCER_CONTENT / 2 - 95)
         }
 
-        style = template.resource().styleContentRegualar().clone().fontSize(6.5f).color(Color(159, 160, 160))
-        stream.paragraph(
-            110f - width / 2,
-            y - DANGER_CONTENT_RATE +if(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") -100 else +54,
-            400f,
-            AlignHorizontal.LEFT,
-            TextBlock(style, template.lblDangerTMI())
-        )
+        template.lblDangerTMI(stream, width, y, dto)
 
         stream.restoreGraphicsState()
         return stream
@@ -124,13 +104,12 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
 
         img = template.resource().imgCancerTypeImage(cancer.name)
         width = img.width * DANGER_CANCER_ICON / img.height
-        stream.drawImage(img, x - width / 2 - 35, y + 17, width, DANGER_CANCER_ICON)
+        stream.drawImage(img, x - width / 2 - 35, y + 22, width, DANGER_CANCER_ICON)
 
-        var style = template.resource().styleContentRegualar().clone().fontSize(8f).color(Color(35, 24, 15))
-        stream.paragraph(x - 36, y + 9, 100f, AlignHorizontal.CENTER, TextBlock(style, template.lblDangerCancerName(convNameToNum(cancer.name))))
+        template.lblDangerCancerName(stream, x, y, cancer.name)
+        template.lblDangerGraphGuide(stream, x, y)
 
-        style = template.resource().styleContentRegualar().clone().fontSize(6.5f).color(Color(114, 113, 113))
-        stream.paragraph(x + 21, y + 7, 100f, AlignHorizontal.CENTER, TextBlock(style, template.lblDangerGraphGuide()))
+        var style = template.resource().styleContentRegualar().clone().fontSize(7f).color(Color(114, 113, 113))
 
         img = template.resource().imgBarGray()
         width = img.width * DANGER_BAR_RATE / img.height
@@ -142,24 +121,15 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
                 val checker = dto.first.name == cancer.name
                 img = if (checker) template.resource().imgBarDanger() else template.resource().imgBarMiddle()
                 val height = if (checker) DANGER_BAR_RATE * 6.5f else DANGER_BAR_RATE * 4f
-
-                val value = if (checker) "10배 이상" else "평균 초과"
+                val value = if (checker) template.lblHighRisk() else template.lblMiddleRisk()
                 style =
-                    if (checker) template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 52, 29))
-                    else template.resource().styleContentBold().clone().fontSize(8f).color(Color(217, 166, 71))
-                stream.paragraph(
-                    x - width / 2 + 49,
-                    y + 18 + height,
-                    100f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(style, value)
-                )
+                    if (checker) template.resource().styleContentBold().clone().fontSize(6f).color(Color(217, 52, 29))
+                    else template.resource().styleContentBold().clone().fontSize(6f).color(Color(217, 166, 71))
+                stream.paragraph(x - width / 2 + 49, y + 18 + height, 100f, AlignHorizontal.CENTER, AlignVertical.BOTTOM, TextBlock(style, value))
                 stream.drawImage(img, x - width / 2 + 41, y + 14, width, height)
 
                 if (checker) {
-                    img = template.resource().imgCancerTypeDetect()
-                    width = img.width * DANGER_GUIDE_RATE / img.height
-                    stream.drawImage(img, x - width / 2 - 26, y + DANGER_CANCER_ICON, width, DANGER_GUIDE_RATE)
+                    template.resource().imgCancerTypeDetect(stream, x, y, DANGER_CANCER_ICON)
 
                     img = template.resource().imgCancerTypeDetectArrow()
                     width = img.width * 24.75f / img.height
@@ -175,14 +145,8 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
 
             CancerchDto.Results.CONCERN -> {
                 img = template.resource().imgBarMiddle()
-                style = template.resource().styleContentBold().clone().fontSize(7f).color(Color(217, 166, 71))
-                stream.paragraph(
-                    x - width / 2 + 49,
-                    y + 18 + DANGER_BAR_RATE + 10,
-                    100f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(style, "평균 초과")
-                )
+                style = template.resource().styleContentBold().clone().fontSize(6f).color(Color(217, 166, 71))
+                stream.paragraph(x - width / 2 + 49, y + 18 + DANGER_BAR_RATE + 10, 100f, AlignHorizontal.CENTER, AlignVertical.BOTTOM, TextBlock(style, template.lblMiddleRisk()))
 
                 stream.restoreGraphicsState()
                 stream.saveGraphicsState()
@@ -192,14 +156,8 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
 
             else -> {
                 img = template.resource().imgBarNormal()
-                style = template.resource().styleContentBold().clone().fontSize(7f).color(Color(81, 78, 145))
-                stream.paragraph(
-                    x - width / 2 + 49,
-                    y + 18 + DANGER_BAR_RATE,
-                    100f,
-                    AlignHorizontal.CENTER,
-                    TextBlock(style, "평균 이하")
-                )
+                style = template.resource().styleContentBold().clone().fontSize(6f).color(Color(81, 78, 145))
+                stream.paragraph(x - width / 2 + 49, y + 18 + DANGER_BAR_RATE, 100f, AlignHorizontal.CENTER, AlignVertical.BOTTOM, TextBlock(style, template.lblNormalRisk()))
 
                 stream.restoreGraphicsState()
                 stream.saveGraphicsState()
@@ -225,18 +183,6 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
         val width = img.width * DANGER_ICON_RATE / img.height
         stream.drawImage(img, x - width / 2, y, width, DANGER_ICON_RATE)
     }
-
-    private fun convNameToNum(name: String) = when (name) {
-        "폐암" -> 1
-        "대장암" -> 2
-        "간암" -> 3
-        "췌장담도암" -> 4
-        "식도암" -> 5
-        "난소암" -> 6
-        "기타암종" -> 7
-        "유방암" -> 8
-        else -> 0
-    }
     private fun rate(tf: Boolean) = if(tf) DANGER_CONTENT_RATE_WITH_OTHER else DANGER_CONTENT_RATE
 
     companion object {
@@ -244,8 +190,7 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
         private const val DANGER_CONTENT_RATE_WITH_OTHER = 469f
         private const val DANGER_HUMAN_RATE = 230f
         private const val DANGER_CANCER_CONTENT = 60F
-        private const val DANGER_CANCER_ICON = 35F
-        private const val DANGER_GUIDE_RATE = 20f
+        private const val DANGER_CANCER_ICON = 32F
         private const val DANGER_ICON_RATE = 45f
         private const val DANGER_BAR_RATE = 4.5f
     }

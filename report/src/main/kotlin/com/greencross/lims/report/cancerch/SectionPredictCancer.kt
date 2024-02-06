@@ -18,36 +18,12 @@ class SectionPredictCancer(private val y: Float = 457f) : Painter<CancerchTempla
         var style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
         stream!!.saveGraphicsState()
         stream.drawImage(img, 298f - width / 2, y - DOUBT_SQUARE_RATE+10, width, 131f)
-        stream.paragraph(
-            562f - width / 2, y - DOUBT_SQUARE_RATE + 121, 300f, AlignHorizontal.CENTER,
-            TextBlock(style, template.lblDoubtContentTitle())
-        )
+        template.lblDoubtContentTitle(stream, y, width, DOUBT_SQUARE_RATE)
         //endregion
 
         //region □ Doubt Content's Text
-        val horizontal = when (dto!!.result) {
-            CancerchDto.Results.RISK -> AlignHorizontal.LEFT
-            else -> AlignHorizontal.CENTER
-        }
-        val x = when (dto.result) {
-            CancerchDto.Results.GENERAL -> 423f - width / 2
-            CancerchDto.Results.CONCERN -> 423f - width / 2
-            else -> 323f - width / 2
-        }
-        val ys = when (dto.result) {
-            CancerchDto.Results.GENERAL -> y - DOUBT_SQUARE_RATE + 75
-            else -> y - DOUBT_SQUARE_RATE + 75
-        }
-        style = TextStyle().color(template.resource().colorText()).fonts(template.resource().fontHeader(), template.resource().fontDefault()).color(Color(67, 72, 142)).fontSize(13f)
-        stream.paragraph(
-            x + 130, ys, 400f, horizontal,
-            TextBlock(style, template.lblDoubtContentLarge(dto.result, dto.first.name))
-        )
-        style = template.resource().styleContentRegualar().clone().color(Color(0, 0, 0)).fontSize(10f)
-        stream.paragraph(
-            x + 130, ys - 27, 300f, horizontal,
-            TextBlock(style, template.lblDoubtContentSmall(dto.result))
-        )
+        template.lblDoubtContentLarge(stream, y, width, DOUBT_SQUARE_RATE, dto!!)
+        template.lblDoubtContentSmall(stream, y, width, DOUBT_SQUARE_RATE, dto)
 
         if (dto.result == CancerchDto.Results.RISK) {
             img = template.resource().imgDoubtCancer(dto.first.name)

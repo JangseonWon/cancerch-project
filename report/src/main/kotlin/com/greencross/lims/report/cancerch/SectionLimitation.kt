@@ -19,7 +19,7 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         var styleBold = template.resource().styleContentBold().clone().fontSize(11f)
         var styleRegular = template.resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f)
         stream.drawImage(img, 297f-width/2, y, width, CONTENT_TITLE_RATE)
-        stream.paragraph(297f, y+10, 200f, AlignHorizontal.CENTER, TextBlock(style, template.lblLimitationHeader()))
+        template.lblLimitationHeader(stream, y)
 
         y -= 10
         for(i in 0..5){
@@ -27,7 +27,7 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
             img = template.resource().imgMiniSquare()
             width = img.width * CONTENT_MINI_SQUARE / img.height
             stream.drawImage(img, 50f-width/2, y, width, CONTENT_MINI_SQUARE)
-            stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblLimitation(i)))
+            template.lblLimitation(stream, y, i)
         }
 
         y -= CONTENT_TABLE_TITLE+25
@@ -43,11 +43,11 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         styleBold = styleBold.clone().color(Color(255,255,255)).fontSize(9f)
         var styleRegularInner = styleRegular.clone().color(Color(81,81,81)).fontSize(8f)
         stream.drawImage(img, 297f-width/2, y, width, CONTENT_TABLE)
-        stream.paragraph(88f, y+117, 100f, AlignHorizontal.CENTER,  TextBlock(styleRegular, template.lblLimitationTableHeader(0)))
-        stream.paragraph(188f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(1)))
-        stream.paragraph(293f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(2)))
-        stream.paragraph(392f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(3)))
-        stream.paragraph(498f, y+117, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, template.lblLimitationTableHeader(4)))
+        template.lblLimitationTableHeader(stream, y,0)
+        template.lblLimitationTableHeader(stream, y,1)
+        template.lblLimitationTableHeader(stream, y,2)
+        template.lblLimitationTableHeader(stream, y,3)
+        template.lblLimitationTableHeader(stream, y,4)
 
         stream.paragraph(88f, y+102, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular,      template.lblLimitationTableTotalCancer(0)))
         stream.paragraph(188f, y+102, 100f, AlignHorizontal.CENTER, TextBlock(styleRegularInner, template.lblLimitationTableTotalCancer(1)))
@@ -91,11 +91,10 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         stream.paragraph(392f, y+6, 100f, AlignHorizontal.CENTER, TextBlock(styleRegularInner, template.lblLimitationTableOverCancer(3)))
         stream.paragraph(498f, y+6, 100f, AlignHorizontal.CENTER, TextBlock(styleRegularInner, template.lblLimitationTableOverCancer(4)))
 
-        styleRegular = styleRegular.clone().color(Color(121,121,121)).fontSize(5.5f)
         y -= 4
         for(i in 0..3){
             y -= 8
-            stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblLimitationDescription(i)))
+            template.lblLimitationDescription(stream, y, i)
         }
 
         y -= CONTENT_TABLE_TITLE+20
@@ -179,13 +178,8 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         stream.paragraph(312f, y+22, 500f, AlignHorizontal.LEFT, TextBlock(styleRegular, template.lblReferenceRight()))
 
         y -= 50
-        styleRegular = styleRegular.clone().color(Color(151,151,151)).fontSize(6.5f)
-        styleRegularInner = styleRegular.clone().color(Color(81,81,81)).fontSize(6.5f)
-        stream.paragraph(297f, y, 600f, AlignHorizontal.CENTER,
-            TextBlock(styleRegular, template.lblReferenceDescription(0)),
-            TextBlock(styleRegularInner, template.lblReferenceDescriptionBold()),
-            TextBlock(styleRegular, template.lblReferenceDescription(1))
-        )
+
+        template.lblReferenceDescription(stream, y)
         return stream
     }
     companion object {

@@ -19,8 +19,16 @@ public class TestInfo {
             .code("N201").name("").build();
     public static final TestInfo N203 = TestInfo.builder()
             .code("N203").name("").build();
+    public static final TestInfo N204 = TestInfo.builder()
+            .code("N203").name("").build();
+    public static final TestInfo N205 = TestInfo.builder()
+            .code("N203").name("").build();
+    public static final TestInfo ON203 = TestInfo.builder()
+            .code("ON203").name("").build();
 
     public static final TestInfo[] TESTS = new TestInfo[] {
-        N201, N203
+        N201,               //AVOID
+        N203, N204, N205,   //Cancerch국문
+        ON203               //Cancerch영문
     };
 }

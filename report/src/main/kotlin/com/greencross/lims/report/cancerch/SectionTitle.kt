@@ -31,41 +31,24 @@ class SectionTitle(private val y: Float = 745f) : Painter<CancerchTemplate<Cance
         img = template.resource().imgHeaderBox()
         width = img.width * TITLE_HEADERBOX_HEIGHT / img.height
         stream.drawImage(img, 383f - width / 2, y - 19, 354f, TITLE_HEADERBOX_HEIGHT)
-        var style = template.resource().styleContentBold().fontSize(8.2f)
-        stream.paragraph(222.5f, y + 45.5f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblMedicalInstitution()))
-        stream.paragraph(382.5f, y + 45.5f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblRequestNumber()))
-        stream.paragraph(222.5f, y + 28f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblPatientName()))
-        stream.paragraph(382.5f, y + 28f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblAgeSex()))
-        stream.paragraph(222.5f, y + 11f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblMedicalRecordNumber()))
-        stream.paragraph(382.5f, y + 11f, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblSpecimenType()))
-        stream.paragraph(222.5f, y - 6, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblSpecimenDate()))
-        stream.paragraph(382.5f, y - 6, 50f, AlignHorizontal.LEFT, TextBlock(style, template.lblReceiptReportDate()))
 
-        style = template.resource().styleContentRegualar()
-        stream.paragraph(285f, y + 45.5f, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.medicalInstitution))
-        stream.paragraph(445f, y + 45.5f, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.requestNumber))
-        stream.paragraph(285f, y + 28f, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.patientName))
-        stream.paragraph(
-            445f, y + 28f, 100f, AlignHorizontal.LEFT,
-            TextBlock(style, Util.dashIfEmpty(dto.age!!)),
-            TextBlock(style, " / "),
-            TextBlock(style, Util.dashIfEmpty(sex(dto.sex)))
-        )
-        stream.paragraph(
-            285f, y + 11f, 100f,
-            AlignHorizontal.LEFT, TextBlock(style, Util.dashIfEmpty(dto.medicalRecordNumber!!))
-        )
-        stream.paragraph(445f, y + 11f, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.specimenType))
-        stream.paragraph(
-            285f, y - 6, 100f,
-            AlignHorizontal.LEFT, TextBlock(style, Util.dashIfEmpty(date(dto.collectionDate)!!))
-        )
-        stream.paragraph(
-            445f, y - 6, 100f, AlignHorizontal.LEFT,
-            TextBlock(style, Util.dashIfEmpty(date(dto.receiptDate)!!)),
-            TextBlock(style, " / "),
-            TextBlock(style, Util.dashIfEmpty(date(dto.reportDate)!!))
-        )
+        template.lblMedicalInstitution(stream, y)
+        template.lblRequestNumber(stream, y)
+        template.lblPatientName(stream, y)
+        template.lblAgeSex(stream, y)
+        template.lblMedicalRecordNumber(stream, y)
+        template.lblSpecimenType(stream, y)
+        template.lblSpecimenDate(stream, y)
+        template.lblReceiptReportDate(stream, y)
+
+        template.lblMedicalInstitution(stream, y, dto)
+        template.lblRequestNumber(stream, y, dto)
+        template.lblPatientName(stream, y, dto)
+        template.lblAgeSex(stream, y, dto)
+        template.lblMedicalRecordNumber(stream, y, dto)
+        template.lblSpecimenType(stream, y, dto)
+        template.lblSpecimenDate(stream, y, dto)
+        template.lblReceiptReportDate(stream, y, dto)
         //endregion
 
         stream.restoreGraphicsState()
@@ -75,31 +58,5 @@ class SectionTitle(private val y: Float = 745f) : Painter<CancerchTemplate<Cance
     companion object {
         private const val TITLE_HEIGHT = 48f
         private const val TITLE_HEADERBOX_HEIGHT = 84f
-    }
-
-    fun date(date: LocalDate?): String? {
-        return if (date == null) null else DTF.format(date)
-    }
-
-    fun date(date: LocalDateTime?): String? {
-        return if (date == null) null else DTF.format(date)
-    }
-
-    fun age(birth: LocalDate?, sampling: LocalDate?): String {
-        if (birth == null) return "-"
-        return if (sampling == null) (Period.between(
-            birth,
-            LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString() else (Period.between(
-            birth,
-            sampling.with(TemporalAdjusters.firstDayOfYear())
-        ).years + 1).toString()
-    }
-
-    fun sex(sex: Sex?): String {
-        return if (sex == null) "-" else when (sex) {
-            Sex.M -> "남"
-            Sex.F -> "여"
-        }
     }
 }

@@ -3,12 +3,9 @@ package com.greencross.lims.report.avoid
 import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.builder.Util
+import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
-
-import com.greencross.lims.report.func.AlignHorizontal.CENTER
-import com.greencross.lims.report.func.AlignHorizontal.LEFT
-import java.awt.Color
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
@@ -36,29 +33,30 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         img = template.resource().imgHeaderBox()
         width = img.width * TITLE_HEADERBOX_HEIGHT / img.height
         stream.drawImage(img, 385f - width/2, y-25, width, TITLE_HEADERBOX_HEIGHT)
-        var style = template.resource().styleContentBold()
-        stream.paragraph(235f, y+35, 50f, LEFT, TextBlock(style, template.lblMedicalInstitution()))
-        stream.paragraph(385f, y+35, 50f, LEFT, TextBlock(style, template.lblRequestNumber()))
-        stream.paragraph(235f, y+20, 50f, LEFT, TextBlock(style, template.lblPatientName()))
-        stream.paragraph(385f, y+20, 50f, LEFT, TextBlock(style, template.lblAgeSex()))
-        stream.paragraph(235f,  y+5, 50f, LEFT, TextBlock(style, template.lblMedicalRecordNumber()))
-        stream.paragraph(385f,  y+5, 50f, LEFT, TextBlock(style, template.lblSpecimenType()))
-        stream.paragraph(235f, y-10, 50f, LEFT, TextBlock(style, template.lblSpecimenDate()))
-        stream.paragraph(385f, y-10, 50f, LEFT, TextBlock(style, template.lblReceiptReportDate()))
 
-        style = template.resource().styleContentRegualar()
-        stream.paragraph(285f, y+35, 100f, LEFT, TextBlock(style, dto.medicalInstitution))
-        stream.paragraph(445f, y+35, 100f, LEFT, TextBlock(style, dto.requestNumber))
-        stream.paragraph(285f, y+20, 100f, LEFT, TextBlock(style, dto.patientName))
-        stream.paragraph(445f, y+20, 100f, LEFT,
+        template.lblMedicalInstitution(stream, y)
+        template.lblRequestNumber(stream, y)
+        template.lblPatientName(stream, y)
+        template.lblAgeSex(stream, y)
+        template.lblMedicalRecordNumber(stream, y)
+        template.lblSpecimenType(stream, y)
+        template.lblSpecimenDate(stream, y)
+        template.lblReceiptReportDate(stream, y)
+
+
+        var style = template.resource().styleContentRegualar()
+        stream.paragraph(285f, y+35, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.medicalInstitution))
+        stream.paragraph(445f, y+35, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.requestNumber))
+        stream.paragraph(285f, y+20, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.patientName))
+        stream.paragraph(445f, y+20, 100f, AlignHorizontal.LEFT,
             TextBlock(style, Util.dashIfEmpty(dto.age!!)),
             TextBlock(style, " / "),
             TextBlock(style, Util.dashIfEmpty(sex(dto.sex)))
         )
-        stream.paragraph(285f, y+5, 100f, LEFT, TextBlock(style, Util.dashIfEmpty(dto.medicalRecordNumber!!)))
-        stream.paragraph(445f, y+5, 100f, LEFT, TextBlock(style, dto.specimenType))
-        stream.paragraph(285f, y-10, 100f, LEFT, TextBlock(style, Util.dashIfEmpty(date(dto.collectionDate)!!)))
-        stream.paragraph(445f, y-10, 100f, LEFT,
+        stream.paragraph(285f, y+5, 100f, AlignHorizontal.LEFT, TextBlock(style, Util.dashIfEmpty(dto.medicalRecordNumber!!)))
+        stream.paragraph(445f, y+5, 100f, AlignHorizontal.LEFT, TextBlock(style, dto.specimenType))
+        stream.paragraph(285f, y-10, 100f, AlignHorizontal.LEFT, TextBlock(style, Util.dashIfEmpty(date(dto.collectionDate)!!)))
+        stream.paragraph(445f, y-10, 100f, AlignHorizontal.LEFT,
             TextBlock(style, Util.dashIfEmpty(date(dto.receiptDate)!!)),
             TextBlock(style, " / "),
             TextBlock(style, Util.dashIfEmpty(date(dto.reportDate)!!))

@@ -2,6 +2,7 @@ package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.HasSign
 import com.greencross.lims.report.TextStyle
+import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
@@ -47,7 +48,7 @@ interface CancerchResource  : HasSign {
     fun imgCancerTypeContent(): PDImageXObject
     fun imgCancerTypeImage(cancer: String): PDImageXObject
     fun imgCancerReadingGuide(): PDImageXObject
-    fun imgCancerTypeDetect(): PDImageXObject
+    fun imgCancerTypeDetect(stream: PDPageContentStreamPageAccessible, x: Float, y: Float, DANGER_CANCER_ICON: Float)
     fun imgCancerTypeDetectArrow(): PDImageXObject
     fun imgUnderBar(): PDImageXObject
     fun imgHuman(): PDImageXObject

@@ -18,6 +18,7 @@ import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
+import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.*
 import com.greencross.lims.report.kokr.SectionSign
@@ -104,8 +105,8 @@ class ReportHandler(
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val baos = ByteArrayOutputStream()
                 val doc = zipped.t2.language?.let { it1 ->
-                    if(zipped.t1.service == "N201" || zipped.t1.service == "N205") build(it1, analysisToAvoidDto(zipped.t1))
-                    else build(it1, analysisToCancerchDto(zipped.t1), if(zipped.t1.patient.customerName2 != null) "labs" else "genome")
+                    if(zipped.t1.service == "N201") build(it1, analysisToAvoidDto(zipped.t1))
+                    else build(it1, analysisToCancerchDto(zipped.t1), if(zipped.t1.patient.customerName2 != null) "labs" else "genome", zipped.t1.service)
                 }
                 val createTime = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
@@ -230,7 +231,7 @@ class ReportHandler(
                     stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
                 null,
-                analysis.comment ?: "comment"
+                analysis.comment ?: ""
             )
         }
 
@@ -271,9 +272,9 @@ class ReportHandler(
     private fun build(lang: String, dto: AvoidDto): PDDocument? {
         return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
     }
-    private fun build(lang: String, dto: CancerchDto, type: String): PDDocument? {
-        return if(type == "genome") builderGenome(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
-        else builderLabsGenome(TestInfo.N203, LogoType.DEPENDENT, dto)?.build()
+    private fun build(lang: String, dto: CancerchDto, type: String, service: String): PDDocument? {
+        return if(type == "genome") builderGenome(service, LogoType.DEPENDENT, dto)?.build()
+        else builderLabsGenome(service, LogoType.DEPENDENT, dto)?.build()
     }
 
     private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto): AvoidPageBuilder<*>? {
@@ -291,27 +292,42 @@ class ReportHandler(
             return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
         } else null
     }
-    private fun builderGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+    private fun builderGenome(service: String, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-        return if (TestInfo.N203 == test) {
+        return if (TestInfo.N203.name() == service || TestInfo.N204.name() == service || TestInfo.N205.name() == service) {
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
             var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, test)
+            var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
             page = SectionPage(547f, 65f, resource.fontDefault())
+
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+        } else if (TestInfo.ON203.name() == service){
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+            var resource = CancerchResourceN203KoKr(doc)
+            var template = CancerchTemplateN203KoKr(resource, TestInfo.ON203)
+            page = SectionPage(547f, 65f, resource.fontDefault())
+
+            return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
         } else null
     }
-    private fun builderLabsGenome(test: TestInfo, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+    private fun builderLabsGenome(service: String, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-        return if (TestInfo.N203 == test) {
+        return if (TestInfo.N203.name() == service || TestInfo.N204.name() == service || TestInfo.N205.name() == service) {
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
             var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, test)
+            var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
+            page = SectionPage(547f, 65f, resource.fontDefault())
+
+            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+        } else if (TestInfo.ON203.name() == service) {
+            var resource = CancerchResourceN203KoKr(doc)
+            var template = CancerchTemplateN203KoKr(resource, TestInfo.ON203)
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
             page = SectionPage(547f, 65f, resource.fontDefault())
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else null

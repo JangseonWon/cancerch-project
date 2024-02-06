@@ -1,9 +1,13 @@
 package com.greencross.lims.report.avoid.kokr
 
 import com.gcgenome.lims.avoid.TestInfo
+import com.greencross.lims.report.TextBlock
+import com.greencross.lims.report.TextStyle
 import com.greencross.lims.report.avoid.AvoidDto
 import com.greencross.lims.report.avoid.AvoidTemplateN201
 import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.func.AlignHorizontal
+import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 
 class AvoidTemplateN201KoKr(
     resource: AvoidResourceN201KoKr,
@@ -17,14 +21,15 @@ class AvoidTemplateN201KoKr(
     }
 
     override fun lblTitleSmallLogo() = "[Pan-cancer : 주요 암]"
-    override fun lblMedicalInstitution() = "의뢰기관"
-    override fun lblRequestNumber() = "접수번호"
-    override fun lblPatientName() = "성명"
-    override fun lblAgeSex() = "나이/성별"
-    override fun lblMedicalRecordNumber() = "등록번호"
-    override fun lblSpecimenType() = "검체종류"
-    override fun lblSpecimenDate() = "검체채취일"
-    override fun lblReceiptReportDate() = "접수일/보고일"
+    override fun lblMedicalInstitution(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(235f, y+35, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(), "의뢰기관")) }
+    override fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float) {  stream.paragraph(385f, y+35, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(), "접수번호" )) }
+    override fun lblPatientName(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(235f, y+20, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(),  "성명"))  }
+    override fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(385f, y+20, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(), "나이/성별")) }
+    override fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float) {  stream.paragraph(235f,  y+5, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(),"등록번호")) }
+    override fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float) {  stream.paragraph(385f,  y+5, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(), "검체종류")) }
+    override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float) {  stream.paragraph(235f, y-10, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(),"검체채취일")) }
+    override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float) {  stream.paragraph(385f, y-10, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold(),"접수일/보고일")) }
+
     override fun lblIntroHeader() = "인공지능 액체생검 주요 6종 암 선별검사"
     override fun lblIntroContent() = "아이캔서치 검사는 약 2,500명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 " +
             "학습한 인공지능으로 수검자의 DNA\n패턴을 분석하여 주요 6종 암의 존재 가능성을 예측합니다. " +

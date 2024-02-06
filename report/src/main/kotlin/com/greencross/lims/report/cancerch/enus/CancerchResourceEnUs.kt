@@ -1,21 +1,20 @@
-package com.greencross.lims.report.cancerch.kokr
+package com.greencross.lims.report.cancerch.enus
 
 import com.greencross.lims.report.HasSign
 import com.greencross.lims.report.Template
 import com.greencross.lims.report.TextStyle
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.cancerch.CancerchResource
+import com.greencross.lims.report.enus.HasHeaderEnUs
+import com.greencross.lims.report.enus.HasSignEnUs
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.kokr.HasHeaderKoKr
-import com.greencross.lims.report.kokr.HasSignKoKr
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
-
 import java.io.File
 
-abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignKoKr, HasHeaderKoKr {
+abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignEnUs, HasHeaderEnUs {
     var doc: PDDocument = PDDocument()
     val fontHeader              : PDFont = font(File(CancerchResource.resource, "font/SDGothicNeoRound06.ttf"))
     val fontTitle               : PDFont = font(File(CancerchResource.resource, "font/SdGothicNeoRound01.ttf"))
@@ -50,13 +49,13 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     override fun labels(): Array<HasSign.SignLabel> {
         return arrayOf(
             object : HasSign.SignLabel {
-                override fun label(): String { return "검사자:" }
+                override fun label(): String { return "Tester:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
                     return arrayOf(person("김다솜"))
                 }
             },
             object : HasSign.SignLabel {
-                override fun label(): String { return "확인자:" }
+                override fun label(): String { return "Confirmed by:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
                     return arrayOf(person("조은해"))
                 }
@@ -117,10 +116,10 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     )
 
     override fun imgCancerTypeDetect(stream: PDPageContentStreamPageAccessible, x: Float, y: Float, DANGER_CANCER_ICON: Float) {
-        val DANGER_GUIDE_RATE = 20f
-        val img = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/detected.png"))
+        val DANGER_GUIDE_RATE = 12f
+        val img = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/detected_enus.png"))
         val width = img.width * DANGER_GUIDE_RATE / img.height
-        stream.drawImage(img, x - width / 2 - 26, y + DANGER_CANCER_ICON, width, DANGER_GUIDE_RATE)
+        stream.drawImage(img, x - width / 2 - 26, y + DANGER_CANCER_ICON+12, width, DANGER_GUIDE_RATE)
     }
     override fun imgCancerTypeDetectArrow() : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/upArrow.png"))
     override fun imgUnderBar(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/underBar.png"))
@@ -130,49 +129,49 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/식도암_"+
-                (first == "식도암")+".png")
+                        (first == "식도암")+".png")
         )
     }
     override fun imgLung(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/폐암_"+
-                (first == "폐암")+".png")
+                        (first == "폐암")+".png")
         )
     }
     override fun imgLiver(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/간암_"+
-                (first == "간암")+".png")
+                        (first == "간암")+".png")
         )
     }
     override fun imgPanc(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/췌장담도암_"+
-                (first == "췌장담도암")+".png")
+                        (first == "췌장담도암")+".png")
         )
     }
     override fun imgColon(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/대장암_"+
-                (first == "대장암")+".png")
+                        (first == "대장암")+".png")
         )
     }
     override fun imgBreast(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/유방암_"+
-                (first == "유방암")+".png")
+                        (first == "유방암")+".png")
         )
     }
     override fun imgOvary(first: String): PDImageXObject {
         return img(
             File(
                 CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/난소암_"+
-                (first == "난소암")+".png")
+                        (first == "난소암")+".png")
         )
     }
 
@@ -227,4 +226,5 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     override fun imgMiniSquare(): PDImageXObject { return imgMiniSquare  }
 
     //endregion
+
 }
