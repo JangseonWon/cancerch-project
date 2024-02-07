@@ -298,7 +298,8 @@ class ReportHandler(
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-        return if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service) {
+
+        if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
             var resource = CancerchResourceN203KoKr(doc)
             var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
@@ -322,16 +323,16 @@ class ReportHandler(
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        return if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service) {
+        if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
-            var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
+            val resource = CancerchResourceN203KoKr(doc)
+            val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else if (TestInfo.ON203.code() == service) {
-            var resource = CancerchResourceON203EnUs(doc)
-            var template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
+            val resource = CancerchResourceON203EnUs(doc)
+            val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
             page = SectionPage(547f, 65f, resource.fontDefault())
             return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)

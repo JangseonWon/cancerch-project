@@ -23,12 +23,15 @@ public class TestInfo {
             .code("N203").name("").build();
     public static final TestInfo N205 = TestInfo.builder()
             .code("N203").name("").build();
+    public static final TestInfo N206 = TestInfo.builder()
+            .code("N206").name("").build();
     public static final TestInfo ON203 = TestInfo.builder()
             .code("ON203").name("").build();
 
     public static final TestInfo[] TESTS = new TestInfo[] {
         N201,               //AVOID
         N203, N204, N205,   //Cancerch국문
+        N206,               //아이캔서치 임직원
         ON203               //Cancerch영문
     };
 }
