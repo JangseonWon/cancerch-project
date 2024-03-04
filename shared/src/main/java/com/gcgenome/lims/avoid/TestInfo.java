@@ -20,7 +20,7 @@ public class TestInfo {
     public static final TestInfo N203 = TestInfo.builder()
             .code("N203").name("").build();
     public static final TestInfo N204 = TestInfo.builder()
-            .code("N203").name("").build();
+            .code("N204").name("").build();
     public static final TestInfo N205 = TestInfo.builder()
             .code("N205").name("").build();
     public static final TestInfo N206 = TestInfo.builder()
