@@ -40,13 +40,13 @@ class CancerchTemplateON203EnUs(
     override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(386f, y - 9.4f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold().fontSize(6.5f), "Receipt/Report Date")) }
 
     override fun lblMedicalInstitution(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(297f, y + 50f, 300f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.medicalInstitution)) }
-    override fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(297f, y + 20.6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.requestNumber))}
+    override fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(297f, y + 20.6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.requestNumber))}
     override fun lblPatientName(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(297f, y + 35.3f, 300f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.patientName))}
-    override fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(297f, y + 5.6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(dto.age!!)), TextBlock(resource().styleContentRegualar().fontSize(6.5f), " / "), TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(sex(dto.sex))))}
-    override fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y + 20.6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(dto.medicalRecordNumber!!)))}
-    override fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y + 5.6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.specimenType)) }
-    override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(297f, y - 9.4f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.collectionDate)!!)))}
-    override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y - 9.4f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.receiptDate)!!)), TextBlock(resource().styleContentRegualar().fontSize(6.5f), " / "), TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.reportDate)!!)))}
+    override fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(297f, y + 5.6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(dto.age!!)), TextBlock(resource().styleContentRegualar().fontSize(6.5f), " / "), TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(sex(dto.sex))))}
+    override fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y + 20.6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(dto.medicalRecordNumber!!)))}
+    override fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y + 5.6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), dto.specimenType)) }
+    override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(297f, y - 9.4f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.collectionDate)!!)))}
+    override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(468f, y - 9.4f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.receiptDate)!!)), TextBlock(resource().styleContentRegualar().fontSize(6.5f), " / "), TextBlock(resource().styleContentRegualar().fontSize(6.5f), Util.dashIfEmpty(date(dto.reportDate)!!)))}
 
     override fun lblIntroHeader(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(297f, y+10, 300f, AlignHorizontal.CENTER, TextBlock(resource().styleContentSpecial().clone().color(Color(255,255,255)).fontSize(14f), "AI-powered Blood Test for Cancer Screening")) }
     override fun lblIntroContent(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(48f, y-29, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().fontSize(7f), "ai-CANCERCH is the multi cancer early detection(MCED) test powered by artificial intelligence(AI) that has trained distinctive DNA patterns from approximately\n" +
@@ -610,7 +610,7 @@ class CancerchTemplateON203EnUs(
         }
     }
 
-    override fun lblLimitationTableTotalCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableTotalCancer(col: Int) = when (col) {
         0 -> "Overall"
         1 -> "96.5%"
         2 -> "81.1%"
@@ -618,7 +618,7 @@ class CancerchTemplateON203EnUs(
         else -> "97.6%"
     }
 
-    override fun lblLimitationTableLungCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableLungCancer(col: Int) = when (col) {
         0 -> "Lung"
         1 -> "96.5%"
         2 -> "73.1%"
@@ -626,7 +626,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableColorCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableColorCancer(col: Int) = when (col) {
         0 -> "Colon"
         1 -> "96.5%"
         2 -> "70.1%"
@@ -634,7 +634,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableLiverCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableLiverCancer(col: Int) = when (col) {
         0 -> "Liver"
         1 -> "96.5%"
         2 -> "94.5%"
@@ -642,7 +642,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTablePanCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTablePanCancer(col: Int) = when (col) {
         0 -> "Pancreatobiliary"
         1 -> "96.5%"
         2 -> "91.3%"
@@ -650,7 +650,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableEsopCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableEsopCancer(col: Int) = when (col) {
         0 -> "Esophageal"
         1 -> "96.5%"
         2 -> "88.4%"
@@ -658,7 +658,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableOverCancer(result: CancerchDto.Results, col: Int) = when (col) {
+    override fun lblLimitationTableOverCancer(col: Int) = when (col) {
         0 -> "Ovarian"
         1 -> "96.5%"
         2 -> "70.4%"

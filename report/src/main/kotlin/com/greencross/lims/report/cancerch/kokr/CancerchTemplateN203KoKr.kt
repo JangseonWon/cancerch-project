@@ -40,14 +40,14 @@ class CancerchTemplateN203KoKr(
     override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(222.5f, y - 6, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold().fontSize(8.2f),"검체채취일")) }
     override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(382.5f, y - 6, 50f, AlignHorizontal.LEFT, TextBlock(resource().styleContentBold().fontSize(8.2f), "접수일/보고일")) }
 
-    override fun lblMedicalInstitution(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y + 45.5f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.medicalInstitution)) }
-    override fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(445f, y + 45.5f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.requestNumber))}
+    override fun lblMedicalInstitution(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y + 45.5f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.medicalInstitution)) }
+    override fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(445f, y + 45.5f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.requestNumber))}
     override fun lblPatientName(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) {stream.paragraph(285f, y + 28f, 300f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.patientName))}
-    override fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y + 28f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(dto.age!!)), TextBlock(resource().styleContentRegualar().fontSize(8.2f), " / "), TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(sex(dto.sex))))}
-    override fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y + 11f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(dto.medicalRecordNumber!!)))}
-    override fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y + 11f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.specimenType)) }
-    override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y - 6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.collectionDate)!!)))}
-    override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y - 6f, 150f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.receiptDate)!!)), TextBlock(resource().styleContentRegualar().fontSize(8.2f), " / "), TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.reportDate)!!)))}
+    override fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y + 28f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(dto.age!!)), TextBlock(resource().styleContentRegualar().fontSize(8.2f), " / "), TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(sex(dto.sex))))}
+    override fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y + 11f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(dto.medicalRecordNumber!!)))}
+    override fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y + 11f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), dto.specimenType)) }
+    override fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(285f, y - 6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.collectionDate)!!)))}
+    override fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto) { stream.paragraph(445f, y - 6f, 100f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.receiptDate)!!)), TextBlock(resource().styleContentRegualar().fontSize(8.2f), " / "), TextBlock(resource().styleContentRegualar().fontSize(8.2f), Util.dashIfEmpty(date(dto.reportDate)!!)))}
 
 
     override fun lblIntroHeader(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(297f, y+10, 300f, AlignHorizontal.CENTER, TextBlock(resource().styleContentSpecial().clone().color(Color(255,255,255)).fontSize(14f), "인공지능 액체생검 주요 6종 암 선별검사")) }
@@ -579,137 +579,60 @@ class CancerchTemplateN203KoKr(
         }
     }
 
-    override fun lblLimitationTableTotalCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "전체"
-            1 -> "95.0%"
-            2 -> "81.1%"
-            3 -> "67.1%"
-            else -> "97.6%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "전체"
-            1 -> "99.0%"
-            2 -> "60.1%"
-            3 -> "88.3%"
-            else -> "95.2%"
-        }
+    override fun lblLimitationTableTotalCancer(col: Int) = when (col) {
+        0 -> "전체"
+        1 -> "96.5%"
+        2 -> "81.1%"
+        3 -> "74.4%"
+        else -> "97.6%"
     }
 
-    override fun lblLimitationTableLungCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "폐암"
-            1 -> "95.0%"
-            2 -> "73.1%"
-            3 -> "9.2%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "폐암"
-            1 -> "99.0%"
-            2 -> "46.2%"
-            3 -> "24.3%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTableLungCancer(col: Int) = when (col) {
+        0 -> "폐암"
+        1 -> "96.5%"
+        2 -> "73.1%"
+        3 -> "12.7%"
+        else -> ">98%"
     }
 
-    override fun lblLimitationTableColorCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "대장암"
-            1 -> "95.0%"
-            2 -> "70.1%"
-            3 -> "13.2%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "대장암"
-            1 -> "99.0%"
-            2 -> "45.3%"
-            3 -> "32.9%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTableColorCancer(col: Int) = when (col) {
+        0 -> "대장암"
+        1 -> "96.5%"
+        2 -> "70.1%"
+        3 -> "17.8%"
+        else -> ">98%"
     }
 
-    override fun lblLimitationTableLiverCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "간암"
-            1 -> "95.0%"
-            2 -> "94.5%"
-            3 -> "7.1%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "간암"
-            1 -> "99.0%"
-            2 -> "82.4%"
-            3 -> "24.9%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTableLiverCancer(col: Int) = when (col) {
+        0 -> "간암"
+        1 -> "96.5%"
+        2 -> "94.5%"
+        3 -> "9.8%"
+        else -> ">98%"
     }
 
-    override fun lblLimitationTablePanCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "췌장담도암"
-            1 -> "95.0%"
-            2 -> "91.3%"
-            3 -> "4.9%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "췌장담도암"
-            1 -> "99.0%"
-            2 -> "76.1%"
-            3 -> "17.5%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTablePanCancer(col: Int) = when (col) {
+        0 -> "췌장담도암"
+        1 -> "96.5%"
+        2 -> "91.3%"
+        3 -> "6.8%"
+        else -> ">98%"
     }
 
-    override fun lblLimitationTableEsopCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "식도암"
-            1 -> "95.0%"
-            2 -> "88.4%"
-            3 -> "1.4%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "식도암"
-            1 -> "99.0%"
-            2 -> "58.1%"
-            3 -> "4.4%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTableEsopCancer(col: Int) = when (col) {
+        0 -> "식도암"
+        1 -> "96.5%"
+        2 -> "88.4%"
+        3 -> "2.0%"
+        else -> ">98%"
     }
 
-    override fun lblLimitationTableOverCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
-        when (col) {
-            0 -> "난소암"
-            1 -> "95.0%"
-            2 -> "70.4%"
-            3 -> "1.2%"
-            else -> ">98%"
-        }
-    }
-    else {
-        when (col) {
-            0 -> "난소암"
-            1 -> "99.0%"
-            2 -> "51.9%"
-            3 -> "4.3%"
-            else -> ">98%"
-        }
+    override fun lblLimitationTableOverCancer(col: Int) = when (col) {
+        0 -> "난소암"
+        1 -> "96.5%"
+        2 -> "70.4%"
+        3 -> "1.7%"
+        else -> ">98%"
     }
 
     override fun lblLimitationTable2Header(col: Int) = when (col) {
