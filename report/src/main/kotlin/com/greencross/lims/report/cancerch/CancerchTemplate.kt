@@ -69,13 +69,13 @@ interface CancerchTemplate<R: CancerchResource>: AbstractReportTemplate<R> {
 
     fun lblLimitationHeader(stream: PDPageContentStreamPageAccessible, y: Float)
     fun lblLimitationTableHeader(stream: PDPageContentStreamPageAccessible, y: Float, col: Int)
-    fun lblLimitationTableTotalCancer(col: Int): String
-    fun lblLimitationTableLungCancer(col: Int): String
-    fun lblLimitationTableColorCancer(col: Int): String
-    fun lblLimitationTableLiverCancer(col: Int): String
-    fun lblLimitationTablePanCancer(col: Int): String
-    fun lblLimitationTableEsopCancer(col: Int): String
-    fun lblLimitationTableOverCancer(col: Int): String
+    fun lblLimitationTableTotalCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTableLungCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTableColorCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTableLiverCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTablePanCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTableEsopCancer(result: CancerchDto.Results, col: Int): String
+    fun lblLimitationTableOverCancer(result: CancerchDto.Results, col: Int): String
     fun lblLimitationTable2Header(col: Int): String
     fun lblLimitationTable2Row1(col: Int): String
     fun lblLimitationTable2Row2(col: Int): String

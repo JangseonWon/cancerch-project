@@ -45,16 +45,16 @@ class CancerchReportTest {
         val repo: CancerRepo = CancerRepo()
         return builder(
             TestInfo.N203, type,
-            CancerchDto("",
-                CancerchDto.Results.RISK,
-                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.RISK,
+//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.CONCERN,
 //                CancerchDto.Cancer("기타암종")))?.build()
-//            CancerchDto("",
-//                CancerchDto.Results.GENERAL,
-//                CancerchDto.Cancer()))?.build()
+            CancerchDto("",
+                CancerchDto.Results.GENERAL,
+                CancerchDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()

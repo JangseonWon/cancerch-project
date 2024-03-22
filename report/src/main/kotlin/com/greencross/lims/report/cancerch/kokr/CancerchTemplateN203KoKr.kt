@@ -579,60 +579,137 @@ class CancerchTemplateN203KoKr(
         }
     }
 
-    override fun lblLimitationTableTotalCancer(col: Int) = when (col) {
-        0 -> "전체"
-        1 -> "96.5%"
-        2 -> "81.1%"
-        3 -> "74.4%"
-        else -> "97.6%"
+    override fun lblLimitationTableTotalCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "전체"
+            1 -> "95.0%"
+            2 -> "81.1%"
+            3 -> "67.1%"
+            else -> "97.6%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "전체"
+            1 -> "99.0%"
+            2 -> "60.1%"
+            3 -> "88.3%"
+            else -> "95.2%"
+        }
     }
 
-    override fun lblLimitationTableLungCancer(col: Int) = when (col) {
-        0 -> "폐암"
-        1 -> "96.5%"
-        2 -> "73.1%"
-        3 -> "12.7%"
-        else -> ">98%"
+    override fun lblLimitationTableLungCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "폐암"
+            1 -> "95.0%"
+            2 -> "73.1%"
+            3 -> "9.2%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "폐암"
+            1 -> "99.0%"
+            2 -> "46.2%"
+            3 -> "24.3%"
+            else -> ">98%"
+        }
     }
 
-    override fun lblLimitationTableColorCancer(col: Int) = when (col) {
-        0 -> "대장암"
-        1 -> "96.5%"
-        2 -> "70.1%"
-        3 -> "17.8%"
-        else -> ">98%"
+    override fun lblLimitationTableColorCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "대장암"
+            1 -> "95.0%"
+            2 -> "70.1%"
+            3 -> "13.2%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "대장암"
+            1 -> "99.0%"
+            2 -> "45.3%"
+            3 -> "32.9%"
+            else -> ">98%"
+        }
     }
 
-    override fun lblLimitationTableLiverCancer(col: Int) = when (col) {
-        0 -> "간암"
-        1 -> "96.5%"
-        2 -> "94.5%"
-        3 -> "9.8%"
-        else -> ">98%"
+    override fun lblLimitationTableLiverCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "간암"
+            1 -> "95.0%"
+            2 -> "94.5%"
+            3 -> "7.1%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "간암"
+            1 -> "99.0%"
+            2 -> "82.4%"
+            3 -> "24.9%"
+            else -> ">98%"
+        }
     }
 
-    override fun lblLimitationTablePanCancer(col: Int) = when (col) {
-        0 -> "췌장담도암"
-        1 -> "96.5%"
-        2 -> "91.3%"
-        3 -> "6.8%"
-        else -> ">98%"
+    override fun lblLimitationTablePanCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "췌장담도암"
+            1 -> "95.0%"
+            2 -> "91.3%"
+            3 -> "4.9%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "췌장담도암"
+            1 -> "99.0%"
+            2 -> "76.1%"
+            3 -> "17.5%"
+            else -> ">98%"
+        }
     }
 
-    override fun lblLimitationTableEsopCancer(col: Int) = when (col) {
-        0 -> "식도암"
-        1 -> "96.5%"
-        2 -> "88.4%"
-        3 -> "2.0%"
-        else -> ">98%"
+    override fun lblLimitationTableEsopCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "식도암"
+            1 -> "95.0%"
+            2 -> "88.4%"
+            3 -> "1.4%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "식도암"
+            1 -> "99.0%"
+            2 -> "58.1%"
+            3 -> "4.4%"
+            else -> ">98%"
+        }
     }
 
-    override fun lblLimitationTableOverCancer(col: Int) = when (col) {
-        0 -> "난소암"
-        1 -> "96.5%"
-        2 -> "70.4%"
-        3 -> "1.7%"
-        else -> ">98%"
+    override fun lblLimitationTableOverCancer(result: CancerchDto.Results, col: Int) = if(result != CancerchDto.Results.RISK){
+        when (col) {
+            0 -> "난소암"
+            1 -> "95.0%"
+            2 -> "70.4%"
+            3 -> "1.2%"
+            else -> ">98%"
+        }
+    }
+    else {
+        when (col) {
+            0 -> "난소암"
+            1 -> "99.0%"
+            2 -> "51.9%"
+            3 -> "4.3%"
+            else -> ">98%"
+        }
     }
 
     override fun lblLimitationTable2Header(col: Int) = when (col) {

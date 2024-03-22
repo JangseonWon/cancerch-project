@@ -610,7 +610,7 @@ class CancerchTemplateON203EnUs(
         }
     }
 
-    override fun lblLimitationTableTotalCancer(col: Int) = when (col) {
+    override fun lblLimitationTableTotalCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Overall"
         1 -> "96.5%"
         2 -> "81.1%"
@@ -618,7 +618,7 @@ class CancerchTemplateON203EnUs(
         else -> "97.6%"
     }
 
-    override fun lblLimitationTableLungCancer(col: Int) = when (col) {
+    override fun lblLimitationTableLungCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Lung"
         1 -> "96.5%"
         2 -> "73.1%"
@@ -626,7 +626,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableColorCancer(col: Int) = when (col) {
+    override fun lblLimitationTableColorCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Colon"
         1 -> "96.5%"
         2 -> "70.1%"
@@ -634,7 +634,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableLiverCancer(col: Int) = when (col) {
+    override fun lblLimitationTableLiverCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Liver"
         1 -> "96.5%"
         2 -> "94.5%"
@@ -642,7 +642,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTablePanCancer(col: Int) = when (col) {
+    override fun lblLimitationTablePanCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Pancreatobiliary"
         1 -> "96.5%"
         2 -> "91.3%"
@@ -650,7 +650,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableEsopCancer(col: Int) = when (col) {
+    override fun lblLimitationTableEsopCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Esophageal"
         1 -> "96.5%"
         2 -> "88.4%"
@@ -658,7 +658,7 @@ class CancerchTemplateON203EnUs(
         else -> ">98%"
     }
 
-    override fun lblLimitationTableOverCancer(col: Int) = when (col) {
+    override fun lblLimitationTableOverCancer(result: CancerchDto.Results, col: Int) = when (col) {
         0 -> "Ovarian"
         1 -> "96.5%"
         2 -> "70.4%"
