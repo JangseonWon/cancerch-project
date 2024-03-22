@@ -51,7 +51,7 @@ class CancerchTemplateN203KoKr(
 
 
     override fun lblIntroHeader(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(297f, y+10, 300f, AlignHorizontal.CENTER, TextBlock(resource().styleContentSpecial().clone().color(Color(255,255,255)).fontSize(14f), "인공지능 액체생검 주요 6종 암 선별검사")) }
-    override fun lblIntroContent(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(51f, y-32, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().fontSize(9f), "아이캔서치 검사는 약 3,500명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 학습한 인공지능으로 수검자의 DNA\n" +
+    override fun lblIntroContent(stream: PDPageContentStreamPageAccessible, y: Float) { stream.paragraph(51f, y-32, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().fontSize(9f), "아이캔서치 검사는 약 5,000명의 암 환자 및 정상인에서 특징적으로 나타나는 DNA 패턴을 학습한 인공지능으로 수검자의 DNA\n" +
             "패턴을 분석하여 주요 6종 암의 존재 가능성을 예측합니다. 본 검사의 결과는 암의 진단 혹은 완전한 배제를 의미하지 않습니다.")) }
 
     override fun lblOverviewTitle(stream: PDPageContentStreamPageAccessible, y: Float) {stream.paragraph(297f, y + 11, 300f, AlignHorizontal.CENTER, TextBlock(resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f), "종 합 결 과")) }
@@ -114,7 +114,10 @@ class CancerchTemplateN203KoKr(
         when(dto.result) {
             CancerchDto.Results.GENERAL -> stream.paragraph(423f - width / 2 + 130, y - SQUARE_RATE + 75, 400f, AlignHorizontal.CENTER, TextBlock(style, "해당없음"))
             CancerchDto.Results.CONCERN -> stream.paragraph(423f - width / 2 + 130, y - SQUARE_RATE + 75, 400f, AlignHorizontal.CENTER, TextBlock(style, "해당없음 : 추적관찰 권장"))
-            CancerchDto.Results.RISK -> stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 75, 400f, AlignHorizontal.LEFT, TextBlock(style, (if (dto.first.name == "기타암종") "6종 암 외 " else "6종 암 중 ") + lblCancerToWord(dto.first.name) + "의 DNA 패턴과 가장 유사합니다."))
+            CancerchDto.Results.RISK -> when(dto.first.name) {
+                "기타암종" ->stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 75, 400f, AlignHorizontal.LEFT, TextBlock(style, "암종 예측 불가: 6종 암 또는 기타 암의 존재 가능성이 있습니다."))
+                else -> stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 75, 400f, AlignHorizontal.LEFT, TextBlock(style, "6종 암 중 " + lblCancerToWord(dto.first.name) + "의 DNA 패턴과 가장 유사합니다."))
+            }
         }
     }
 
@@ -122,10 +125,15 @@ class CancerchTemplateN203KoKr(
         val style = resource().styleContentRegualar().clone().color(Color(0, 0, 0)).fontSize(10f)
         when(dto.result) {
             CancerchDto.Results.GENERAL -> stream.paragraph(423f - width / 2 + 130, y - SQUARE_RATE + 48, 300f, AlignHorizontal.CENTER, TextBlock(style, "DNA 패턴 분석 결과, 암 존재 가능성이 낮게 예측되었습니다."))
-            CancerchDto.Results.CONCERN -> stream.paragraph(423f - width / 2 + 130, y - SQUARE_RATE + 48, 300f, AlignHorizontal.CENTER, TextBlock(style, "DNA 패턴 분석 결과, 6종 암으로 예측되지는 않습니다.\n " +
-                    "그러나 암의 존재 가능성이 발견되었으므로 추적관찰을 권장합니다."))
-            CancerchDto.Results.RISK -> stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 48, 300f, AlignHorizontal.LEFT, TextBlock(style, "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
-                    "타 암종에 대해서는 정확한 분석이 어렵습니다."))
+            CancerchDto.Results.CONCERN -> stream.paragraph(423f - width / 2 + 130, y - SQUARE_RATE + 48, 400f, AlignHorizontal.CENTER, TextBlock(style, "특정 암으로 예측하기에는 불분명하나 암 존재 가능성이 약 2배 이상 높을 것으로 예측됩니다."))
+            CancerchDto.Results.RISK -> when(dto.first.name){
+                "기타암종" -> stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 58, 300f, AlignHorizontal.LEFT, TextBlock(style, "특정 암으로 예측하기에는 불분명하나 암 존재 가능성이\n" +
+                        "약 10배 이상 높을 것으로 예측됩니다.\n\n"),
+                    TextBlock(style.clone().fontSize(8f), "*6종 암: 폐암, 대장암, 간암, 췌장담도암, 식도암, 난소암"))
+                else -> stream.paragraph(323f - width / 2 + 130, y - SQUARE_RATE + 58, 300f, AlignHorizontal.LEFT, TextBlock(style, "본 검사에 포함된 6종 암 중 가장 유사한 암종에 대해 예측하므로,\n" +
+                        "타 암종에 대해서는 정확한 분석이 어렵습니다.\n\n"),
+                    TextBlock(style.clone().fontSize(8f), "*6종 암: 폐암, 대장암, 간암, 췌장담도암, 식도암, 난소암"))
+            }
         }
     }
 
@@ -139,7 +147,7 @@ class CancerchTemplateN203KoKr(
         if(dto.result == CancerchDto.Results.RISK) {
             if (dto.first.name == "기타암종") {
                 stream.line(375f,  y+67, 375f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
-                stream.paragraph(365f, y + 85, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(67, 72, 142)).clone().fontSize(13f),"의심 암종 : 기타 암"))
+                stream.paragraph(365f, y + 85, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.color(Color(67, 72, 142)).clone().fontSize(13f),"암종 예측 불가"))
             } else {
                 stream.line(375f,  y+113, 375f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
                 stream.paragraph(290f, y + 85, 200f, AlignHorizontal.CENTER, TextBlock(styleBold.fontSize(13f), "의심 암종 : ${dto.first.name}"))
@@ -234,7 +242,7 @@ class CancerchTemplateN203KoKr(
                 stream.drawImage(img, 498 - width / 2, y-98, width, height)
                 stream.paragraph(498f, y-98 + height + 10, 120f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(colors).fontSize(13f), "약 5배 이상"))
             } else {
-                stream.paragraph(470f, y, 300f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11, 11, 11)).clone().fontSize(11f), "6종 암 외의 암 존재 가능성이\n\n약 10배 이상 높을 것으로 예측됨"))
+                stream.paragraph(470f, y, 300f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11, 11, 11)).clone().fontSize(11f), "6종 암 또는 기타암 존재 가능성이\n\n약 10배 이상 높을 것으로 예측됨"))
             }
         }
     }
@@ -356,11 +364,11 @@ class CancerchTemplateN203KoKr(
             TextBlock(styleRegular, "인 "),
             TextBlock(styleBold, dto.patientName),
             TextBlock(styleRegular, "님은 "),
-            TextBlock(styleBold, "기타 암"),
+            TextBlock(styleBold, "암"),
             TextBlock(styleRegular, " 환자의 이상 DNA패턴과 가장 유사합니다.\n혈액 속 암세포에서 유래된 DNA를 인공지능 알고리즘을 통해 분석한 결과, "),
             TextBlock(styleBold, dto.patientName),
             TextBlock(styleRegular, "님은 암의 존재 가능성이 다소 높을 것으로\n예측되어 일반인 대비 "),
-            TextBlock(styleBold, dto.first.name),
+            TextBlock(styleBold, "암"),
             TextBlock(styleRegular, " 존재 가능성이 약 10배 이상 높을 것으로 예측됩니다.\n일반적으로 "),
             TextBlock(styleBold, lblPatientInfoWithCancer(dto.age!!, dto.sex!!, dto.first.name)),
             TextBlock(styleRegular, " 환자는 "),
@@ -370,10 +378,10 @@ class CancerchTemplateN203KoKr(
             TextBlock(styleRegular, ")의 확률로 발생하지만,\n"),
             TextBlock(styleBold, dto.patientName),
             TextBlock(styleRegular, "님이 "),
-            TextBlock(styleBold, "기타 암"),
+            TextBlock(styleBold, "암"),
             TextBlock(styleRegular, "일 확률은 약 "),
             TextBlock(styleBold, dto.first.ppv.toString() + "%"),
-            TextBlock(styleRegular, "입니다.\n\n집중관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다. 또한 "),
+            TextBlock(styleRegular, "입니다.\n\n집중관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "),
             TextBlock(blackbold,"정상인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%).\n\n"),
             TextBlock(blackbold, dto.first.comment)
         )
@@ -791,6 +799,7 @@ class CancerchTemplateN203KoKr(
             3 -> stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f), "암종의 위치 및 유전적 특성에 따라 검출민감도가 상이할 수 있습니다."))
             4 -> stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f), "본 검사는 내부적으로 축적된 데이터에 따라 검사 대상 암종 확대 및 성능이 변경될 수 있습니다."))
             5 -> stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f), "본 검사는 양성질환, 자가면역질환 등에서 위양성으로 보고될 수 있으며, 항암치료, 세포치료 등에 따라서 위음성으로 보고될 수 있습니다."))
+            6 -> stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f), "본 검사는 기존의 건강검진 검사를 대체할 수는 없습니다."))
             else -> stream.paragraph(56f, y, 500f, AlignHorizontal.LEFT, TextBlock(resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(8f), ""))
         }
     }

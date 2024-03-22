@@ -22,7 +22,7 @@ class SectionLimitation(private var y: Float = 755f) : Painter<CancerchTemplate<
         template.lblLimitationHeader(stream, y)
 
         y -= 10
-        for(i in 0..5){
+        for(i in 0..6){
             y -= CONTENT_MINI_SQUARE+10
             img = template.resource().imgMiniSquare()
             width = img.width * CONTENT_MINI_SQUARE / img.height
