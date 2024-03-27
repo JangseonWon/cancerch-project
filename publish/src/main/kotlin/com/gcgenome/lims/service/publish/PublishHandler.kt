@@ -92,7 +92,7 @@ class PublishHandler(
     }
 
     private fun publishRMS(sample: Long, service: String, createAt: Long): Mono<Boolean> {
-        logger.info("RMS 전송 시작")
+        logger.info("의뢰번호 : "+sample+" / 검사코드 : "+service+" RMS 전송 시작")
         return requestDao.findById(sample, service)
             .zipWith(reportDao.findForCassandraReport(
                 sample,
