@@ -5,9 +5,26 @@ spring:
     web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: localhost:12181
       discovery:
         root: /avoid-service
+    stream:
+      default:
+        max.message.bytes: 67109632
+      function:
+        definition: publishRms;broadcast-publishing
+      bindings:
+        publish-rms-out-o:
+          destination: report
+          group: report
+        broadcast-publishing-in-0:
+          destination: alis-pdf-publisher-response
+          group: alis-pdf-publisher-response
+      kafka:
+        binder:
+          brokers: localhost
+          auto-add-partitions: true
+
   r2dbc:
     url: r2dbc:postgresql://gemini:5432/lims
     compatibility-mode : true
@@ -27,7 +44,7 @@ spring:
       connect-timeout: 10000s
       read-timeout: 10000s
 server:
-  port: 0
+  port: 58895
 
 logging:
   level:

@@ -2,14 +2,13 @@ package com.gcgenome.alis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.alis.models.*
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpCookie
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
-import org.springframework.util.MultiValueMap
 import org.springframework.util.MultiValueMapAdapter
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -23,6 +22,7 @@ class Client (
     @Qualifier("httpWebClient")
     private val webClient: WebClient
 ){
+    private val logger = LoggerFactory.getLogger(Client::class.java)
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
@@ -45,14 +45,17 @@ class Client (
                 operation = Operation.CREATE_IMG_TOTAL
             ),
         )
-        return webClient
+
+        val response = webClient
             .post()
             .uri("https://lims/alis-queue/async")
             .cookies{it.addAll(cookieMap)}
             .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(listOf(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo))), List::class.java)
             .exchangeToMono{
+                logger.info(it.statusCode().toString())
                 Mono.just(it.statusCode().is2xxSuccessful)
             }
+        return response
     }
 }
