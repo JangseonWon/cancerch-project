@@ -14,7 +14,7 @@ data class ReportForRMS(
     val physician: String?,
     val sample: Long,
     val service: String,
-    val report: String
+    val report: ByteArray
 ) {
     val interpretation: Map<String, Any> = mutableMapOf()
     val customeInfos: Map<String, Any> = mutableMapOf()

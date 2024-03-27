@@ -55,7 +55,7 @@ class PublishHandler(
                     LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
                 )
             }.map {
-                println("send complete")
+                logger.info("의뢰번호 : "+sample+" / 검사코드 : "+service+" 전송 완료")
                 true
             }
             .switchIfEmpty(Mono.just(false))
@@ -70,10 +70,20 @@ class PublishHandler(
         return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c)) }
     }
 
-    @Bean("publish-rms")
-    fun publishRMS(): Supplier<Flux<String>> {
-        return Supplier { rmsPublisher.asFlux().map(om::writeValueAsString) }
+    @Bean("publish")
+    fun publish(): Supplier<Flux<String>> {
+        return Supplier {
+            rmsPublisher.asFlux().mapNotNull {
+                try {
+                    om.writeValueAsString(it)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }
+            }
+        }
     }
+
 
     private fun stringToMessage(str: String): AlisResponse {
         return om.readValue(str, AlisResponse::class.java)
@@ -114,7 +124,7 @@ class PublishHandler(
                     it.t1.physician,
                     it.t1.sample,
                     it.t1.service,
-                    it.t2.toString()
+                    it.t2
                 )
             }.map {
                 rmsPublisher.tryEmitNext(it)
