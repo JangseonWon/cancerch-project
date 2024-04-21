@@ -110,7 +110,7 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     override fun imgRankFirst(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/kokr/C_rankfirst.png"))
     override fun imgRankSecond(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/kokr/C_ranksecond.png"))
 
-    override fun imgCancerTypeTitle(tf: Boolean): PDImageXObject = img(File(CancerchResource.resource, if(tf) "img/avoid/SectionCancerTypeDanger/large_content_box_3.png" else "img/avoid/SectionCancerTypeDanger/large_content_box_2.png"))
+    override fun imgCancerTypeTitle(tf: Boolean): PDImageXObject = img(File(CancerchResource.resource, if(tf) "img/avoid/SectionCancerTypeDanger/middle_content_box.png" else "img/avoid/SectionCancerTypeDanger/large_content_box_3.png"))
     override fun imgCancerTypeContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/cancer_box.png"))
     override fun imgCancerTypeImage(cancer: String) : PDImageXObject = img(
         File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/$cancer.png")

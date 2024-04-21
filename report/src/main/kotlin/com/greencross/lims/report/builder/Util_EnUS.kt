@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 
-open class Util {
+open class Util_EnUS {
     companion object {
         private val DTF: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         fun date(date: LocalDate?): String? {
@@ -33,8 +33,8 @@ open class Util {
 
         fun sex(sex: Sex?): String {
             return if (sex == null) "-" else when (sex) {
-                Sex.M -> "남"
-                Sex.F -> "여"
+                Sex.M -> "M"
+                Sex.F -> "F"
             }
         }
         fun dashIfEmpty(str: String): String {
@@ -81,42 +81,46 @@ open class Util {
             stream.restoreGraphicsState()
         }
         fun lblResultToWord(result: CancerchDto.Results) = when (result) {
-            CancerchDto.Results.GENERAL -> "일반관리"
-            CancerchDto.Results.CONCERN -> "관심관리"
-            else -> "집중관리"
+            CancerchDto.Results.GENERAL -> "General Risk"
+            CancerchDto.Results.CONCERN -> "Intermediate Risk"
+            else -> "High Risk"
         }
-        fun lblCancerToWord(cancer: String) = when (cancer) {
-            "기타암종" -> "기타 암"
-            else -> cancer
+        fun cancerToEng(cancer: String) = when (cancer) {
+            "폐암" -> "Lung Cancer"
+            "대장암" -> "Colon Cancer"
+            "간암" -> "Liver Cancer"
+            "췌장담도암" -> "Pancreatobiliary Cancer"
+            "식도암" -> "Esophageal Cancer"
+            "난소암" -> "Ovarian Cancer"
+            else -> "Others"
         }
-        fun lblPatientSir(name: String) = "${name}님"
         fun lblPatientInfo(age: String, sex: Sex): String {
             val ageStream: String = (age.toInt() / 10 * 10).toString()
             val cut: String = when {
-                age.substring(age.length - 1, age.length).toInt() >= 5 -> "후반"
-                else -> "초반"
+                age.substring(age.length - 1, age.length).toInt() >= 5 -> "in late "
+                else -> "in early "
             }
             val sexStr: String = when {
-                sex == Sex.F -> "여성"
-                else -> "남성"
+                sex == Sex.F -> "Female "
+                else -> "Male "
             }
-            return ageStream + "대 " + cut + " " + sexStr + " 평균"
+            return sexStr + cut + ageStream +"s"
         }
         fun lblPatientInfoWithCancer(age: String, sex: Sex, cancer: String): String {
             val ageStream: String = (age.toInt() / 10 * 10).toString()
             val cut: String = when {
-                age.substring(age.length - 1, age.length).toInt() >= 5 -> "후반"
-                else -> "초반"
+                age.substring(age.length - 1, age.length).toInt() >= 5 -> "late "
+                else -> "early "
             }
             val sexStr: String = when {
-                sex == Sex.F -> "여성"
-                else -> "남성"
+                sex == Sex.F -> "Female "
+                else -> "Male "
             }
-            val canStr: String = when (cancer) {
-                "기타암종" -> "전체 암"
-                else -> cancer
+            return when(cancer) {
+                "기타암종" -> cut + ageStream +"s " + sexStr
+                else -> sexStr + cancerToEng(cancer) + " patients in their "+ cut + ageStream + "s "
             }
-            return ageStream + "대 " + cut + " " + sexStr + " " + canStr
+
         }
     }
 }

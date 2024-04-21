@@ -1,14 +1,12 @@
 package com.greencross.lims
 
 import com.gcgenome.lims.avoid.TestInfo
-import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
-import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
-import com.greencross.lims.report.cancerch.enus.CancerchTemplateON203EnUs
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
+import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenomeNotColorBar
 import com.greencross.lims.report.kokr.SectionPage
@@ -24,11 +22,11 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 class CancerchReportTest {
     var code = "375"
     var patient: String = "홍길동"
-    var birth: Int = 1968
+    var birth: Int = 2001
     var collection: LocalDate = LocalDate.of(2023,10,11)
-    var sex: Sex = Sex.F
+    var sex: Sex = Sex.M
     var receipt: LocalDate = collection
-    var cancer= CancerRepo.암종.기타암종
+    var cancer= CancerchRepo.암종.췌장담도암
     var barcode: String = "CR3-$code"
     var request: String = "20231011-971-0001"
     val comment: String = "소견이 입력됩니다."
@@ -39,19 +37,45 @@ class CancerchReportTest {
             Desktop.getDesktop().open(File("./N203/샘플테테테스트.pdf"))
         }
     }
+    fun createAllReport() {
+        val cancers = arrayOf(CancerchRepo.암종.폐암, CancerchRepo.암종.췌장담도암, CancerchRepo.암종.대장암, CancerchRepo.암종.난소암, CancerchRepo.암종.식도암, CancerchRepo.암종.간암, CancerchRepo.암종.기타암종)
+        val sexes = arrayOf(Sex.M, Sex.F)
+        val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
 
+        for(cancer in cancers) {
+            this.cancer = cancer
+            for (sex in sexes) {
+                this.sex = sex
+                for (birth in birthes) {
+                    this.birth = birth
+                    println("./N203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+                    val doc: PDDocument? = build(null, "ko-kr")
+                    doc!!.save("./N203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+                }
+            }
+        }
+//        for (sex in sexes) {
+//            this.sex = sex
+//            for (birth in birthes) {
+//                this.birth = birth
+//                println("./N203/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
+//                val doc: PDDocument? = build(null, "ko-kr")
+//                doc!!.save("./N203/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
+//            }
+//        }
+    }
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
         val type: LogoType = LogoType.DEPENDENT
-        val repo: CancerRepo = CancerRepo()
+        val repo: CancerchRepo = CancerchRepo()
         return builder(
             TestInfo.N203, type,
-            CancerchDto("",
-                CancerchDto.Results.RISK,
-                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
 //            CancerchDto("",
-//                CancerchDto.Results.CONCERN,
-//                CancerchDto.Cancer("기타암종")))?.build()
+//                CancerchDto.Results.RISK,
+//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+            CancerchDto("",
+                CancerchDto.Results.CONCERN,
+                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.GENERAL,
 //                CancerchDto.Cancer()))?.build()
@@ -105,4 +129,5 @@ class CancerchReportTest {
 fun main(){
     val test = CancerchReportTest()
     test.test()
+//    test.createAllReport()
 }

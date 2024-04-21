@@ -11,15 +11,15 @@ class CancerchON203(
     val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 ) : CancerchPageBuilder<CancerchTemplateON203<CancerchResource>>(template, dto)  {
     val barcode: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionBarcode()
-    private val title: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTitle()
-    private val intro: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionIntro()
-    private val totalResult: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTotalResult()
-    private val predictCancer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionPredictCancer()
-    private val analysis: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysis()
-    private val cancerTypeDanger: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionCancerTypeDanger()
-    private val analysisComment: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysisComment()
-    private val guideLine: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionGuideLine()
-    private val limitation: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionLimitation()
+    private val title: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTitle2()
+    private val intro: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionIntro2()
+    private val totalResult: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTotalResult2()
+    private val predictCancer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionPredictCancer2()
+    private val analysis: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysis2()
+    private val cancerTypeDanger: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionCancerTypeDanger2()
+    private val analysisComment: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysisComment2()
+    private val guideLine: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionGuideLine2()
+    private val limitation: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionLimitation2()
 
     override fun template(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return title.and { stream, template, dto ->

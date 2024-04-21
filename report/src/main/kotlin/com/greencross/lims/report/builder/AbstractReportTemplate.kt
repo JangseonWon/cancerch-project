@@ -9,12 +9,4 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface AbstractReportTemplate<R: Resource>: Template<R> {
-    fun lblMedicalInstitution(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblMedicalRecordNumber(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblRequestNumber(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblPatientName(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblAgeSex(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblSpecimenType(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblSpecimenDate(stream: PDPageContentStreamPageAccessible, y: Float)
-    fun lblReceiptReportDate(stream: PDPageContentStreamPageAccessible, y: Float)
 }

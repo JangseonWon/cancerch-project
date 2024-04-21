@@ -15,10 +15,6 @@ abstract class CancerchTemplateKoKr<R: CancerchResourceKoKr>(
     testInfo: TestInfo
 ) : CancerchTemplate<R> {
     val testInfo: TestInfo
-    fun lblCancerToWord(cancer: String) = when (cancer) {
-        "기타암종" -> "기타 암"
-        else -> cancer
-    }
 
     init{
         this.testInfo = testInfo

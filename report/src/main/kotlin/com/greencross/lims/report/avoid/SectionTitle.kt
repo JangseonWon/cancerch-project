@@ -34,14 +34,14 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         width = img.width * TITLE_HEADERBOX_HEIGHT / img.height
         stream.drawImage(img, 385f - width/2, y-25, width, TITLE_HEADERBOX_HEIGHT)
 
-        template.lblMedicalInstitution(stream, y)
-        template.lblRequestNumber(stream, y)
-        template.lblPatientName(stream, y)
-        template.lblAgeSex(stream, y)
-        template.lblMedicalRecordNumber(stream, y)
-        template.lblSpecimenType(stream, y)
-        template.lblSpecimenDate(stream, y)
-        template.lblReceiptReportDate(stream, y)
+        stream.paragraph(235f, y+35, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(), "의뢰기관"))
+        stream.paragraph(385f, y+35, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(), "접수번호" ))
+        stream.paragraph(235f, y+20, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(),  "성명"))
+        stream.paragraph(385f, y+20, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(), "나이/성별"))
+        stream.paragraph(235f,  y+5, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(),"등록번호"))
+        stream.paragraph(385f,  y+5, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(), "검체종류"))
+        stream.paragraph(235f, y-10, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(),"검체채취일"))
+        stream.paragraph(385f, y-10, 50f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold(),"접수일/보고일"))
 
 
         var style = template.resource().styleContentRegualar()
