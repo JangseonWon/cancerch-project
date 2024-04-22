@@ -221,8 +221,8 @@ class ReportHandler(
         else Pair(patient.customerName, formatSampleId(analysis.sample))
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
-            CancerRepo.결과.GENERAL -> CancerchDto.Cancer()
-            CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종")
+            CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
+            CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종", comment = analysis.comment ?: "")
             else -> CancerchDto.Cancer(
                 cancerToFileName(result),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
