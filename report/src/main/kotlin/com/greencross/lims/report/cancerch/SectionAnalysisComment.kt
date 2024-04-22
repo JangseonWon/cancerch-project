@@ -33,7 +33,8 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
                 TextBlock(styleRegular, "인 "),
                 TextBlock(styleBold, "${dto.patientName}"),
                 TextBlock(styleRegular, "님은 건강인의 DNA패턴과 유사합니다.\n단, 아이캔서치 검사는 모든 암을 검출할 수 없으며, 암의 병기나 종류에 따라 검출 성능이 달라질 수 있습니다.\n본 검사는 수검자의 암 존재 가능성을 확인하는 검사로 정확한 진단을 위한 검사는 아니며,\n확진을 위해서는 의료진 상담을 통한 정밀검사를 권장합니다.\n\n"),
-                TextBlock(blackbold, "현재 암 일반관리군으로 분류된 것이 미래에 암이 발병하지 않음을 의미하는 것은 아니므로,\n정기적인 건강검진과 생활습관 관리를 통해 암을 예방할 것을 권장합니다.")
+                TextBlock(blackbold, "현재 암 일반관리군으로 분류된 것이 미래에 암이 발병하지 않음을 의미하는 것은 아니므로,\n정기적인 건강검진과 생활습관 관리를 통해 암을 예방할 것을 권장합니다.\n\n"),
+                TextBlock(blackbold, dto.first.comment)
             )
         } else if (CancerchDto.Results.CONCERN == dto.result){
             val RESULT_IMAGE_COMMENT_RATE = 201f
@@ -55,7 +56,8 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
                 TextBlock(styleRegular, "님은 암의 존재 가능성이\n"),
                 TextBlock(styleBold, "약 2배 이상 "),
                 TextBlock(styleRegular, "높을 것으로 예측되나, 암 종을 예측하기에는 불분명합니다.\n\n관심관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "),
-                TextBlock(blackbold, "건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다.(약 5%).")
+                TextBlock(blackbold, "건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다.(약 5%).\n\n"),
+                TextBlock(blackbold, dto.first.comment)
             )
         }
 
@@ -93,7 +95,8 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
                     TextBlock(styleRegular, "일 확률은 약 "),
                     TextBlock(styleBold, dto.first.ppv.toString() + "%"),
                     TextBlock(styleRegular, "입니다.\n\n집중관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "),
-                    TextBlock(blackbold,"건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%).")
+                    TextBlock(blackbold,"건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 집중관리 대상자로 보고될 수 있습니다(약 1%).\n\n"),
+                    TextBlock(blackbold, dto.first.comment)
                 )
             }
             else {
