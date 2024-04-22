@@ -345,7 +345,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		String top6FEMS		= convertFormat(value.too6FemsProb());
 		String iscore		= convertFormat(value.iscore());
 		String result		= convertResultName(value.result());
-		String comment		= value.comment().equals("") || value.comment().equals(" ") ? "입력 필요" : "입력 완료";
+		String comment		= value.comment().equals("") || value.comment().equals(" ") ? "입력" : "수정";
 		String comments     = value.comment().equals(" ") ? "" : value.comment();
 		Data datum = Data.create(idx)
 				.put("ID",       				id)
