@@ -110,6 +110,7 @@ class PublishHandler(
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
             ).publishOn(Schedulers.boundedElastic()).map { reportFileRepo.findById(it.file).map { it.data?.array() }.get() }
             ).map {
+                val institution = if(it.t1.institution2.isNullOrBlank())it.t1.institution else it.t1.institution + "-" + it.t1.institution2
                 ReportForRMS(
                     it.t1.institutionName,
                     it.t1.departmentName,
@@ -120,7 +121,7 @@ class PublishHandler(
                     it.t1.birth.toString(),
                     it.t1.mrn,
                     it.t1.info,
-                    it.t1.institution + "-" + it.t1.institution2,
+                    institution,
                     it.t1.physician,
                     it.t1.sample,
                     it.t1.service,
