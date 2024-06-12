@@ -123,7 +123,7 @@ class SectionGuideLine2(private var y: Float = 329f) : Painter<CancerchTemplate<
             stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "Intervals"))
             stream.paragraph(440f, y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "Test"))
 
-            var styleRegular = template.resource().styleContentBold().clone().color(Color(23,18,15)).fontSize(7f)
+            var styleRegular = template.resource().styleContentRegualar().clone().color(Color(23,18,15)).fontSize(7f)
             stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "Lung"))
             stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -73, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "Colon"))
             stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -113, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "Liver"))
@@ -140,7 +140,7 @@ class SectionGuideLine2(private var y: Float = 329f) : Painter<CancerchTemplate<
                 TextBlock(styleRegular.clone().fontSize(7f), "Individuals aged 70 or older \n"),
                 TextBlock(styleRegular.clone().fontSize(6f),
                     "(Family history of pancreatobiliary cancer/ long\nterm smoker / medical history of chronic pancreatitis)"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -184, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Individuals who have any symptoms or\nare suspected to have esophageal cancer"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -182, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Individuals who have any symptoms or\nare suspected to have esophageal cancer"))
             stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -215, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "-"))
 
             stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "Every 2 years"))
@@ -150,11 +150,11 @@ class SectionGuideLine2(private var y: Float = 329f) : Painter<CancerchTemplate<
             stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -182, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "Regular\ncheck-ups"))
             stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -215, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "-"))
 
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Low-dose chest CT"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -62, 220f, AlignHorizontal.LEFT, TextBlock(styleRegular.fontSize(5.5f), "If there are any abnormal findings in a fecal occult blood test,\ncolonoscopy can be considered.\n"), TextBlock(styleRegular.clone().fontSize(5.5f), "(If a colonoscopy is not available, a double contrast brium enema\nmay be an option.)"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE - 38, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Low-dose chest CT"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE - 65, 220f, AlignHorizontal.LEFT, TextBlock(styleRegular, "If there are any abnormal findings in a fecal occult blood test,\ncolonoscopy can be considered.\n"), TextBlock(styleRegular.clone().fontSize(5.5f), "(If a colonoscopy is not available, a double contrast brium enema may be an option.)"))
             stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -113, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular,"Liver ultrasound, AFP test"))
             stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -152, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Abdominal ultrasound, CT"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -187, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Esophageal-Gastric endoscopy"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -186, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "Esophageal-Gastric endoscopy"))
             stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -211, 230f, AlignHorizontal.LEFT, TextBlock(styleRegular, "If there are any abnormal findings in a CA125 test, ultrasound,\nCT or MRI can be considered."))
 
             styleRegular = template.resource().styleContentRegualar().clone().fontSize(7f)

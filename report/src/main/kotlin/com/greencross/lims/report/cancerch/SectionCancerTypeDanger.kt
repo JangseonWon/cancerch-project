@@ -201,8 +201,8 @@ class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTem
         private const val DANGER_CONTENT_RATE = 445f
         private const val DANGER_CONTENT_RATE_WITH_OTHER = 469f
         private const val DANGER_HUMAN_RATE = 230f
-        private const val DANGER_CANCER_CONTENT = 60F
-        private const val DANGER_CANCER_ICON = 32F
+        private const val DANGER_CANCER_CONTENT = 60f
+        private const val DANGER_CANCER_ICON = 32f
         private const val DANGER_ICON_RATE = 45f
         private const val DANGER_BAR_RATE = 4.5f
     }

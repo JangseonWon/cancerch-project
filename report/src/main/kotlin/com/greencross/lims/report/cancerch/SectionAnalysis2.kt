@@ -114,7 +114,12 @@ class SectionAnalysis2(private val y: Float = 200f) : Painter<CancerchTemplate<C
                 stream.drawImage(img, 498 - width / 2, y-98, width, height)
                 stream.paragraph(498f, y-98 + height + 10, 120f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(colors).fontSize(11f), "About 5x higher"))
             } else {
-                stream.paragraph(470f, y, 300f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11, 11, 11)).clone().fontSize(9f), "Possibility of cancer other than\n6 types of cancer is predicted to be\nabout "), TextBlock(styleRegular.color(Color(217, 52, 29)).clone().fontSize(9f),"10 times higher"))
+                stream.paragraph(470f, y+10, 300f, AlignHorizontal.CENTER, TextBlock(styleRegular.color(Color(11, 11, 11)).clone().fontSize(9f), "Possibility of cancer other than\n6 types of cancer is predicted to be\nabout "), TextBlock(styleRegular.clone().color(Color(217, 52, 29)).fontSize(9f),"10 times higher"))
+                stream.paragraph(
+                    470f, y-40, 300f, AlignHorizontal.CENTER, TextBlock(
+                        styleRegular.clone().fontSize(7f), "*6 cancer types: Lung, Colon, Liver, Pancreatobiliary,\nEsophageal, and Ovarian cancer."
+                    )
+                )
             }
         }
         return stream

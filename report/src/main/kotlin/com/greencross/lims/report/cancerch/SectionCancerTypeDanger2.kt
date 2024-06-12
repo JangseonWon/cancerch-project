@@ -3,6 +3,7 @@ package com.greencross.lims.report.cancerch
 import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.builder.Sex
+import com.greencross.lims.report.cancerch.SectionCancerTypeDanger.Companion
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.AlignVertical
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
@@ -17,9 +18,9 @@ class SectionCancerTypeDanger2(private val y: Float = 745f) : Painter<CancerchTe
         dto: CancerchDto?
     ): PDPageContentStreamPageAccessible {
         stream!!.saveGraphicsState()
-        var img = template!!.resource().imgCancerTypeTitle(dto!!.result == CancerchDto.Results.RISK && dto.first.name == "기타암종")
-        var width = img.width * rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") / img.height
-        stream.drawImage(img, 298f - width / 2, y - rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") + 63, width, rate(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종"))
+        var img = template!!.resource().imgCancerTypeTitle(dto!!.result == CancerchDto.Results.GENERAL)
+        var width = img.width * rate(dto.result == CancerchDto.Results.GENERAL) / img.height
+        stream.drawImage(img, 298f - width / 2, y - rate(dto.result == CancerchDto.Results.GENERAL) + 63, width, rate(dto.result == CancerchDto.Results.GENERAL))
 
         var style = template.resource().styleContentSpecial().fontSize(15f).color(Color(255, 255, 255))
         stream.paragraph(560f - width / 2, y + 45, 120f, AlignHorizontal.CENTER, TextBlock(style, "Cancer Risk"))
@@ -73,7 +74,8 @@ class SectionCancerTypeDanger2(private val y: Float = 745f) : Painter<CancerchTe
         }
 
         style = template.resource().styleContentRegualar().clone().fontSize(6f).color(Color(159, 160, 160))
-        stream.paragraph(110f - width / 2, y - DANGER_CONTENT_RATE +if(dto.result == CancerchDto.Results.RISK && dto.first.name == "기타암종") -100 else +54, 500f, AlignHorizontal.LEFT, TextBlock(style, "* The average risk for each cancer type corresponds to prevalence among similar age and gender demographics as the examinee. (Annual report of cancer statistics in Korea in 2020)"))
+        if(dto.result == CancerchDto.Results.GENERAL) stream.paragraph(630f - width / 2, y - DANGER_CONTENT_RATE +70, 500f, AlignHorizontal.RIGHT, TextBlock(style, "* The average risk for each cancer type corresponds to prevalence among similar age and gender demographics as the examinee. (Annual report of cancer statistics in Korea in 2020)"))
+        else stream.paragraph(115f - width / 2, y - DANGER_CONTENT_RATE +30, 500f, AlignHorizontal.LEFT, TextBlock(style, "* The average risk for each cancer type corresponds to prevalence among similar age and gender demographics as the examinee. (Annual report of cancer statistics in Korea in 2020)"))
 
         stream.restoreGraphicsState()
         return stream
@@ -202,14 +204,14 @@ class SectionCancerTypeDanger2(private val y: Float = 745f) : Painter<CancerchTe
         stream.drawImage(img, x - width / 2, y, width, DANGER_ICON_RATE)
     }
 
-    private fun rate(tf: Boolean) = if(tf) DANGER_CONTENT_RATE_WITH_OTHER else DANGER_CONTENT_RATE
+    private fun rate(tf: Boolean) = if(tf) DANGER_CONTENT_RATE else DANGER_CONTENT_RATE_WITH_OTHER
 
     companion object {
-        private const val DANGER_CONTENT_RATE = 318f
+        private const val DANGER_CONTENT_RATE = 445f
         private const val DANGER_CONTENT_RATE_WITH_OTHER = 469f
         private const val DANGER_HUMAN_RATE = 230f
-        private const val DANGER_CANCER_CONTENT = 60F
-        private const val DANGER_CANCER_ICON = 32F
+        private const val DANGER_CANCER_CONTENT = 60f
+        private const val DANGER_CANCER_ICON = 32f
         private const val DANGER_ICON_RATE = 45f
         private const val DANGER_BAR_RATE = 4.5f
     }

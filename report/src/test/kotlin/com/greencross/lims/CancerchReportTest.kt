@@ -23,10 +23,10 @@ class CancerchReportTest {
     var code = "375"
     var patient: String = "홍길동"
     var birth: Int = 2001
-    var collection: LocalDate = LocalDate.of(2023,10,11)
-    var sex: Sex = Sex.M
+    var collection: LocalDate = LocalDate.of(2024,4,22)
+    var sex: Sex = Sex.F
     var receipt: LocalDate = collection
-    var cancer= CancerchRepo.암종.췌장담도암
+    var cancer= CancerchRepo.암종.기타암종
     var barcode: String = "CR3-$code"
     var request: String = "20231011-971-0001"
     val comment: String = "소견이 입력됩니다."
@@ -73,12 +73,12 @@ class CancerchReportTest {
 //                CancerchDto.Results.RISK,
 //                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
 //                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
-            CancerchDto("",
-                CancerchDto.Results.CONCERN,
-                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
-//                CancerchDto.Results.GENERAL,
-//                CancerchDto.Cancer()))?.build()
+//                CancerchDto.Results.CONCERN,
+//                CancerchDto.Cancer("기타암종")))?.build()
+            CancerchDto("",
+                CancerchDto.Results.GENERAL,
+                CancerchDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()

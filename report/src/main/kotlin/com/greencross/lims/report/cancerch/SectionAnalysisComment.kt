@@ -2,7 +2,6 @@ package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.TextBlock
 import com.greencross.lims.report.builder.Util.Companion.lblResultToWord
-import com.greencross.lims.report.builder.Util.Companion.lblPatientInfo
 import com.greencross.lims.report.builder.Util.Companion.lblPatientInfoWithCancer
 import com.greencross.lims.report.func.AlignHorizontal
 import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
@@ -11,19 +10,19 @@ import java.awt.Color
 import kotlin.math.round
 
 class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
-
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: CancerchTemplate<CancerchResource>?,
         dto: CancerchDto?
     ): PDPageContentStreamPageAccessible {
         stream!!.saveGraphicsState()
+
+        val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(9f)
+        val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
+        val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
+
         stream.line(47f,493f, 542f, 493f).setLineWidth(0.4f).setStrokingColor(Color(67, 72, 142)).stroke()
         if (CancerchDto.Results.GENERAL == dto!!.result) {
-            val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(9f)
-            val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
-            val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
-
             stream.paragraph(
                 52f,
                 y + RESULT_IMAGE_COMMENT_RATE + 275,
@@ -37,11 +36,6 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
                 TextBlock(blackbold, dto.first.comment)
             )
         } else if (CancerchDto.Results.CONCERN == dto.result){
-            val RESULT_IMAGE_COMMENT_RATE = 201f
-            val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(9f)
-            val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
-            val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
-
             stream.paragraph(
                 52f,
                 y + RESULT_IMAGE_COMMENT_RATE + 275,
@@ -63,10 +57,6 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
 
         else {
             if (dto.first.name != "기타암종"){
-                val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(9f)
-                val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
-                val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
-
                 stream.paragraph(
                     52f,
                     y + RESULT_IMAGE_COMMENT_RATE + 275,
@@ -100,10 +90,6 @@ class SectionAnalysisComment(private val y: Float = 0f) : Painter<CancerchTempla
                 )
             }
             else {
-                val styleRegular = template!!.resource().styleContentRegualar().clone().fontSize(9f)
-                val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
-                val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
-
                 stream.paragraph(
                     52f,
                     y + RESULT_IMAGE_COMMENT_RATE + 275,

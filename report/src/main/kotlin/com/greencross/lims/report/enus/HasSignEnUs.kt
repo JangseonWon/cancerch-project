@@ -20,7 +20,7 @@ interface HasSignEnUs: HasSign {
 
         val MDS: Array<HasSign.Person> = arrayOf(
             HasSign.Person("기창석 M.D", "547", File(resource, "/img/sign/enus/기창석.png")),
-            HasSign.Person("Jo Eun-hae MD", "690", File(resource, "/img/sign/enus/조은해.png")),
+            HasSign.Person("Eun-hae Cho MD", "690", File(resource, "/img/sign/enus/조은해.png")),
             HasSign.Person("김동일 M.D", "762", File(resource, "/img/sign/enus/김동일.png")),
             HasSign.Person("송주선 M.D", "997", File(resource, "/img/sign/enus/송주선.png")),
             HasSign.Person("설창안 M.D", "1037", File(resource, "/img/sign/enus/설창안.png")),

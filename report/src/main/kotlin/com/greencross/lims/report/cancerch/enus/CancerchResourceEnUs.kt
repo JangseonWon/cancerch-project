@@ -96,7 +96,7 @@ abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignE
     override fun imgContentTitle(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/C_contentTitle.png"))
     override fun imgIntroContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionIntro/2_introcontent.png"))
 
-    override fun imgTotalResultContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTotalResult/3_totalresultcontent.png"))
+    override fun imgTotalResultContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTotalResult/4_totalresultcontent.png"))
     override fun imgTotalResultLowRisk(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTotalResult/KoKr/3_1rowrisk.png"))
     override fun imgTotalResultMiddleRisk(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTotalResult/KoKr/3_2middlerisk.png"))
     override fun imgTotalResultHighRisk(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTotalResult/KoKr/3_3highrisk.png"))
@@ -109,7 +109,7 @@ abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignE
     override fun imgRankFirst(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/kokr/C_rankfirst.png"))
     override fun imgRankSecond(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/kokr/C_ranksecond.png"))
 
-    override fun imgCancerTypeTitle(tf: Boolean): PDImageXObject = img(File(CancerchResource.resource, if(tf) "img/avoid/SectionCancerTypeDanger/large_content_box_3.png" else "img/avoid/SectionCancerTypeDanger/large_content_box_2.png"))
+    override fun imgCancerTypeTitle(tf: Boolean): PDImageXObject = img(File(CancerchResource.resource, if(tf) "img/avoid/SectionCancerTypeDanger/middle_content_box.png" else "img/avoid/SectionCancerTypeDanger/large_content_box_3.png"))
     override fun imgCancerTypeContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/cancer_box.png"))
     override fun imgCancerTypeImage(cancer: String) : PDImageXObject = img(
         File(CancerchResource.resource, "img/avoid/SectionCancerTypeDanger/$cancer.png")

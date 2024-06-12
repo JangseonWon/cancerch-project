@@ -26,7 +26,7 @@ class CancerchReportON203Test {
     var collection: LocalDate = LocalDate.of(2021,11,20)
     var sex: Sex = Sex.F
     var receipt: LocalDate = collection
-    var cancer= CancerchRepo.암종.기타암종
+    var cancer= CancerchRepo.암종.췌장담도암
     var barcode: String = "CR3-$code"
     var request: String = "20211109-971-0$code"
     val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
@@ -44,27 +44,27 @@ class CancerchReportON203Test {
         val sexes = arrayOf(Sex.M, Sex.F)
         val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
 
-//        for(cancer in cancers) {
-//            this.cancer = cancer
-//            for (sex in sexes) {
-//                this.sex = sex
-//                for (birth in birthes) {
-//                    this.birth = birth
-//                    println("./ON203_2/집중관리/집중관리_${this.sex}_${this.birth}.pdf")
-//                    val doc: PDDocument? = build(null, "ko-kr")
-//                    doc!!.save("./ON203_2/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
-//                }
-//            }
-//        }
-        for (sex in sexes) {
-            this.sex = sex
-            for (birth in birthes) {
-                this.birth = birth
-                println("./ON203_2/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
-                val doc: PDDocument? = build(null, "ko-kr")
-                doc!!.save("./ON203_2/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+        for(cancer in cancers) {
+            this.cancer = cancer
+            for (sex in sexes) {
+                this.sex = sex
+                for (birth in birthes) {
+                    this.birth = birth
+                    println("./ON203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+                    val doc: PDDocument? = build(null, "ko-kr")
+                    doc!!.save("./ON203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+                }
             }
         }
+//        for (sex in sexes) {
+//            this.sex = sex
+//            for (birth in birthes) {
+//                this.birth = birth
+//                println("./ON203/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+//                val doc: PDDocument? = build(null, "ko-kr")
+//                doc!!.save("./ON203/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+//            }
+//        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
@@ -72,16 +72,16 @@ class CancerchReportON203Test {
         val repo: CancerchRepo = CancerchRepo()
         return builder(
             TestInfo.ON203, type,
-            CancerchDto("",
-                CancerchDto.Results.RISK,
-                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.RISK,
+//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.CONCERN,
 //                CancerchDto.Cancer("기타암종")))?.build()
-//            CancerchDto("",
-//                CancerchDto.Results.GENERAL,
-//                CancerchDto.Cancer()))?.build()
+            CancerchDto("",
+                CancerchDto.Results.GENERAL,
+                CancerchDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()
