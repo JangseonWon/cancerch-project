@@ -46,7 +46,7 @@ class Client (
             ),
             AlisRequest(
                 fileId = file.toString(),
-                operation = Operation.SEND_GENERAL
+                operation = Operation.SEND_USER_FILE
             ),
         )
 
