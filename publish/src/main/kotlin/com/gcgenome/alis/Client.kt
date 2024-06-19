@@ -44,6 +44,10 @@ class Client (
                 fileId = file.toString(),
                 operation = Operation.CREATE_IMG_TOTAL
             ),
+            AlisRequest(
+                fileId = file.toString(),
+                operation = Operation.SEND_GENERAL
+            ),
         )
 
         val response = webClient
