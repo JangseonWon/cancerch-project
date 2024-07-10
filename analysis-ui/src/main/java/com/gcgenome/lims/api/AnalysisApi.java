@@ -1,13 +1,11 @@
 package com.gcgenome.lims.api;
 
 import com.gcgenome.lims.data.Analysis;
-import com.gcgenome.lims.data.Report;
+import com.gcgenome.lims.data.LinkRequest;
 import com.gcgenome.lims.dto.Query;
 import elemental2.dom.*;
 import elemental2.promise.Promise;
-import jsinterop.base.Js;
 import lombok.experimental.UtilityClass;
-import net.sayaya.ui.event.HasValueChangeHandlers;
 
 import static elemental2.core.Global.JSON;
 import static elemental2.core.Global.encodeURI;
@@ -63,6 +61,53 @@ public class AnalysisApi {
 				.then(response->{
 					if (!response.ok) return response.text().then(msg -> {
 						DomGlobal.alert(msg);
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
+	public Promise<Response> chkOriginRequest(String sample, String service, String batchName, String rowNumber) {
+		RequestInit request = RequestInit.create();
+		request.setMethod("GET");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		return FetchApi.request("/analysis/validate/"+sample.replace("-","")+"/"+service+"/"+batchName+"/"+rowNumber, request)
+				.then(response->{
+					if(!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert("의뢰가 없습니다.");
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
+	public Promise<Response> chkLinkedRequest(String sample, String service) {
+		RequestInit request = RequestInit.create();
+		request.setMethod("GET");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
+		});
+		return FetchApi.request("/analysis/request/"+sample.replace("-","")+"/"+service, request)
+				.then(response->{
+					if(!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert("의뢰가 없습니다.");
+						return Promise.reject(msg);
+					});
+					else return Promise.resolve(response);
+				});
+	}
+	public Promise<Response> linkAnalysisData(LinkRequest dto) {
+		RequestInit request = RequestInit.create();
+		request.setMethod("POST");
+		request.setHeaders(new String[][] {
+				new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8;"}
+		});
+		request.setBody(JSON.stringify(dto));
+
+		return FetchApi.request("/analysis/linkData", request)
+				.then(response->{
+					if(!response.ok) return response.text().then(msg -> {
+						DomGlobal.alert("의뢰가 없습니다.");
 						return Promise.reject(msg);
 					});
 					else return Promise.resolve(response);
