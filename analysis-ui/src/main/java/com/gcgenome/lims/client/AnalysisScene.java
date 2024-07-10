@@ -53,12 +53,12 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
     private final ButtonElementText btnLinkConfirm = ButtonElement.outline().text("LINK").enabled(false);
     private final Dialog dialog = Dialog.confirmation("출력, 전송 대기열", null, cancel);
     private final Dialog linkDialog = Dialog.confirmation("데이터 연결", btnLinkConfirm, linkCancel);
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginSampleNumber = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("의뢰번호").required(true).value("202406109712800");
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginServiceCode = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("검사코드").required(true).value("N203");
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginBatchName = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("배치명").required(true).value("24AIC028-0027");
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginRownumber = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("배치순서").required(true).value("3");
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptLinkedSampleNumber = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("의뢰번호").required(true).value("202407091000001");
-    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptLinkedServiceCode = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("검사코드").required(true).value("N203");
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginSampleNumber = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("의뢰번호").required(true);
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginServiceCode = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("검사코드").required(true);
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginBatchName = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("배치명").required(true);
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptOriginRownumber = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("배치순서").required(true);
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptLinkedSampleNumber = TextFieldElement.textBox().outlined().css("button").style("width: 195px; height: 36px; margin-right: 10px;").text("의뢰번호").required(true);
+    private final TextFieldElement<String, TextFieldElement.TextFieldOutlined<String>> iptLinkedServiceCode = TextFieldElement.textBox().outlined().css("button").style("width: 145px; height: 36px; margin-right: 10px;").text("검사코드").required(true);
     private final ButtonElement btnCheckOriginRequest = ButtonElement.outline().text("원의뢰 검증").style("min-width: 130px;");
     private final ButtonElement btnCheckLinkedRequest = ButtonElement.outline().text("연결의뢰 검증").style("min-width: 130px;");
     private final QueueDialogInnerElement inner = QueueDialogInnerElement.instance();
@@ -282,17 +282,17 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
                     .then(Response::text)
                     .then(response -> {
                         if(response.equals("true")) {
-//                            btnCheckLinkedRequest.text("연결의뢰 검증").enabled(true);
-//                            btnCheckOriginRequest.text("원의뢰 검증").enabled(true);
-//                            btnLinkConfirm.enabled(false);
-//                            iptLinkedSampleNumber.value("").enabled(true);
-//                            iptLinkedServiceCode.value("").enabled(true);
-//                            iptOriginSampleNumber.value("").enabled(true);
-//                            iptOriginServiceCode.value("").enabled(true);
-//                            iptOriginBatchName.value("").enabled(true);
-//                            iptOriginRownumber.value("").enabled(true);
+                            btnCheckLinkedRequest.text("연결의뢰 검증").enabled(true);
+                            btnCheckOriginRequest.text("원의뢰 검증").enabled(true);
+                            btnLinkConfirm.enabled(false);
+                            iptLinkedSampleNumber.value("").enabled(true);
+                            iptLinkedServiceCode.value("").enabled(true);
+                            iptOriginSampleNumber.value("").enabled(true);
+                            iptOriginServiceCode.value("").enabled(true);
+                            iptOriginBatchName.value("").enabled(true);
+                            iptOriginRownumber.value("").enabled(true);
                             DomGlobal.alert("연동을 완료했습니다.");
-//                            linkDialog.close();
+                            linkDialog.close();
                         } else {
                             DomGlobal.alert("연동에 실패했습니다. LIMS팀에 문의 바랍니다.");
                         }
