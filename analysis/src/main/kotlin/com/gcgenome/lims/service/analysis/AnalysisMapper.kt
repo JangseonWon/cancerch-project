@@ -2,12 +2,14 @@ package com.gcgenome.lims.service.analysis
 
 import com.gcgenome.lims.data.*
 import com.gcgenome.lims.entity.Analysis
+import com.gcgenome.lims.entity.AnalysisQC
+import com.gcgenome.lims.entity.AnalysisResult
 import org.springframework.stereotype.Component
 
 @Component
 class AnalysisMapper {
     fun toDto(entity: Analysis) : com.gcgenome.lims.data.Analysis{
-        return com.gcgenome.lims.data.Analysis(entity.sample, entity.serviceId, entity.batch, entity.row).apply{
+        return Analysis(entity.sample, entity.serviceId, entity.batch, entity.row).apply{
             this.freemix                        = entity.freemix
             this.rawReadsMillions               = entity.rawReadsMillions
             this.dupRate                        = entity.dupRate
@@ -86,6 +88,48 @@ class AnalysisMapper {
             this.createdAt = entity.analysisAt.toString()
             this.lastModifyAt = entity.lastModifyAt.toString()
             this.lastModifyBy = User(entity.lastModifyById, entity.lastModifyByNm)
+        }
+    }
+    fun createAnalysisQCEntity(entity: AnalysisQC, sample: Long, service: String): AnalysisQC {
+        return AnalysisQC(sample, service, entity.batch, entity.row).apply {
+            this.file = entity.file
+            this.freemix = entity.freemix
+            this.rawReadsMillions = entity.rawReadsMillions
+            this.dupRate = entity.dupRate
+            this.totalReads = entity.totalReads
+            this.mean = entity.mean
+            this.median = entity.median
+            this.qc = entity.qc
+            this.gc = entity.gc
+            this.chrxCnt = entity.chrxCnt
+            this.chryCnt = entity.chryCnt
+            this.chrxProp = entity.chrxProp
+            this.chryProp = entity.chryProp
+            this.predSex = entity.predSex
+            this.freemixTmp = entity.freemixTmp
+            this.rawReadMillionsTmp = entity.rawReadMillionsTmp
+            this.dupRateTmp = entity.dupRateTmp
+            this.totalReadsTmp = entity.totalReadsTmp
+            this.meanTmp = entity.meanTmp
+            this.medianTmp = entity.medianTmp
+            this.qcTmp = entity.qcTmp
+            this.gcTmp = entity.gcTmp
+            this.chrxCntTmp = entity.chrxCntTmp
+            this.chryCntTmp = entity.chryCntTmp
+            this.chrxPropTmp = entity.chrxPropTmp
+            this.chryPropTmp = entity.chryPropTmp
+            this.predSexTmp = entity.predSexTmp
+        }
+    }
+    fun createAnalysisResultEntity(entity: AnalysisResult, sample: Long, service: String): AnalysisResult {
+        return AnalysisResult(sample, service, entity.batch, entity.row).apply {
+            this.cadEnsembleProb = entity.cadEnsembleProb
+            this.too5Pred = entity.too5Pred
+            this.too5RmdFemsEnsembleProb = entity.too5RmdFemsEnsembleProb
+            this.too6Pred = entity.too6Pred
+            this.iscore = entity.iscore
+            this.result = entity.result
+            this.comment = entity.comment
         }
     }
 }

@@ -2,6 +2,7 @@ package com.gcgenome.lims.service.analysis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.data.Analysis
+import com.gcgenome.lims.data.LinkRequest
 import com.gcgenome.lims.service.searchParam
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,6 +21,9 @@ class AnalysisRouter(
     @Bean("com.greencross.lims.service.AnalysisRouter")
     fun router() = router{
         GET("/analysis/search",                                    contentType, ::search)
+        GET("/analysis/validate/{sample}/{service}/{batch}/{row}", contentType, ::linkCheck)
+        GET("/analysis/request/{sample}/{service}",                contentType, ::requestCheck)
+        POST("/analysis/linkData",                                 contentType, ::linkData)
         PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment",contentType, ::updateComment)
         PATCH("/analysis/update",                                  contentType, ::updateAll)
     }
@@ -43,10 +47,32 @@ class AnalysisRouter(
             .then(ServerResponse.ok().build())
             .switchIfEmpty(ServerResponse.noContent().build())
     }
-    private fun updateAll(request: ServerRequest): Mono<ServerResponse>{
+    private fun updateAll(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToFlux(Analysis::class.java)
             .flatMap{ handler.updateResult(it) }
             .then(ServerResponse.ok().build())
             .switchIfEmpty(ServerResponse.noContent().build())
+    }
+    private fun linkData(request: ServerRequest): Mono<ServerResponse> {
+        return request.bodyToMono(LinkRequest::class.java)
+            .flatMap(handler::linkData)
+            .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
+            .switchIfEmpty(ServerResponse.badRequest().bodyValue("잘못된 요청입니다."))
+    }
+    private fun requestCheck(request: ServerRequest): Mono<ServerResponse> {
+        val sample = request.pathVariable("sample").toLong()
+        val service = request.pathVariable("service")
+        return handler.chkRequest(sample, service)
+            .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
+            .switchIfEmpty(ServerResponse.badRequest().bodyValue("잘못된 요청입니다."))
+    }
+    private fun linkCheck(request: ServerRequest): Mono<ServerResponse> {
+        val sample = request.pathVariable("sample").toLong()
+        val service = request.pathVariable("service")
+        val batch = request.pathVariable("batch")
+        val row = request.pathVariable("row").toInt()
+        return handler.chkAnalysis(sample, service, batch, row)
+            .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
+            .switchIfEmpty(ServerResponse.badRequest().bodyValue("잘못된 요청입니다."))
     }
 }
