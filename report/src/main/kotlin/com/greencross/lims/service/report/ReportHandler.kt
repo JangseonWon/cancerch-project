@@ -68,7 +68,7 @@ class ReportHandler(
     @Transactional
     fun print(sample: Long, service: String, batch: String, row: Long, lang: String, description: String): Mono<Void> {
         return analysisDao.findById(sample, service, batch, row)
-            .map { mapper.createReportEntity(it, lang, description) }
+            .map { mapper.createReportEntity(it, batch, row, lang, description) }
             .flatMap(reportDao::create)
             .flatMap {
                 logger.info("$sample/$service is scheduled.")

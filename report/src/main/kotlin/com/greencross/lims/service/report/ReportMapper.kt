@@ -25,7 +25,7 @@ class ReportMapper(private val om: ObjectMapper) {
             .createAt(entity.createAt.toString())
             .creator(entity.createBy)
     }
-    fun createReportEntity(analysis: Analysis, lang: String, description: String): Report {
+    fun createReportEntity(analysis: Analysis, batch: String, row: Long, lang: String, description: String): Report {
         val createTime = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
             ZoneId.systemDefault()
