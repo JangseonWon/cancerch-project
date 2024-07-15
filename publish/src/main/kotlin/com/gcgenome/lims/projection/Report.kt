@@ -1,6 +1,8 @@
 package com.gcgenome.lims.projection
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.entity.User
+import com.gcgenome.lims.model.ResultInfo
 import io.r2dbc.postgresql.codec.Json
 import java.time.LocalDateTime
 import java.util.*
@@ -17,7 +19,8 @@ data class Report(
     val size: Long,
     val publishAt: LocalDateTime?,
     val publishBy: User?,
-    val publishLog: String?
+    val publishLog: String?,
+    val resultInfo: String?
     ) {
     companion object {
         data class ReportBuilder(
@@ -35,12 +38,14 @@ data class Report(
             val publishId:      String?,
             val publishAt:      LocalDateTime?,
             val publishBy:      String?,
-            val publishLog:     Json?
+            val publishLog:     Json?,
+            val resultInfo:     Json?
         ){
             fun build() : Report{
                 val publishUser : User? = if(publishId == null || publishBy == null) null else User(publishId, publishBy)
-                val log : String? = if(publishLog == null) "" else publishLog.asString()
-                return Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, publishUser, log)
+                val log : String = if(publishLog == null) "" else publishLog.asString()
+                val resultJson: String = if(resultInfo == null) "" else resultInfo.asString()
+                return Report(sample, service, file, createAt, User(createId, createBy), lastModifyAt, User(lastModifyId, lastModifyBy), name, size, publishAt, publishUser, log, resultJson)
             }
         }
     }

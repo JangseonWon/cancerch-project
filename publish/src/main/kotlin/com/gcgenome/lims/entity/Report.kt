@@ -30,6 +30,7 @@ data class Report(
     @Column("publish_at")             var publishAt:     LocalDateTime? = null
     @Column("publish_by")             var publishBy:     String? = null
     @Column("publish_log")            var publishLog:    Json? = null
+    @Column("result_info")            var resultInfo:    Json? = null
 
     @Id @Transient   lateinit var _id: ReportPK
     constructor(
@@ -44,7 +45,9 @@ data class Report(
         size: Long,
         publishAt: LocalDateTime,
         publishBy: String,
-        publishLog: Json
+        publishLog: Json,
+        resultInfo: Json
+
     ) : this(sample, service, createAt) {
         this.file = file
         this.createBy = createBy
@@ -55,6 +58,7 @@ data class Report(
         this.publishAt = publishAt
         this.publishBy = publishBy
         this.publishLog = publishLog
+        this.resultInfo = resultInfo
     }
 
     companion object{

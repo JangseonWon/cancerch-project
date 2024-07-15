@@ -5,6 +5,7 @@ import com.gcgenome.alis.Client
 import com.gcgenome.alis.models.AlisResponse
 import com.gcgenome.lims.projection.Report
 import com.gcgenome.lims.model.ReportForRMS
+import com.gcgenome.lims.model.ResultInfo
 import com.gcgenome.lims.service.report.ReportDao
 import com.gcgenome.lims.service.reportfile.ReportFileRepository
 import com.gcgenome.lims.service.request.RequestDao
@@ -96,9 +97,11 @@ class PublishHandler(
         it: Tuple2<Report, SecurityContext>
     ): Mono<Boolean> {
         val file = it.t1.file
+        val resultInfo = it.t1.resultInfo
         val user = it.t2.authentication
         logger.info("ALIS 전송 시작")
-        return client.send(sample, service, file, user, request)
+        return requestDao.findById(sample, service)
+            .flatMap { client.send(it, file, user, request, om.readValue(resultInfo, ResultInfo::class.java)) }
     }
 
     private fun publishRMS(sample: Long, service: String, createAt: Long): Mono<Boolean> {

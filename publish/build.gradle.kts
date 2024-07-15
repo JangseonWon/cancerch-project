@@ -16,7 +16,7 @@ dependencies {
     implementation(libs.bundles.r2dbc.postgres)
     implementation(libs.bundles.r2dbc.querydsl)
     implementation(libs.spring.kafka)
-    implementation("com.gcgenome:alis-report-api:1.1.2")
+    implementation("com.gcgenome:alis-report-api:1.1.3")
     kapt(libs.bundles.r2dbc.querydsl)
     testImplementation(libs.bundles.test)
 }

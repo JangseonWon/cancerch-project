@@ -2,6 +2,9 @@ package com.gcgenome.alis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.alis.models.*
+import com.gcgenome.lims.model.ResultInfo
+import com.gcgenome.lims.projection.Request
+import io.r2dbc.postgresql.codec.Json
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -18,20 +21,22 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
-class Client (
+class Client(
     @Qualifier("httpWebClient")
     private val webClient: WebClient
-){
+) {
     private val logger = LoggerFactory.getLogger(Client::class.java)
+
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    fun send(sample : Long, service : String, file : UUID, user : Authentication, serverRequest : ServerRequest) : Mono<Boolean> {
-        val date = LocalDate.parse(sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
-        val subSample = sample.toString().substring(8).toLong()
-        val publishInfo = PublishRequest(date, subSample, service)
-        val cookieMap = MultiValueMapAdapter(serverRequest.cookies().map { it.key to it.value.map(HttpCookie::getValue) }.toMap())
-        val requests = listOf(
+    fun send(request: Request, file: UUID, user: Authentication, serverRequest: ServerRequest, resultInfo: ResultInfo): Mono<Boolean> {
+        val date = LocalDate.parse(request.sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val subSample = request.sample.toString().substring(8).toLong()
+        val publishInfo = PublishRequest(date, subSample, request.service)
+        val cookieMap =
+            MultiValueMapAdapter(serverRequest.cookies().map { it.key to it.value.map(HttpCookie::getValue) }.toMap())
+        val requests = mutableListOf(
             AlisRequest(
                 fileId = file.toString(),
                 operation = Operation.CREATE_IMG_DIV_PAR
@@ -47,16 +52,38 @@ class Client (
             AlisRequest(
                 fileId = file.toString(),
                 operation = Operation.SEND_USER_FILE
-            ),
+            )
         )
+
+        if (request.institution!! == "강북삼성수원의원" || request.institution == "강북삼성태평로의원" || request.institution == "유전체연구소(Test)") {
+            requests.add(AlisRequest(
+                fileId = file.toString(),
+                payload = "${(request.sample/1000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${resultInfo.result}",
+                operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
+                )
+            )
+        }
+
 
         val response = webClient
             .post()
             .uri("https://lims/alis-queue/async")
-            .cookies{it.addAll(cookieMap)}
+            .cookies { it.addAll(cookieMap) }
             .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(listOf(RequestBundle(UUID.randomUUID(), requests, user.principal as String, "Cancerch", publishInfo))), List::class.java)
-            .exchangeToMono{
+            .body(
+                Mono.just(
+                    listOf(
+                        RequestBundle(
+                            UUID.randomUUID(),
+                            requests,
+                            user.principal as String,
+                            "Cancerch",
+                            publishInfo
+                        )
+                    )
+                ), List::class.java
+            )
+            .exchangeToMono {
                 logger.info(it.statusCode().toString())
                 Mono.just(it.statusCode().is2xxSuccessful)
             }
