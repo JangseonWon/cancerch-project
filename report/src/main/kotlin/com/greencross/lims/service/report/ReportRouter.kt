@@ -45,7 +45,7 @@ class ReportRouter(
         val service = request.pathVariable("service")
         val lang    = request.pathVariable("lang")
         val batch   = request.pathVariable("batch")
-        val row     = request.pathVariable("row")
+        val row     = request.pathVariable("row").toLong()
         return request.bodyToMono(String::class.java)
             .switchIfEmpty(Mono.just("최초보고"))
             .flatMap { handler.print(sample.toLong(), service, batch, row, lang, it) }

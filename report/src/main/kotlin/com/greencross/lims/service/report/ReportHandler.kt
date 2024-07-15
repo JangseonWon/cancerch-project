@@ -66,36 +66,15 @@ class ReportHandler(
     }
 
     @Transactional
-    fun print(sample: Long, service: String, batch: String, row: String, lang: String, description: String): Mono<Void> {
-        val createTime = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
-            ZoneId.systemDefault()
-        )
-
-        val entity =
-            com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
-                this.batch = batch
-                this.row = row.toLong()
-                this.language = lang
-                this.isPrinted = "PREPARE"
-                this.description = description
+    fun print(sample: Long, service: String, batch: String, row: Long, lang: String, description: String): Mono<Void> {
+        return analysisDao.findById(sample, service, batch, row)
+            .map { mapper.createReportEntity(it, lang, description) }
+            .flatMap(reportDao::create)
+            .flatMap {
+                logger.info("$sample/$service is scheduled.")
+                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(it)))
+                Mono.empty()
             }
-        return reportDao.create(entity).flatMap {
-            logger.info("$sample/$service is created.")
-            publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(entity)))
-            Mono.empty()
-        }
-//        return ReactiveSecurityContextHolder.getContext().map{
-//            com.greencross.lims.entity.Report(sample = sample, service = service, createAt = createTime).apply {
-//                language = lang
-//                isPrinted = "PREPARE"
-//                createBy = it.authentication.principal.toString()
-//            }
-//        }.flatMap {
-//            logger.info("$sample/$service 출력 요청 수신")
-//            publisher.tryEmitNext(MessageReport(MessageReport.MessageType.CREATE, mapper.toMessageDto(it)))
-//            Mono.empty()
-//        }
     }
 
     @Transactional
@@ -355,6 +334,7 @@ class ReportHandler(
         "colon" -> CancerRepo.암종.대장암
         "Others" -> CancerRepo.암종.기타암종
         "ESO" -> CancerRepo.암종.식도암
+        "OV" -> CancerRepo.암종.난소암
         else -> CancerRepo.암종.유방암
     }
 
@@ -365,6 +345,7 @@ class ReportHandler(
         "colon" -> CancerchRepo.암종.대장암
         "Others" -> CancerchRepo.암종.기타암종
         "ESO" -> CancerchRepo.암종.식도암
+        "OV" -> CancerchRepo.암종.난소암
         else -> CancerchRepo.암종.유방암
     }
 
@@ -375,6 +356,7 @@ class ReportHandler(
         "colon" -> "대장암"
         "Others" -> "기타암종"
         "ESO" -> "식도암"
+        "OV" -> "난소암"
         else -> "유방암"
     }
 

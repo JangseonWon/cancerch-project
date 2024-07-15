@@ -36,6 +36,7 @@ data class Report(
     @Column("is_printed")             var isPrinted:     String?=null
     @Column("language")               var language:      String?=null
     @Column("description")            var description:   String=""
+    @Column("result_info")            var resultInfo:    Json? = null
     @Version @Column("version")       var version:       Long = 0
     @Id @Transient           lateinit var _id:           ReportPK
 
