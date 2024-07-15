@@ -43,7 +43,7 @@ class ReportMapper(private val om: ObjectMapper) {
             this.language = lang
             this.isPrinted = "PREPARE"
             this.description = description
-            this.resultInfo = Json.of("{\"result\": \"$result\", \"resultType\": \"$prediction\"}")
+            this.resultInfo = Json.of("{\"result\": \"$result\", \"result_type\": \"$prediction\"}")
         }
     }
 
