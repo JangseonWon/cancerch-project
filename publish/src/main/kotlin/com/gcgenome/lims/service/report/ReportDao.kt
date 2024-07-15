@@ -63,7 +63,8 @@ class ReportDao(private val repo: ReportRepository) {
                 report.size,
                 report.publishAt,
                 report.publishBy,
-                report.publishLog
+                report.publishLog,
+                report.resultInfo
             )
         ).from(report).where(report.sample.eq(sample).and(report.service.eq(service)).and(Expressions.predicate(Ops.EQ, report.createAt, Expressions.asDateTime(createdAt.toString().replace("T", " ")))))
         }.one().switchIfEmpty(Mono.just(com.gcgenome.lims.entity.Report(sample, service, createdAt)))
