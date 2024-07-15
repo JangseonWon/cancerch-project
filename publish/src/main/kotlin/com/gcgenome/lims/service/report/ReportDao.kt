@@ -36,7 +36,7 @@ class ReportDao(private val repo: ReportRepository) {
                 report.publishAt.`as`("publishAt"),
                 publishBy.name.`as`("publisher"),
                 report.publishLog.`as`("publishLog"),
-                report.resultInfo.`as`("result_info")
+                report.resultInfo.`as`("resultInfo")
             )
         ).from(report)
             .leftJoin(createBy).on(createBy.id.eq(report.createBy))
