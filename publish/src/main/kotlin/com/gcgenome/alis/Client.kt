@@ -58,7 +58,7 @@ class Client(
         if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125") {
             requests.add(AlisRequest(
                 fileId = file.toString(),
-                payload = "${(request.sample/1000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${resultInfo.result}",
+                payload = Base64.getEncoder().encodeToString("${(request.sample/1000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${resultInfo.result}".toByteArray()),
                 operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
                 )
             )
