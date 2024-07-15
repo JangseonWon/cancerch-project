@@ -7,6 +7,9 @@ subprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven(url = "http://gemini/api/packages/LIMS/maven"){
+            isAllowInsecureProtocol = true
+        }
         maven(url = "http://gitea.apps.gcgenome.com/api/packages/LIMS/maven"){
             isAllowInsecureProtocol = true
         }
