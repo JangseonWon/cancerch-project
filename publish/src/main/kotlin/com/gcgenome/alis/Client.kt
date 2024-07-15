@@ -55,7 +55,7 @@ class Client(
             )
         )
 
-        if (request.institution!! == "강북삼성수원의원" || request.institution == "강북삼성태평로의원" || request.institution == "유전체연구소(Test)") {
+        if (request.institution!! == "강북삼성수원의원" || request.institution == "강북삼성태평로의원" || request.institution == "유전체연구소(Test) ") {
             requests.add(AlisRequest(
                 fileId = file.toString(),
                 payload = "${(request.sample/1000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${resultInfo.result}",
