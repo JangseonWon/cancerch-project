@@ -191,7 +191,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement<?>[][]{
-                new IsElement[]{chkOnlyPass, btnAnalysisComplete, btnProgressOnly, btnLink},
+                new IsElement[]{chkOnlyPass, btnAnalysisComplete, btnProgressOnly},
                 new IsElement<?>[]{iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch, btnQueue},
                 new IsElement[]{btnPdf, btnPublish, btnSave}
         };
@@ -374,54 +374,6 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
 
         }
         update();
-//		if(selection.length == 0) return;
-//		ButtonElementText ok 			= ButtonElement.outline().text("OK").enabled(false);
-//		ButtonElementText cancel 		= ButtonElement.outline().text("CANCEL");
-//		CheckBoxElement chkConfirm 		= CheckBoxElement.checkBox(false).text("위 내용을 확인했습니다.");
-//		Dialog dialog 					= Dialog.confirmation("선택한 " + selection.length + "개의 검사 결과지를 생성합니다.", ok, cancel);
-//		HTMLElement surface 			= (HTMLElement) dialog.element().getElementsByClassName("mdc-dialog__surface").item(0);
-//		surface.style.minWidth 			= CSSProperties.MinWidthUnionType.of("1200px");
-//		long countGeneral 				= Arrays.stream(selection).filter(d->d.result().equals("GENERAL")).count();
-//		long countConcern 				= Arrays.stream(selection).filter(d->d.result().equals("CONCERN")).count();
-//		long countRisk	  				= Arrays.stream(selection).filter(d->d.result().equals("RISK")).count();
-//		long countNeedLog				= Arrays.stream(selection).filter(d->d.report().fileName() != null).count();
-//		PRTPUBDialogInnerElement inner 	= PRTPUBDialogInnerElement.build(selection);
-//
-//		chkConfirm.onValueChange(evt->{ok.enabled(evt.value());});
-//		ok.onClick(evt->{
-//			for(Analysis analysis: selection){
-//				if(analysis.report().fileName() != null) {
-//					String description = DomGlobal.prompt("변경 사유 입력이 필요한 ("+analysis.sample()+")검사 결과입니다.(3자 이상)");
-//					if(description.length() < 2) {
-//						DomGlobal.alert("2자 이하 입력으로 해당 결과의 결과지 생성이 취소됩니다.");
-//					}
-//					else {
-//						SampleApi.print(
-//								String.valueOf(analysis.request().sample().id()),
-//								analysis.request().service().id(),
-//								analysis.batch(),
-//								String.valueOf(analysis.row()),
-//								"kokr",
-//								description
-//						);
-//					}
-//				}
-//			}
-//			dialog.close();
-//			dialog.element().remove();
-//			update();
-//		});
-//		cancel.onClick(evt->{
-//			dialog.close();
-//			dialog.element().remove();
-//		});
-//		dialog.add(div().add(label("일반관리 : "+countGeneral+"건").style("margin-right: 1em;"))
-//						.add(label("관심관리 : "+countConcern+"건").style("margin-right: 1em;"))
-//						.add(label("집중관리 : "+countRisk+"건").style("margin-right: 1em;"))
-//						.add(label("이력입력 필요 : "+countNeedLog+"건").style("color: #FF0000;")))
-//				.add(inner).add(chkConfirm);
-//		body().add(dialog);
-//		dialog.open();
     }
 
     private void publish() {
