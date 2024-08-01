@@ -23,7 +23,7 @@ class AvoidN201(
     private val limitation: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionLimitation()
     override fun template(): Painter<AvoidTemplate<AvoidResource>, AvoidDto> {
         return title.and { stream, template, dto ->
-            stream.font(template.resource().fontDefault())
+            stream.setFont(template.resource().fontDefault(), 11f)
             return@and stream
         }.and(sign).and(footer)
     }

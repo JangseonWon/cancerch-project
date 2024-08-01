@@ -64,7 +64,7 @@ class SectionTitle (private val y: Float = 745f) : Painter<AvoidTemplate<AvoidRe
         //endregion
 
         stream.restoreGraphicsState()
-        return stream.cursorY(y - TITLE_HEIGHT)
+        return stream
     }
 
     companion object {

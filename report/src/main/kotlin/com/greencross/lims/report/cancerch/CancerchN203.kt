@@ -22,13 +22,13 @@ class CancerchN203(
     private val limitation: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionLimitation()
     override fun template(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return title.and { stream, template, dto ->
-            stream.font(template.resource().fontDefault())
+            stream.setFont(template.resource().fontDefault(), 11f)
             return@and stream
         }.and(sign).and(footer)
     }
     private fun templateWithoutTitle(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return sign.and { stream, template, dto ->
-            stream.font(template.resource().fontDefault())
+            stream.setFont(template.resource().fontDefault(), 11f)
             return@and stream
         }.and(footer)
     }

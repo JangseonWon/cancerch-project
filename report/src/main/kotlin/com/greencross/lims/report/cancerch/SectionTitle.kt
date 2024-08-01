@@ -56,7 +56,7 @@ class SectionTitle(private val y: Float = 745f) : Painter<CancerchTemplate<Cance
         //endregion
 
         stream.restoreGraphicsState()
-        return stream.cursorY(y - TITLE_HEIGHT)
+        return stream
     }
 
     companion object {

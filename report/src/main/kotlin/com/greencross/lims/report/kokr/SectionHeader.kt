@@ -48,14 +48,14 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
         val styleValueTitle =
             TextStyle().color(resource.colorText()).fonts(resource.fontHeaderValue(), resource.fontDefault())
                 .fontSize(7f).paragraph(false)
-        var y = stream.cursorY()
+        var y = 450f
         stream.setNonStrokingColor(colorGray)
             .setLineWidth(0.25f).setStrokingColor(colorGray)
             .addRect(60f, y, 70f, -63f)
             .addRect(216f, y, 70f, -63f)
             .addRect(374f, y, 70f, -63f)
             .fill()
-        y -= 10f
+        y = y - 10f
         stream.line(60f, y - 5, 533f, y - 5).stroke()
         stream.paragraph(62f, y, 65f, TextBlock(styleHeaderTitle, lblMedicalInstitution))
         stream.paragraph(219f, y, 65f, TextBlock(styleHeaderTitle, lblMedicalRecordNumber))
@@ -109,7 +109,6 @@ class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Paint
         )
         stream.line(60f, y - 5, 533f, y - 5).stroke()
         stream.restoreGraphicsState()
-        stream.cursorY(y)
         return stream
     }
 
