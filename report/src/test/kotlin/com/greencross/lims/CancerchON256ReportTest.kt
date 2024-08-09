@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
-class CancerchON203ReportTest {
+class CancerchON256ReportTest {
     var code = "375"
     var patient: String = "John Doe" //24자 제한
     var birth: Int = 1994
@@ -129,7 +129,7 @@ class CancerchON203ReportTest {
 }
 
 fun main(){
-    val test = CancerchON203ReportTest()
+    val test = CancerchON256ReportTest()
     test.test()
 //    test.createAllReport()
 }
