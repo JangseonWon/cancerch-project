@@ -8,7 +8,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.io.File
 
-class CancerchResourceON203EnUs(doc: PDDocument) : CancerchResourceEnUs(doc), CancerchResourceON203 {
+class CancerchResourceON256EnUs(doc: PDDocument) : CancerchResourceEnUs(doc), CancerchResourceON203 {
     val fontDefault: PDFont
 
     init {
