@@ -11,7 +11,7 @@ import com.greencross.lims.report.func.Painter
 import java.awt.Color
 import kotlin.math.round
 
-class GangbukSectionAnalysisCommentEnUS(private var y: Float = 0f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class GangbukSectionAnalysisCommentEnUs(private var y: Float = 0f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
