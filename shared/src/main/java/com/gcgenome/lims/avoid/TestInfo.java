@@ -27,11 +27,16 @@ public class TestInfo {
             .code("N206").name("").build();
     public static final TestInfo ON203 = TestInfo.builder()
             .code("ON203").name("").build();
+    public static final TestInfo N256 = TestInfo.builder()
+            .code("N256").name("").build();
+    public static final TestInfo ON256 = TestInfo.builder()
+            .code("ON256").name("").build();
 
     public static final TestInfo[] TESTS = new TestInfo[] {
-        N201,               //AVOID
-        N203, N204, N205,   //Cancerch국문
-        N206,               //아이캔서치 임직원
-        ON203               //Cancerch영문
+            N201,               //AVOID
+            N203, N204, N205,   //Cancerch국문
+            N206,               //아이캔서치 임직원
+            ON203,              //Cancerch영문
+            N256, ON256     // 강북삼성 Cancerch 국/영문
     };
 }
