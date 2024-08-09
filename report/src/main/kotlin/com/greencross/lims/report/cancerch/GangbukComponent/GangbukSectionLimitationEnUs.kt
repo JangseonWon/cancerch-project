@@ -69,7 +69,7 @@ class GangbukSectionLimitationEnUs(private var y: Float = 755f) : Painter<Cancer
         img = template.resource().imgLimitationTableTitle()
         width = img.width * CONTENT_TABLE_TITLE / img.height
         stream.drawImage(img, 123f-width/2, y, width, CONTENT_TABLE_TITLE)
-        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), "ai-CANCERCH Performance"))
+        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), "Circulating tumor DNA Performance"))
 
         y -= CONTENT_TABLE +10
         img = template.resource().imgLimitationTable1()
@@ -130,11 +130,11 @@ class GangbukSectionLimitationEnUs(private var y: Float = 755f) : Painter<Cancer
         for(row in 0..3){
             y -= 8
             when (row) {
-                0 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "1) Specificity: Indicates the proportion where the ai-CANCERCH test classifies a healthy individual to the low risk group."))
-                1 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "2) Sensitivity: Indicates the proportion where the ai-CANCERCH test classifies a cancer patient to high or intermediate risk group."))
-                2 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "3) PPV: Positive Predictive Value. Represents the proportion of subjects identified by the ai-CANCERCH test as part of the high or intermediate risk group who are actual cancer patients. PPV has been calculated based on the\n" +
+                0 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "1) Specificity: Indicates the proportion where the Circulating tumor DNA test classifies a healthy individual to the low risk group."))
+                1 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "2) Sensitivity: Indicates the proportion where the Circulating tumor DNA test classifies a cancer patient to high or intermediate risk group."))
+                2 -> stream.paragraph(42f, y, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "3) PPV: Positive Predictive Value. Represents the proportion of subjects identified by the Circulating tumor DNA test as part of the high or intermediate risk group who are actual cancer patients. PPV has been calculated based on the\n" +
                         "   prevalence of the 50s and above Korean."))
-                3 -> stream.paragraph(42f, y-6, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "4) NPV: Negative Predictive Value. Represents the proportion of subjects identified by the ai-CANCERCH test as part of the low risk group who are healthy individuals. NPV has been calculated based on the prevalence of the 50s and\n" +
+                3 -> stream.paragraph(42f, y-6, 600f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), "4) NPV: Negative Predictive Value. Represents the proportion of subjects identified by the Circulating tumor DNA test as part of the low risk group who are healthy individuals. NPV has been calculated based on the prevalence of the 50s and\n" +
                         "   above Korean."))
                 else -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5f), ""))
             }

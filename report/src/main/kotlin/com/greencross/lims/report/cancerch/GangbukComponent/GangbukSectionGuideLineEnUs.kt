@@ -63,29 +63,29 @@ class GangbukSectionGuideLineEnUs(private var y: Float = 329f) : Painter<Cancerc
 
                     val content =  when(dto.first.name) {
                         "폐암" -> "For a lung cancer High Risk result, consultation with the physician for follow-ups is recommended. Although lung cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         "대장암" -> "For a colon cancer High Risk result, consultation with the physician for follow-ups is recommended. Although colon cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         "간암" -> "For a liver cancer High Risk result, consultation with the physician for follow-ups is recommended. Although liver cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         "췌장담도암" -> "For a pancreatobiliary cancer High Risk result, consultation with the physician for follow-ups is recommended. Although pancreatobiliary cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         "식도암" -> "For a esophageal cancer High Risk result, consultation with the physician for follow-ups is recommended. Although esophageal cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         "유방암" -> ""
 
                         "난소암" -> "For a ovarian cancer High Risk result, consultation with the physician for follow-ups is recommended. Although ovarian cancer is not confirmed through further diagnostic test, potential risk for other cancer types can not be excluded.\n" +
-                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "When you have the symptoms of other cancers, PET-CT test can be considered. If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
 
                         else -> "For the High Risk result, consultation with the physician for diagnostic test is recommended. Although cancer is not\n" +
                                 "confirmed through further test, potential risks for other cancer types can not be excluded.\n" +
                                 "When you have the symptoms of other cancers, PET-CT test can be considered.\n" +
-                                "If cancer is still not confirmed, undergoing ai-CANCERCH test to monitor cancer risk every three months can be considered."
+                                "If cancer is still not confirmed, undergoing Circulating tumor DNA test to monitor cancer risk every three months can be considered."
                     }
                     stream.paragraph(138f, y+20, 420f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(template.resource().styleContentRegualar().clone().fontSize(8f), content))
                 }
@@ -105,10 +105,10 @@ class GangbukSectionGuideLineEnUs(private var y: Float = 329f) : Painter<Cancerc
                     lblGuideLineTableHeader2(stream, y, 0f, dto, template)
                     lblGuideLineTime(stream, y, 0f, dto, template)
                     stream.paragraph(128f, y+48, 500f, AlignHorizontal.LEFT,
-                        TextBlock(template.resource().styleContentRegualar().clone().fontSize(8f), "For the Intermediate Risk result, ai-CANCERCH test after three months for follow ups is recommended.\n" +
+                        TextBlock(template.resource().styleContentRegualar().clone().fontSize(8f), "For the Intermediate Risk result, Circulating tumor DNA test after three months for follow ups is recommended.\n" +
                                 "The Intermediate Risk is a case in which abnormal DNA patterns is observed but the possibility of temporal abnormality\n" +
                                 "due to the health status(benign disease, autoimmune disease, etc.) cannot be excluded.\n" +
-                                "Please consider undergoing the ai-CANCERCH to monitor cancer risk every three months.\n" +
+                                "Please consider undergoing the Circulating tumor DNA to monitor cancer risk every three months.\n" +
                                 "If you have the symptoms for specific cancers, further test through the consultation with the physician is recommended.")
                     )
                 }
@@ -169,10 +169,10 @@ class GangbukSectionGuideLineEnUs(private var y: Float = 329f) : Painter<Cancerc
     private fun lblGuideLineTableHeader2(stream: PDPageContentStreamPageAccessible, y: Float, rate: Float, dto: CancerchDto, template: CancerchTemplate<CancerchResource>?) {
         when(dto.result) {
             CancerchDto.Results.RISK -> stream.paragraph(468f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
-                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(9f), "ai-CANCERCH Test")
+                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(9f), "Circulating tumor DNA Test")
             )
             else -> stream.paragraph(380f, y + RESULT_CONTENT_OTH_RATE - 129 + RESULT_CONTENT_OTH_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
-                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(9f), "ai-CANCERCH Test")
+                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(9f), "Circulating tumor DNA Test")
             )
         }
     }

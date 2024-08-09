@@ -46,7 +46,7 @@ class GangbukSectionLimitationKoKr(private var y: Float = 755f) : Painter<Cancer
         img = template.resource().imgLimitationTableTitle()
         width = img.width * CONTENT_TABLE_TITLE / img.height
         stream.drawImage(img, 123f-width/2, y, width, CONTENT_TABLE_TITLE)
-        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), "아이캔서치 검사의 암종별 성능"))
+        stream.paragraph(123f, y+6, 300f, AlignHorizontal.CENTER, TextBlock(styleBold.clone().color(Color(67,72,142)).fontSize(9f), "종양 DNA 혈액검사의 암종별 성능"))
 
         y -= CONTENT_TABLE +5
         img = template.resource().imgLimitationTable1()
@@ -107,10 +107,10 @@ class GangbukSectionLimitationKoKr(private var y: Float = 755f) : Painter<Cancer
         for(row in 0..3){
             y -= 8
             when (row) {
-                0 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "1) 특이도 : 건강인을 검사했을 때 아이캔서치 검사가 일반관리군으로 판단한 비율을 의미합니다."))
-                1 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "2) 민감도 : 암환자를 검사했을 때 아이캔서치 검사가 관심관리군 · 집중관리군으로 판단한 비율을 의미합니다."))
-                2 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "3) 양성예측도 : 아이캔서치 검사에서 관심관리 · 집중관리로 판단한 수검자가 실제 암환자일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 양성예측도가 계산되었습니다."))
-                3 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "4) 음성예측도 : 아이캔서치 검사에서 일반관리로 판단한 수검자가 실제 건강인일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 음성예측도가 계산되었습니다."))
+                0 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "1) 특이도 : 건강인을 검사했을 때 종양 DNA 혈액검사가 일반관리군으로 판단한 비율을 의미합니다."))
+                1 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "2) 민감도 : 암환자를 검사했을 때 종양 DNA 혈액검사가 관심관리군 · 집중관리군으로 판단한 비율을 의미합니다."))
+                2 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "3) 양성예측도 : 종양 DNA 혈액검사에서 관심관리 · 집중관리로 판단한 수검자가 실제 암환자일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 양성예측도가 계산되었습니다."))
+                3 -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), "4) 음성예측도 : 종양 DNA 혈액검사에서 일반관리로 판단한 수검자가 실제 건강인일 비율을 의미합니다. 50대 이상의 유병률에 기초하여 음성예측도가 계산되었습니다."))
                 else -> stream.paragraph(42f, y, 500f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().clone().color(Color(121,121,121)).fontSize(5.5f), ""))
             }
         }

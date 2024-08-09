@@ -62,42 +62,42 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
                     lblGuideLineTime(stream, y, rate, dto, template)
 
                     val content =  when(dto.first.name) {
-                        "폐암" -> "아이캔서치 검사 폐암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "폐암" -> "종양 DNA 혈액검사 폐암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 폐암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "대장암" -> "아이캔서치 검사 대장암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "대장암" -> "종양 DNA 혈액검사 대장암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 대장암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "간암" -> "아이캔서치 검사 간암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "간암" -> "종양 DNA 혈액검사 간암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 간암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "췌장담도암" -> "아이캔서치 검사 췌장담도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "췌장담도암" -> "종양 DNA 혈액검사 췌장담도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 췌장담도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "식도암" -> "아이캔서치 검사 식도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "식도암" -> "종양 DNA 혈액검사 식도암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 식도암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "유방암" -> "아이캔서치 검사 유방암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "유방암" -> "종양 DNA 혈액검사 유방암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 유방암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        "난소암" -> "아이캔서치 검사 난소암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        "난소암" -> "종양 DNA 혈액검사 난소암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 난소암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
 
-                        else -> "아이캔서치 검사 기타 암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
+                        else -> "종양 DNA 혈액검사 기타 암 집중관리군은 정밀검사를 위해 주치의와 상담을 권장합니다.\n" +
                                 "정밀검사를 통해 암이 확인 되지 않은 경우, 다른 암종의 가능성을 완전히 배제할 수 없습니다.\n" +
                                 "증상 등이 동반되어 다른 암종이 의심될 경우 PET-CT 검사를 고려할 수 있습니다.\n" +
                                 "정밀 검사에서 암이 확인되지 않았다면 3개월 주기로 본 검사를 통해 암 DNA를 추적할 것을 권장합니다."
@@ -121,7 +121,7 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
                     lblGuideLineTime(stream, y, 0f, dto, template)
 
                     stream.paragraph(134f, y+50, 500f, AlignHorizontal.LEFT,
-                        TextBlock(template.resource().styleContentRegualar().clone().fontSize(9f), "아이캔서치 검사 관심관리군은 3개월 후 본 검사를 통해 암 DNA를 추적할 것을 권장합니다.\n" +
+                        TextBlock(template.resource().styleContentRegualar().clone().fontSize(9f), "종양 DNA 혈액검사 관심관리군은 3개월 후 본 검사를 통해 암 DNA를 추적할 것을 권장합니다.\n" +
                                 "관심관리군은 암환자와 다소 유사한 DNA 이상 패턴이 관찰되었으나,\n" +
                                 "건강상태(양성질환, 자가면역질환 등)에 따른 일시적인 이상 패턴 검출의 가능성을 배제할 수 없는 경우입니다.\n" +
                                 "3개월 주기로 본 검사를 통해 암 DNA에 의한 이상 패턴을 추적할 것을 권장합니다.\n" +
@@ -179,10 +179,10 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
     private fun lblGuideLineTableHeader2(stream: PDPageContentStreamPageAccessible, y: Float, rate: Float, dto: CancerchDto, template: CancerchTemplate<CancerchResource>?) {
         when(dto.result) {
             CancerchDto.Results.RISK -> stream.paragraph(468f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
-                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "아이캔서치 검사 모니터링 권장 기간")
+                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "종양 DNA 혈액검사 모니터링 권장 기간")
             )
             else -> stream.paragraph(380f, y + RESULT_CONTENT_OTH_RATE - 129 + RESULT_CONTENT_OTH_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
-                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "아이캔서치 검사 모니터링 권장 기간")
+                TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "종양 DNA 혈액검사 모니터링 권장 기간")
             )
         }
     }
