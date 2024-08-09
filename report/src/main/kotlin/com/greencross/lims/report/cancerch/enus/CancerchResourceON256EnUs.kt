@@ -18,5 +18,5 @@ class CancerchResourceON256EnUs(doc: PDDocument) : CancerchResourceEnUs(doc), Ca
     override fun fontDefault(): PDFont {
         return fontDefault
     }
-    override fun imgTitle()       : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/0_title.png"))
+    override fun imgTitle()       : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/0_title_gangbuk_EnUs.png"))
 }
