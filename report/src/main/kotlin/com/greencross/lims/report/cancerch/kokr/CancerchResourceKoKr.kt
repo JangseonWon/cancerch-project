@@ -92,7 +92,7 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
     //endregion
 
     //region #Override img
-    override fun imgTitle()       : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/0_title.png"))
+
     override fun imgHeaderBox()   : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/1_headerBox.png"))
     override fun imgContentTitle(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/C_contentTitle.png"))
     override fun imgIntroContent(): PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionIntro/2_introcontent.png"))

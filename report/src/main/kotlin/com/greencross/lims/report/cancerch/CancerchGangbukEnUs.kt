@@ -1,25 +1,26 @@
 package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.SectionBarcode
+import com.greencross.lims.report.cancerch.GangbukComponent.*
 import com.greencross.lims.report.func.Painter
 
 class CancerchGangbukEnUs(
-    val template: CancerchTemplateON203<CancerchResource>,
+    val template: CancerchTemplateON256<CancerchResource>,
     val dto: CancerchDto,
     val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto>,
     val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto>,
     val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
-) : CancerchPageBuilder<CancerchTemplateON203<CancerchResource>>(template, dto)  {
+) : CancerchPageBuilder<CancerchTemplateON256<CancerchResource>>(template, dto)  {
     val barcode: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionBarcode()
-    private val title: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTitle2()
-    private val intro: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionIntro2()
-    private val totalResult: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionTotalResult2()
-    private val predictCancer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionPredictCancer2()
-    private val analysis: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysis2()
-    private val cancerTypeDanger: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionCancerTypeDanger2()
-    private val analysisComment: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionAnalysisComment2()
-    private val guideLine: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionGuideLine2()
-    private val limitation: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionLimitation2()
+    private val title: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionTitleEnUs()
+    private val intro: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionIntroEnUs()
+    private val totalResult: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionTotalResultEnUs()
+    private val predictCancer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionPredictCancerEnUs()
+    private val analysis: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionAnalysisEnUs()
+    private val cancerTypeDanger: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionCancerTypeDangerEnUs()
+    private val analysisComment: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionAnalysisCommentEnUs()
+    private val guideLine: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionGuideLineEnUs()
+    private val limitation: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionLimitationEnUs()
 
     override fun template(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return title.and { stream, template, dto ->
