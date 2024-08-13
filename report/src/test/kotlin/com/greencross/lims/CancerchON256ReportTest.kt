@@ -6,7 +6,9 @@ import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
+import com.greencross.lims.report.cancerch.enus.CancerchResourceON256EnUs
 import com.greencross.lims.report.cancerch.enus.CancerchTemplateON203EnUs
+import com.greencross.lims.report.cancerch.enus.CancerchTemplateON256EnUs
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.greencross.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionPage
@@ -40,45 +42,45 @@ class CancerchON256ReportTest {
     }
 
     fun createAllReport() {
-        val cancers = arrayOf(CancerchRepo.암종.폐암, CancerchRepo.암종.췌장담도암, CancerchRepo.암종.대장암, CancerchRepo.암종.난소암, CancerchRepo.암종.식도암, CancerchRepo.암종.간암)
+        val cancers = arrayOf(CancerchRepo.암종.폐암, CancerchRepo.암종.췌장담도암, CancerchRepo.암종.대장암, CancerchRepo.암종.난소암, CancerchRepo.암종.식도암, CancerchRepo.암종.간암, CancerchRepo.암종.기타암종)
         val sexes = arrayOf(Sex.M, Sex.F)
         val birthes = arrayOf(1940, 1950, 1960, 1970, 1980, 1990, 2000)
 
-        for(cancer in cancers) {
-            this.cancer = cancer
-            for (sex in sexes) {
-                this.sex = sex
-                for (birth in birthes) {
-                    this.birth = birth
-                    println("./ON203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
-                    val doc: PDDocument? = build(null, "ko-kr")
-                    doc!!.save("./ON203/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
-                }
-            }
-        }
-//        for (sex in sexes) {
-//            this.sex = sex
-//            for (birth in birthes) {
-//                this.birth = birth
-//                println("./ON203/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
-//                val doc: PDDocument? = build(null, "ko-kr")
-//                doc!!.save("./ON203/일반관리/일반관리_${this.sex}_${this.birth}.pdf")
+//        for(cancer in cancers) {
+//            this.cancer = cancer
+//            for (sex in sexes) {
+//                this.sex = sex
+//                for (birth in birthes) {
+//                    this.birth = birth
+//                    println("./강북삼성/ON256/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+//                    val doc: PDDocument? = build(null, "ko-kr")
+//                    doc!!.save("./강북삼성/ON256/집중관리/집중관리(${this.cancer})_${this.sex}_${this.birth}.pdf")
+//                }
 //            }
 //        }
+        for (sex in sexes) {
+            this.sex = sex
+            for (birth in birthes) {
+                this.birth = birth
+                println("./강북삼성/ON256/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
+                val doc: PDDocument? = build(null, "ko-kr")
+                doc!!.save("./강북삼성/ON256/관심관리/관심관리_${this.sex}_${this.birth}.pdf")
+            }
+        }
     }
 
     fun build(obj: JvmType.Object?, lang: String): PDDocument? {
         val type: LogoType = LogoType.DEPENDENT
         val repo: CancerchRepo = CancerchRepo()
         return builder(
-            TestInfo.ON203, type,
-            CancerchDto("",
-                CancerchDto.Results.RISK,
-                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+            TestInfo.ON256, type,
 //            CancerchDto("",
-//                CancerchDto.Results.CONCERN,
-//                CancerchDto.Cancer("기타암종")))?.build()
+//                CancerchDto.Results.RISK,
+//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+            CancerchDto("",
+                CancerchDto.Results.CONCERN,
+                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.GENERAL,
 //                CancerchDto.Cancer()))?.build()
@@ -96,21 +98,21 @@ class CancerchON256ReportTest {
 
 //        dto.barcode = dto.barcode
         dto.medicalInstitution = "GC Genome"
-        dto.medicalRecordNumber = barcode
+        dto.medicalRecordNumber = "012345678901234567"
         dto.specimenType = "Whole Blood"
 
         dto.reportDate = LocalDate.of(2022,11,3)
         dto.age = age(dto.birthDate, dto.collectionDate).toString()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        return if(TestInfo.ON203 == test) {
+        return if(TestInfo.ON256 == test) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
-            val resource = CancerchResourceON203EnUs(doc)
-            val template = CancerchTemplateON203EnUs(resource, test)
+            val resource = CancerchResourceON256EnUs(doc)
+            val template = CancerchTemplateON256EnUs(resource, test)
 
             page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
+            return CancerchGangbukEnUs(template as CancerchTemplateON256<CancerchResource>, dto, sign, footer, page)
         } else null
     }
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
@@ -130,6 +132,6 @@ class CancerchON256ReportTest {
 
 fun main(){
     val test = CancerchON256ReportTest()
-    test.test()
-//    test.createAllReport()
+//    test.test()
+    test.createAllReport()
 }

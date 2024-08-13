@@ -198,15 +198,10 @@ abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignE
         return img(File(CancerchResource.resource, "img/avoid/SectionDetailResultAnalysis/background_$cancer.png"))
     }
 
-    override fun imgGuideLineTable(risk: String) = when(risk){
-        "RISK"   -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
-        "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
-        else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203_middle.png"))
-    }
+
     override fun imgGuideLineCancer(cancer: String): PDImageXObject {
         return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/cancer_$cancer.png"))
     }
-    override fun imgGuideLineTotalCancer() : PDImageXObject { return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203_general.png")) }
     override fun imgProcess(): PDImageXObject { return imgProcess }
     override fun imgAi(): PDImageXObject { return imgAI }
     override fun imgAiBox(): PDImageXObject { return imgAIBox }

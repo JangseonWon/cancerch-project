@@ -13,7 +13,7 @@ import com.greencross.lims.report.func.Painter
 import java.awt.Color
 import kotlin.math.round
 
-class GangbukSectionCancerTypeDangerKoKr(private val y: Float = 745f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class GangbukSectionCancerTypeDangerKoKr(private val y: Float = 725f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: CancerchTemplate<CancerchResource>?,

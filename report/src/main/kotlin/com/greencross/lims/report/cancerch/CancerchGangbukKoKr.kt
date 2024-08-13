@@ -13,6 +13,7 @@ class CancerchGangbukKoKr(
 ) : CancerchPageBuilder<CancerchTemplateN256<CancerchResource>>(template, dto) {
     val barcode: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionBarcode()
     private val title: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionTitleKoKr()
+    private val simpleTitle: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionSimpleTitleKoKr()
     private val intro: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionIntroKoKr()
     private val totalResult: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionTotalResultKoKr()
     private val predictCancer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = GangbukSectionPredictCancerKoKr()
@@ -27,17 +28,17 @@ class CancerchGangbukKoKr(
             return@and stream
         }.and(sign).and(footer)
     }
-    private fun templateWithoutTitle(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
-        return sign.and { stream, template, dto ->
+    private fun templateWithSimpleTitle(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+        return simpleTitle.and { stream, template, dto ->
             stream.setFont(template.resource().fontDefault(), 11f)
             return@and stream
-        }.and(footer)
+        }.and(sign).and(footer)
     }
 
     override fun pages(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return template().and(intro).and(totalResult).and(predictCancer).and(analysis)
-            .and { s, t, d -> newPage(s) }.and(templateWithoutTitle()).and(cancerTypeDanger).and(analysisComment).and(guideLine)
-            .and { s, t, d -> newPage(s) }.and(templateWithoutTitle()).and(limitation)
+            .and { s, t, d -> newPage(s) }.and(templateWithSimpleTitle()).and(cancerTypeDanger).and(analysisComment).and(guideLine)
+            .and { s, t, d -> newPage(s) }.and(templateWithSimpleTitle()).and(limitation)
     }
 
 }

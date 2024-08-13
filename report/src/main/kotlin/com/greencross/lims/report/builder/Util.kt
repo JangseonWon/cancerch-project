@@ -20,6 +20,16 @@ open class Util {
         fun date(date: LocalDate?): String? {
             return if (date == null) null else DTF.format(date)
         }
+        fun dateOrDash(date: LocalDate?): String {
+            return if (date == null) "-" else DTF.format(date)
+        }
+        fun getDynamicFontSize(maxSize: Float = 10f, minSize: Float = 0f, textLength: Int, maxLength: Int = 9999): Float {
+            return if (textLength > maxLength) {
+                minSize
+            } else {
+                maxSize - (textLength / maxLength.toFloat()) * (maxSize - minSize)
+            }
+        }
         fun age(birth: LocalDate?, sampling: LocalDate?): String {
             if (birth == null) return "-"
             return if (sampling == null) (Period.between(

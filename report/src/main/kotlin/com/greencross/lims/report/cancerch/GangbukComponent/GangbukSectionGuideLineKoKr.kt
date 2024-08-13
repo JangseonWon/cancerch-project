@@ -11,7 +11,7 @@ import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 import com.greencross.lims.report.func.Painter
 import java.awt.Color
 
-class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class GangbukSectionGuideLineKoKr(private var y: Float = 310f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: CancerchTemplate<CancerchResource>?,
@@ -31,18 +31,17 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
         }
         stream.paragraph(297f, y+10, 300f, AlignHorizontal.CENTER, TextBlock(style, title))
 
+        y -= 8
+        stream.line(34f, y, 561f, y).setStrokingColor(Color(120,120,120)).setLineDashPattern(floatArrayOf(2.5f, 1.5f), 1f).setLineWidth(0.2f).stroke()
         if(dto.result != CancerchDto.Results.GENERAL) {
-            y -= 8
-            stream.line(34f, y, 561f, y).setStrokingColor(Color(55,55,55)).setLineWidth(0.2f).stroke()
             when(dto.result){
                 CancerchDto.Results.RISK -> {
                     img = template.resource().imgGuideLineTable(if(dto.first.name == "기타암종") "OTHERS" else dto.result.name)
                     val rate = RESULT_CONTENT_RATE
                     width = img.width * rate / img.height
-                    y -= rate + 10
+                    y -= rate - 15
 
                     stream.drawImage(img, 297f - width / 2, y-24, width, rate)
-                    lblGuideLineTop(stream, y + rate - 9, dto, template)
 
                     img = template.resource().imgGuideLineCancer(dto.first.name)
                     width = img.width * CONTENT_CANCER_RATE / img.height
@@ -107,20 +106,19 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
                 else -> {
                     img = template.resource().imgGuideLineTable(CancerchDto.Results.CONCERN.name)
                     width = img.width * RESULT_CONTENT_OTH_RATE / img.height
-                    y -= RESULT_CONTENT_OTH_RATE + 10
+                    y -= RESULT_CONTENT_OTH_RATE - 15
 
                     stream.drawImage(img, 297f - width / 2, y-24, width, RESULT_CONTENT_OTH_RATE)
-                    lblGuideLineTop(stream, y + RESULT_CONTENT_OTH_RATE - 9, dto, template)
 
                     img = template.resource().imgGuideLineCancer(dto.first.name)
                     width = img.width * CONTENT_CANCER_RATE / img.height
-                    stream.drawImage(img, 75f - width / 2, y + CONTENT_CANCER_RATE +30, width, CONTENT_CANCER_RATE)
+                    stream.drawImage(img, 75f - width / 2, y + CONTENT_CANCER_RATE +15, width, CONTENT_CANCER_RATE)
                     val style = template.resource().styleContentSpecial().clone().color(Color(255, 255, 255)).fontSize(14f)
-                    stream.paragraph(140f, y+125, 100f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(style, Util.lblResultToWord(dto.result)))
-                    lblGuideLineTableHeader2(stream, y, 0f, dto, template)
-                    lblGuideLineTime(stream, y, 0f, dto, template)
+                    stream.paragraph(140f, y+105, 100f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(style, Util.lblResultToWord(dto.result)))
+                    lblGuideLineTableHeader2(stream, y+8, 0f, dto, template)
+                    lblGuideLineTime(stream, y-18, 0f, dto, template)
 
-                    stream.paragraph(134f, y+50, 500f, AlignHorizontal.LEFT,
+                    stream.paragraph(134f, y+40, 500f, AlignHorizontal.LEFT,
                         TextBlock(template.resource().styleContentRegualar().clone().fontSize(9f), "종양 DNA 혈액검사 관심관리군은 3개월 후 본 검사를 통해 암 DNA를 추적할 것을 권장합니다.\n" +
                                 "관심관리군은 암환자와 다소 유사한 DNA 이상 패턴이 관찰되었으나,\n" +
                                 "건강상태(양성질환, 자가면역질환 등)에 따른 일시적인 이상 패턴 검출의 가능성을 배제할 수 없는 경우입니다.\n" +
@@ -133,71 +131,59 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
         } else {
             img = template.resource().imgGuideLineTotalCancer()
             width = img.width * RESULT_CONTENT_LOW_RATE / img.height
-            y -= RESULT_CONTENT_LOW_RATE + 10
+
+            y -= RESULT_CONTENT_LOW_RATE + 7
+
             stream.drawImage(img, 296.5f - width / 2, y, width, RESULT_CONTENT_LOW_RATE)
 
             val styleBold = template.resource().styleContentBold().clone().color(Color(255,255,255)).fontSize(9f)
-            stream.paragraph(59f,  y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold,"암종"))
-            stream.paragraph(178f, y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "대상"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "주기"))
-            stream.paragraph(440f, y+ RESULT_CONTENT_LOW_RATE -12, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "검사"))
+            stream.paragraph(59f,  y+ RESULT_CONTENT_LOW_RATE -11, 100f, AlignHorizontal.CENTER, TextBlock(styleBold,"암종"))
+            stream.paragraph(178f, y+ RESULT_CONTENT_LOW_RATE -11, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "대상"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -11, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "주기"))
+            stream.paragraph(440f, y+ RESULT_CONTENT_LOW_RATE -11, 100f, AlignHorizontal.CENTER, TextBlock(styleBold, "검사"))
 
             val styleRegular = template.resource().styleContentRegualar().clone().fontSize(8f)
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "폐암"))
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -73, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "대장암"))
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -113, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "간암"))
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -152, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "췌장담도암"))
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -187, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "식도암"))
-            stream.paragraph(62f, y+ RESULT_CONTENT_LOW_RATE -215, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "난소암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -30, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "폐암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -60, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "대장암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -98, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "간암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -131, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "췌장담도암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -158, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "식도암"))
+            stream.paragraph(60f, y+ RESULT_CONTENT_LOW_RATE -181, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "난소암"))
 
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -34, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "만 54세 이상 만 74세 이하 남녀\n 폐암 발생 고위험군(30갑년*이상 흡연력)"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -73, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "만 50세 이상 남녀"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -102, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "만 40세 이상 남녀 중 간암 발생 고위험군\n"), TextBlock(styleRegular.clone().fontSize(7f), "(간경변증이나 B형 간염 바이러스 항원 또는\nC형 간염 바이러스 항체 양성으로 확인된 자)"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -147, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().fontSize(7f), "만 70세 이상 남녀\n췌장담도암 가족력/장기 흡연자/만성췌장염 병력"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -187, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "증상이 있거나, 식도암이 의심되는 자"))
-            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -215, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "-"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -26, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "만 54세 이상 만 74세 이하 남녀\n 폐암 발생 고위험군(30갑년*이상 흡연력)"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -58, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "만 50세 이상 남녀"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -96,  200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "만 40세 이상 남녀 중 간암 발생 고위험군\n"), TextBlock(styleRegular.clone().fontSize(7f), "(간경변증이나 B형 간염 바이러스 항원 또는\nC형 간염 바이러스 항체 양성으로 확인된 자)"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -129, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular.clone().fontSize(7f), "만 70세 이상 남녀\n췌장담도암 가족력/장기 흡연자/만성췌장염 병력"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -155, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "증상이 있거나, 식도암이 의심되는 자"))
+            stream.paragraph(97f, y+ RESULT_CONTENT_LOW_RATE -178, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "-"))
 
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "2년"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -73, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "1년"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -113, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "6개월"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -152, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "1년"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -182, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "정기적인\n검사 권장"))
-            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -215, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "-"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -30, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "2년"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -60, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "1년"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -98,  100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "6개월"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -131, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "1년"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -155, 100f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(styleRegular, "정기적인\n검사 권장"))
+            stream.paragraph(295f, y+ RESULT_CONTENT_LOW_RATE -181, 100f, AlignHorizontal.CENTER, TextBlock(styleRegular, "-"))
 
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -38, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "저선량흉부CT검사"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -69, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular, "분변잠혈검사 이상소견 시, 대장내시경검사\n"), TextBlock(styleRegular.clone().fontSize(6.5f), "(단, 대장내시경을 실시하기 어려운 경우 대장이중조영검사 선택적 시행)"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -113, 200f, AlignHorizontal.LEFT, TextBlock(styleRegular,"간초음파검사, 혈청알파태아단백검사"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -152, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "복부초음파검사, 복부CT검사"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -187, 100f, AlignHorizontal.LEFT, TextBlock(styleRegular, "식도-위 내시경검사"))
-            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -215, 230f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().fontSize(7.5f), "CA125 암표지자 검사 이상소견 시 초음파검사, CT검사, MRI검사"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -26, 100f, AlignHorizontal.LEFT, AlignVertical.MIDDLE,  TextBlock(styleRegular, "저선량흉부CT검사"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -58, 200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE,  TextBlock(styleRegular, "분변잠혈검사 이상소견 시, 대장내시경검사\n"), TextBlock(styleRegular.clone().fontSize(6.5f), "(단, 대장내시경을 실시하기 어려운 경우 대장이중조영검사 선택적 시행)"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -96,  200f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular,"간초음파검사, 혈청알파태아단백검사"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -129, 100f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "복부초음파검사, 복부CT검사"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -155, 100f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular, "식도-위 내시경검사"))
+            stream.paragraph(343f, y+ RESULT_CONTENT_LOW_RATE -178, 230f, AlignHorizontal.LEFT, AlignVertical.MIDDLE, TextBlock(styleRegular.clone().fontSize(7.5f), "CA125 암표지자 검사 이상소견 시 초음파검사, CT검사, MRI검사"))
 
-            stream.paragraph(400f, y+ RESULT_CONTENT_LOW_RATE -232, 230f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().clone().color(Color(55,55,55)).fontSize(5f), "*갑년 : 일평균 흡연량(갑) x 흡연기간(년) ex) 2갑 x 15년 = 30갑년(검진 대상)"))
+            stream.paragraph(400f, y+ RESULT_CONTENT_LOW_RATE -198, 230f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().clone().color(Color(55,55,55)).fontSize(5f), "*갑년 : 일평균 흡연량(갑) x 흡연기간(년) ex) 2갑 x 15년 = 30갑년(검진 대상)"))
         }
         return stream
     }
 
     private fun lblGuideLineTableHeader2(stream: PDPageContentStreamPageAccessible, y: Float, rate: Float, dto: CancerchDto, template: CancerchTemplate<CancerchResource>?) {
         when(dto.result) {
-            CancerchDto.Results.RISK -> stream.paragraph(468f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
+            CancerchDto.Results.RISK -> stream.paragraph(468f, y + rate - 68 + CONTENT_CANCER_RATE * 0.5f, 200f, AlignHorizontal.CENTER,
                 TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "종양 DNA 혈액검사 모니터링 권장 기간")
             )
-            else -> stream.paragraph(380f, y + RESULT_CONTENT_OTH_RATE - 129 + RESULT_CONTENT_OTH_RATE * 0.5f, 160f, AlignHorizontal.CENTER,
+            else -> stream.paragraph(380f, y + RESULT_CONTENT_OTH_RATE - 129 + RESULT_CONTENT_OTH_RATE * 0.5f, 200f, AlignHorizontal.CENTER,
                 TextBlock(template!!.resource().styleContentBold().clone().color(Color(255, 255, 255)).fontSize(10f), "종양 DNA 혈액검사 모니터링 권장 기간")
             )
-        }
-    }
-
-    private fun lblGuideLineTop(stream: PDPageContentStreamPageAccessible, y: Float, dto: CancerchDto, template: CancerchTemplate<CancerchResource>?) {
-        val styleBold = template!!.resource().styleContentBold().clone().fontSize(11f)
-        when (dto.result) {
-            CancerchDto.Results.CONCERN -> stream.paragraph(305f, y, 400f, AlignHorizontal.CENTER, TextBlock(styleBold, "관심관리군 맞춤 가이드라인은 다음과 같습니다"))
-            else -> {
-                val cancer = when {
-                    dto.first.name == "기타암종" -> "기타 암"
-                    else -> dto.first.name
-                }
-                stream.paragraph(305f, y, 400f, AlignHorizontal.CENTER, TextBlock(styleBold, "$cancer 집중관리군 맞춤 가이드라인은 다음과 같습니다."))
-            }
         }
     }
 
@@ -224,7 +210,7 @@ class GangbukSectionGuideLineKoKr(private var y: Float = 329f) : Painter<Cancerc
         private const val CONTENT_TITLE_RATE = 28f
         private const val CONTENT_CANCER_RATE = 60f
         private const val RESULT_CONTENT_RATE = 164.5f
-        private const val RESULT_CONTENT_OTH_RATE = 182f
-        private const val RESULT_CONTENT_LOW_RATE = 225f
+        private const val RESULT_CONTENT_OTH_RATE = 164f
+        private const val RESULT_CONTENT_LOW_RATE = 190f
     }
 }

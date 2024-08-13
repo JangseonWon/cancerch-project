@@ -19,4 +19,10 @@ class CancerchResourceON256EnUs(doc: PDDocument) : CancerchResourceEnUs(doc), Ca
         return fontDefault
     }
     override fun imgTitle()       : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/0_title_gangbuk_EnUs.png"))
+    override fun imgGuideLineTable(risk: String) = when(risk){
+        "RISK"   -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
+        "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
+        else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n256.png"))
+    }
+    override fun imgGuideLineTotalCancer() : PDImageXObject { return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n256_general.png")) }
 }

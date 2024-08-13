@@ -3,7 +3,7 @@ spring:
   main.web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: localhost:12181
       discovery.root: /avoid-service
     stream:
       bindings:
@@ -27,4 +27,4 @@ logging:
 
 server:
   resources : file:/data/lims/static/avoid-service/
-  port: 0
+  port: 62179

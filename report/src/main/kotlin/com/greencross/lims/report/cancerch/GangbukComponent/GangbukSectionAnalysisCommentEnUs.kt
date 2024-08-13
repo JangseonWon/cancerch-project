@@ -11,7 +11,7 @@ import com.greencross.lims.report.func.Painter
 import java.awt.Color
 import kotlin.math.round
 
-class GangbukSectionAnalysisCommentEnUs(private var y: Float = 0f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class GangbukSectionAnalysisCommentEnUs(private var y: Float = -20f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
@@ -24,7 +24,7 @@ class GangbukSectionAnalysisCommentEnUs(private var y: Float = 0f) : Painter<Can
         val styleBold = template.resource().styleContentBold().clone().fontSize(8f)
         val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(8f)
 
-        stream.line(47f,493f, 542f, 493f).setLineWidth(0.4f).setStrokingColor(Color(67, 72, 142)).stroke()
+        stream.line(47f,473f, 542f, 473f).setLineWidth(0.4f).setStrokingColor(Color(67, 72, 142)).stroke()
         if (CancerchDto.Results.GENERAL == dto!!.result) {
             stream.paragraph(
                 52f, y + RESULT_IMAGE_COMMENT_RATE + 275, 500f,

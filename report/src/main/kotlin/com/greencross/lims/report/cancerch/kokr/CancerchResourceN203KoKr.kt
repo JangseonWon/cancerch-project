@@ -17,4 +17,10 @@ class CancerchResourceN203KoKr(doc: PDDocument) : CancerchResourceKoKr(doc), Can
 
     override fun fontDefault()    : PDFont = fontDefault
     override fun imgTitle()       : PDImageXObject = img(File(CancerchResource.resource, "img/avoid/SectionTitle/0_title.png"))
+    override fun imgGuideLineTotalCancer() : PDImageXObject { return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203_general.png")) }
+    override fun imgGuideLineTable(risk: String) = when(risk){
+        "RISK"   -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
+        "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
+        else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203_middle.png"))
+    }
 }
