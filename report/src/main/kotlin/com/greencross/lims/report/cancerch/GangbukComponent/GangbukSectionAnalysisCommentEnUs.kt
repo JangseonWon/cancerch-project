@@ -35,7 +35,7 @@ class GangbukSectionAnalysisCommentEnUs(private var y: Float = -20f) : Painter<C
                 TextBlock(styleRegular, "and DNA patterns is similar to that of healthy individuals.\nAs a result of cfDNA analysis by artificial intelligence algorithm, "),
                 TextBlock(styleBold, "${dto.patientName} "),
                 TextBlock(styleRegular, "has a low probability of cancer than the general population.\n" +
-                        "The Circulating tumor DNA test cannot detect all types of cancer, and its detection performance may differ depending on the stage or type of\n" +
+                        "The Circulating tumor DNA test cannot detect all types of cancer, and its detection performance may differ depending on the stage or type of " +
                         "cancer. This test is a cancer screening test, not a cancer diagnostic test, so physician-driven diagnosis is recommended.\n" +
                         "This result is only for your current status.\n" +
                         "It is recommended to undergo regular health check-ups and life-style management to monitor the constantly evolving future health status.\n\n"),
@@ -126,7 +126,7 @@ class GangbukSectionAnalysisCommentEnUs(private var y: Float = -20f) : Painter<C
                     TextBlock(styleRegular, "in "),
                     TextBlock(styleBold, Util_EnUS.lblPatientInfoWithCancer(dto.age!!, dto.sex!!, dto.first.name)),
                     TextBlock(styleBold, " is "),
-                    TextBlock(styleBold, String.format("%.20f", (round(dto.first.asr.div(1000) * 10000) / 10000)).trimEnd('0').trimEnd('.') + "%"),
+                    TextBlock(styleBold, String.format("%.20f", (round(dto.first.asr.div(1000) * 10000) / 10000)).trimEnd('0').trimEnd('.') + "% "),
                     TextBlock(styleRegular, "but the risk of "),
                     TextBlock(styleBold, "${dto.patientName} "),
                     TextBlock(styleBold, "is " + dto.first.ppv.toString() + "%"),

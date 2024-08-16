@@ -72,6 +72,7 @@ class GangbukSectionTotalResultKoKr(private val y: Float = 580f) : Painter<Cance
                 CancerchDto.Results.RISK ->     TextBlock(template.resource().styleContentSpecial().clone().fontSize(27f).color(Color(217, 52, 29)),    Util.lblResultToWord(dto.result))
             })
 
+        stream.restoreGraphicsState()
         return stream
     }
 

@@ -35,10 +35,6 @@ class GangbukSectionSimpleTitleEnUs(private val y: Float = 805f) : Painter<Cance
         stream.line(511f, y+6, 511f, y-1).setLineDashPattern(floatArrayOf(0f, 0f), 0f).setLineWidth(0.7f).setStrokingColor(Color(81, 78, 145)).stroke()
         stream.paragraph(515f, y, 300f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentRegualar().fontSize(8f), Util_EnUS.dateOrDash(dto.collectionDate)))
 
-
-
-        //endregion
-
         stream.restoreGraphicsState()
         return stream
     }

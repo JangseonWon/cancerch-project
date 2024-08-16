@@ -18,7 +18,8 @@ class GangbukSectionAnalysisEnUs(private val y: Float = 200f) : Painter<Cancerch
         template: CancerchTemplate<CancerchResource>?,
         dto: CancerchDto?
     ): PDPageContentStreamPageAccessible {
-        stream!!.line(35f, y+113, 560f, y+113).setStrokingColor(Color(67, 72, 142)).setLineWidth(1f).stroke()
+        stream!!.saveGraphicsState()
+        stream.line(35f, y+113, 560f, y+113).setStrokingColor(Color(67, 72, 142)).setLineWidth(1f).stroke()
         stream.line(35f, y+67, 560f, y+67).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()
         stream.line(35f, y-98, 560f, y-98).setStrokingColor(Color(67, 72, 142)).setLineWidth(1f).stroke()
         stream.line(195f, y+113, 195f, y-98).setStrokingColor(Color.BLACK).setLineWidth(0.2f).stroke()

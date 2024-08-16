@@ -65,7 +65,7 @@ class GangbukSectionTotalResultEnUs(private val y: Float = 580f) : Painter<Cance
                 AlignHorizontal.RIGHT, TextBlock(template.resource().styleContentSpecial().clone().fontSize(20f).color(Color(217, 52, 29)), Util_EnUS.lblResultToWord(dto.result)))
         }
         //endregion
-
+        stream.restoreGraphicsState()
         return stream
     }
 

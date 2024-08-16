@@ -53,7 +53,7 @@ class GangbukSectionAnalysisCommentKoKr(private val y: Float = -20f) : Painter<C
                 TextBlock(styleRegular, "님은 암의 존재 가능성이\n"),
                 TextBlock(styleBold, "약 2배 이상 "),
                 TextBlock(styleRegular, "높을 것으로 예측되나, 암 종을 예측하기에는 불분명합니다.\n\n관심관리 대상자여도 암으로 확진되기까지 수 개월이 걸릴 수도 있으므로 추적관찰을 요합니다.\n또한 "),
-                TextBlock(blackbold, "건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다.(약 5%).\n\n"),
+                TextBlock(blackbold, "건강인이라도 건강상태(양성질환, 자가면역질환 등)에 따라 관심관리 대상자로 보고될 수 있습니다(약 5%).\n\n"),
                 TextBlock(blackbold, dto.first.comment)
             )
         }

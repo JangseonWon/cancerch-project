@@ -106,7 +106,7 @@ class GangbukSectionGuideLineEnUs(private var y: Float = 310f) : Painter<Cancerc
                         TextBlock(template.resource().styleContentRegualar().clone().fontSize(8f), "For the Intermediate Risk result, Circulating tumor DNA test after three months for follow ups is recommended.\n" +
                                 "The Intermediate Risk is a case in which abnormal DNA patterns is observed but the possibility of temporal abnormality\n" +
                                 "due to the health status(benign disease, autoimmune disease, etc.) cannot be excluded.\n" +
-                                "Please consider undergoing the Circulating tumor DNA to monitor cancer risk every three months.\n" +
+                                "Please consider undergoing the Circulating tumor DNA test to monitor cancer risk every three months.\n" +
                                 "If you have the symptoms for specific cancers, further test through the consultation with the physician is recommended.")
                     )
                 }
