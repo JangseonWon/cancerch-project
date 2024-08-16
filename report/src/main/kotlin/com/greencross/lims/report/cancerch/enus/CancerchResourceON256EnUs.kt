@@ -24,5 +24,5 @@ class CancerchResourceON256EnUs(doc: PDDocument) : CancerchResourceEnUs(doc), Ca
         "OTHERS" -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n203.png"))
         else     -> img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n256.png"))
     }
-    override fun imgGuideLineTotalCancer() : PDImageXObject { return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_n256_general.png")) }
+    override fun imgGuideLineTotalCancer() : PDImageXObject { return img(File(CancerchResource.resource, "img/avoid/SectionGuideLine/img_table_on256_general.png")) }
 }
