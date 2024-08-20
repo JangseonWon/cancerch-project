@@ -37,13 +37,14 @@ class ReportMapper(private val om: ObjectMapper) {
             else      -> "오류발생"
         }
         val prediction = if(analysis.patient.sex == "F") replaceResult(analysis.too6Pred) else replaceResult(analysis.too5Pred)
+        val comment = analysis.comment?:""
         return Report(sample = analysis.sample, service = analysis.service, createAt = createTime).apply {
             this.batch = batch
             this.row = row
             this.language = lang
             this.isPrinted = "PREPARE"
             this.description = description
-            this.resultInfo = Json.of("{\"result\": \"$result\", \"result_type\": \"$prediction\"}")
+            this.resultInfo = Json.of("{\"result\": \"$result\", \"result_type\": \"$prediction\", \"comment\": \"$comment\"}")
         }
     }
 
