@@ -58,10 +58,22 @@ class Client(
             AlisRequest(
                 fileId = file.toString(),
                 operation = Operation.SEND_USER_FILE
+            ),
+            AlisRequest(
+                fileId = file.toString(),
+                operation = Operation.SEND_RESULT,
+                results = listOf(
+                    AlisResult(
+                        request.service + "010",
+                        resultInfo.result,
+                        resultInfo.resultType,
+                        resultInfo.comment
+                    )
+                )
             )
         )
 
-        if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125") {
+        if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006") {
             requests.add(
                 AlisRequest(
                     fileId = file.toString(),
@@ -70,13 +82,7 @@ class Client(
                     operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
                 )
             )
-            requests.add(
-                AlisRequest(
-                    fileId = file.toString(),
-                    operation = Operation.SEND_RESULT,
-                    results = listOf(AlisResult(request.service + "010", resultInfo.result, resultInfo.resultType, resultInfo.comment))
-                )
-            )
+
         }
 
 
