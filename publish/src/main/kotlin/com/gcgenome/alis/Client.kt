@@ -30,7 +30,13 @@ class Client(
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    fun send(request: Request, file: UUID, user: Authentication, serverRequest: ServerRequest, resultInfo: ResultInfo): Mono<Boolean> {
+    fun send(
+        request: Request,
+        file: UUID,
+        user: Authentication,
+        serverRequest: ServerRequest,
+        resultInfo: ResultInfo
+    ): Mono<Boolean> {
         val date = LocalDate.parse(request.sample.toString().substring(0, 8), DateTimeFormatter.ofPattern("yyyyMMdd"))
         val subSample = request.sample.toString().substring(8).toLong()
         val publishInfo = PublishRequest(date, subSample, request.service)
@@ -56,10 +62,19 @@ class Client(
         )
 
         if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125") {
-            requests.add(AlisRequest(
-                fileId = file.toString(),
-                payload = Base64.getEncoder().encodeToString("${(request.sample/10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${request.serviceName}$${resultInfo.result}".toByteArray()),
-                operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
+            requests.add(
+                AlisRequest(
+                    fileId = file.toString(),
+                    payload = Base64.getEncoder()
+                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${request.serviceName}$${resultInfo.result}".toByteArray()),
+                    operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
+                )
+            )
+            requests.add(
+                AlisRequest(
+                    fileId = file.toString(),
+                    operation = Operation.SEND_RESULT,
+                    results = listOf(AlisResult(request.service + "010", resultInfo.result, resultInfo.resultType, resultInfo.comment))
                 )
             )
         }
