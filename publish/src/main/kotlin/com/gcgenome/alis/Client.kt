@@ -78,7 +78,7 @@ class Client(
                 AlisRequest(
                     fileId = file.toString(),
                     payload = Base64.getEncoder()
-                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}$${request.service}$${request.serviceName}$${resultInfo.result}".toByteArray()),
+                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${resultInfo.result}".toByteArray()),
                     operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
                 )
             )
