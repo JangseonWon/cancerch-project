@@ -67,7 +67,7 @@ class Client(
                         request.service + "010",
                         resultInfo.result,
                         resultInfo.resultType,
-                        resultInfo.comment
+                        resultInfo.comment?:""
                     )
                 )
             )
