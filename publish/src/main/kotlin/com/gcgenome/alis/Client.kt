@@ -45,7 +45,7 @@ class Client(
         val requests = mutableListOf(
             AlisRequest(
                 fileId = file.toString(),
-                operation = Operation.CREATE_IMG_DIV_PAR
+                operation = Operation.CREATE_IMG_DIV
             ),
             AlisRequest(
                 fileId = file.toString(),
@@ -59,18 +59,18 @@ class Client(
                 fileId = file.toString(),
                 operation = Operation.SEND_USER_FILE
             ),
-//            AlisRequest(
-//                fileId = file.toString(),
-//                operation = Operation.SEND_RESULT,
-//                results = listOf(
-//                    AlisResult(
-//                        request.service + "010",
-//                        resultInfo.result,
-//                        resultInfo.resultType,
-//                        resultInfo.comment
-//                    )
-//                )
-//            )
+            AlisRequest(
+                fileId = file.toString(),
+                operation = Operation.SEND_RESULT,
+                results = listOf(
+                    AlisResult(
+                        request.service + "010",
+                        resultInfo.result,
+                        resultInfo.resultType,
+                        resultInfo.comment
+                    )
+                )
+            )
         )
 
         if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006") {
