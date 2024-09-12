@@ -74,11 +74,17 @@ class Client(
         )
 
         if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006") {
+            val result = when(resultInfo.result) {
+                "일반관리" -> "미검출"
+                "관심관리" -> "검출_관심관리"
+                "집중관리" -> "검출_집중관리"
+                else -> throw Exception("결과값에서 의도치않은 문구가 발견됐습니다.")
+            }
             requests.add(
                 AlisRequest(
                     fileId = file.toString(),
                     payload = Base64.getEncoder()
-                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${resultInfo.result}".toByteArray()),
+                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${result}".toByteArray()),
                     operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
                 )
             )
