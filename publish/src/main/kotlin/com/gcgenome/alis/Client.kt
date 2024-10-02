@@ -116,10 +116,8 @@ class Client(
         "일반관리" -> "미검출"
         "관심관리" -> "검출_관심관리"
         "집중관리" -> "검출_집중관리"
-        else -> result
+        else -> throw Exception("의도치 않은 문구가 삽입됐습니다.")
     }
 
     private fun isKangbukRequest(request: Request) : Boolean = request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006"
-
-    }
 }
