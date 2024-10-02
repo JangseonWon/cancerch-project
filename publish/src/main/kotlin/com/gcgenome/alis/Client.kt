@@ -65,7 +65,8 @@ class Client(
                 results = listOf(
                     AlisResult(
                         request.service + "010",
-                        resultInfo.result,
+                        if(isKangbukRequest(request)) convertResultKangbuk(resultInfo.result)
+                        else resultInfo.result,
                         resultInfo.resultType,
                         resultInfo.comment?:""
                     )
@@ -73,18 +74,12 @@ class Client(
             )
         )
 
-        if (request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006") {
-            val result = when(resultInfo.result) {
-                "일반관리" -> "미검출"
-                "관심관리" -> "검출_관심관리"
-                "집중관리" -> "검출_집중관리"
-                else -> throw Exception("결과값에서 의도치않은 문구가 발견됐습니다.")
-            }
+        if (isKangbukRequest(request)) {
             requests.add(
                 AlisRequest(
                     fileId = file.toString(),
                     payload = Base64.getEncoder()
-                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${result}".toByteArray()),
+                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${resultInfo.result}".toByteArray()),
                     operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
                 )
             )
@@ -115,5 +110,16 @@ class Client(
                 Mono.just(it.statusCode().is2xxSuccessful)
             }
         return response
+    }
+
+    private fun convertResultKangbuk(result: String) = when(result) {
+        "일반관리" -> "미검출"
+        "관심관리" -> "검출_관심관리"
+        "집중관리" -> "검출_집중관리"
+        else -> result
+    }
+
+    private fun isKangbukRequest(request: Request) : Boolean = request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006"
+
     }
 }
