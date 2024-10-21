@@ -24,7 +24,6 @@ import org.jboss.elemento.HtmlContentBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static elemental2.dom.DomGlobal.console;
 import static java.lang.Math.round;
 import static org.jboss.elemento.Elements.*;
 import static org.jboss.elemento.EventType.bind;
