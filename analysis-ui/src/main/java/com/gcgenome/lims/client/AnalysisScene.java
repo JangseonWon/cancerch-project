@@ -191,7 +191,7 @@ public class AnalysisScene extends AbstractScenePageable<AnalysisScene> {
     @Override
     protected IsElement<?>[][] controls() {
         return new IsElement<?>[][]{
-                new IsElement[]{chkOnlyPass, btnAnalysisComplete, btnProgressOnly},
+                new IsElement[]{chkOnlyPass, btnAnalysisComplete, btnProgressOnly, btnLink},
                 new IsElement<?>[]{iptDateFrom, label("~").style("line-height: 36px; margin-left: 2px; margin-right: 2px;"), iptDateTo, btnSearch, btnQueue},
                 new IsElement[]{btnPdf, btnPublish, btnSave}
         };

@@ -24,6 +24,7 @@ import org.jboss.elemento.HtmlContentBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static elemental2.dom.DomGlobal.console;
 import static java.lang.Math.round;
 import static org.jboss.elemento.Elements.*;
 import static org.jboss.elemento.EventType.bind;
@@ -182,7 +183,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 		surface.style.minWidth = CSSProperties.MinWidthUnionType.of("600px");
 		TextAreaElement<String> iptComment = TextAreaElement.textBox().outlined().text("소견").css("button").style("width:100%;height:200px;");
 		HtmlContentBuilder<HTMLLabelElement> counter = label(data.get("Comment").length()+"/180");
-		iptComment.value(data.get("Comment"));
+		if(!Objects.equals(data.get("Comment"), ""))	iptComment.value(data.get("Comment"));
 		iptComment.on(EventType.keyup, evt->{
 			if(iptComment.value().length() > 180) {
 				iptComment.value(iptComment.value().substring(0, 180));
@@ -473,7 +474,7 @@ public class AnalysisGridElement extends HTMLElementBuilder<HTMLDivElement, Anal
 	}
 	@Override
 	public Analysis[] selection() {
-		return Arrays.stream(wrapper.selection()).filter(d->d.get("QC 분석").equals("PASS") && d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).toArray(Analysis[]::new);
+		return Arrays.stream(wrapper.selection()).filter(d->d.get("성별 분석").equals("PASS")).map(d->d.get("ID").replace("-", "") + "$" + d.get("검사코드") + "$" + d.get("Batch") + "$" + d.get("Row")).map(values::get).toArray(Analysis[]::new);
 	}
 	@Override
 	public HandlerRegistration onSelectionChange(SelectionChangeEventListener<Analysis[]> selectionChangeEventListener) {
