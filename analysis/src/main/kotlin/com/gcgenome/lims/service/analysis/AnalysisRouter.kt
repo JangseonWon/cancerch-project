@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.*
-import org.springframework.web.reactive.function.server.RequestPredicates.contentType
 import reactor.core.publisher.Mono
 
 @Configuration
@@ -17,15 +16,14 @@ class AnalysisRouter(
     private val handler: AnalysisHandler,
     private val om: ObjectMapper
 ) {
-    private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
     @Bean("com.greencross.lims.service.AnalysisRouter")
     fun router() = router{
-        GET("/analysis/search",                                    contentType, ::search)
-        GET("/analysis/validate/{sample}/{service}/{batch}/{row}", contentType, ::linkCheck)
-        GET("/analysis/request/{sample}/{service}",                contentType, ::requestCheck)
-        POST("/analysis/linkData",                                 contentType, ::linkData)
-        PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment",contentType, ::updateComment)
-        PATCH("/analysis/update",                                  contentType, ::updateAll)
+        GET("/analysis/search",                                    ::search)
+        GET("/analysis/validate/{sample}/{service}/{batch}/{row}", ::linkCheck)
+        GET("/analysis/request/{sample}/{service}",                ::requestCheck)
+        POST("/analysis/linkData",                                 ::linkData)
+        PATCH("/analysis/{sample}/{service}/{batch}/{row}/comment",::updateComment)
+        PATCH("/analysis/update",                                  ::updateAll)
     }
 
     private fun search(request: ServerRequest): Mono<ServerResponse>{
@@ -38,7 +36,7 @@ class AnalysisRouter(
             }.switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
     private fun updateComment(request: ServerRequest): Mono<ServerResponse>{
-        val sample = request.pathVariable("sample").toLong()
+        val sample = request.pathVariable("sample").replace("-","").toLong()
         val service = request.pathVariable("service")
         val batch = request.pathVariable("batch")
         val row = request.pathVariable("row").toInt()

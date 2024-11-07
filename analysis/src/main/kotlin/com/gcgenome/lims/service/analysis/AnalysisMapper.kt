@@ -80,7 +80,7 @@ class AnalysisMapper {
                 entity.size,
                 entity.reportUrl,
                 User(entity.reportedById, entity.reportedByNm),
-                entity.publishAt.toString(),
+                entity.publishAt,
                 User(entity.publishById, entity.publishByNm),
                 entity.reportDescription ?: ""
             )
