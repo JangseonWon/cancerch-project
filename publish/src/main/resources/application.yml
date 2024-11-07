@@ -22,16 +22,16 @@ spring:
           auto-add-partitions: true
 
   r2dbc:
-    url: r2dbc:postgresql://gemini:5432/lims
+    url: r2dbc:postgresql://172.19.216.212:5432/lims
     compatibility-mode : true
     username: avoid
     password: avoid1004
   data:
     cassandra:
-      contact-points: gemini, pisces, taurus
+      contact-points: 172.19.216.213
       local-datacenter: datacenter1
-      username: cassandra
-      password: snubi1004
+      username: gcgenome-superuser
+      password: CvuvlrYXpi75SMjGfCcL7-9dKUIryACXAivIkrspuHszteuDj8weZQ
       port: 9042
       keyspace-name: lims
       schema-action: NONE
@@ -40,7 +40,7 @@ spring:
       connect-timeout: 10000s
       read-timeout: 10000s
 server:
-  port: 58895
+  port: 29486
 
 logging:
   level:
@@ -48,4 +48,4 @@ logging:
     io.r2dbc.postgresql.PARAM: DEBUG # for parameters
 
 webhook:
-  url: https://wh.jandi.com/connect-api/webhook/17558388/69834a4cb47d80f9c339a0ce83ab7c90
+  url: https://wh.jandi.com/connect-api/webhook/17558388/7ee4909d0db3e51da5990fbd032b6e34

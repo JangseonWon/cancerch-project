@@ -26,11 +26,11 @@ spring:
         - id: publish-api
           uri: lb://publish-api
           predicates:
-            - Path=/samples/*/services/*/reports/*/publish
+            - Path=/publish/samples/*/services/*/reports/*/publish, /publish/publishoutcome
         - id: report-api
           uri: lb://report-api
           predicates:
-            - Path=/samples/*/services/*/batch/*/row/*/print/*, /samples/*/services/*/reports/*, /samples/works, /samples/queue, /samples/*/services/*/reportTotal, /samples/*/services/*/log
+            - Path=/report/samples/*/services/*/batch/*/row/*/print/*, /report/samples/*/services/*/reports/*, /report/works, /report/queue, /report/samples/*/services/*/reportTotal, /report/samples/*/services/*/log
 
 
 server:

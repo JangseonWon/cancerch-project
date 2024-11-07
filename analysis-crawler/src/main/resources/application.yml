@@ -6,10 +6,10 @@ spring:
       connect-string: test:12181
       discovery.root: /avoid-project
   r2dbc:
-    url: r2dbc:postgresql://gemini:5432/lims
-    compatibility-mode: true
-    username: avoid
-    password: avoid1004
+    url: r2dbc:postgresql://172.19.216.212:5432/lims
+    compatibility-mode : true
+    username: postgres
+    password: X9ZWLERPs54RRYMic8FXJqV1TobIA2rwqGDgctFj1mQj1aco7TqkLoes9AByUFgW
 server:
   port: 0
 logging:
