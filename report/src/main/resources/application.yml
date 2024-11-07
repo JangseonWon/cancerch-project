@@ -5,7 +5,7 @@ spring:
     web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: localhost:12181
       discovery:
         root: /avoid-service
     stream:
@@ -19,29 +19,27 @@ spring:
           destination: avoid-printing-events
       kafka:
         binder:
-          brokers: gemini, pisces, aries, taurus, libra
+          brokers: localhost
           auto-add-partitions: true
   r2dbc:
-    url: r2dbc:postgresql://gemini:5432/lims
+    url: r2dbc:postgresql://172.19.216.212:5432/lims
     compatibility-mode : true
     username: avoid
     password: avoid1004
   data:
     cassandra:
-      contact-points: gemini, pisces, taurus
-      local-datacenter: datacenter1
-      username: cassandra
-      password: snubi1004
+      contact-points: 172.19.216.213
+      local-datacenter: cassandra
+      username: gcgenome-superuser
+      password: CvuvlrYXpi75SMjGfCcL7-9dKUIryACXAivIkrspuHszteuDj8weZQ
       port: 9042
       keyspace-name: lims
       schema-action: NONE
-      connect-timeout-millis: 10000s
-      read-timeout-millis: 10000s
-      connect-timeout: 10000s
-      read-timeout: 10000s
-      pool-timeout: 10000s
+      connection:
+        connect-timeout: 10000s
+
 server:
-  port: 0
+  port: 55398
 
 logging:
   level:

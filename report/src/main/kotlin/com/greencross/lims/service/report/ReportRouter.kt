@@ -8,40 +8,37 @@ import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.*
-import org.springframework.web.reactive.function.server.RequestPredicates.contentType
 import reactor.core.publisher.Mono
-import java.util.*
 
 @Configuration
 class ReportRouter(
     private val handler: ReportHandler
 ) {
-    private val contentType: RequestPredicate = contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
     @Bean("com.greencross.lims.service.Report.ReportRouter")
     fun router() = router{
-        GET("/samples/queue",                                                                         ::subscribe)
-        GET("/samples/works",                                                            contentType, ::works)
-        GET("/samples/{sample}/services/{service}/log",                                  contentType, ::getLog)
-        GET("/samples/{sample}/services/{service}/reportTotal",                          contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::reportTotal)
-        PUT("/samples/{sample}/services/{service}/batch/{batch}/row/{row}/print/{lang}", contentType, ::print)
-        GET("/samples/{sample}/services/{service}/reports/{createAt}"                  , contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::preview)
+        GET("/report/queue",                                                                                 ::subscribe)
+        GET("/report/works",                                                                                 ::works)
+        GET("/report/samples/{sample}/services/{service}/log",                                               ::getLog)
+        GET("/report/samples/{sample}/services/{service}/reportTotal",                                       ::reportTotal)
+        PUT("/report/samples/{sample}/services/{service}/batch/{batch}/row/{row}/print/{lang}",              ::print)
+        GET("/report/samples/{sample}/services/{service}/reports/{createAt}",                                ::preview)
     }
     private fun getLog(request: ServerRequest): Mono<ServerResponse> {
-        val (sample, service)  = request.pathVariable("sample") to request.pathVariable("service")
+        val (sample, service)  = request.pathVariable("sample").replace("-", "") to request.pathVariable("service")
         return Mono.just(ServerResponse.ok()).flatMap {
             it.body(handler.getLogs(sample.replace("-", "").toLong(), service), Log::class.java)
         }.onErrorResume { ServerResponse.badRequest().body(Mono.just("Bad Request, check path parameters")) }
     }
 
     private fun reportTotal(request: ServerRequest): Mono<ServerResponse> {
-        val (sample, service)  = request.pathVariable("sample") to request.pathVariable("service")
+        val (sample, service)  = request.pathVariable("sample").replace("-", "") to request.pathVariable("service")
         return Mono.just(ServerResponse.ok()).flatMap {
             it.body(handler.getReports(sample.replace("-", "").toLong(), service), ByteArray::class.java)
         }.onErrorResume { ServerResponse.badRequest().body(Mono.just("Bad Request, check path parameters")) }
     }
 
     private fun print(request: ServerRequest): Mono<ServerResponse>{
-        val sample  = request.pathVariable("sample")
+        val sample  = request.pathVariable("sample").replace("-", "")
         val service = request.pathVariable("service")
         val lang    = request.pathVariable("lang")
         val batch   = request.pathVariable("batch")
