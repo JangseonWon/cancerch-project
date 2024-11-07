@@ -7,24 +7,20 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.web.reactive.function.BodyInserters
-import org.springframework.web.reactive.function.server.RequestPredicate
-import org.springframework.web.reactive.function.server.RequestPredicates
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
 @Configuration
 class PublishRouter(private val handler: PublishHandler) {
-    private val contentType: RequestPredicate = RequestPredicates.contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8))
     @Bean("com.gcgenome.lims.service.publish.PublishRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-//        PUT("/samples/{sample}/services/{service}/publish", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::publish)
-        GET("/samples/publishoutcome",                                                      ::subscribe)
-        PUT("/samples/{sample}/services/{service}/reports/{createAt}/publish", contentType, ::publishWithReport)
+        GET("/publish/publishoutcome",                                                      ::subscribe)
+        PUT("/publish/samples/{sample}/services/{service}/reports/{createAt}/publish",              ::publishWithReport)
 
     }
     private fun publishWithReport(request: ServerRequest): Mono<ServerResponse>{
-        val sample = request.pathVariable("sample").toLong()
+        val sample = request.pathVariable("sample").replace("-","").toLong()
         val service = request.pathVariable("service")
         val createAt = request.pathVariable("createAt").toLong()
         return handler.publish(sample, service, createAt, request).flatMap{

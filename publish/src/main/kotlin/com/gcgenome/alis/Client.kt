@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.alis.models.*
 import com.gcgenome.lims.model.ResultInfo
 import com.gcgenome.lims.projection.Request
-import io.r2dbc.postgresql.codec.Json
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -74,19 +73,6 @@ class Client(
             )
         )
 
-        if (isKangbukRequest(request)) {
-            requests.add(
-                AlisRequest(
-                    fileId = file.toString(),
-                    payload = Base64.getEncoder()
-                        .encodeToString("${(request.sample / 10000000).toInt()}$${request.mrn}$${request.sample}$${request.patientName}\$L5974$${request.serviceName}$${resultInfo.result}".toByteArray()),
-                    operation = Operation.SEND_KANGBUK_SAMSUNG_CSV_FILE
-                )
-            )
-
-        }
-
-
         val response = webClient
             .post()
             .uri("https://lims/alis-queue/async")
@@ -119,5 +105,5 @@ class Client(
         else -> throw Exception("의도치 않은 문구가 삽입됐습니다.")
     }
 
-    private fun isKangbukRequest(request: Request) : Boolean = request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006"
+    private fun isKangbukRequest(request: Request) : Boolean = request.institution!! == "G062546" || request.institution == "G075003" || request.institution == "G001125" || request.institution == "Q000003" || request.institution == "G0Q0006" || request.institution == "G044110" || request.institution == "G044111"
 }
