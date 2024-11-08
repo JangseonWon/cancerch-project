@@ -30,7 +30,7 @@ export default function DataComponent(props: DataComponentProps) {
     });
     const [rows, setRows] = useState<GridRowsProp>([]);
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowId[]>([]);
-    const [setInterpretationDialog] = [useInterpretationDialogStore(state=>state.setInterpretationDialog)]
+    const [setInterpretationDialog] = [useInterpretationDialogStore(state => state.setInterpretationDialog)]
     const [setSearchTrigger] = [useSearchTriggerStore(state => state.setTrigger)]
     const [setSelectedAnalysis] = [useSelectedAnalysisStore(state => state.setSelectedAnalysis)]
     const apiRef = useGridApiRef();
@@ -40,10 +40,10 @@ export default function DataComponent(props: DataComponentProps) {
     }, [props])
 
     function selectableColumnOnChange(params: GridRenderEditCellParams, event: SelectChangeEvent<unknown>) {
-        (async() => {
+        (async () => {
             let newRow = {...params.row, [params.field]: event.target.value}
             params.api.stopCellEditMode({id: params.id, field: params.field});
-            if(await AnalysisUpdateAPI(utils.convertRowDataToSavableAnalysis(newRow)) === 200) {
+            if (await AnalysisUpdateAPI(utils.convertRowDataToSavableAnalysis(newRow)) === 200) {
                 setSearchTrigger(true)
             }
         })()
@@ -58,8 +58,32 @@ export default function DataComponent(props: DataComponentProps) {
         {field: 'patientName', headerName: '수진자명', width: 135},
         {field: 'patientMrn', headerName: 'MRN', width: 100},
         {field: 'patientSex', headerName: '성별', width: 70, align: "center"},
-        {field: 'sexPredictA', headerName: "성별 분석 A", align: "center", width: 80},
-        {field: 'sexPredictB', headerName: "성별 분석 B", align: "center", width: 80},
+        {
+            field: 'sexAnalysisA', headerName: "성별 예측 A", width: 90, align: "center"
+        },
+        {
+            field: 'sexPredictA', headerName: "성별 비교 A", renderCell: (params) => (
+                <div className={'QC__Cell__A'} style={{
+                    backgroundColor: utils.setColor(params.value),
+                    textAlign: "center",
+                    margin: 0,
+                    padding: 0
+                }}>{utils.convertPassOrFail(params.value)}</div>
+            ), width: 80
+        },
+        {
+            field: 'sexAnalysisB', headerName: "성별 예측 B", width: 90, align: "center"
+        },
+        {
+            field: 'sexPredictB', headerName: "성별 비교 B", renderCell: (params) => (
+                <div className={'QC__Cell__A'} style={{
+                    backgroundColor: utils.setColor(params.value),
+                    textAlign: "center",
+                    margin: 0,
+                    padding: 0
+                }}>{utils.convertPassOrFail(params.value)}</div>
+            ), width: 80
+        },
         {
             field: 'qcA', headerName: "QC A", renderCell: (params) => (
                 <div className={'QC__Cell__A'} style={{
@@ -422,13 +446,13 @@ export default function DataComponent(props: DataComponentProps) {
                 sx={{
                     'width': '100%',
                     '& .MuiDataGrid-cell': {
-                        fontSize: '10px',
+                        fontSize: '12px',
                         fontFamily: 'Montserrat, Noto Sans KR',
                         padding: '0 0'
                     },
                     '& .MuiDataGrid-columnHeaders': {
                         textAlign: 'center',
-                        fontSize: '12px',
+                        fontSize: '14px',
 
                         fontFamily: 'Montserrat, Noto Sans KR',
                     },

@@ -82,7 +82,8 @@ function searchResultToRowData(analysis: Analysis): Object {
         chrXPropA: analysis.chr_xprop,
         chrYCountA: analysis.chr_ycnt,
         chrYPropA: analysis.chr_yprop,
-        sexPredictA: analysis.pred_sex,
+        sexPredictA: analysis.pred_sex === analysis.request.sample.patient.sex ? "P":"F",
+        sexAnalysisA: analysis.pred_sex,
         freemixB: analysis.freemix_tmp,
         rawReadMillionB: analysis.raw_reads_millions_tmp,
         filteredReadsB: analysis.total_reads_tmp,
@@ -95,7 +96,8 @@ function searchResultToRowData(analysis: Analysis): Object {
         chrXPropB: analysis.chr_xprop_tmp,
         chrYCountB: analysis.chr_ycnt_tmp,
         chrYPropB: analysis.chr_yprop_tmp,
-        sexPredictB: analysis.pred_sex_tmp,
+        sexPredictB: analysis.pred_sex_tmp === analysis.request.sample.patient.sex ? "P":"F",
+        sexAnalysisB: analysis.pred_sex_tmp,
         interpretation: analysis.comment
     }
 }

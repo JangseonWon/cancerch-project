@@ -165,41 +165,47 @@ function Predicator() {
 
     function handleDataLinkStartOnClick() {
         (async () => {
-            if (await RequestLinkAPI({
+            await RequestLinkAPI({
                 origin_sample: Number(linkDialog.originSampleId),
                 origin_service: linkDialog.originServiceCode,
                 batch: linkDialog.originBatchName,
                 row: Number(linkDialog.originRowNumber),
                 link_sample: Number(linkDialog.linkSampleId),
                 link_service: linkDialog.linkServiceCode
-            }) !== 200) {
-                setAlert({title: "사용자 확인 요청", content: "연동에 실패했습니다.", open: true})
-            } else {
-                setLinkDialog({...linkDialog, open: false})
-                setSearchTrigger(true)
-                setSnackbar({message: "연동 완료했습니다", state: true, openType: "success"})
-            }
+            }).then(value => {
+                if(value) {
+                    setLinkDialog({...linkDialog, open: false})
+                    setSearchTrigger(true)
+                    setSnackbar({message: "연동 완료했습니다", state: true, openType: "success"})
+                } else {
+                    setAlert({title: "사용자 확인 요청", content: "연동에 실패했습니다.", open: true})
+                }
+            })
         })()
     }
 
     function handleOriginRequestValidation() {
         (async () => {
-            if (await OriginRequestValidationAPI(linkDialog.originSampleId, linkDialog.originServiceCode, linkDialog.originBatchName, linkDialog.originRowNumber) !== 200) {
-                setAlert({title: "사용자 확인 요청", content: "해당 분석결과가 없습니다.", open: true})
-            } else {
-                setLinkDialog({...linkDialog, originValidation: true, linkValidation: false})
-            }
+            await OriginRequestValidationAPI(linkDialog.originSampleId, linkDialog.originServiceCode, linkDialog.originBatchName, linkDialog.originRowNumber).then(value => {
+                if(value) {
+                    setLinkDialog({...linkDialog, originValidation: true, linkValidation: false})
+                } else {
+                    setAlert({title: "사용자 확인 요청", content: "해당 분석결과가 없습니다.", open: true})
+                }
+            })
         })()
 
     }
 
     function handleLinkRequestValidation() {
         (async () => {
-            if (await LinkRequestValidationAPI(linkDialog.linkSampleId, linkDialog.linkServiceCode) !== 200) {
-                setAlert({title: "사용자 확인 요청", content: "해당 의뢰정보가 없습니다.", open: true})
-            } else {
-                setLinkDialog({...linkDialog, linkValidation: true, linkable: false})
-            }
+            await LinkRequestValidationAPI(linkDialog.linkSampleId, linkDialog.linkServiceCode).then(value=>{
+                if(value) {
+                    setLinkDialog({...linkDialog, linkValidation: true, linkable: false})
+                } else {
+                    setAlert({title: "사용자 확인 요청", content: "해당 의뢰정보가 없습니다.", open: true})
+                }
+            })
         })()
     }
 

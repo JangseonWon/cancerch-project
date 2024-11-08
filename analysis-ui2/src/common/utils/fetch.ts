@@ -100,17 +100,17 @@ const _analysisChangeUpdateAPI = async(analysis: object) => {
     const path = await getApiPath('/analysis/update')
     return (await axiosInstance.patch(path, analysis)).status
 }
-const _originRequestValidationAPI = async(sample: string, service: string, batchName: string, rowNumber: string)=> {
+const _originRequestValidationAPI = async(sample: string, service: string, batchName: string, rowNumber: string) : Promise<boolean>=> {
     const path = await getApiPath(`/analysis/validate/${sample}/${service}/${batchName}/${rowNumber}`)
-    return (await axiosInstance.get(path)).status
+    return (await axiosInstance.get(path)).data
 }
-const _linkRequestValidationAPI = async(sample: string, service: string) => {
+const _linkRequestValidationAPI = async(sample: string, service: string) : Promise<boolean> => {
     const path = await getApiPath(`/analysis/request/${sample}/${service}`)
-    return (await axiosInstance.get(path)).status
+    return (await axiosInstance.get(path)).data
 }
-const _requestLinkAPI = async(linkRequest: {origin_sample: number, origin_service: string, batch: string, row: number, link_sample: number, link_service: string}) => {
+const _requestLinkAPI = async(linkRequest: {origin_sample: number, origin_service: string, batch: string, row: number, link_sample: number, link_service: string}): Promise<boolean> => {
     const path = await getApiPath(`/analysis/linkData`)
-    return (await axiosInstance.post(path, linkRequest)).status
+    return (await axiosInstance.post(path, linkRequest)).data
 }
 
 export const AnalysisSearchAPI = errorHandler(_analysisSearchAPI)
