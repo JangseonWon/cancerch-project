@@ -5,7 +5,6 @@ plugins {
     id("io.spring.dependency-management") version "1.0.14.RELEASE"
 }
 dependencies {
-    implementation("com.gcgenome:sample-data:1.0")
     implementation(libs.spring.gateway)
     implementation(libs.kotlin.reactor)
     implementation(libs.spring.discovery)
