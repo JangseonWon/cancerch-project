@@ -52,14 +52,14 @@ export default function DataComponent(props: DataComponentProps) {
     const columns: GridColDef[] = [
         {field: 'batchName', headerName: '배치명', width: 100, align: "left"},
         {field: 'rowNumber', headerName: '순번', width: 80, align: "center"},
-        {field: 'sampleId', headerName: '지놈의뢰번호', width: 120},
-        {field: 'customerId', headerName: '타기관의뢰번호', width: 120},
+        {field: 'sampleId', headerName: '지놈의뢰번호', width: 130},
+        {field: 'customerId', headerName: '타기관의뢰번호', width: 130},
         {field: 'serviceName', headerName: '검사명', width: 135},
-        {field: 'patientName', headerName: '수진자명', width: 135},
+        {field: 'patientName', headerName: '수진자명', width: 145},
         {field: 'patientMrn', headerName: 'MRN', width: 100},
         {field: 'patientSex', headerName: '성별', width: 70, align: "center"},
         {
-            field: 'sexAnalysisA', headerName: "성별 예측 A", width: 90, align: "center"
+            field: 'sexAnalysisA', headerName: "성별 예측 A", width: 100, align: "center"
         },
         {
             field: 'sexPredictA', headerName: "성별 비교 A", renderCell: (params) => (
@@ -67,12 +67,13 @@ export default function DataComponent(props: DataComponentProps) {
                     backgroundColor: utils.setColor(params.value),
                     textAlign: "center",
                     margin: 0,
-                    padding: 0
+                    padding: 0,
+                    color: "white"
                 }}>{utils.convertPassOrFail(params.value)}</div>
-            ), width: 80
+            ), width: 100
         },
         {
-            field: 'sexAnalysisB', headerName: "성별 예측 B", width: 90, align: "center"
+            field: 'sexAnalysisB', headerName: "성별 예측 B", width: 100, align: "center"
         },
         {
             field: 'sexPredictB', headerName: "성별 비교 B", renderCell: (params) => (
@@ -80,9 +81,10 @@ export default function DataComponent(props: DataComponentProps) {
                     backgroundColor: utils.setColor(params.value),
                     textAlign: "center",
                     margin: 0,
-                    padding: 0
+                    padding: 0,
+                    color: "white"
                 }}>{utils.convertPassOrFail(params.value)}</div>
-            ), width: 80
+            ), width: 100
         },
         {
             field: 'qcA', headerName: "QC A", renderCell: (params) => (
@@ -90,7 +92,8 @@ export default function DataComponent(props: DataComponentProps) {
                     backgroundColor: utils.setColor(params.value),
                     textAlign: "center",
                     margin: 0,
-                    padding: 0
+                    padding: 0,
+                    color: "white"
                 }}>{utils.convertPassOrFail(params.value)}</div>
             ), width: 70
         },
@@ -100,7 +103,8 @@ export default function DataComponent(props: DataComponentProps) {
                     backgroundColor: utils.setColor(params.value),
                     textAlign: "center",
                     margin: 0,
-                    padding: 0
+                    padding: 0,
+                    color: "white"
                 }}>{utils.convertPassOrFail(params.value)}</div>
             ), width: 70
         },
@@ -194,7 +198,7 @@ export default function DataComponent(props: DataComponentProps) {
             renderCell: (params) => (
                 <div
                     className={'BASIC__CELL'}>{params.value === "null" ? "" : params.value.replace("T", " ").split(".")[0]}</div>),
-            width: 120
+            width: 140
         },
         {field: 'publishAt', headerName: "발송일", align: 'center', width: 90},
         {field: 'publisher', headerName: "발송자", align: 'center', width: 80},
@@ -236,7 +240,7 @@ export default function DataComponent(props: DataComponentProps) {
             ), width: 90
         },
         {
-            field: 'too5Fems', headerName: "too5\nFEMS prob", renderCell: (params) => (
+            field: 'too5Fems', headerName: "too5 FEMS PROB", renderCell: (params) => (
                 <div className={'RESULT__CELL'}>{params.value}</div>
             ), width: 150
         },
@@ -279,7 +283,7 @@ export default function DataComponent(props: DataComponentProps) {
             ), width: 90
         },
         {
-            field: 'too6Fems', headerName: "TOO6 FEMS PROB", renderCell: (params) => (
+            field: 'too6Fems', headerName: "too6 FEMS PROB", renderCell: (params) => (
                 <div className={'RESULT__CELL'}>{params.value}</div>
             ), align: "right", width: 150
         },
@@ -291,7 +295,7 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'rawReadMillionA', headerName: "RAW READ(Million) A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 150
+            ), width: 160
         },
         {
             field: 'filteredReadsA', headerName: "FILTERED READS A", renderCell: (params) => (
@@ -301,7 +305,7 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'dupRateA', headerName: "DUP RATE A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 90
+            ), width: 100
         },
         {
             field: 'gcA', headerName: "GC A", renderCell: (params) => (
@@ -316,27 +320,27 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'medianA', headerName: "MEDIAN A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 80
+            ), width: 90
         },
         {
             field: 'chrXCountA', headerName: "chr X Count A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 100
+            ), width: 110
         },
         {
             field: 'chrXPropA', headerName: "chr X Proportion A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 120
+            ), width: 140
         },
         {
             field: 'chrYCountA', headerName: "chr Y Count A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 100
+            ), width: 110
         },
         {
             field: 'chrYPropA', headerName: "chr Y Proportion A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
-            ), width: 120
+            ), width: 140
         },
         {
             field: 'freemixB', headerName: "FREEMIX B", renderCell: (params) => (
@@ -346,17 +350,17 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'rawReadMillionB', headerName: "RAW READ(Million) B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 150
+            ), width: 160
         },
         {
             field: 'filteredReadsB', headerName: "FILTERED READS B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 80
+            ), width: 150
         },
         {
             field: 'dupRateB', headerName: "DUP RATE B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 80
+            ), width: 100
         },
         {
             field: 'gcB', headerName: "GC B", renderCell: (params) => (
@@ -376,22 +380,22 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'chrXCountB', headerName: "chr X Count B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 100
+            ), width: 110
         },
         {
             field: 'chrXPropB', headerName: "chr X Proportion B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 120
+            ), width: 140
         },
         {
             field: 'chrYCountB', headerName: "chr Y Count B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 100
+            ), width: 110
         },
         {
             field: 'chrYPropB', headerName: "chr Y Proportion B", renderCell: (params) => (
                 <div className={'QC__Cell__B'}>{params.value}</div>
-            ), width: 120
+            ), width: 140
         }
     ]
     const handleReportClick = (id: GridRowId) => () => {
