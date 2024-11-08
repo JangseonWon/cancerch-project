@@ -167,6 +167,24 @@ interface AnalysisPredicatesFilter {
     pass: boolean
 }
 
+interface SelectedAnalysis {
+    sampleId: number,
+    serviceCode: string,
+    batchName: string,
+    rowNumber: number,
+    reportCreateAt: Date
+}
+
+interface SavableAnalysis {
+    sampleId: string,
+    serviceCode: string,
+    batchName: string,
+    rowNumber: number,
+    analysisResult: string,
+    too6Pred: string,
+    too5Pred: string
+}
+
 export type {
     Analysis,
     AnalysisPredicates,
@@ -174,7 +192,9 @@ export type {
     ConfirmData,
     LinkDialogData,
     InterpretationDialogData,
+    SavableAnalysis,
     SearchResult,
+    SelectedAnalysis,
     LoadingObject,
     SnackBarData
 }

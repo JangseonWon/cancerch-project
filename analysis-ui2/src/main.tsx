@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import AnalysisPage from './analysis/AnalysisPage.tsx'
+import AnalysisPage from './analysis/AnalysisPage'
 import './index.css'
 const router = createBrowserRouter([
     {

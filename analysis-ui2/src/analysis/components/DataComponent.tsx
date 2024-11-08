@@ -18,7 +18,6 @@ import useSelectedAnalysisStore from "../stores/SelectedAnalysisStore";
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import useInterpretationDialogStore from "../stores/InterpretationStore";
 import useSearchTriggerStore from "../stores/SearchTriggerStore";
-import useSnackBarStore from "../../common/stores/SnackBarStore";
 
 interface DataComponentProps {
     searchResult: SearchResult
@@ -33,7 +32,6 @@ export default function DataComponent(props: DataComponentProps) {
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowId[]>([]);
     const [setInterpretationDialog] = [useInterpretationDialogStore(state=>state.setInterpretationDialog)]
     const [setSearchTrigger] = [useSearchTriggerStore(state => state.setTrigger)]
-    const [setSnackbar] = [useSnackBarStore(state => state.setSnackbar)]
     const [setSelectedAnalysis] = [useSelectedAnalysisStore(state => state.setSelectedAnalysis)]
     const apiRef = useGridApiRef();
 
@@ -412,7 +410,6 @@ export default function DataComponent(props: DataComponentProps) {
                 rows={rows}
                 className={"apper__animation"}
 
-                disableClipboardPaste={false}
                 columnHeaderHeight={40}
                 checkboxSelection
                 disableRowSelectionOnClick

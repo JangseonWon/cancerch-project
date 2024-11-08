@@ -7,7 +7,7 @@ interface ConfirmState {
 }
 
 const useConfirmDialogStore = create<ConfirmState>()((set) => ({
-    dialog: {title: "", content: "", open: false},
+    dialog: {title: "", content: "", open: false, okFunction: ()=>{}},
     setDialog: (newDialog) =>
         set(() => ({ dialog: newDialog}))
 }))

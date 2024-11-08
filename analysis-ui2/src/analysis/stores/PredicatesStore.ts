@@ -10,7 +10,7 @@ const usePredicatesStore = create<PredicatesState>()((set) => ({
         page: 0,
         limit: 10000000,
         sort_by: "Batch",
-        asc: "false",
+        asc: false,
         filters: {
             to: new Date(),
             from: new Date(new Date().setMonth(new Date().getMonth() -1)),

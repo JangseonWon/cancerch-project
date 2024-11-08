@@ -1,4 +1,4 @@
-import {Analysis, AnalysisPredicates, SearchResult} from "../types/Types";
+import {Analysis, SavableAnalysis, SearchResult} from "../types/Types";
 import {RawAxiosResponseHeaders} from "axios";
 
 const convertPredicatesToQueryString = (predicates: any): string => {
@@ -8,31 +8,32 @@ const convertPredicatesToQueryString = (predicates: any): string => {
         .filter(([_, value]) => value === true || value instanceof Date) // true인 값과 날짜만 포함
         .map(([key, value]) => ({
             key,
-            value: value instanceof Date ? value.getTime().toString() : value.toString(),
+            value: value instanceof Date
+                ? value.getTime().toString()
+                : (value as string | number | boolean).toString(), // 타입 단언 추가
         }));
 
-    const queryString = `page=${page}&limit=${limit}&sort_by=${sort_by}&asc=${asc}&filters=${encodeURIComponent(
+    return `page=${page}&limit=${limit}&sort_by=${sort_by}&asc=${asc}&filters=${encodeURIComponent(
         JSON.stringify(filterArray)
     )}`;
-
-    return queryString;
 };
 
 function apiResponseToSearchResult(header: RawAxiosResponseHeaders, body: Analysis[]): SearchResult {
     return {
         data: body,
-        total_page: header["x-total-count"],
-        current_page: header["x-total-page"]
-    }
+        total_page: Number(header["x-total-count"] ?? 0),
+        current_page: Number(header["x-total-page"] ?? 1),
+    };
 }
-function convertRowDataToSavableAnalysis(rowData: object): {
+
+function convertRowDataToSavableAnalysis(rowData: SavableAnalysis): {
     result: string;
     too6_pred: string;
-    too5_pred: string;
-    row: string;
-    batch: string;
-    sample: number;
     service: string;
+    too5_pred: string;
+    batch: string;
+    row: number;
+    sample: string
 } {
     return {
         sample: rowData.sampleId.replaceAll("-", ""),

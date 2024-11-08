@@ -1,8 +1,9 @@
 import {create} from "zustand";
+import {SelectedAnalysis} from "../../common/types/Types";
 
 interface SelectedAnalysisState {
-    selectedAnalysis: object[]
-    setSelectedAnalysis: (newSelectedAnalysis: object[]) => void
+    selectedAnalysis: SelectedAnalysis[]
+    setSelectedAnalysis: (newSelectedAnalysis: SelectedAnalysis[]) => void
 }
 
 const useSelectedAnalysisStore = create<SelectedAnalysisState>()((set) => ({
