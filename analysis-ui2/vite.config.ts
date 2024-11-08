@@ -11,8 +11,8 @@ export default defineConfig({
       }
     }
   },
-  base: "/analysis/",
+  base: "analysis/",
   server: {
-    open: '/analysis/analysis.html',
+    open: 'analysis/analysis.html',
   }
 })
