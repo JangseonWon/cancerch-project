@@ -11,8 +11,8 @@ export default defineConfig({
       }
     }
   },
-  base: "analysis/",
+  base: "/data/lims/static/avoid-service/analysis/",
   server: {
-    open: 'analysis/analysis.html',
+    open: './analysis.html',
   }
 })
