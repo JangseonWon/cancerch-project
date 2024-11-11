@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   build: {
     rollupOptions: {
@@ -11,8 +11,8 @@ export default defineConfig({
       }
     }
   },
-  base: "/data/lims/static/avoid-service/analysis/",
+  base: mode === 'production' ? "/data/lims/static/avoid-service/analysis/" : "",
   server: {
     open: './analysis.html',
   }
-})
+}))
