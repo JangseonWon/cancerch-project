@@ -190,7 +190,7 @@ function isPublisable(selectedAnalysis: SelectedAnalysis[]): boolean {
     return selectedAnalysis.length !== 0
 }
 function hasPrintingReport(selectedAnalysis: SelectedAnalysis[]): boolean {
-    return selectedAnalysis.filter(value=>value.reportCreateAt !== "null" & value.reportName === null).length > 0
+    return selectedAnalysis.filter(value=>value.reportCreateAt !== "null" && value.reportName === null).length > 0
 }
 const utils = {
     apiResponseToSearchResult,

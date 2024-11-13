@@ -149,7 +149,7 @@ interface InterpretationDialogData {
 
 interface HistoryDialogData {
     open: boolean
-    sampleId: number
+    sampleId: string
     serviceCode: string
     serviceName: string
     batchName: string
@@ -180,7 +180,7 @@ interface AnalysisPredicatesFilter {
 }
 
 interface SelectedAnalysis {
-    sampleId: number
+    sampleId: string
     serviceCode: string
     serviceName: string
     batchName: string

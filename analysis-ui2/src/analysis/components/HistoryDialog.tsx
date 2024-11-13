@@ -9,7 +9,6 @@ import {
     TextField
 } from "@mui/material";
 import React, {useEffect, useState} from "react";
-import useSearchTriggerStore from "../stores/SearchTriggerStore";
 import useSnackBarStore from "../../common/stores/SnackBarStore";
 import useHistoryDialogStore from "../stores/ReportHistoryStore";
 import {ReportPrintAPI} from "../../common/utils/fetch";

@@ -11,7 +11,7 @@ const useHistoryDialogStore = create<HistoryState>()((set) => ({
         open: false,
         history: "",
         batchName: "",
-        rowNumber: "",
+        rowNumber: 0,
         patientName: "",
         serviceCode: "",
         serviceName: "",
