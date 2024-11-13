@@ -21,6 +21,9 @@ import Predicator from "./components/Predicator";
 import utils from "../common/utils/Mapper";
 import useSearchTriggerStore from "./stores/SearchTriggerStore";
 import InterpretationDialog from "./components/InterpretationDialog";
+import AlertDialog from "../common/components/AlertDialog";
+import ConfirmDialog from "../common/components/ConfirmDialog";
+import HistoryDialog from "./components/HistoryDialog";
 
 function AnalysisPage() {
     const [analysisData, setAnalysisData] = useState<SearchResult | null>()
@@ -36,13 +39,10 @@ function AnalysisPage() {
                 const reportQueueSSE = await ReportQueueEvent();
 
                 reportQueueSSE.addEventListener("CREATE", (event: MessageEvent) => {
-                    const data = JSON.parse(event.data);
-                    console.log(data)
                     setSearchTrigger(true);
                 })
                 reportQueueSSE.addEventListener("PRINTING",(event: MessageEvent) => {
-                    const data = JSON.parse(event.data);
-                    setSnackbar({ message: `${data.id.split("$")[0]} 결과지가 출력중입니다.`, openType: "info", state: true });
+
                 })
                 reportQueueSSE.addEventListener("FINISH", (event: MessageEvent) => {
                     setSearchTrigger(true);
@@ -123,6 +123,9 @@ function AnalysisPage() {
                 </Alert>
             </Snackbar>
             <InterpretationDialog/>
+            <AlertDialog/>
+            <ConfirmDialog/>
+            <HistoryDialog/>
         </>
     )
 }

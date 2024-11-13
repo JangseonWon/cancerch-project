@@ -63,12 +63,6 @@ class ReportHandler(
     fun getLogs(sample: Long, service: String)  = logService.getLogs(sample, service)
     fun getReports(sample: Long, service: String) = reportVersionService.getReportLogPdf(sample, service)
 
-
-    @Transactional
-    fun reports(sample: Long, service: String): Flux<Report> {
-        return reportDao.findBySampleAndService(sample, service)
-    }
-
     @Transactional
     fun print(sample: Long, service: String, batch: String, row: Long, lang: String, description: String): Mono<Void> {
         return analysisDao.findById(sample, service, batch, row)

@@ -5,7 +5,6 @@ import {
 import utils from "./Mapper";
 import {errorHandler} from "./errorHandler";
 
-const getConfig: AxiosRequestConfig = JSON.parse(import.meta.env.VITE_CONFIG_GET_DATA)
 const postConfig: AxiosRequestConfig<string[]> = JSON.parse(import.meta.env.VITE_CONFIG_POST_DATA)
 
 const axiosInstance = axios.create(postConfig)
@@ -66,19 +65,19 @@ const _analysisSearchAPI = async (payload: string) => {
     return utils.apiResponseToSearchResult(response.headers, response.data)
 }
 
-const _reportPreviewAPI = async (sample: number, service: string, createAt: number) => {
+const _reportPreviewAPI = async (sample: string, service: string, createAt: number) => {
     const path = await getApiPath(`/report/samples/${sample}/services/${service}/reports/${createAt}`)
     const response = await axiosInstance.get<ArrayBuffer>(path, {...postConfig, responseType: 'arraybuffer'})
     return response.data
 }
 
-const _reportPrintAPI = async (sample: number, service: string, batchName: string, rowNumber: number) => {
+const _reportPrintAPI = async (sample: string, service: string, batchName: string, rowNumber: number, history?: string) => {
     const path = await getApiPath(`/report/samples/${sample}/services/${service}/batch/${batchName}/row/${rowNumber}/print/kokr`)
-    const response = await axiosInstance.put<void>(path)
+    const response = history? await axiosInstance.put<void>(path,history) : await axiosInstance.put<void>(path)
     return response.status
 }
 
-const _reportPublishAPI = async (sample: number, service: string, createAt: number) => {
+const _reportPublishAPI = async (sample: string, service: string, createAt: number) => {
     const path = await getApiPath(`/publish/samples/${sample}/services/${service}/reports/${createAt}/publish`)
     return (await axiosInstance.put<void>(path)).status
 }
@@ -92,6 +91,11 @@ const _reportPublishSSE = async () => {
     const path = await getApiPath("/publish/publishoutcome");
     return new EventSource(path)
 };
+const _allPublishedReportDownloadAPI = async (sample: string, service: string) => {
+    const path = await getApiPath(`/report/samples/${sample}/services/${service}/reportTotal`)
+    const response = await axiosInstance.get<ArrayBuffer>(path, {...postConfig, responseType: 'arraybuffer'})
+    return response.data
+}
 const _analysisInterpretationAPI = async (sample: string, service: string, batchName: string, rowNumber: string, interpretation: string) => {
     const path = await getApiPath(`/analysis/${sample}/${service}/${batchName}/${rowNumber}/comment`)
     return (await axiosInstance.patch(path, interpretation)).status
@@ -124,3 +128,4 @@ export const InterpretationAPI = errorHandler(_analysisInterpretationAPI)
 export const OriginRequestValidationAPI = errorHandler(_originRequestValidationAPI)
 export const LinkRequestValidationAPI = errorHandler(_linkRequestValidationAPI)
 export const RequestLinkAPI = errorHandler(_requestLinkAPI)
+export const AllReportDownloadAPI = errorHandler(_allPublishedReportDownloadAPI)

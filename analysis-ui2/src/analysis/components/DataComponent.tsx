@@ -12,8 +12,9 @@ import {
     MenuItem, Select, SelectChangeEvent
 } from "@mui/material";
 import SummarizeIcon from '@mui/icons-material/Summarize';
+import HistoryIcon from '@mui/icons-material/History';
 import {SearchResult} from "../../common/types/Types";
-import {AnalysisUpdateAPI, ReportPreviewAPI} from "../../common/utils/fetch";
+import {AllReportDownloadAPI, AnalysisUpdateAPI, ReportPreviewAPI} from "../../common/utils/fetch";
 import useSelectedAnalysisStore from "../stores/SelectedAnalysisStore";
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import useInterpretationDialogStore from "../stores/InterpretationStore";
@@ -179,7 +180,7 @@ export default function DataComponent(props: DataComponentProps) {
                         sx={{
                             color: 'primary.main'
                         }}
-                        onClick={handleInterpretationClick(id)}/>]
+                        onClick={handleInterpretationOnClick(id)}/>]
                 else return [
                     <GridActionsCellItem
                         icon={<EditNoteIcon/>}
@@ -187,7 +188,7 @@ export default function DataComponent(props: DataComponentProps) {
                         sx={{
                             color: 'primary.secondary'
                         }}
-                        onClick={handleInterpretationClick(id)}/>
+                        onClick={handleInterpretationOnClick(id)}/>
 
                 ]
             }, width: 60
@@ -202,6 +203,31 @@ export default function DataComponent(props: DataComponentProps) {
         },
         {field: 'publishAt', headerName: "발송일", align: 'center', width: 90},
         {field: 'publisher', headerName: "발송자", align: 'center', width: 80},
+        {
+            field: 'publishHistory',
+            headerName: "발송이력",
+            type: 'actions',
+            align: 'center',
+            cellClassName: 'historyActions',
+            getActions: ({id}) => {
+                if (apiRef.current.getRow(id).publishAt !== "")
+                    return [<GridActionsCellItem
+                        icon={<HistoryIcon/>}
+                        label="interpretation"
+                        sx={{
+                            color: 'primary.main'
+                        }}
+                        onClick={handleHistoryOnClick(id)}/>]
+                else return [
+                    <GridActionsCellItem
+                        icon={<HistoryIcon/>}
+                        label="interpretation"
+                        onClick={handleHistoryOnClick(id)}/>
+                    // disabled={true}/>
+                ]
+            },
+            width: 80
+        },
         {
             field: 'too5Pred',
             headerName: "예측암종(남)",
@@ -408,8 +434,9 @@ export default function DataComponent(props: DataComponentProps) {
             window.open(url);
         })()
     }
-    const handleInterpretationClick = (id: GridRowId) => () => {
-        let row = apiRef.current.getRow(id);
+    const handleInterpretationOnClick = (id: GridRowId) => () => {
+        let row = apiRef.current.getRow(id)
+
         setInterpretationDialog({
             open: true,
             sampleId: row.sampleId,
@@ -420,6 +447,18 @@ export default function DataComponent(props: DataComponentProps) {
             patientName: row.patientName,
             interpretation: row.interpretation
         })
+    }
+
+    const handleHistoryOnClick = (id: GridRowId) => () => {
+        let row = apiRef.current.getRow(id);
+
+
+        (async () => {
+            const report = await AllReportDownloadAPI(row["sampleId"], row["serviceCode"])
+            const blob = new Blob([report], {type: 'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            window.open(url);
+        })()
     }
 
     const handleRowSelection = (rowSelectionModel: GridRowId[]) => {

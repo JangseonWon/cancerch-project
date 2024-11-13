@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import usePredicatesStore from "../stores/PredicatesStore";
 import useSnackBarStore from "../../common/stores/SnackBarStore";
-import React, {MouseEventHandler, useState} from "react";
+import React, {useEffect, useState} from "react";
 import utils from "../../common/utils/Mapper";
 import {GridSearchIcon} from "@mui/x-data-grid";
 import useSelectedAnalysisStore from "../stores/SelectedAnalysisStore";
@@ -23,13 +23,16 @@ import {
     RequestLinkAPI
 } from "../../common/utils/fetch";
 import {LinkDialogData} from "../../common/types/Types";
+import useHistoryDialogStore from "../stores/ReportHistoryStore";
 
 function Predicator() {
     const [predicates, setPredicates] = [usePredicatesStore(state => state.predicates), usePredicatesStore(state => state.setPredicates)]
-    const [searchTrigger, setSearchTrigger] = [useSearchTriggerStore(state => state.trigger), useSearchTriggerStore(state => state.setTrigger)]
+    const [setSearchTrigger] = [useSearchTriggerStore(state => state.setTrigger)]
     const [setSnackbar] = [useSnackBarStore(state => state.setSnackbar)]
-    const [alert, setAlert] = [useAlertDialogStore(state => state.dialog), useAlertDialogStore(state => state.setDialog)]
+    const [setAlert] = [useAlertDialogStore(state => state.setDialog)]
+    const [selectedAnalysis] = [useSelectedAnalysisStore(state => state.selectedAnalysis)]
     const [confirm, setConfirm] = [useConfirmDialogStore(state => state.dialog), useConfirmDialogStore(state => state.setDialog)]
+    const [setHistory] = [useHistoryDialogStore(state => state.setHistoryDialog)]
     const [linkDialog, setLinkDialog] = useState<LinkDialogData>({
         originSampleId: "",
         originServiceCode: "",
@@ -42,8 +45,28 @@ function Predicator() {
         linkable: true,
         open: false
     })
-    const [selectedAnalysis, setSelectedAnalysis] = [useSelectedAnalysisStore(state => state.selectedAnalysis), useSelectedAnalysisStore(state => state.setSelectedAnalysis)]
+    const [printable, setPrintable] = useState<boolean>(true)
+    const [publisable, setPublisable] = useState<boolean>(true)
 
+    useEffect(() => {
+        if (utils.isOnlySinglePrintable(selectedAnalysis)) {
+            setPrintable(true)
+        } else if (utils.hasPrintingReport(selectedAnalysis)) {
+            setAlert({title: "사용자 알림", content: "선택 내역 중 출력 중인 결과지가 포함되어 있습니다.", open: true})
+            setPrintable(true)
+            setPublisable(true)
+        } else if (utils.isSinglePrintable(selectedAnalysis)) {
+            setPrintable(false)
+        } else if (utils.isMultiPrintable(selectedAnalysis)) {
+            setPrintable(false)
+        } else {
+            setPrintable(true)
+        }
+
+        if (utils.isPublisable(selectedAnalysis)) setPublisable(false)
+        else setPublisable(true)
+
+    }, [selectedAnalysis])
 
     function handleToDateChange(value: string) {
         if (utils.isValidDate(value)) {
@@ -111,7 +134,18 @@ function Predicator() {
 
     function handlePrintOnClick() {
         if (selectedAnalysis.length === 0) setAlert({title: "사용자 확인 요청", content: "선택된 항목이 없습니다.", open: true})
-        else {
+        else if (selectedAnalysis.filter(value => value.reportCreateAt !== "null").length === 1) {
+            setHistory({
+                sampleId: selectedAnalysis[0].sampleId,
+                serviceName: selectedAnalysis[0].serviceName,
+                serviceCode: selectedAnalysis[0].serviceCode,
+                patientName: selectedAnalysis[0].patientName,
+                batchName: selectedAnalysis[0].batchName,
+                rowNumber: selectedAnalysis[0].rowNumber,
+                history: "",
+                open: true
+            })
+        } else {
             setConfirm({
                 title: "결과지 생성",
                 content: `선택한 ${selectedAnalysis.length}개의 결과지를 생성합니다.`,
@@ -122,7 +156,6 @@ function Predicator() {
                             ReportPrintAPI(analysis.sampleId, analysis.serviceCode, analysis.batchName, analysis.rowNumber)
                         })
                     })()
-                    setConfirm({...confirm, open: false})
                 }
             })
         }
@@ -173,7 +206,7 @@ function Predicator() {
                 link_sample: Number(linkDialog.linkSampleId),
                 link_service: linkDialog.linkServiceCode
             }).then(value => {
-                if(value) {
+                if (value) {
                     setLinkDialog({...linkDialog, open: false})
                     setSearchTrigger(true)
                     setSnackbar({message: "연동 완료했습니다", state: true, openType: "success"})
@@ -187,7 +220,7 @@ function Predicator() {
     function handleOriginRequestValidation() {
         (async () => {
             await OriginRequestValidationAPI(linkDialog.originSampleId, linkDialog.originServiceCode, linkDialog.originBatchName, linkDialog.originRowNumber).then(value => {
-                if(value) {
+                if (value) {
                     setLinkDialog({...linkDialog, originValidation: true, linkValidation: false})
                 } else {
                     setAlert({title: "사용자 확인 요청", content: "해당 분석결과가 없습니다.", open: true})
@@ -199,8 +232,8 @@ function Predicator() {
 
     function handleLinkRequestValidation() {
         (async () => {
-            await LinkRequestValidationAPI(linkDialog.linkSampleId, linkDialog.linkServiceCode).then(value=>{
-                if(value) {
+            await LinkRequestValidationAPI(linkDialog.linkSampleId, linkDialog.linkServiceCode).then(value => {
+                if (value) {
                     setLinkDialog({...linkDialog, linkValidation: true, linkable: false})
                 } else {
                     setAlert({title: "사용자 확인 요청", content: "해당 의뢰정보가 없습니다.", open: true})
@@ -209,12 +242,7 @@ function Predicator() {
         })()
     }
 
-    const alertDialogClose = () => {
-        setAlert({...alert, open: false})
-    }
-    const confirmDialogClose = () => {
-        setConfirm({...confirm, open: false})
-    }
+
     const linkDialogClose = () => {
         setLinkDialog({
             originSampleId: "",
@@ -287,48 +315,9 @@ function Predicator() {
                 </Box>
                 <ButtonGroup size="large" sx={{marginLeft: '10px;'}}>
                     <Button onClick={handleDataLinkOnClick}>데이터 연동</Button>
-                    <Button onClick={handlePrintOnClick}>결과지 생성</Button>
-                    <Button onClick={handlePublishOnClick}>결과지 전송</Button>
+                    <Button onClick={handlePrintOnClick} disabled={printable}>결과지 생성</Button>
+                    <Button onClick={handlePublishOnClick} disabled={publisable}>결과지 전송</Button>
                 </ButtonGroup>
-                <Dialog
-                    open={alert.open}
-                    onClose={alertDialogClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description">
-                    <DialogTitle id="alert-dialog-title">
-                        {alert.title}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            {alert.content}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button variant={"contained"} onClick={alertDialogClose}>
-                            확인
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <Dialog
-                    open={confirm.open}
-                    onClose={confirmDialogClose}
-                    aria-labelledby="confirm-dialog-title"
-                    aria-describedby="confirm-dialog-description">
-                    <DialogTitle id="confirm-dialog-title">
-                        {confirm.title}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="confirm-dialog-description">
-                            {confirm.content}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button variant={"contained"} onClick={confirm.okFunction}>OK</Button>
-                        <Button onClick={confirmDialogClose}>
-                            CLOSE
-                        </Button>
-                    </DialogActions>
-                </Dialog>
                 <Dialog
                     open={linkDialog.open}
                     onClose={linkDialogClose}

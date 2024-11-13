@@ -135,15 +135,27 @@ interface LinkDialogData {
     linkValidation: boolean
     linkable: boolean
 }
+
 interface InterpretationDialogData {
     open: boolean
     sampleId: string
     serviceCode: string
     serviceName: string
-    batchName: string,
-    rowNumber: string,
+    batchName: string
+    rowNumber: string
     patientName: string
     interpretation: string
+}
+
+interface HistoryDialogData {
+    open: boolean
+    sampleId: number
+    serviceCode: string
+    serviceName: string
+    batchName: string
+    rowNumber: number
+    patientName: string
+    history: string
 }
 
 interface LoadingObject {
@@ -168,11 +180,14 @@ interface AnalysisPredicatesFilter {
 }
 
 interface SelectedAnalysis {
-    sampleId: number,
-    serviceCode: string,
-    batchName: string,
-    rowNumber: number,
-    reportCreateAt: Date
+    sampleId: number
+    serviceCode: string
+    serviceName: string
+    batchName: string
+    rowNumber: number
+    patientName: string
+    reportCreateAt: string
+    reportName: string
 }
 
 interface SavableAnalysis {
@@ -195,6 +210,7 @@ export type {
     SavableAnalysis,
     SearchResult,
     SelectedAnalysis,
+    HistoryDialogData,
     LoadingObject,
     SnackBarData
 }

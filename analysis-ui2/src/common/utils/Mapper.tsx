@@ -1,4 +1,4 @@
-import {Analysis, SavableAnalysis, SearchResult} from "../types/Types";
+import {Analysis, SavableAnalysis, SearchResult, SelectedAnalysis} from "../types/Types";
 import {RawAxiosResponseHeaders} from "axios";
 
 const convertPredicatesToQueryString = (predicates: any): string => {
@@ -98,7 +98,8 @@ function searchResultToRowData(analysis: Analysis): Object {
         chrYPropB: analysis.chr_yprop_tmp,
         sexPredictB: analysis.pred_sex_tmp === analysis.request.sample.patient.sex ? "P":"F",
         sexAnalysisB: analysis.pred_sex_tmp,
-        interpretation: analysis.comment
+        interpretation: analysis.comment,
+        description: analysis.report.description
     }
 }
 function convertPassOrFail(str: string): string{
@@ -176,6 +177,21 @@ function isValidDate(dateString: string): boolean {
     const date = new Date(dateString)
     return !isNaN(date.getTime())
 }
+function isOnlySinglePrintable(selectedAnalysis: SelectedAnalysis[]): boolean {
+    return selectedAnalysis.filter(value=>value.reportCreateAt !== "null").length !== 0 && selectedAnalysis.length >= 2
+}
+function isSinglePrintable(selectedAnalysis: SelectedAnalysis[]): boolean {
+    return selectedAnalysis.filter(value=>value.reportCreateAt !== "null").length !== 0 && selectedAnalysis.length === 1
+}
+function isMultiPrintable(selectedAnalysis: SelectedAnalysis[]): boolean {
+    return selectedAnalysis.filter(value => value.reportCreateAt === "null").length > 0
+}
+function isPublisable(selectedAnalysis: SelectedAnalysis[]): boolean {
+    return selectedAnalysis.length !== 0
+}
+function hasPrintingReport(selectedAnalysis: SelectedAnalysis[]): boolean {
+    return selectedAnalysis.filter(value=>value.reportCreateAt !== "null" & value.reportName === null).length > 0
+}
 const utils = {
     apiResponseToSearchResult,
     convertPredicatesToQueryString,
@@ -184,6 +200,11 @@ const utils = {
     convertRowDataToSavableAnalysis,
     isValidDate,
     setColor,
-    searchResultToRowData
+    searchResultToRowData,
+    isOnlySinglePrintable,
+    isSinglePrintable,
+    isMultiPrintable,
+    isPublisable,
+    hasPrintingReport
 }
 export default utils;

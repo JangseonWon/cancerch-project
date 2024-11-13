@@ -5,6 +5,7 @@ interface InterpretationState {
     interpretationDialog: InterpretationDialogData
     setInterpretationDialog: (newInterpretationDialog: InterpretationDialogData) => void
 }
+
 const useInterpretationDialogStore = create<InterpretationState>()((set) => ({
     interpretationDialog: {
         open: false,
@@ -16,7 +17,7 @@ const useInterpretationDialogStore = create<InterpretationState>()((set) => ({
         serviceName: "",
         sampleId: ""
     },
-    setInterpretationDialog: (newInterpretationDialog) => set(state=>({interpretationDialog: newInterpretationDialog}))
+    setInterpretationDialog: (newInterpretationDialog) => set(state => ({interpretationDialog: newInterpretationDialog}))
 }))
 
 export default useInterpretationDialogStore
