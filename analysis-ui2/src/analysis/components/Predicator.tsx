@@ -199,11 +199,11 @@ function Predicator() {
     function handleDataLinkStartOnClick() {
         (async () => {
             await RequestLinkAPI({
-                origin_sample: Number(linkDialog.originSampleId),
+                origin_sample: Number(linkDialog.originSampleId.replaceAll("-", "")),
                 origin_service: linkDialog.originServiceCode,
                 batch: linkDialog.originBatchName,
                 row: Number(linkDialog.originRowNumber),
-                link_sample: Number(linkDialog.linkSampleId),
+                link_sample: Number(linkDialog.linkSampleId.replaceAll("-", "")),
                 link_service: linkDialog.linkServiceCode
             }).then(value => {
                 if (value) {
@@ -227,7 +227,6 @@ function Predicator() {
                 }
             })
         })()
-
     }
 
     function handleLinkRequestValidation() {
