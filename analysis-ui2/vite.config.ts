@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
       }
     }
   },
-  base: mode === 'production' ? "/avoid-service/analysis/" : "",
+  base: mode === 'production' ? "/avoid-service/" : "",
   server: {
     open: './analysis.html',
   }
