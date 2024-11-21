@@ -1,15 +1,13 @@
 package com.greencross.lims.report.cancerch.GangbukComponent
 
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.builder.Util
+import com.gcgenome.lims.report.TextBlock
 import com.greencross.lims.report.builder.Util_EnUS
 import com.greencross.lims.report.cancerch.CancerchDto
 import com.greencross.lims.report.cancerch.CancerchResource
 import com.greencross.lims.report.cancerch.CancerchTemplate
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.AlignVertical
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 import java.time.format.DateTimeFormatter
 

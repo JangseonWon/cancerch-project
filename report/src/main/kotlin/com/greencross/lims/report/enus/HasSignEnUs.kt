@@ -1,7 +1,7 @@
 package com.greencross.lims.report.enus
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.TextStyle
 import org.apache.pdfbox.pdmodel.font.PDFont
 import java.awt.Color
 import java.io.File

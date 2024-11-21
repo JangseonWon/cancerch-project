@@ -5,12 +5,10 @@ import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
-import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
 import com.greencross.lims.report.cancerch.enus.CancerchResourceON256EnUs
-import com.greencross.lims.report.cancerch.enus.CancerchTemplateON203EnUs
 import com.greencross.lims.report.cancerch.enus.CancerchTemplateON256EnUs
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -74,13 +72,13 @@ class CancerchON256ReportTest {
         val repo: CancerchRepo = CancerchRepo()
         return builder(
             TestInfo.ON256, type,
-//            CancerchDto("",
-//                CancerchDto.Results.RISK,
-//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
             CancerchDto("",
-                CancerchDto.Results.CONCERN,
-                CancerchDto.Cancer("기타암종")))?.build()
+                CancerchDto.Results.RISK,
+                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
+                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.CONCERN,
+//                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.GENERAL,
 //                CancerchDto.Cancer()))?.build()
@@ -132,6 +130,6 @@ class CancerchON256ReportTest {
 
 fun main(){
     val test = CancerchON256ReportTest()
-//    test.test()
-    test.createAllReport()
+    test.test()
+//    test.createAllReport()
 }

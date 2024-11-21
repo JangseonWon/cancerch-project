@@ -1,21 +1,19 @@
 package com.greencross.lims.report.kokr
 
-import com.greencross.lims.report.Template
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextBlock
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.avoid.kokr.AvoidResourceKoKr
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.builder.Util
-import com.greencross.lims.report.func.AlignVertical.MIDDLE
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.AlignVertical.MIDDLE
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Period
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 
 
 class SectionHeader<T: Template<AvoidResourceKoKr>, D: AbstractReportDto>: Painter<T, D> {

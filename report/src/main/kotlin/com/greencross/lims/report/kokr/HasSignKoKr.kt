@@ -2,7 +2,7 @@ package com.greencross.lims.report.kokr
 
 import com.greencross.lims.report.HasSign
 import com.greencross.lims.report.HasSign.Person
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.TextStyle
 import org.apache.pdfbox.pdmodel.font.PDFont
 import java.awt.Color
 import java.io.File

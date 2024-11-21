@@ -1,12 +1,12 @@
 package com.greencross.lims.report.cancerch
 
-import com.greencross.lims.report.TextBlock
+import com.gcgenome.lims.report.TextBlock
 import com.greencross.lims.report.builder.Util_EnUS.Companion.cancerToEng
 import com.greencross.lims.report.builder.Util_EnUS.Companion.lblPatientInfo
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.AlignVertical
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.AlignVertical
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 
 class SectionAnalysis2(private val y: Float = 200f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {

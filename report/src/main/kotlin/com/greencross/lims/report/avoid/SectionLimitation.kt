@@ -1,9 +1,9 @@
 package com.greencross.lims.report.avoid
 
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.TextBlock
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 
 class SectionLimitation (private var y: Float = 685f)  : Painter<AvoidTemplate<AvoidResource>, AvoidDto> {

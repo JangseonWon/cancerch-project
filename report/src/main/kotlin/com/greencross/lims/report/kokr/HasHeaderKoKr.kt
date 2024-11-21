@@ -1,6 +1,5 @@
 package com.greencross.lims.report.kokr
 
-import com.greencross.lims.report.Resource
 import org.apache.pdfbox.pdmodel.font.PDFont
 import java.awt.Color
 

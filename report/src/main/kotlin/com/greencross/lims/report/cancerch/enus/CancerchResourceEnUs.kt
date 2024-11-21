@@ -1,13 +1,13 @@
 package com.greencross.lims.report.cancerch.enus
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.Template
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.cancerch.CancerchResource
 import com.greencross.lims.report.enus.HasHeaderEnUs
 import com.greencross.lims.report.enus.HasSignEnUs
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject

@@ -1,8 +1,8 @@
 package com.greencross.lims.report.avoid
 
-import com.greencross.lims.report.func.Page
-import com.greencross.lims.report.func.PageBuilder
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Page
+import com.gcgenome.lims.report.func.PageBuilder
+import com.gcgenome.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.PDDocument
 
 abstract class AvoidPageBuilder<T : AvoidTemplate<in AvoidResource>>(
@@ -18,6 +18,7 @@ abstract class AvoidPageBuilder<T : AvoidTemplate<in AvoidResource>>(
     fun build(): PDDocument {
         return builder.add(pages()).build()
     }
+
     init{
         builder = PageBuilder(template, dto)
     }

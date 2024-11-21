@@ -1,14 +1,14 @@
 package com.greencross.lims.report.cancerch.GangbukComponent
 
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.TextBlock
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.builder.Util_EnUS.Companion.cancerToEng
 import com.greencross.lims.report.cancerch.CancerchDto
 import com.greencross.lims.report.cancerch.CancerchResource
 import com.greencross.lims.report.cancerch.CancerchTemplate
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 
 class GangbukSectionPredictCancerEnUs(private val y: Float = 457f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {

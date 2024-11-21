@@ -7,7 +7,7 @@ import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenomeNotColorBar
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
@@ -23,13 +23,13 @@ class CancerchN203ReportTest {
     var code = "375"
     var patient: String = "홍길동"
     var birth: Int = 2001
-    var collection: LocalDate = LocalDate.of(2024,4,22)
+    var collection: LocalDate = LocalDate.of(2024,8,22)
     var sex: Sex = Sex.F
     var receipt: LocalDate = collection
-    var cancer= CancerchRepo.암종.기타암종
+    var cancer= CancerchRepo.암종.대장암
     var barcode: String = "CR3-$code"
-    var request: String = "20231011-971-0001"
-    val comment: String = "소견이 입력됩니다."
+    var request: String = "20240822-171-0001"
+    val comment: String = ""
     fun test() {
         val doc: PDDocument? = build(null, "ko-kr")
         if (doc != null) {
@@ -96,7 +96,7 @@ class CancerchN203ReportTest {
         dto.medicalRecordNumber = barcode
         dto.specimenType = "Whole Blood"
 
-        dto.reportDate = LocalDate.of(2023,10,24)
+        dto.reportDate = LocalDate.of(2024,9,11)
         dto.age = age(dto.birthDate, dto.collectionDate).toString()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)

@@ -16,7 +16,7 @@ configurations {
 dependencyManagement { imports { mavenBom(libs.spring.cloud.bom.get().toString()) } }
 dependencies {
     implementation(project(":shared"))
-    implementation("com.greencross:lims-report:1.0")
+    implementation("com.gcgenome:lims-report:1.0")
     implementation("com.greencross:lims-api-gateway-data:1.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")

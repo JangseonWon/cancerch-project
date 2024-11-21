@@ -1,7 +1,7 @@
 package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.SectionBarcode
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 
 class AvoidN201(
     val template: AvoidTemplateN201<AvoidResource>,

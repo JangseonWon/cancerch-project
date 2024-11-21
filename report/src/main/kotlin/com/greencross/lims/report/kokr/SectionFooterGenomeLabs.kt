@@ -1,13 +1,13 @@
 package com.greencross.lims.report.kokr
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.Template
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextBlock
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.builder.Util
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
 import java.awt.image.BufferedImage

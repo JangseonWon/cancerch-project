@@ -2,9 +2,8 @@ package com.greencross.lims.report.avoid.kokr
 
 import com.greencross.lims.report.HasSign.Person
 import com.greencross.lims.report.HasSign.SignLabel
-import com.greencross.lims.report.Template
-import com.greencross.lims.report.TextStyle
-import com.greencross.lims.report.avoid.AvoidDto
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.avoid.AvoidResource
 import com.greencross.lims.report.builder.AbstractReportDto
 import com.greencross.lims.report.kokr.HasHeaderKoKr

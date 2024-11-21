@@ -1,8 +1,8 @@
 package com.greencross.lims.report.builder
 
-import com.greencross.lims.report.TextBlock
+import com.gcgenome.lims.report.TextBlock
 import com.greencross.lims.report.cancerch.CancerchDto
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
 import org.apache.pdfbox.cos.COSArray
 import org.apache.pdfbox.cos.COSFloat
 import org.apache.pdfbox.cos.COSInteger

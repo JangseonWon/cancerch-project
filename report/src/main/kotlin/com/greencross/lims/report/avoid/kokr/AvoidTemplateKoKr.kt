@@ -2,12 +2,6 @@ package com.greencross.lims.report.avoid.kokr
 
 import com.gcgenome.lims.avoid.TestInfo
 import com.greencross.lims.report.avoid.AvoidTemplate
-import com.greencross.lims.report.builder.Sex
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Period
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 
 abstract class AvoidTemplateKoKr<R : AvoidResourceKoKr>(
     testInfo: TestInfo

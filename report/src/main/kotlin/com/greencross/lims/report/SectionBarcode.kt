@@ -1,13 +1,16 @@
 package com.greencross.lims.report
 
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextBlock
+import com.gcgenome.lims.report.TextStyle
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.oned.Code128Writer
 import com.greencross.lims.report.builder.AbstractReportDto
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.AlignVertical
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.AlignVertical
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import java.awt.Color
 import java.io.IOException

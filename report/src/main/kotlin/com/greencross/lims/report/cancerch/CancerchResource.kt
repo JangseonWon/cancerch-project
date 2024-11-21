@@ -1,8 +1,8 @@
 package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.TextStyle
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.TextStyle
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color

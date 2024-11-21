@@ -2,7 +2,7 @@ package com.greencross.lims.report.cancerch
 
 import com.greencross.lims.report.SectionBarcode
 import com.greencross.lims.report.cancerch.GangbukComponent.*
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 
 class CancerchGangbukEnUs(
     val template: CancerchTemplateON256<CancerchResource>,

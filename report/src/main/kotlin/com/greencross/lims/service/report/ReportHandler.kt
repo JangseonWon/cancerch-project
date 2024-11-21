@@ -8,7 +8,6 @@ import com.gcgenome.report.versions.report.ReactiveReportVersionService
 import com.greencross.lims.data.Report_
 import com.greencross.lims.entity.ReportFile
 import com.greencross.lims.projection.Analysis
-import com.greencross.lims.projection.Report
 import com.greencross.lims.report.avoid.*
 import com.greencross.lims.report.avoid.kokr.AvoidResourceN201KoKr
 import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
@@ -26,7 +25,7 @@ import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN256KoKr
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.*
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao

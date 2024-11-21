@@ -1,13 +1,9 @@
 package com.greencross.lims.report.avoid.kokr
 
 import com.gcgenome.lims.avoid.TestInfo
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.TextStyle
 import com.greencross.lims.report.avoid.AvoidDto
 import com.greencross.lims.report.avoid.AvoidTemplateN201
 import com.greencross.lims.report.builder.Sex
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
 
 class AvoidTemplateN201KoKr(
     resource: AvoidResourceN201KoKr,

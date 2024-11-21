@@ -7,9 +7,8 @@ import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
 import com.greencross.lims.report.avoid.repository.CancerRepo
 import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionFooterGenome
-import com.greencross.lims.report.kokr.SectionFooterGenomeLabs
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -150,3 +149,5 @@ fun main(){
     val test = AvoidReportTest()
     test.test()
 }
+
+

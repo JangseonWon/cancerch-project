@@ -1,13 +1,12 @@
 package com.greencross.lims.report.avoid
 
 import com.greencross.lims.report.HasSign
-import com.greencross.lims.report.TextStyle
+import com.gcgenome.lims.report.TextStyle
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import java.awt.Color
 import java.io.File
 import java.io.IOException
-import java.util.function.Supplier
 
 interface AvoidResource : HasSign {
     //region # Basic Func

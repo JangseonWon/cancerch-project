@@ -8,7 +8,7 @@ import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN256KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN256KoKr
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -76,12 +76,12 @@ class CancerchN256ReportTest {
 //                CancerchDto.Results.RISK,
 //                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
 //                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
-//            CancerchDto("",
-//                CancerchDto.Results.CONCERN,
-//                CancerchDto.Cancer("기타암종")))?.build()
             CancerchDto("",
-                CancerchDto.Results.GENERAL,
-                CancerchDto.Cancer()))?.build()
+                CancerchDto.Results.CONCERN,
+                CancerchDto.Cancer("기타암종")))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.GENERAL,
+//                CancerchDto.Cancer()))?.build()
     }
     private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()
@@ -131,6 +131,6 @@ class CancerchN256ReportTest {
 
 fun main(){
     val test = CancerchN256ReportTest()
-//    test.test()
-    test.createAllReport()
+    test.test()
+//    test.createAllReport()
 }

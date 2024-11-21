@@ -1,6 +1,6 @@
 package com.greencross.lims.report.builder
 
-import com.greencross.lims.report.Dto
+import com.gcgenome.lims.report.Dto
 import java.time.LocalDate
 
 abstract class AbstractReportDto: Dto {

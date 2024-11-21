@@ -1,10 +1,13 @@
 package com.greencross.lims.report
 
+import com.gcgenome.lims.report.Resource
+import com.gcgenome.lims.report.Template
+import com.gcgenome.lims.report.TextStyle
 import com.greencross.lims.report.builder.AbstractReportDto
 import java.io.File
 
 
-interface HasSign : Resource{
+interface HasSign : Resource {
     fun stylePerson(): TextStyle
     fun person(name: String): Person?
     fun labels(): Array<SignLabel>

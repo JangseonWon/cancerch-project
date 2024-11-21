@@ -1,16 +1,11 @@
 package com.greencross.lims.report.cancerch
 
-import com.greencross.lims.report.TextBlock
-import com.greencross.lims.report.builder.Sex
+import com.gcgenome.lims.report.TextBlock
 import com.greencross.lims.report.builder.Util
-import com.greencross.lims.report.func.AlignHorizontal
-import com.greencross.lims.report.func.PDPageContentStreamPageAccessible
-import com.greencross.lims.report.func.Painter
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Period
+import com.gcgenome.lims.report.func.AlignHorizontal
+import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
+import com.gcgenome.lims.report.func.Painter
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 
 class SectionTitle(private val y: Float = 745f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
     private val DTF: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

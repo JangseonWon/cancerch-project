@@ -8,7 +8,7 @@ import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
 import com.greencross.lims.report.cancerch.enus.CancerchTemplateON203EnUs
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
-import com.greencross.lims.report.func.Painter
+import com.gcgenome.lims.report.func.Painter
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
