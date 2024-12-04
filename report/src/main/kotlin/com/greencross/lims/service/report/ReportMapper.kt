@@ -44,7 +44,7 @@ class ReportMapper(private val om: ObjectMapper) {
             this.language = lang
             this.isPrinted = "PREPARE"
             this.description = description
-            this.resultInfo = Json.of("{\"result\": \"$result\", \"result_type\": \"$prediction\", \"comment\": \"$comment\"}")
+            this.resultInfo = Json.of("{\"result\": \"$result\", \"result_type\": \"$prediction\", \"comment\": \"$comment\", \"textReport\":  \"${createTextReport(result, prediction, comment)}\"}")
         }
     }
 
@@ -57,6 +57,24 @@ class ReportMapper(private val om: ObjectMapper) {
             "ESO" -> "식도암"
             "OV" -> "난소암"
             else -> "오류"
+    }
+    private fun createTextReport(result: String, predictedCancer: String, comment: String): String {
+        val sb = StringBuilder()
+        val guideline = when(result) {
+            "일반관리" -> "-"
+            "관심관리" -> "아이캔서치 검사 모니터링 권장 기간 : 3개월 후"
+            "집중관리" -> "정밀검사 : 주치의와 상담요함 / 아이캔서치 검사 모니터링 권장 기간 : 3개월 후"
+            else -> "오류"
+        }
+        sb.append("<![CDATA[")
+        sb.append("◆ 아이캔서치 분석 리포트\r\n\r\n")
+        sb.append("■ 종합결과 : $result\r\n")
+        sb.append("■ 이상 패턴 검출 여부 : ${if(result == "일반관리") "미검출" else "검출"}\r\n")
+        sb.append("■ 6종 암 중 인공지능 예측 암종 : ${if(result != "집중관리") "해당없음" else predictedCancer}\r\n")
+        sb.append("■ 기타 소견 : ${if(comment == "") "-" else comment}\r\n")
+        sb.append("■ 가이드라인 : $guideline")
+
+        return sb.toString()
     }
 
 }
