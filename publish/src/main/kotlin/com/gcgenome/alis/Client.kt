@@ -56,10 +56,6 @@ class Client(
             ),
             AlisRequest(
                 fileId = file.toString(),
-                operation = Operation.SEND_USER_FILE
-            ),
-            AlisRequest(
-                fileId = file.toString(),
                 operation = Operation.SEND_RESULT,
                 results = listOf(
                     AlisResult(
@@ -70,6 +66,12 @@ class Client(
                         resultInfo.comment?:""
                     )
                 )
+            ),
+            AlisRequest(
+                fileId = file.toString(),
+                operation = Operation.SEND_INTERPRETATION,
+                textShort = resultInfo.textReport,
+                text = resultInfo.textReport
             )
         )
 
