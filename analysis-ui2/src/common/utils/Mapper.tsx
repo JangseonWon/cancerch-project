@@ -62,7 +62,7 @@ function searchResultToRowData(analysis: Analysis): Object {
         requestDate: analysis.request.date_request.toString().split("T")[0],
         requestTat: analysis.request.date_due.toString().split("T")[0],
         reportName: analysis.report.file_name,
-        reportCreateAt: analysis.report.create_at.toString().split("T")[0],
+        reportCreateAt: analysis.report.create_at,
         reportCreateBy: analysis.report.create_by.name,
         reportResult: analysis.report.report_result,
         reportResultType: analysis.report.report_result_type,

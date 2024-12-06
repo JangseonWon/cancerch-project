@@ -455,6 +455,9 @@ export default function DataComponent(props: DataComponentProps) {
         let reports = apiRef.current.getRow(id);
 
         (async () => {
+            console.log(reports)
+            console.log(reports["reportCreateAt"])
+            console.log(new Date(reports["reportCreateAt"]).getTime())
             const report = await ReportPreviewAPI(reports["sampleId"], reports["serviceCode"], new Date(reports["reportCreateAt"]).getTime())
             const blob = new Blob([report], {type: 'application/pdf'});
             const url = URL.createObjectURL(blob);

@@ -30,10 +30,9 @@ function ReportDialog() {
             </DialogTitle>
             <DialogContent>
                 <Box sx={{display: "flex", height: "100%"}}>
-                    <iframe src={reportDialog.fileUrl} style={{width: "60%", height: "100vh;"}}></iframe>
+                    <iframe src={reportDialog.fileUrl} style={{width: "60%", height: "100%"}}></iframe>
                     <hr/>
                     <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-evenly"}}>
-                        <h4>의뢰 정보</h4>
                         <Box>
                             <FormControl variant="outlined">
                                 <InputLabel htmlFor="originSampleId" size={"small"}>의뢰번호</InputLabel>
@@ -162,7 +161,6 @@ function ReportDialog() {
                                 />
                             </FormControl>
                         </Box>
-                        <h4>결과 정보</h4>
                         <Box>
                             <FormControl variant="outlined">
                                 <InputLabel htmlFor="originSampleId" size={"small"}>분석 배치</InputLabel>

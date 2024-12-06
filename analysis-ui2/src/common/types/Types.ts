@@ -167,7 +167,7 @@ interface ReportDialogData {
     reportCreateBy: string
     description: string
     reportName: string | null
-    fileUrl: string
+    fileUrl: string | null
     reportPublishAt: string | null
     reportPublishBy: string | null
     reportResult: string | null
