@@ -1,5 +1,8 @@
 package com.gcgenome.lims.service.analysis
 
+
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcgenome.lims.data.*
 import com.gcgenome.lims.entity.Analysis
 import com.gcgenome.lims.entity.AnalysisQC
@@ -7,8 +10,11 @@ import com.gcgenome.lims.entity.AnalysisResult
 import org.springframework.stereotype.Component
 
 @Component
-class AnalysisMapper {
+class AnalysisMapper(private val om: ObjectMapper) {
     fun toDto(entity: Analysis) : com.gcgenome.lims.data.Analysis{
+        val resultInfos: MutableMap<String, String> = entity.resultInfo?.asString()?.let {
+            om.readValue(it, object : TypeReference<MutableMap<String, String>>() {})
+        } ?: mutableMapOf()
         return Analysis(entity.sample, entity.serviceId, entity.batch, entity.row).apply{
             this.freemix                        = entity.freemix
             this.rawReadsMillions               = entity.rawReadsMillions
@@ -76,14 +82,19 @@ class AnalysisMapper {
                 entity.sample,
                 entity.serviceId,
                 entity.reportedAt.toString(),
-                entity.reportName,
-                entity.size,
-                entity.reportUrl,
-                User(entity.reportedById, entity.reportedByNm),
-                entity.publishAt,
-                User(entity.publishById, entity.publishByNm),
-                entity.reportDescription ?: ""
-            )
+            ).apply {
+                this.fileName = entity.reportName
+                this.fileSize = entity.size
+                this.fileUrl = entity.reportUrl
+                this.createBy = User(entity.reportedById, entity.reportedByNm)
+                this.publishAt = entity.publishAt
+                this.publishBy = User(entity.publishById, entity.publishByNm)
+                this.description = entity.reportDescription ?: ""
+                this.reportResult = resultInfos["result"]
+                this.reportResultType = resultInfos["result_type"]
+                this.reportComment = resultInfos["comment"]
+                this.reportText = resultInfos["text_report"]
+            }
             this.file = entity.analysisFile
             this.createdAt = entity.analysisAt.toString()
             this.lastModifyAt = entity.lastModifyAt.toString()

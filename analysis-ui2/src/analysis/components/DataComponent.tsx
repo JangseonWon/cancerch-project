@@ -4,24 +4,51 @@ import {
     GridColDef,
     GridRenderEditCellParams,
     GridRowId,
-    GridRowsProp,
+    GridRowsProp, GridToolbarContainer,
     useGridApiRef
 } from "@mui/x-data-grid";
 import utils from "../../common/utils/Mapper";
 import {
+    Button,
     MenuItem, Select, SelectChangeEvent
 } from "@mui/material";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import HistoryIcon from '@mui/icons-material/History';
+import PrintIcon from '@mui/icons-material/Print';
 import {SearchResult} from "../../common/types/Types";
 import {AllReportDownloadAPI, AnalysisUpdateAPI, ReportPreviewAPI} from "../../common/utils/fetch";
 import useSelectedAnalysisStore from "../stores/SelectedAnalysisStore";
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import useInterpretationDialogStore from "../stores/InterpretationStore";
 import useSearchTriggerStore from "../stores/SearchTriggerStore";
+import useReportDialogStore from "../stores/ReportDialogStore";
+import * as XLSX from "xlsx";
+import {saveAs} from "file-saver";
+
+interface Data {
+    [key: string]: any; // 유연한 데이터 타입
+}
 
 interface DataComponentProps {
     searchResult: SearchResult
+}
+
+interface ToolbarProps {
+    onDownload: () => void
+}
+
+function Toolbar(props: ToolbarProps) {
+    const onDownload = async () => {
+        props.onDownload()
+    }
+
+    return (
+        <GridToolbarContainer sx={{justifyContent: 'flex-end'}}>
+            <Button color="primary" startIcon={<PrintIcon/>} onClick={onDownload} sx={{right: "30px"}}>
+                Download XLSX
+            </Button>
+        </GridToolbarContainer>
+    )
 }
 
 export default function DataComponent(props: DataComponentProps) {
@@ -32,6 +59,7 @@ export default function DataComponent(props: DataComponentProps) {
     const [rows, setRows] = useState<GridRowsProp>([]);
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowId[]>([]);
     const [setInterpretationDialog] = [useInterpretationDialogStore(state => state.setInterpretationDialog)]
+    const [setReportDialog] = [useReportDialogStore(state => state.setReportDialog)]
     const [setSearchTrigger] = [useSearchTriggerStore(state => state.setTrigger)]
     const [setSelectedAnalysis] = [useSelectedAnalysisStore(state => state.setSelectedAnalysis)]
     const apiRef = useGridApiRef();
@@ -223,7 +251,6 @@ export default function DataComponent(props: DataComponentProps) {
                         icon={<HistoryIcon/>}
                         label="interpretation"
                         onClick={handleHistoryOnClick(id)}/>
-                    // disabled={true}/>
                 ]
             },
             width: 80
@@ -431,7 +458,7 @@ export default function DataComponent(props: DataComponentProps) {
             const report = await ReportPreviewAPI(reports["sampleId"], reports["serviceCode"], new Date(reports["reportCreateAt"]).getTime())
             const blob = new Blob([report], {type: 'application/pdf'});
             const url = URL.createObjectURL(blob);
-            window.open(url);
+            setReportDialog({...reports, open: true, fileUrl: url})
         })()
     }
     const handleInterpretationOnClick = (id: GridRowId) => () => {
@@ -452,7 +479,6 @@ export default function DataComponent(props: DataComponentProps) {
     const handleHistoryOnClick = (id: GridRowId) => () => {
         let row = apiRef.current.getRow(id);
 
-
         (async () => {
             const report = await AllReportDownloadAPI(row["sampleId"], row["serviceCode"])
             const blob = new Blob([report], {type: 'application/pdf'});
@@ -470,13 +496,43 @@ export default function DataComponent(props: DataComponentProps) {
         setSelectedAnalysis(selectedRowsData)
     };
 
+    const onDownload = () => {
+        const excludedColumns = ["serviceCode", "id", "patientMrn", "patientSex", "patientName", "customerId", "customerName", "reportText", "reportComment", "reportCreateAt", "reportCreateBy", "reportPublishBy", "reportPublishAt", "reportName", "requestTat", "requestDate", "description"];
+
+        const filteredData = rows.map((item) =>
+            Object.fromEntries(
+                Object.entries(item).filter(([key]) => !excludedColumns.includes(key))
+            )
+        );
+        const worksheet = XLSX.utils.json_to_sheet(filteredData)
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "CANCERCH QC AND RESULT");
+
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+        });
+
+        const blob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        saveAs(blob, "data.xlsx");
+    }
+
     return (
         <>
             <DataGrid
                 columns={columns}
                 rows={rows}
                 className={"apper__animation"}
-
+                slots={{
+                    toolbar: Toolbar
+                }}
+                slotProps={{
+                    toolbar: {onDownload}
+                }}
                 columnHeaderHeight={40}
                 checkboxSelection
                 disableRowSelectionOnClick

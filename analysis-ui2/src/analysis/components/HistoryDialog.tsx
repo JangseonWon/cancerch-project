@@ -9,16 +9,12 @@ import {
     TextField
 } from "@mui/material";
 import React, {useEffect, useState} from "react";
-import useSnackBarStore from "../../common/stores/SnackBarStore";
 import useHistoryDialogStore from "../stores/ReportHistoryStore";
 import {ReportPrintAPI} from "../../common/utils/fetch";
-import useLoadingStore from "../../common/stores/LoadingStore";
 
 function HistoryDialog() {
     const [historyDialog, setHistoryDialog] = [useHistoryDialogStore(state => state.historyDialog), useHistoryDialogStore(state => state.setHistoryDialog)]
     const [history, setHistory] = useState<string>('')
-    const [setLoading] = [useLoadingStore(state => state.setOpen)]
-    const [setSnackbar] = [useSnackBarStore(state => state.setSnackbar)]
     const [historySavable, setHistorySavable] = useState<boolean>(true)
 
     useEffect(() => {

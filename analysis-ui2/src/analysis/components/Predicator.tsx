@@ -155,6 +155,7 @@ function Predicator() {
                         selectedAnalysis.forEach(analysis => {
                             ReportPrintAPI(analysis.sampleId, analysis.serviceCode, analysis.batchName, analysis.rowNumber)
                         })
+                        setConfirm({...confirm, open: false})
                     })()
                 }
             })
@@ -177,7 +178,6 @@ function Predicator() {
                     setConfirm({...confirm, open: false})
                 }
             })
-            console.log(selectedAnalysis)
         }
     }
 

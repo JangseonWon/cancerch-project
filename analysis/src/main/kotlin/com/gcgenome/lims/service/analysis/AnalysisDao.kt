@@ -95,7 +95,6 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         val count = repo.query { it.select(Wildcard.count).from(analysis).where(predicates) }
         return count.one().map { PageReactive(it, param.limit, param.page, flux) }
     }
-    //   if(!context.authentication.authorities.contains(SecurityContextRepository.Companion.RoleManager)) {
     private fun convert(cancer: String) = when(cancer){
         "폐암"   -> "LuC"
         "대장암" -> "colon"

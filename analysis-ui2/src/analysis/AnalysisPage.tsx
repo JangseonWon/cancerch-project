@@ -24,6 +24,7 @@ import InterpretationDialog from "./components/InterpretationDialog";
 import AlertDialog from "../common/components/AlertDialog";
 import ConfirmDialog from "../common/components/ConfirmDialog";
 import HistoryDialog from "./components/HistoryDialog";
+import ReportDialog from "./components/ReportDialog";
 
 function AnalysisPage() {
     const [analysisData, setAnalysisData] = useState<SearchResult | null>()
@@ -126,6 +127,7 @@ function AnalysisPage() {
             <AlertDialog/>
             <ConfirmDialog/>
             <HistoryDialog/>
+            <ReportDialog/>
         </>
     )
 }

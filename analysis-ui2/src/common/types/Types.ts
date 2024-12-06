@@ -80,6 +80,8 @@ interface Service {
 }
 
 interface Report {
+    sample: number
+    service: string
     create_at: Date
     create_by: User
     description: string
@@ -88,9 +90,11 @@ interface Report {
     file_url: string | null
     is_printed: string | null
     publish_at: Date | null
-    publisher: User
-    sample: number
-    service: string
+    publish_by: User
+    report_result: String | null
+    report_result_type: String | null
+    report_comment: String | null
+    report_text: String | null
 }
 
 interface SearchResult {
@@ -145,6 +149,31 @@ interface InterpretationDialogData {
     rowNumber: string
     patientName: string
     interpretation: string
+}
+
+interface ReportDialogData {
+    open: boolean
+    sampleId: string,
+    serviceCode: string
+    serviceName: string
+    batchName: string
+    rowNumber: string
+    customerName: string
+    customerId: string
+    patientName: string
+    patientMrn: string
+    patientSex: string
+    reportCreateAt: string
+    reportCreateBy: string
+    description: string
+    reportName: string | null
+    fileUrl: string
+    reportPublishAt: string | null
+    reportPublishBy: string | null
+    reportResult: string | null
+    reportResultType: string | null
+    reportComment: string | null
+    reportText: string | null
 }
 
 interface HistoryDialogData {
@@ -212,5 +241,6 @@ export type {
     SelectedAnalysis,
     HistoryDialogData,
     LoadingObject,
-    SnackBarData
+    SnackBarData,
+    ReportDialogData
 }
