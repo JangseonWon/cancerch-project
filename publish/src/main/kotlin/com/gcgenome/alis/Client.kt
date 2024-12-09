@@ -66,14 +66,18 @@ class Client(
                         resultInfo.comment?:""
                     )
                 )
-            ),
-            AlisRequest(
-                fileId = file.toString(),
-                operation = Operation.SEND_INTERPRETATION,
-                textShort = "<![CDATA[${resultInfo.textReport}]]>",
-                text = "<![CDATA[${resultInfo.textReport}]]>"
             )
         )
+        if(request.service == "N203" || request.service == "N205") {
+            requests.add(
+                AlisRequest(
+                    fileId = file.toString(),
+                    operation = Operation.SEND_INTERPRETATION,
+                    textShort = "<![CDATA[${resultInfo.textReport}]]>",
+                    text = "<![CDATA[${resultInfo.textReport}]]>"
+                )
+            )
+        }
 
         val response = webClient
             .post()
