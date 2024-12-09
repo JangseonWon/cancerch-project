@@ -73,8 +73,8 @@ class Client(
                 AlisRequest(
                     fileId = file.toString(),
                     operation = Operation.SEND_INTERPRETATION,
-                    textShort = "<![CDATA[${resultInfo.textReport}]]>",
-                    text = "<![CDATA[${resultInfo.textReport}]]>"
+                    textShort = "${resultInfo.textReport}",
+                    text = "${resultInfo.textReport}"
                 )
             )
         }
