@@ -12,7 +12,6 @@ import com.greencross.lims.report.avoid.*
 import com.greencross.lims.report.avoid.kokr.AvoidResourceN201KoKr
 import com.greencross.lims.report.avoid.kokr.AvoidTemplateN201KoKr
 import com.greencross.lims.report.avoid.repository.CancerRepo
-import com.greencross.lims.report.builder.LogoType
 import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.enus.CancerchResourceON203EnUs
@@ -56,10 +55,10 @@ class ReportHandler(
     private val reportVersionService: ReactiveReportVersionService,
     private val om: ObjectMapper
 ) {
-    private val logger      = LoggerFactory.getLogger("ReportSearch")
-    private val publisher   = Sinks.many().unicast().onBackpressureBuffer<MessageReport>()
-    private val subscriber  = Sinks.many().multicast().directAllOrNothing<MessageReport>()
-    fun getLogs(sample: Long, service: String)  = logService.getLogs(sample, service)
+    private val logger = LoggerFactory.getLogger("ReportSearch")
+    private val publisher = Sinks.many().unicast().onBackpressureBuffer<MessageReport>()
+    private val subscriber = Sinks.many().multicast().directAllOrNothing<MessageReport>()
+    fun getLogs(sample: Long, service: String) = logService.getLogs(sample, service)
     fun getReports(sample: Long, service: String) = reportVersionService.getReportLogPdf(sample, service)
 
     @Transactional
@@ -79,16 +78,18 @@ class ReportHandler(
         logger.info("CronJob Running: Period 1 Min.")
         return reportDao.findReport().flatMap {
             analysisDao.findById(it.sample, it.service, it.batch, it.row).zipWith(Mono.just(it)).flatMap { zipped ->
-                logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is printing.")
+                logger.info(zipped.t1.sample.toString() + "/" + zipped.t1.service + " is printing.")
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val baos = ByteArrayOutputStream()
-                val doc = zipped.t2.language?.let { it1 ->
-                    if(zipped.t1.service == "N201") build(it1, analysisToAvoidDto(zipped.t1))
-                    else build(it1, analysisToCancerchDto(zipped.t1),
-                        if(zipped.t1.service == "N256" || zipped.t1.service == "ON256") "gangbuk"
-                        else if(zipped.t1.patient.customerName2 != null) "labs"
-                        else "genome", zipped.t1.service)
+                val doc = when (zipped.t1.service) {
+                    "N201" -> build(analysisToAvoidDto(zipped.t1))
+                    "N256", "ON256" -> build(analysisToCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
+                    else -> build(
+                        analysisToCancerchDto(zipped.t1), if (zipped.t1.patient.customerName == "Gclabs") "labs"
+                        else "genome", zipped.t1.service
+                    )
                 }
+
                 val createTime = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
                     ZoneId.systemDefault()
@@ -98,6 +99,7 @@ class ReportHandler(
                     "${zipped.t1.sample}_${zipped.t1.service}_${
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))
                     }.pdf"
+
                 val reportFile = ReportFile(UUID.randomUUID()).apply {
                     this.createTime = createTime
                     this.data = ByteBuffer.wrap(baos.toByteArray())
@@ -106,16 +108,24 @@ class ReportHandler(
                     this.size = baos.toByteArray().size.toLong()
                 }
                 baos.close()
+
                 fileRepo.save(reportFile)
-                zipped.t2.apply{
+
+                zipped.t2.apply {
                     this.file = reportFile.id
                     this.name = reportFile.name!!
                     this.size = reportFile.size
-                    this.isPrinted="COMPLETED"
+                    this.isPrinted = "COMPLETED"
                 }
+
                 reportDao.merge(zipped.t2).doOnSuccess {
-                    logger.info(zipped.t1.sample.toString()+"/"+zipped.t1.service + " is finished.")
-                    publisher.tryEmitNext(MessageReport(MessageReport.MessageType.FINISH, mapper.toMessageDto(zipped.t2)))
+                    logger.info(zipped.t1.sample.toString() + "/" + zipped.t1.service + " is finished.")
+                    publisher.tryEmitNext(
+                        MessageReport(
+                            MessageReport.MessageType.FINISH,
+                            mapper.toMessageDto(zipped.t2)
+                        )
+                    )
                 }
             }
         }.then(Mono.empty())
@@ -133,27 +143,33 @@ class ReportHandler(
             }
             .map { it.get().data!!.array() }
     }
+
     @Transactional
     fun works(): Flux<Report_> {
         return reportDao.findRequestQueue().map(mapper::toDto)
     }
+
     @Bean("publish-printing")
     fun publishReports(): Supplier<Flux<String>> {
-        return Supplier { publisher.asFlux().map(this::messageToString)}
+        return Supplier { publisher.asFlux().map(this::messageToString) }
     }
+
     @Bean("broadcast-printing")
     fun broadcastReports(): Consumer<String> {
-        return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c))}
+        return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c)) }
     }
+
     fun subscribe(): Flux<MessageReport> = subscriber.asFlux()
 
     private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
         val cancerRepo = CancerRepo()
         val patient = analysis.patient
         val barcode = analysis.value
+
         val (customerName, requestNumber) =
-            if (patient.customerName2 != null) Pair(patient.customerName2, formatSampleId(analysis.remark?.toLongOrNull()))
-            else Pair(patient.customerName, formatSampleId(analysis.sample))
+            if (patient.customerName == "Gclabs") Pair(patient.customerName2, formatSampleId(analysis.remark!!))
+            else if(patient.customerName2 != null) Pair(patient.customerName2, analysis.remark ?: formatSampleId(analysis.sample.toString()))
+            else Pair(patient.customerName, formatSampleId(analysis.sample.toString()))
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
@@ -177,27 +193,26 @@ class ReportHandler(
         avoidDto.birthDate = patient.birth
         avoidDto.age = age(avoidDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
         avoidDto.sex = sex(patient.sex)
-        avoidDto.requestNumber = requestNumber?:""
+        avoidDto.requestNumber = requestNumber ?: ""
         avoidDto.collectionDate = analysis.dateSampling.toLocalDate()
         avoidDto.receiptDate = analysis.dateRequest.toLocalDate()
         avoidDto.reportDate = LocalDate.now()
-        avoidDto.medicalRecordNumber = analysis.patient.mrn?:""
+        avoidDto.medicalRecordNumber = analysis.patient.mrn ?: ""
         avoidDto.barcode = barcode
-        avoidDto.medicalInstitution = customerName?:""
+        avoidDto.medicalInstitution = customerName ?: ""
         avoidDto.specimenType = analysis.sampleType
 
         return avoidDto
     }
+
     private fun analysisToCancerchDto(analysis: Analysis): CancerchDto {
         val cancerRepo = CancerchRepo()
         val patient = analysis.patient
         val barcode = analysis.value
-        val (customerName, requestNumber) = if (patient.customerName2 != null) Pair(
-            patient.customerName2, formatSampleId(
-                analysis.remark?.toLongOrNull()
-            )
-        )
-        else Pair(patient.customerName, formatSampleId(analysis.sample))
+        val (customerName, requestNumber) =
+            if (patient.customerName == "Gclabs") Pair(patient.customerName2, formatSampleId(analysis.remark!!))
+            else if(patient.customerName2 != null) Pair(patient.customerName2, analysis.remark ?: formatSampleId(analysis.sample.toString()))
+            else Pair(patient.customerName, formatSampleId(analysis.sample.toString()))
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
@@ -221,17 +236,18 @@ class ReportHandler(
         cancerchDto.birthDate = patient.birth
         cancerchDto.age = age(cancerchDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
         cancerchDto.sex = sex(patient.sex)
-        cancerchDto.requestNumber = requestNumber?:""
+        cancerchDto.requestNumber = requestNumber ?: ""
         cancerchDto.collectionDate = analysis.dateSampling.toLocalDate()
         cancerchDto.receiptDate = analysis.dateRequest.toLocalDate()
         cancerchDto.reportDate = LocalDate.now()
-        cancerchDto.medicalRecordNumber = analysis.patient.mrn?:""
+        cancerchDto.medicalRecordNumber = analysis.patient.mrn ?: ""
         cancerchDto.barcode = barcode
-        cancerchDto.medicalInstitution = customerName?:""
+        cancerchDto.medicalInstitution = customerName ?: ""
         cancerchDto.specimenType = analysis.sampleType
 
         return cancerchDto
     }
+
     private fun age(birth: LocalDate?, sampling: LocalDate?): Int {
         if (birth == null) return 0
         return if (sampling == null) {
@@ -249,56 +265,63 @@ class ReportHandler(
         return Sex.valueOf(sex)
     }
 
-    private fun build(lang: String, dto: AvoidDto): PDDocument? {
-        return builder(TestInfo.N201, LogoType.DEPENDENT, dto)?.build()
-    }
-    private fun build(lang: String, dto: CancerchDto, type: String, service: String): PDDocument? {
-        return if(type == "genome") builderGenome(service, LogoType.DEPENDENT, dto)?.build()
-        else if(type == "gangbuk") buildGangbuk(service, dto)?.build()
-        else builderLabsGenome(service, LogoType.DEPENDENT, dto)?.build()
+    private fun build(dto: AvoidDto): PDDocument? {
+        return builder(dto)?.build()
     }
 
-    private fun builder(test: TestInfo, logo: LogoType, dto: AvoidDto): AvoidPageBuilder<*>? {
+    private fun build(dto: CancerchDto, type: String, service: String): PDDocument? {
+        return when (type) {
+            "genome" -> builderGenome(service, dto)?.build()
+            "gangbuk" -> buildGangbuk(service, dto)?.build()
+            else -> builderLabsGenome(service, dto)?.build()
+        }
+    }
+
+    private fun builder(dto: AvoidDto): AvoidPageBuilder<*>? {
         val doc = PDDocument()
-
         val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
         val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
         val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
-        return if (TestInfo.N201 == test) {
-            var resource = AvoidResourceN201KoKr(doc)
-            var template = AvoidTemplateN201KoKr(resource, test)
+        val resource = AvoidResourceN201KoKr(doc)
+        val template = AvoidTemplateN201KoKr(resource, TestInfo.N201)
 
-            page = SectionPage(547f, 65f, resource.fontDefault())
+        page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
-        } else null
+        return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
     }
+
     private fun buildGangbuk(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        if(TestInfo.N256.code() == service) {
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
-            var resource = CancerchResourceN256KoKr(doc)
-            var template = CancerchTemplateN256KoKr(resource, TestInfo.N256)
-            page = SectionPage(547f, 65f, resource.fontDefault())
+        when (service) {
+            TestInfo.N256.code() -> {
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+                val resource = CancerchResourceN256KoKr(doc)
+                val template = CancerchTemplateN256KoKr(resource, TestInfo.N256)
+                page = SectionPage(547f, 65f, resource.fontDefault())
+                return CancerchGangbukKoKr(template as CancerchTemplateN256<CancerchResource>, dto, sign, footer, page)
+            }
 
-            return CancerchGangbukKoKr(template as CancerchTemplateN256<CancerchResource>, dto, sign, footer, page)
-        } else if(TestInfo.ON256.code() == service) {
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
-            val resource = CancerchResourceON256EnUs(doc)
-            val template = CancerchTemplateON256EnUs(resource, TestInfo.ON256)
-            page = SectionPage(547f, 65f, resource.fontDefault())
+            TestInfo.ON256.code() -> {
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+                val resource = CancerchResourceON256EnUs(doc)
+                val template = CancerchTemplateON256EnUs(resource, TestInfo.ON256)
+                page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return CancerchGangbukEnUs(template as CancerchTemplateON256<CancerchResource>, dto, sign, footer, page)
-        } else {
-            logger.warn("ERROR : Unknown Service Code : " + service)
-            return null
+                return CancerchGangbukEnUs(template as CancerchTemplateON256<CancerchResource>, dto, sign, footer, page)
+            }
+
+            else -> {
+                logger.warn("ERROR : Unknown Service Code : " + service)
+                return null
+            }
         }
     }
-    private fun builderGenome(service: String, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+
+    private fun builderGenome(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
@@ -306,15 +329,15 @@ class ReportHandler(
 
         if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
-            var resource = CancerchResourceN203KoKr(doc)
-            var template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
+            val resource = CancerchResourceN203KoKr(doc)
+            val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
-        } else if (TestInfo.ON203.code() == service){
+        } else if (TestInfo.ON203.code() == service) {
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
-            var resource = CancerchResourceON203EnUs(doc)
-            var template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
+            val resource = CancerchResourceON203EnUs(doc)
+            val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             page = SectionPage(547f, 65f, resource.fontDefault())
 
             return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
@@ -323,7 +346,8 @@ class ReportHandler(
             return null
         }
     }
-    private fun builderLabsGenome(service: String, logo: LogoType, dto: CancerchDto): CancerchPageBuilder<*>? {
+
+    private fun builderLabsGenome(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
@@ -391,22 +415,22 @@ class ReportHandler(
         "CONCERN" -> AvoidDto.Results.CONCERN
         else -> AvoidDto.Results.RISK
     }
+
     private fun stringToCancerchResult(result: String): CancerchDto.Results = when (result) {
         "GENERAL" -> CancerchDto.Results.GENERAL
         "CONCERN" -> CancerchDto.Results.CONCERN
         else -> CancerchDto.Results.RISK
     }
 
-    private fun formatSampleId(id: Long?): String? {
-        if (id == null) return null
-        val cast = id.toString()
-        return if (cast.length == 15) "${cast.substring(0, 8)}-${cast.substring(8, 11)}-${cast.substring(11)}"
-        else cast
+    private fun formatSampleId(id: String): String? {
+        return if (id.length == 15) "${id.substring(0, 8)}-${id.substring(8, 11)}-${id.substring(11)}"
+        else id
     }
 
     private fun messageToString(msg: MessageReport): String {
         return om.writeValueAsString(msg)
     }
+
     private fun stringToMessage(str: String): MessageReport {
         return om.readValue(str, MessageReport::class.java)
     }
