@@ -15,7 +15,8 @@ data class Request(
     val service: String,
     @Column("date_request")val dateRequest: LocalDateTime,
     @Column("date_sampling") val dateSampling: LocalDateTime,
-    @Column("date_due") val dateDue: LocalDateTime
+    @Column("date_due") val dateDue: LocalDateTime,
+    @Column("ward") val ward: String?
 ): Persistable<Request.Companion.RequestPK> {
     @Id @Transient lateinit var _Id: RequestPK
 

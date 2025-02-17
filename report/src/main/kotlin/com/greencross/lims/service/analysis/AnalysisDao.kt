@@ -25,6 +25,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 sample.sampleType.`as`("sampleType"),
                 sample.barcode,
                 sample.remark,
+                request.ward,
                 requestInfo.code,
                 requestInfo.value,
                 patient.id_SET.`as`("patient"),

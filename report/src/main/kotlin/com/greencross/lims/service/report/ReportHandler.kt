@@ -82,12 +82,18 @@ class ReportHandler(
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
                 val baos = ByteArrayOutputStream()
                 val doc = when (zipped.t1.service) {
-                    "N201" -> build(analysisToAvoidDto(zipped.t1))
-                    "N256", "ON256" -> build(analysisToCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
-                    else -> build(
-                        analysisToCancerchDto(zipped.t1), if (zipped.t1.patient.customerName == "Gclabs") "labs"
-                        else "genome", zipped.t1.service
-                    )
+                    //AVOID 검사 분기
+                    "N201"  -> build(analysisToAvoidDto(zipped.t1))
+
+                    //강북삼성 종양DNA검사 분기
+                    "N256"  -> build(analysisToKoKrCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
+                    "ON256" -> build(analysisToEnUsCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
+
+                    //캔서치검사 분기
+                    "ON203" -> build(analysisToEnUsCancerchDto(zipped.t1),
+                        if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
+                    else -> build(analysisToKoKrCancerchDto(zipped.t1),
+                        if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
                 }
 
                 val createTime = LocalDateTime.ofInstant(
@@ -205,14 +211,66 @@ class ReportHandler(
         return avoidDto
     }
 
-    private fun analysisToCancerchDto(analysis: Analysis): CancerchDto {
+    private fun analysisToKoKrCancerchDto(analysis: Analysis): CancerchDto {
         val cancerRepo = CancerchRepo()
         val patient = analysis.patient
         val barcode = analysis.value
-        val (customerName, requestNumber) =
-            if (patient.customerName == "Gclabs") Pair(patient.customerName2, formatSampleId(analysis.remark!!))
-            else if(patient.customerName2 != null) Pair(patient.customerName2, analysis.remark ?: formatSampleId(analysis.sample.toString()))
-            else Pair(patient.customerName, formatSampleId(analysis.sample.toString()))
+        val customerName = when {
+            patient.customerName2 != null -> patient.customerName2
+            else -> patient.customerName
+        }
+        val requestNumber = when {
+            analysis.remark != null -> if(patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(analysis.remark) else analysis.remark
+            else -> formatSampleId(analysis.sample.toString())
+        }
+        val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
+        val cancer1 = when (stringToEnum(analysis.result)) {
+            CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
+            CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종", comment = analysis.comment ?: "")
+            else -> CancerchDto.Cancer(
+                cancerToFileName(result),
+                cancerRepo.findPPVbyAgeAndCancerAndSex(
+                    stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!,
+                cancerRepo.findASRbyAgeAndCancerAndSex(
+                    stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
+                )!!,
+                null,
+                analysis.comment ?: ""
+            )
+        }
+
+        val cancerchDto = CancerchDto(barcode, stringToCancerchResult(analysis.result), cancer1)
+        cancerchDto.barcode = barcode
+        cancerchDto.patientName = patient.name
+        cancerchDto.birthDate = patient.birth
+        cancerchDto.age = age(cancerchDto.birthDate, analysis.dateSampling.toLocalDate()).toString()
+        cancerchDto.sex = sex(patient.sex)
+        cancerchDto.requestNumber = requestNumber ?: ""
+        cancerchDto.collectionDate = analysis.dateSampling.toLocalDate()
+        cancerchDto.receiptDate = analysis.dateRequest.toLocalDate()
+        cancerchDto.reportDate = LocalDate.now()
+        cancerchDto.medicalRecordNumber = analysis.patient.mrn ?: ""
+        cancerchDto.barcode = barcode
+        cancerchDto.medicalInstitution = customerName ?: ""
+        cancerchDto.specimenType = analysis.sampleType
+
+        return cancerchDto
+    }
+
+    private fun analysisToEnUsCancerchDto(analysis: Analysis): CancerchDto {
+        val cancerRepo = CancerchRepo()
+        val patient = analysis.patient
+        val barcode = analysis.value
+        val customerName = when {
+            analysis.ward != null -> analysis.ward
+            patient.customerName2 != null -> patient.customerName2
+            else -> patient.customerName
+        }
+        val requestNumber = when {
+            analysis.remark != null -> if(patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(analysis.remark) else analysis.remark
+            else -> formatSampleId(analysis.sample.toString())
+        }
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
