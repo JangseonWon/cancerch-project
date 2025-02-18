@@ -23,7 +23,7 @@ interface HasSignEnUs: HasSign {
             HasSign.Person("Eun-hae Cho MD", "690", File(resource, "/img/sign/enus/조은해.png")),
             HasSign.Person("김동일 M.D", "762", File(resource, "/img/sign/enus/김동일.png")),
             HasSign.Person("송주선 M.D", "997", File(resource, "/img/sign/enus/송주선.png")),
-            HasSign.Person("설창안 M.D", "1037", File(resource, "/img/sign/enus/설창안.png")),
+            HasSign.Person("Chang-ahn Seol MD", "1037", File(resource, "/img/sign/enus/설창안.png")),
             HasSign.Person("이새미 M.D", "1067", File(resource, "/img/sign/enus/이새미.png")),
             HasSign.Person("김영곤 M.D", "1139", File(resource, "/img/sign/enus/김영곤.png"))
         )

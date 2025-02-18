@@ -58,7 +58,7 @@ abstract class CancerchResourceKoKr(doc: PDDocument): CancerchResource, HasSignK
             object : HasSign.SignLabel {
                 override fun label(): String { return "확인자:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
-                    return arrayOf(person("조은해"))
+                    return arrayOf(person("조은해"), person("설창안"))
                 }
             }
         )

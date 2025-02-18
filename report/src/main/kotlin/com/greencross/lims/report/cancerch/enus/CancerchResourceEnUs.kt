@@ -57,7 +57,7 @@ abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignE
             object : HasSign.SignLabel {
                 override fun label(): String { return "Confirmed by:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
-                    return arrayOf(person("조은해"))
+                    return arrayOf(person("조은해"), person("설창안"))
                 }
             }
         )
