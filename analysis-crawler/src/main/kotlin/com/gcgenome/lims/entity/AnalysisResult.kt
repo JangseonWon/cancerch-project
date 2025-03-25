@@ -21,22 +21,14 @@ data class AnalysisResult(
     @Column("row")     val row:     Int
 ): Persistable<AnalysisResult.Companion.AnalysisResultPK> {
     @CreatedDate
-    @Column("create_at")
-    lateinit var createAt: LocalDateTime
-    @Column("cad_ensemble_prob")
-             var cadEnsembleProb: Double = 0.0
-    @Column("too5_pred")
-             var too5Pred: String = ""
-    @Column("too5_rmd_fems_ensemble_prob")
-             var too5FemsProb: Double = 0.0
-    @Column("too6_pred")
-             var too6Pred: String = ""
-    @Column("too6_rmd_fems_ensemble_prob")
-             var too6FemsProb: Double = 0.0
-    @Column("iscore")
-             var iscore: Double = 0.0
-    @Column("result")
-             var result: String = ""
+    @Column("create_at")          lateinit var createAt:        LocalDateTime
+    @Column("cad_ensemble_prob")           var cadEnsembleProb: Double? = 0.0
+    @Column("too5_pred")                   var too5Pred:        String? = ""
+    @Column("too5_rmd_fems_ensemble_prob") var too5FemsProb:    Double? = 0.0
+    @Column("too6_pred")                   var too6Pred:        String? = ""
+    @Column("too6_rmd_fems_ensemble_prob") var too6FemsProb:    Double? = 0.0
+    @Column("iscore")                      var iscore:          Double? = 0.0
+    @Column("result")                      var result:          String? = ""
 
     @Id @Transient
     lateinit var _id: AnalysisResultPK

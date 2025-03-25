@@ -77,7 +77,7 @@ class AnalysisQCCrawler(
             jandi.sendWithConnectInfos("QC 결과 업로드가 완료되었습니다. o(￣▽￣)ｄ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
         }
     }
-    private fun sexMapper(sexPred: String) = when(sexPred){
+    private fun sexMapper(sexPred: String?) = when(sexPred){
         "male"     -> "M"
         "female"   -> "F"
         else       -> "?"
