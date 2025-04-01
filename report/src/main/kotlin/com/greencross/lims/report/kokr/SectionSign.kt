@@ -31,7 +31,7 @@ class SectionSign<T: Template<out HasSign>,D: AbstractReportDto>(
             for(person in label.persons(template, dto)){
                 block = TextBlock(style, person!!.name + "(" + person.license+")")
                 if(!signs.containsKey(person)) signs.put(person, PDImageXObject.createFromFileByContent(person.sign, template.resource().doc()))
-                widthTotal += block.width() + SIGN_WIDTH_MAX + 10
+                widthTotal += block.width() + SIGN_WIDTH_MAX
             }
             widthTotal += 20
         }
