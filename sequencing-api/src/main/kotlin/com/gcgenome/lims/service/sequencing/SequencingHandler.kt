@@ -12,17 +12,28 @@ import reactor.core.publisher.Mono
 import java.util.*
 
 @Service
-class SequencingHandler(val repo: WorklistRepository, val repo2: PreprocessingRepository, val repo3: SequencingRepository, val lims1: Lims1Api) {
+class SequencingHandler(
+    val repo: WorklistRepository,
+    val repo2: PreprocessingRepository,
+    val repo3: SequencingRepository,
+    val lims1: Lims1Api
+) {
     @Transactional
     fun sequencing(worklist: Flux<String>): Mono<Boolean> {
         return repo2.findSequencingMax().flatMap { idx ->
-            val seq = idx+1
+            val seq = idx + 1
             worklist.map(UUID::fromString)
                 .collectList().flatMap {
-                    validation(it, "PENDING", "HOLDING").flatMap { valid -> if (valid) Mono.just(it) else Mono.error(RuntimeException()) }
-                }.flatMapMany { toParam(it) }.sort().map { it.apply {
-                    it.sequencing.stream().forEach { it.sequencing_ = seq }
-                } }.collectList()
+                    validation(it, "PENDING", "HOLDING").flatMap { valid ->
+                        if (valid) Mono.just(it) else Mono.error(
+                            RuntimeException()
+                        )
+                    }
+                }.flatMapMany { toParam(it) }.sort().map {
+                    it.apply {
+                        it.sequencing.stream().forEach { it.sequencing_ = seq }
+                    }
+                }.collectList()
                 .flatMap { param ->
                     lims1.createA(param)
                         .flatMap { updateSequencingIdx(param) }
@@ -30,36 +41,72 @@ class SequencingHandler(val repo: WorklistRepository, val repo2: PreprocessingRe
                 }
         }
     }
+
     private fun updateSequencingIdx(param: List<WorklistToBatch.Companion.WorklistToBatchParam>) =
-        Flux.fromIterable(param).flatMap { param->
-            Flux.fromIterable(param.sequencing).flatMap { seq->
+        Flux.fromIterable(param).flatMap { param ->
+            Flux.fromIterable(param.sequencing).flatMap { seq ->
                 repo2.updatePreprocessingSequencingIdx(seq.worklist, seq.index, seq.sequencing_)
             }
         }.collectList()
-    @Transactional(readOnly = true)
-    fun sequencingB(worklist: Flux<String>): Mono<Boolean> =  worklist.map(UUID::fromString)
-        .collectList().flatMap {
-            validation(it, "PENDING_B", "HOLDING_B").flatMap { valid -> if (valid) Mono.just(it) else Mono.error(RuntimeException()) }
-        }.flatMapMany { toParam(it) }.sort().collectList()
-        .flatMap{ param ->
-            lims1.createB(param)
-                .then(shift(param.stream().map { it.worklist }.toList(), "PENDING_B", "HOLDING_B"))
-        }
 
-    private fun validation(worklist:List<UUID>, vararg states: String): Mono<Boolean> {
+    @Transactional(readOnly = true)
+    fun sequencingB(worklist: Flux<String>): Mono<Boolean> {
+        return worklist.map(UUID::fromString).collectList().flatMap { worklists ->
+            repo2.findSequencingByWorklists(worklists).flatMap { savedIdx ->
+                if (savedIdx == 0) {
+                    repo2.findSequencingMax().flatMap { idx ->
+                        val seq = idx + 1
+                        worklist.map(UUID::fromString)
+                            .collectList().flatMap {
+                                validation(it, "PENDING_B", "HOLDING_B").flatMap { valid ->
+                                    if (valid) Mono.just(it) else Mono.error(
+                                        RuntimeException()
+                                    )
+                                }
+                            }.flatMapMany { toParam(it) }.sort().map {
+                                it.apply {
+                                    it.sequencing.stream().forEach { it.sequencing_ = seq }
+                                }
+                            }.collectList()
+                            .flatMap { param ->
+                                lims1.createB(param)
+                                    .flatMap { updateSequencingIdx(param) }
+                                    .then(shift(param.stream().map { it.worklist }.toList(), "PENDING_B", "HOLDING_B"))
+                            }
+                    }
+                } else {
+                    worklist.map(UUID::fromString)
+                        .collectList().flatMap {
+                            validation(it, "PENDING_B", "HOLDING_B").flatMap { valid ->
+                                if (valid) Mono.just(it) else Mono.error(
+                                    RuntimeException()
+                                )
+                            }
+                        }.flatMapMany { toParam(it) }.sort().collectList()
+                        .flatMap { param ->
+                            lims1.createB(param)
+                                .then(shift(param.stream().map { it.worklist }.toList(), "PENDING_B", "HOLDING_B"))
+                        }
+                }
+            }
+        }
+    }
+
+    private fun validation(worklist: List<UUID>, vararg states: String): Mono<Boolean> {
         // worklists의 Preprocessing.state가 states 안에 있는지 확인
         // 단순 쿼리로 처리해도 무방
         return Mono.just(true)
     }
-    private fun shift(worklists:List<Worklist>, vararg states: String): Mono<Boolean> =
+
+    private fun shift(worklists: List<Worklist>, vararg states: String): Mono<Boolean> =
         Flux.fromIterable(worklists).flatMap {
-            Flux.fromArray(states).flatMap{ state ->
+            Flux.fromArray(states).flatMap { state ->
                 repo2.shiftPreprocessingState(it.id, state, shift(state))
             }
         }.last().then(Mono.just(true))
 
 
-    private fun shift(state: String): String = when(state) {
+    private fun shift(state: String): String = when (state) {
         "PENDING" -> "PENDING_B"
         "HOLDING" -> "HOLDING_B"
         "PENDING_B" -> "COMPLETE"
@@ -73,7 +120,7 @@ class SequencingHandler(val repo: WorklistRepository, val repo2: PreprocessingRe
             val findSequencing: Mono<List<Sequencing>> = repo3.findAllByWorklist(it)
                 .sort(Comparator.comparing(Sequencing::index))
                 .filter(Sequencing::qc)
-                .filter{ it.state.startsWith("PENDING") }
+                .filter { it.state.startsWith("PENDING") }
                 .collectList()
             Mono.zip(findWorklist, findSequencing)
         }.map { WorklistToBatch.Companion.WorklistToBatchParam(it.t1, it.t2) }
