@@ -49,13 +49,13 @@ abstract class CancerchResourceEnUs(doc: PDDocument): CancerchResource, HasSignE
     override fun labels(): Array<HasSign.SignLabel> {
         return arrayOf(
             object : HasSign.SignLabel {
-                override fun label(): String { return "Tester:" }
+                override fun label(): String { return "Tested by:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
                     return arrayOf(person("김다솜"))
                 }
             },
             object : HasSign.SignLabel {
-                override fun label(): String { return "Confirmed by:" }
+                override fun label(): String { return "Reported by/Reviewed by:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<HasSign.Person?> {
                     return arrayOf(person("조은해"), person("설창안"))
                 }

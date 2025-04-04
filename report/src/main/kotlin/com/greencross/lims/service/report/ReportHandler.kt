@@ -25,6 +25,7 @@ import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN256KoKr
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.gcgenome.lims.report.func.Painter
+import com.greencross.lims.report.enus.SectionFooterEngGenomeLabsNotColorBar
 import com.greencross.lims.report.kokr.*
 import com.greencross.lims.report.kokr.SectionSign
 import com.greencross.lims.service.analysis.AnalysisDao
@@ -420,7 +421,7 @@ class ReportHandler(
         } else if (TestInfo.ON203.code() == service) {
             val resource = CancerchResourceON203EnUs(doc)
             val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeLabsNotColorBar()
             page = SectionPage(547f, 65f, resource.fontDefault())
             return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
         } else {
