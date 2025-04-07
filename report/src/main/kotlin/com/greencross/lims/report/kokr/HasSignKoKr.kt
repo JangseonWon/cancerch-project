@@ -16,8 +16,8 @@ interface HasSignKoKr: HasSign {
         )
 
         val MDS: Array<Person> = arrayOf(
-            Person("조은해 M.D", "690", File(resource, "/img/sign/enus/조은해.png")),
-            Person("설창안 M.D", "1037", File(resource, "/img/sign/enus/설창안.png")),
+            Person("조은해 M.D", "690", File(resource, "/img/sign/kokr/조은해.png")),
+            Person("설창안 M.D", "1037", File(resource, "/img/sign/kokr/설창안.png")),
         )
     }
 

@@ -138,7 +138,7 @@ class GangbukSectionAnalysisCommentEnUs(private var y: Float = -20f) : Painter<C
                 )
             }
         }
-
+        stream.restoreGraphicsState()
         return stream
     }
 

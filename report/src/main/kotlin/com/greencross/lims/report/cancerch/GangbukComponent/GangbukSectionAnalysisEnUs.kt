@@ -126,6 +126,7 @@ class GangbukSectionAnalysisEnUs(private val y: Float = 200f) : Painter<Cancerch
                 )
             }
         }
+        stream.restoreGraphicsState()
         return stream
     }
 }

@@ -164,6 +164,7 @@ class GangbukSectionGuideLineEnUs(private var y: Float = 310f) : Painter<Cancerc
 
             stream.paragraph(420f, y+ RESULT_CONTENT_LOW_RATE -198, 230f, AlignHorizontal.LEFT, TextBlock(styleRegular.clone().color(Color(55,55,55)).fontSize(6f), "*Pack-years: Average daily smoking amount (packs)"))
         }
+        stream.restoreGraphicsState()
         return stream
     }
     private fun lblGuideLineTableHeader2(stream: PDPageContentStreamPageAccessible, y: Float, rate: Float, dto: CancerchDto, template: CancerchTemplate<CancerchResource>?) {

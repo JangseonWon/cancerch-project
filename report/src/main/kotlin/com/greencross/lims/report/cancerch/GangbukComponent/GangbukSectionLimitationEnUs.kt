@@ -247,6 +247,7 @@ class GangbukSectionLimitationEnUs(private var y: Float = 755f) : Painter<Cancer
         stream.paragraph(297f, y-40, 600f, AlignHorizontal.CENTER,
             TextBlock(template.resource().styleContentRegualar().clone().color(Color(151,151,151)).fontSize(6.5f), "※This test was developed and its performance characteristics determined by GC Genome."),
         )
+        stream.restoreGraphicsState()
         return stream
     }
 
