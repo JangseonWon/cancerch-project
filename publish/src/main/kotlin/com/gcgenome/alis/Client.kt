@@ -62,7 +62,7 @@ class Client(
                         request.service + "010",
                         if(isKangbukRequest(request)) convertResultKangbuk(resultInfo.result)
                         else resultInfo.result,
-                        resultInfo.resultType,
+                        "",
                         resultInfo.comment?:""
                     )
                 )
