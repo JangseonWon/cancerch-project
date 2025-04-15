@@ -21,7 +21,7 @@ class SectionAnalysisComment(private val y: Float = 20f) : Painter<CancerchTempl
         val styleBold = template.resource().styleContentBold().clone().fontSize(9f)
         val blackbold = styleBold.clone().color(Color(11, 11, 11)).fontSize(9f)
 
-        stream.line(47f,493f, 542f, 493f).setLineWidth(0.4f).setStrokingColor(Color(67, 72, 142)).stroke()
+        stream.line(47f,513f, 542f, 513f).setLineWidth(0.4f).setStrokingColor(Color(67, 72, 142)).stroke()
         if (CancerchDto.Results.GENERAL == dto!!.result) {
             stream.paragraph(
                 52f,
