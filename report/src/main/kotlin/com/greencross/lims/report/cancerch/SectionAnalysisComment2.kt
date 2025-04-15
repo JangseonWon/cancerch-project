@@ -8,7 +8,7 @@ import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 import kotlin.math.round
 
-class SectionAnalysisComment2(private var y: Float = 0f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class SectionAnalysisComment2(private var y: Float = 20f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
 
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,

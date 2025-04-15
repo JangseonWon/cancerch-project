@@ -10,7 +10,7 @@ import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 import kotlin.math.round
 
-class SectionCancerTypeDanger(private val y: Float = 745f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class SectionCancerTypeDanger(private val y: Float = 765f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: CancerchTemplate<CancerchResource>?,

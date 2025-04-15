@@ -93,8 +93,9 @@ class ReportHandler(
                     //캔서치검사 분기
                     "ON203" -> build(analysisToEnUsCancerchDto(zipped.t1),
                         if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
-                    else -> build(analysisToKoKrCancerchDto(zipped.t1),
+                    "N203", "N204", "N205", "N206" -> build(analysisToKoKrCancerchDto(zipped.t1),
                         if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
+                    else -> throw Exception("등록되지 않은 검사코드 : "+zipped.t1.sample+"/"+zipped.t1.service)
                 }
 
                 val createTime = LocalDateTime.ofInstant(
@@ -365,7 +366,7 @@ class ReportHandler(
             }
 
             TestInfo.ON256.code() -> {
-                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
                 val resource = CancerchResourceON256EnUs(doc)
                 val template = CancerchTemplateON256EnUs(resource, TestInfo.ON256)
                 page = SectionPage(547f, 65f, resource.fontDefault())

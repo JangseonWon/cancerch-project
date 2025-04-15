@@ -23,9 +23,8 @@ class SectionFooterGenomeNotColorBar<T: Template<out HasSign>, D: AbstractReport
     ): PDPageContentStreamPageAccessible {
         if(img == null){
             val src: BufferedImage = ImageIO.read(File(resource, "/img/footer.png"))
-            val dest: BufferedImage = src.getSubimage(0, 0, src.width, src.height-80)
             val baos = ByteArrayOutputStream()
-            ImageIO.write(dest, "png", baos)
+            ImageIO.write(src, "png", baos)
             img = PDImageXObject.createFromByteArray(template.resource().doc(), baos.toByteArray(), "footer.png")
         }
 

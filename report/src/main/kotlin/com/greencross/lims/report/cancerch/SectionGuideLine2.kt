@@ -9,7 +9,7 @@ import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
 import com.gcgenome.lims.report.func.Painter
 import java.awt.Color
 
-class SectionGuideLine2(private var y: Float = 329f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
+class SectionGuideLine2(private var y: Float = 349f) : Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
     override fun paint(
         stream: PDPageContentStreamPageAccessible?,
         template: CancerchTemplate<CancerchResource>?,

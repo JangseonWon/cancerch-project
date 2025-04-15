@@ -9,7 +9,7 @@ import java.awt.Color
 import java.io.File
 import java.io.IOException
 
-interface CancerchResource  : HasSign {
+interface CancerchResource : HasSign {
     fun colorPrimary(): Color
     fun colorPrimaryStroke(): Color
     fun colorGray():    Color { return Color.decode("0xEFEFEF") }

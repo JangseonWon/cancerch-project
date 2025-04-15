@@ -8,8 +8,7 @@ import org.apache.pdfbox.pdmodel.PDDocument
 abstract class CancerchPageBuilder<T : CancerchTemplate<in CancerchResource>>(
     template: T,
     dto: CancerchDto
-) :
-    Page<T>(template) {
+) : Page<T>(template) {
     val builder: PageBuilder<CancerchTemplate<CancerchResource>, CancerchDto>
 
     abstract fun template(): Painter<CancerchTemplate<CancerchResource>, CancerchDto>
