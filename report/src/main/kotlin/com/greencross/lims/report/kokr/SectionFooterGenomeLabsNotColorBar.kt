@@ -7,6 +7,7 @@ import com.greencross.lims.report.builder.Util
 import com.gcgenome.lims.report.func.PDPageContentStreamPageAccessible
 import com.gcgenome.lims.report.func.Painter
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -30,6 +31,7 @@ class SectionFooterGenomeLabsNotColorBar<T: Template<out HasSign>, D: AbstractRe
 
         stream!!.saveGraphicsState();
         Util.icon(stream, img!!, 0f, 64f, 595f, 100f)
+        stream.setLineWidth(5f).setStrokingColor(Color(84, 151, 87)).setNonStrokingColor(Color(84, 151, 87)).moveTo(25f, 59f).lineTo(565f,59f).fill()
         stream.restoreGraphicsState()
         return stream
     }
