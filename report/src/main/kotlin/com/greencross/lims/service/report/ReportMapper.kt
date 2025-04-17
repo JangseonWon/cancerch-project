@@ -83,7 +83,7 @@ class ReportMapper(private val om: ObjectMapper) {
             sb.append("■ 6종 암 중 인공지능 예측 암종 : ${if (result != "집중관리") "해당없음" else predictedCancer}\n")
             sb.append("■ 기타 소견 : ${if (comment.trim() == "") "-" else comment}\n")
             sb.append("■ 가이드라인 : $guideline\n")
-            sb.append("■ 검사자 : 김다솜 / 확인자 : 조은해\n")
+            sb.append("■ 검사자 : 김다솜 / 보고자, 검토자 : 조은해, 설창안\n")
 
             return sb.toString().replace("\n", "\\n").replace("\"", "\\\"")
         } else return "-"

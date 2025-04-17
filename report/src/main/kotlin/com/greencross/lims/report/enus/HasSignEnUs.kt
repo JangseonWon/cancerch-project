@@ -23,7 +23,7 @@ interface HasSignEnUs: HasSign {
     fun fontDefault(): PDFont?
     fun colorText(): Color?
     override fun stylePerson(): TextStyle {
-        return TextStyle().fonts(fontDefault()).color(colorText()).fontSize(8f).paragraph(false)
+        return TextStyle().fonts(fontDefault()).color(colorText()).fontSize(7f).paragraph(false)
     }
 
     override fun person(name: String): HasSign.Person? {

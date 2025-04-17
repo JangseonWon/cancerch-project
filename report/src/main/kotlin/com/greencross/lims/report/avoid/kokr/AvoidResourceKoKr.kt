@@ -56,9 +56,9 @@ abstract class AvoidResourceKoKr(doc: PDDocument): AvoidResource, HasSignKoKr, H
                 }
             },
             object : SignLabel {
-                override fun label(): String { return "확인자:" }
+                override fun label(): String { return "보고자/검토자:" }
                 override fun persons(template: Template<*>, dto: AbstractReportDto): Array<Person?> {
-                    return arrayOf(person("조은해"))
+                    return arrayOf(person("조은해"), person("설창안"))
                 }
             }
         )

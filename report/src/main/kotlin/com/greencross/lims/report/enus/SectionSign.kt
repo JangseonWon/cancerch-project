@@ -1,4 +1,4 @@
-package com.greencross.lims.report.kokr
+package com.greencross.lims.report.enus
 
 import com.greencross.lims.report.HasSign
 import com.gcgenome.lims.report.Template
@@ -48,9 +48,8 @@ class SectionSign<T: Template<out HasSign>,D: AbstractReportDto>(
                 val sign = signs.get(person)
                 Util.icon(stream, sign!!, x+block.width() + 2, y+SIGN_HEIGHT_MAX, SIGN_WIDTH_MAX, SIGN_HEIGHT_MAX)
                 stream.paragraph(x, y+SIGN_HEIGHT_MAX/2, block.width(), MIDDLE, block)
-                x += block.width() + SIGN_WIDTH_MAX + 10
+                x += block.width() + SIGN_WIDTH_MAX
             }
-            x += 20
         }
         stream.restoreGraphicsState()
         return stream

@@ -36,7 +36,7 @@ class CancerchN203(
     override fun pages(): Painter<CancerchTemplate<CancerchResource>, CancerchDto> {
         return template().and(intro).and(totalResult).and(predictCancer).and(analysis)
             .and { s, t, d -> newPage(s) }.and(templateWithoutTitle()).and(cancerTypeDanger).and(analysisComment).and(guideLine)
-            .and { s, t, d -> newPage(s) }.and(templateWithoutTitle()).and(limitation)
+            .and { s, t, d -> newPage(s) }.and(templateWithoutTitle()).and(limitation).and(page)
     }
 
 }

@@ -57,8 +57,8 @@ open class Util {
             icon: PDImageXObject,
             x: Float,
             y: Float,
-            HEADER_WIDTH: Float,
-            HEADER_HEIGHT: Float
+            HEADER_WIDTH: Float, //595
+            HEADER_HEIGHT: Float //100
         ) {
             val scaleHeight = icon.height * HEADER_WIDTH / icon.width
             if (scaleHeight <= HEADER_HEIGHT) stream.drawImage(icon, x, y - scaleHeight, HEADER_WIDTH, scaleHeight)

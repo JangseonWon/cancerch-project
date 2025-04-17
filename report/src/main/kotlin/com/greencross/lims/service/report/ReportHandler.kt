@@ -353,11 +353,12 @@ class ReportHandler(
     private fun buildGangbuk(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
-        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
         when (service) {
             TestInfo.N256.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
                 val resource = CancerchResourceN256KoKr(doc)
                 val template = CancerchTemplateN256KoKr(resource, TestInfo.N256)
@@ -366,6 +367,7 @@ class ReportHandler(
             }
 
             TestInfo.ON256.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
                 val resource = CancerchResourceON256EnUs(doc)
                 val template = CancerchTemplateON256EnUs(resource, TestInfo.ON256)
@@ -384,10 +386,11 @@ class ReportHandler(
     private fun builderGenome(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
-        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
         if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
+            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
             val resource = CancerchResourceN203KoKr(doc)
             val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
@@ -395,6 +398,7 @@ class ReportHandler(
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else if (TestInfo.ON203.code() == service) {
+            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
             val resource = CancerchResourceON203EnUs(doc)
             val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
@@ -409,10 +413,10 @@ class ReportHandler(
 
     private fun builderLabsGenome(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
-        val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
         if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
+            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
             val resource = CancerchResourceN203KoKr(doc)
             val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
@@ -420,6 +424,7 @@ class ReportHandler(
 
             return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
         } else if (TestInfo.ON203.code() == service) {
+            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
             val resource = CancerchResourceON203EnUs(doc)
             val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
             val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeLabsNotColorBar()
