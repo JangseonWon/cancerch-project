@@ -11,12 +11,12 @@ interface HasSignEnUs: HasSign {
         val resource = File("/data/lims/resources")
 
         val MTS: Array<HasSign.Person> = arrayOf(
-            HasSign.Person("Da-Som Kim MT", "45102", File(resource, "/img/sign/enus/김다솜.png"))
+            HasSign.Person("Da-Som Kim M.T.", "45102", File(resource, "/img/sign/enus/김다솜.png"))
         )
 
         val MDS: Array<HasSign.Person> = arrayOf(
-            HasSign.Person("Eun-hae Cho MD", "690", File(resource, "/img/sign/enus/조은해.png")),
-            HasSign.Person("Chang-ahn Seol MD", "1037", File(resource, "/img/sign/enus/설창안.png")),
+            HasSign.Person("Eun-hae Cho M.D.", "690", File(resource, "/img/sign/enus/조은해.png")),
+            HasSign.Person("Chang-ahn Seol M.D.", "1037", File(resource, "/img/sign/enus/설창안.png")),
         )
     }
 

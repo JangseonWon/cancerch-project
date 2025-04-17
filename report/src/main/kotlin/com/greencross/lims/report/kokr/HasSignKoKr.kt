@@ -12,12 +12,12 @@ interface HasSignKoKr: HasSign {
         val resource = File("/data/lims/resources")
 
         val MTS: Array<Person> = arrayOf(
-            Person("김다솜 M.T", "45102", File(resource, "/img/sign/enus/김다솜.png"))
+            Person("김다솜 M.T.", "45102", File(resource, "/img/sign/enus/김다솜.png"))
         )
 
         val MDS: Array<Person> = arrayOf(
-            Person("조은해 M.D", "690", File(resource, "/img/sign/enus/조은해.png")),
-            Person("설창안 M.D", "1037", File(resource, "/img/sign/enus/설창안.png")),
+            Person("조은해 M.D.", "690", File(resource, "/img/sign/enus/조은해.png")),
+            Person("설창안 M.D.", "1037", File(resource, "/img/sign/enus/설창안.png")),
         )
     }
 
