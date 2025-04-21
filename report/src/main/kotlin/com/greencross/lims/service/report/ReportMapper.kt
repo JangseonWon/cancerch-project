@@ -70,7 +70,7 @@ class ReportMapper(private val om: ObjectMapper) {
     }
     private fun createTextReport(service: String, result: String, predictedCancer: String, comment: String): String {
         val sb = StringBuilder()
-        if(service == "N203") {
+        if(service == "N203" || service == "J024") {
             val guideline = when(result) {
                 "일반관리" -> "-"
                 "관심관리" -> "아이캔서치 검사 모니터링 권장 기간 : 3개월 후"
