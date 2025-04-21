@@ -87,13 +87,13 @@ class ReportHandler(
                     "N201"  -> build(analysisToAvoidDto(zipped.t1))
 
                     //강북삼성 종양DNA검사 분기
-                    "N256"  -> build(analysisToKoKrCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
+                    "N256", "J001", "J002"  -> build(analysisToKoKrCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
                     "ON256" -> build(analysisToEnUsCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
 
                     //캔서치검사 분기
                     "ON203" -> build(analysisToEnUsCancerchDto(zipped.t1),
                         if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
-                    "N203", "N204", "N205", "N206" -> build(analysisToKoKrCancerchDto(zipped.t1),
+                    "N203", "N204", "N205", "N206", "J024" -> build(analysisToKoKrCancerchDto(zipped.t1),
                         if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
                     else -> throw Exception("등록되지 않은 검사코드 : "+zipped.t1.sample+"/"+zipped.t1.service)
                 }
@@ -320,7 +320,6 @@ class ReportHandler(
             else americanAge.toInt()
         }
     }
-
     private fun sex(sex: String): Sex {
         return Sex.valueOf(sex)
     }
@@ -339,25 +338,21 @@ class ReportHandler(
 
     private fun builder(dto: AvoidDto): AvoidPageBuilder<*>? {
         val doc = PDDocument()
-        val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
-        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
-        val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto>
         val resource = AvoidResourceN201KoKr(doc)
         val template = AvoidTemplateN201KoKr(resource, TestInfo.N201)
-
-        page = SectionPage(547f, 65f, resource.fontDefault())
+        val sign: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionSign(65f)
+        val footer: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionFooterGenome()
+        val page: Painter<AvoidTemplate<AvoidResource>, AvoidDto> = SectionPage(547f, 65f, resource.fontDefault())
 
         return AvoidN201(template as AvoidTemplateN201<AvoidResource>, dto, sign, footer, page)
     }
 
     private fun buildGangbuk(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
-
-
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
         when (service) {
-            TestInfo.N256.code() -> {
+            TestInfo.N256.code(), TestInfo.J001.code(), TestInfo.J002.code() -> {
                 val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
                 val resource = CancerchResourceN256KoKr(doc)
@@ -365,7 +360,6 @@ class ReportHandler(
                 page = SectionPage(547f, 65f, resource.fontDefault())
                 return CancerchGangbukKoKr(template as CancerchTemplateN256<CancerchResource>, dto, sign, footer, page)
             }
-
             TestInfo.ON256.code() -> {
                 val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
@@ -375,39 +369,35 @@ class ReportHandler(
 
                 return CancerchGangbukEnUs(template as CancerchTemplateON256<CancerchResource>, dto, sign, footer, page)
             }
-
-            else -> {
-                logger.warn("ERROR : Unknown Service Code : " + service)
-                return null
-            }
+            else -> throw Exception("ERROR : Unknown Service Code : " + service)
         }
     }
 
     private fun builderGenome(service: String, dto: CancerchDto): CancerchPageBuilder<*>? {
         val doc = PDDocument()
-
-
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
-            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
-            val resource = CancerchResourceN203KoKr(doc)
-            val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
-            page = SectionPage(547f, 65f, resource.fontDefault())
+        when(service) {
+            TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+                val resource = CancerchResourceN203KoKr(doc)
+                val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
+                page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
-        } else if (TestInfo.ON203.code() == service) {
-            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
-            val resource = CancerchResourceON203EnUs(doc)
-            val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
-            page = SectionPage(547f, 65f, resource.fontDefault())
+                return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+            }
 
-            return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
-        } else {
-            logger.warn("ERROR : Unknown Service Code : " + service)
-            return null
+            TestInfo.ON203.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+                val resource = CancerchResourceON203EnUs(doc)
+                val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
+                page = SectionPage(547f, 65f, resource.fontDefault())
+
+                return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
+            }
+            else -> throw Exception("ERROR : Unknown Service Code : " + service)
         }
     }
 
@@ -415,24 +405,25 @@ class ReportHandler(
         val doc = PDDocument()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        if (TestInfo.N203.code() == service || TestInfo.N204.code() == service || TestInfo.N205.code() == service || TestInfo.N206.code() == service) {
-            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
-            val resource = CancerchResourceN203KoKr(doc)
-            val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
-            page = SectionPage(547f, 65f, resource.fontDefault())
+        when(service) {
+            TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code(), TestInfo.J024.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
+                val resource = CancerchResourceN203KoKr(doc)
+                val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
+                page = SectionPage(547f, 65f, resource.fontDefault())
 
-            return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
-        } else if (TestInfo.ON203.code() == service) {
-            val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
-            val resource = CancerchResourceON203EnUs(doc)
-            val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeLabsNotColorBar()
-            page = SectionPage(547f, 65f, resource.fontDefault())
-            return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
-        } else {
-            logger.warn("ERROR : Unknown Service Code : " + service)
-            return null
+                return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
+            }
+            TestInfo.ON203.code() -> {
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
+                val resource = CancerchResourceON203EnUs(doc)
+                val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeLabsNotColorBar()
+                page = SectionPage(547f, 65f, resource.fontDefault())
+                return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
+            }
+            else -> throw Exception("ERROR : Unknown Service Code : " + service)
         }
     }
 

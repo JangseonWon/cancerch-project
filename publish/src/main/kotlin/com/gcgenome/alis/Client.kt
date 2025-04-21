@@ -68,7 +68,7 @@ class Client(
                 )
             )
         )
-        if(request.service == "N203" || request.service == "N205") {
+        if(request.service == "N203" || request.service == "N205" || request.service == "J024") {
             requests.add(
                 AlisRequest(
                     fileId = file.toString(),
