@@ -56,18 +56,15 @@ class SequencingHandler(
                 if (savedIdx == 0) {
                     repo2.findSequencingMax().flatMap { idx ->
                         val seq = idx + 1
-                        worklist.map(UUID::fromString)
-                            .collectList().flatMap {
-                                validation(it, "PENDING_B", "HOLDING_B").flatMap { valid ->
-                                    if (valid) Mono.just(it) else Mono.error(
-                                        RuntimeException()
-                                    )
-                                }
-                            }.flatMapMany { toParam(it) }.sort().map {
-                                it.apply {
-                                    it.sequencing.stream().forEach { it.sequencing_ = seq }
-                                }
-                            }.collectList()
+                        validation(worklists, "PENDING_B", "HOLDING_B").flatMap { valid ->
+                            if (valid) Mono.just(worklists) else Mono.error(
+                                RuntimeException()
+                            )
+                        }.flatMapMany { toParam(it) }.sort().map {
+                            it.apply {
+                                it.sequencing.stream().forEach { it.sequencing_ = seq }
+                            }
+                        }.collectList()
                             .flatMap { param ->
                                 lims1.createB(param)
                                     .flatMap { updateSequencingIdx(param) }
