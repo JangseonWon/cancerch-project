@@ -8,6 +8,7 @@ import com.greencross.lims.report.cancerch.kokr.CancerchResourceN203KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN203KoKr
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.gcgenome.lims.report.func.Painter
+import com.greencross.lims.report.kokr.SectionFooterGenomeLabsNotColorBar
 import com.greencross.lims.report.kokr.SectionFooterGenomeNotColorBar
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
@@ -21,14 +22,14 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class CancerchN203ReportTest {
     var code = "375"
-    var patient: String = "홍길동"
-    var birth: Int = 2001
-    var collection: LocalDate = LocalDate.of(2024,8,22)
-    var sex: Sex = Sex.F
+    var patient: String = "결과지검증3"
+    var birth: Int = 1964
+    var collection: LocalDate = LocalDate.of(2025,4,10)
+    var sex: Sex = Sex.M
     var receipt: LocalDate = collection
     var cancer= CancerchRepo.암종.대장암
-    var barcode: String = "CR3-$code"
-    var request: String = "20240822-171-0001"
+    var barcode: String = "111111"
+    var request: String = "20250410-100-0003"
     val comment: String = ""
     fun test() {
         val doc: PDDocument? = build(null, "ko-kr")
@@ -69,38 +70,40 @@ class CancerchN203ReportTest {
         val repo: CancerchRepo = CancerchRepo()
         return builder(
             TestInfo.N203, type,
-            CancerchDto("",
-                CancerchDto.Results.RISK,
-                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.RISK,
+//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,7,22), collection).toInt(), sex)!!,
+//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,7,22), collection).toInt(), sex)!!, 95.5, comment)))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.CONCERN,
 //                CancerchDto.Cancer("기타암종")))?.build()
-//            CancerchDto("",
-//                CancerchDto.Results.GENERAL,
-//                CancerchDto.Cancer()))?.build()
+            CancerchDto("",
+                CancerchDto.Results.GENERAL,
+                CancerchDto.Cancer()))?.build()
     }
+
     private fun builder(test: TestInfo, logo: LogoType, dto: CancerchDto) : CancerchPageBuilder<*>? {
         val doc = PDDocument()
 
         //변경점
         dto.patientName = this.patient
-        dto.birthDate = LocalDate.of(this.birth,1,1)
+        dto.birthDate = LocalDate.of(this.birth,7,22)
         dto.sex = this.sex
         dto.requestNumber = this.request
         dto.collectionDate = this.collection
         dto.receiptDate = this.receipt
 
 //        dto.barcode = dto.barcode
-        dto.medicalInstitution = "GC지놈"
+        dto.medicalInstitution = "결과지검증"
         dto.medicalRecordNumber = barcode
-        dto.specimenType = "Whole Blood"
+        dto.specimenType = "WB"
 
-        dto.reportDate = LocalDate.of(2024,9,11)
+        dto.reportDate = LocalDate.of(2025,4,10)
         dto.age = age(dto.birthDate, dto.collectionDate).toString()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+//        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
+        val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
         return if(TestInfo.N203 == test){
 
             val resource = CancerchResourceN203KoKr(doc)

@@ -7,8 +7,8 @@ import com.greencross.lims.report.builder.Sex
 import com.greencross.lims.report.cancerch.*
 import com.greencross.lims.report.cancerch.kokr.CancerchResourceN256KoKr
 import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN256KoKr
-import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.gcgenome.lims.report.func.Painter
+import com.greencross.lims.report.kokr.SectionFooterGenomeNotColorBar
 import com.greencross.lims.report.kokr.SectionPage
 import com.greencross.lims.report.kokr.SectionSign
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -21,15 +21,15 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class CancerchN256ReportTest {
     var code = "375"
-    var patient: String = "홍길동"
-    var birth: Int = 2001
-    var collection: LocalDate = LocalDate.of(2024,4,22)
+    var patient: String = "샘플결과지"
+    var birth: Int = 1960
+    var collection: LocalDate = LocalDate.of(2025,4,10)
     var sex: Sex = Sex.F
     var receipt: LocalDate = collection
-    var cancer= CancerchRepo.암종.기타암종
-    var barcode: String = "CR3-$code"
-    var request: String = "20231011-971-0001"
-    val comment: String = "ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ ㅁㅁㅁㅁㅁ"
+    var cancer= CancerchRepo.암종.대장암
+    var barcode: String = "111111"
+    var request: String = "20250410-100-0000"
+    val comment: String = ""
 
     fun test() {
         val doc: PDDocument? = build(null, "ko-kr")
@@ -72,13 +72,13 @@ class CancerchN256ReportTest {
         val repo: CancerchRepo = CancerchRepo()
         return builder(
             TestInfo.N256, type,
-//            CancerchDto("",
-//                CancerchDto.Results.RISK,
-//                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!,
-//                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,1,1), collection).toInt(), sex)!!, 95.5, comment)))?.build()
             CancerchDto("",
-                CancerchDto.Results.CONCERN,
-                CancerchDto.Cancer("기타암종")))?.build()
+                CancerchDto.Results.RISK,
+                CancerchDto.Cancer(cancer.name, repo.findPPVbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,12,13), collection).toInt(), sex)!!,
+                    repo.findASRbyAgeAndCancerAndSex(cancer, age(LocalDate.of(this.birth,12,13), collection).toInt(), sex)!!, 95.5, comment)))?.build()
+//            CancerchDto("",
+//                CancerchDto.Results.CONCERN,
+//                CancerchDto.Cancer("기타암종")))?.build()
 //            CancerchDto("",
 //                CancerchDto.Results.GENERAL,
 //                CancerchDto.Cancer()))?.build()
@@ -88,24 +88,24 @@ class CancerchN256ReportTest {
 
         //변경점
         dto.patientName = this.patient
-        dto.birthDate = LocalDate.of(this.birth,1,1)
+        dto.birthDate = LocalDate.of(this.birth,12,13)
         dto.sex = this.sex
         dto.requestNumber = this.request
         dto.collectionDate = this.collection
         dto.receiptDate = this.receipt
 
 //        dto.barcode = dto.barcode
-        dto.medicalInstitution = "GC Genome"
+        dto.medicalInstitution = "샘플결과지"
         dto.medicalRecordNumber = barcode
-        dto.specimenType = "Whole Blood"
+        dto.specimenType = "WB"
 
-        dto.reportDate = LocalDate.of(2022,11,3)
+        dto.reportDate = LocalDate.of(2025,4,11)
         dto.age = age(dto.birthDate, dto.collectionDate).toString()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
         val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
 
         return if(TestInfo.N256 == test) {
-            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+            val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
             val resource = CancerchResourceN256KoKr(doc)
             val template = CancerchTemplateN256KoKr(resource, test)
 
