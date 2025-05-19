@@ -378,7 +378,7 @@ class ReportHandler(
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
         when(service) {
-            TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code() -> {
+            TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code(), TestInfo.J024.code() -> {
                 val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
                 val resource = CancerchResourceN203KoKr(doc)
