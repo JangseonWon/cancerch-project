@@ -32,10 +32,10 @@ class GangbukSectionTitleEnUs(private val y: Float = 745f) : Painter<CancerchTem
         stream.drawImage(img, 383f - width / 2, y - 19, 354f, TITLE_HEADERBOX_HEIGHT)
 
         stream.paragraph(215f, y + 50f,     70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Institution"))
-        stream.paragraph(215f, y + 20.6f,   70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Receipt No."))
+        stream.paragraph(215f, y + 20.6f,   70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Registration No."))
         stream.paragraph(215f, y + 35.3f,   70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Name"))
         stream.paragraph(215f, y + 5.6f,    70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Age/Gender"))
-        stream.paragraph(386f, y + 20.6f,   70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Registration No."))
+        stream.paragraph(386f, y + 20.6f,   70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Receipt No."))
         stream.paragraph(386f, y + 5.6f,    70f,  AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Sample Type"))
         stream.paragraph(215f, y - 9.4f,    100f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Sample Collection Date"))
         stream.paragraph(386f, y - 9.4f,    100f, AlignHorizontal.LEFT, TextBlock(template.resource().styleContentBold().fontSize(6.5f), "Receipt/Report Date"))
