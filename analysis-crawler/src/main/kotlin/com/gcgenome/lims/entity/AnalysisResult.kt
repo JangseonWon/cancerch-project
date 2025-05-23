@@ -31,7 +31,7 @@ data class AnalysisResult(
     @Column("iscore")
              var iscore: Double = 0.0
     @Column("result")
-             var result: String = ""
+             var result: String? = ""
     @Column("fems_cov_bc")
              var femsCovBc: Double = 0.0
     @Column("fems_bc")
