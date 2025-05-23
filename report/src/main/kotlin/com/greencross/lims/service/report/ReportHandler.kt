@@ -25,6 +25,25 @@ import com.greencross.lims.report.cancerch.kokr.CancerchTemplateN256KoKr
 import com.greencross.lims.report.cancerch.repository.CancerchRepo
 import com.greencross.lims.report.enus.SectionFooterEngGenomeNotColorBar
 import com.gcgenome.lims.report.func.Painter
+import com.greencross.lims.report.ON204.*
+import com.greencross.lims.report.ON204.enus.resource.DNACXResourceON204EnUs
+import com.greencross.lims.report.ON204.enus.template.DNACXTemplateON204EnUs
+import com.greencross.lims.report.ON204.jajp.resource.DNACXResourceON204JaJp
+import com.greencross.lims.report.ON204.jajp.template.DNACXTemplateON204JaJp
+import com.greencross.lims.report.ON204.resource.DNACXResource
+import com.greencross.lims.report.ON204.template.DNACXTemplate
+import com.greencross.lims.report.ON204.template.DNACXTemplateON204
+import com.greencross.lims.report.ON206.DNACTDto
+import com.greencross.lims.report.ON206.DNACTON206EnUs
+import com.greencross.lims.report.ON206.DNACTON206JaJp
+import com.greencross.lims.report.ON206.DNACTPageBuilder
+import com.greencross.lims.report.ON206.enus.resource.DNACTResourceON206EnUs
+import com.greencross.lims.report.ON206.enus.template.DNACTTemplateON206EnUs
+import com.greencross.lims.report.ON206.jajp.resource.DNACTResourceON206JaJp
+import com.greencross.lims.report.ON206.jajp.template.DNACTTemplateON206JaJp
+import com.greencross.lims.report.ON206.resource.DNACTResource
+import com.greencross.lims.report.ON206.template.DNACTTemplate
+import com.greencross.lims.report.ON206.template.DNACTTemplateON206
 import com.greencross.lims.report.enus.SectionFooterEngGenomeLabsNotColorBar
 import com.greencross.lims.report.kokr.*
 import com.greencross.lims.report.kokr.SectionSign
@@ -74,69 +93,92 @@ class ReportHandler(
             }
     }
 
+    private fun createReport(analysisList: List<Analysis>): ReportFile {
+        val baos = ByteArrayOutputStream()
+        val targetAnalysis = analysisList.first()
+        val doc = when (targetAnalysis.service) {
+            //AVOID 검사 분기
+            "N201" -> build(analysisToAvoidDto(targetAnalysis))
+
+            //강북삼성 종양DNA검사 분기
+            "N256", "J001", "J002" -> build(
+                analysisToKoKrCancerchDto(targetAnalysis),
+                "gangbuk",
+                targetAnalysis.service
+            )
+
+            "ON256" -> build(analysisToEnUsCancerchDto(targetAnalysis), "gangbuk", targetAnalysis.service)
+
+            //캔서치검사 분기
+            "ON203" -> build(
+                analysisToEnUsCancerchDto(targetAnalysis),
+                if (targetAnalysis.patient.customerName == "Gclabs") "labs" else "genome", targetAnalysis.service
+            )
+
+            "N203", "N204", "N205", "N206", "J024" -> build(
+                analysisToKoKrCancerchDto(targetAnalysis),
+                if (targetAnalysis.patient.customerName == "Gclabs") "labs" else "genome", targetAnalysis.service
+            )
+
+            "ON204" -> build(analysisToDNACXDto(targetAnalysis))
+            "ON206" -> build(analysisToDNACTDto(analysisList))
+            else -> throw Exception("등록되지 않은 검사코드 : " + targetAnalysis.sample + "/" + targetAnalysis.service)
+        }
+        val createTime = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
+            ZoneId.systemDefault()
+        )
+        doc?.save(baos)
+        val fileName = "${targetAnalysis.sample}_${targetAnalysis.service}_${
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))
+        }.pdf"
+        val reportFile = ReportFile(UUID.randomUUID()).apply {
+            this.createTime = createTime
+            this.data = ByteBuffer.wrap(baos.toByteArray())
+            this.extension = "pdf"
+            this.name = fileName
+            this.size = baos.toByteArray().size.toLong()
+        }
+        baos.close()
+        return reportFile
+    }
+
     @Transactional
-    fun scheduleReports(): Mono<Void> {
+    fun scheduleReports(): Mono<Long> {
         logger.info("CronJob Running: Period 1 Min.")
-        return reportDao.findReport().flatMap {
-            analysisDao.findById(it.sample, it.service, it.batch, it.row).zipWith(Mono.just(it)).flatMap { zipped ->
-                logger.info(zipped.t1.sample.toString() + "/" + zipped.t1.service + " is printing.")
-                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(zipped.t2)))
-                val baos = ByteArrayOutputStream()
-                val doc = when (zipped.t1.service) {
-                    //AVOID 검사 분기
-                    "N201"  -> build(analysisToAvoidDto(zipped.t1))
-
-                    //강북삼성 종양DNA검사 분기
-                    "N256", "J001", "J002"  -> build(analysisToKoKrCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
-                    "ON256" -> build(analysisToEnUsCancerchDto(zipped.t1), "gangbuk", zipped.t1.service)
-
-                    //캔서치검사 분기
-                    "ON203" -> build(analysisToEnUsCancerchDto(zipped.t1),
-                        if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
-                    "N203", "N204", "N205", "N206", "J024" -> build(analysisToKoKrCancerchDto(zipped.t1),
-                        if (zipped.t1.patient.customerName == "Gclabs") "labs" else "genome", zipped.t1.service)
-                    else -> throw Exception("등록되지 않은 검사코드 : "+zipped.t1.sample+"/"+zipped.t1.service)
-                }
-
-                val createTime = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(LocalDateTime.now().toInstant(OffsetDateTime.now().offset).toEpochMilli()),
-                    ZoneId.systemDefault()
-                )
-                doc?.save(baos)
-                val fileName =
-                    "${zipped.t1.sample}_${zipped.t1.service}_${
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))
-                    }.pdf"
-
-                val reportFile = ReportFile(UUID.randomUUID()).apply {
-                    this.createTime = createTime
-                    this.data = ByteBuffer.wrap(baos.toByteArray())
-                    this.extension = "pdf"
-                    this.name = fileName
-                    this.size = baos.toByteArray().size.toLong()
-                }
-                baos.close()
-
-                fileRepo.save(reportFile)
-
-                zipped.t2.apply {
-                    this.file = reportFile.id
-                    this.name = reportFile.name!!
-                    this.size = reportFile.size
-                    this.isPrinted = "COMPLETED"
-                }
-
-                reportDao.merge(zipped.t2).doOnSuccess {
-                    logger.info(zipped.t1.sample.toString() + "/" + zipped.t1.service + " is finished.")
-                    publisher.tryEmitNext(
-                        MessageReport(
-                            MessageReport.MessageType.FINISH,
-                            mapper.toMessageDto(zipped.t2)
-                        )
-                    )
-                }
+//        return reportDao.findReport()
+//            .doOnNext {
+//                logger.info(it.sample.toString() + "/" + it.service + " is printing.")
+//                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(it)))
+//            }
+//            .flatMap(analysisDao::findAllById)
+//            .map(this::createReport)
+//            .map(fileRepo::save)
+        return reportDao.findReport()
+            .doOnNext {
+                logger.info(it.sample.toString() + "/" + it.service + " is printing.")
+                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(it)))
             }
-        }.then(Mono.empty())
+            .flatMap {
+                analysisDao.findAllById(it).zipWith(Mono.just(it))
+                    .flatMap { zipped ->
+                        val reportFile = createReport(zipped.t1)
+                        fileRepo.save(reportFile)
+
+                        zipped.t2.apply {
+                            this.file = reportFile.id
+                            this.name = reportFile.name!!
+                            this.size = reportFile.size
+                            this.isPrinted = "COMPLETED"
+                        }
+
+                        reportDao.merge(zipped.t2)
+                            .doOnSuccess {
+                                logger.info(zipped.t1.first().sample.toString() + "/" + zipped.t1.first().service + " is finished.")
+                                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.FINISH, mapper.toMessageDto(zipped.t2)))
+                            }
+                    }
+            }.then(Mono.empty())
     }
 
     @Transactional
@@ -146,9 +188,7 @@ class ReportHandler(
             service,
             LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
         )
-            .map {
-                fileRepo.findById(it.file)
-            }
+            .map { fileRepo.findById(it.file) }
             .map { it.get().data!!.array() }
     }
 
@@ -169,6 +209,96 @@ class ReportHandler(
 
     fun subscribe(): Flux<MessageReport> = subscriber.asFlux()
 
+    private fun analysisToDNACTDto(analysisList: List<Analysis>): DNACTDto {
+        val targetAnalysis = analysisList.first()
+        val patient = targetAnalysis.patient
+        val barcode = targetAnalysis.value
+        val customerName = if (patient.customerName == "GC Lymphotec") patient.customerName2 else patient.customerName
+        val result = analysisList.map { analysis ->
+            DNACTDto.SummaryOfResult(
+                date                = analysis.dateRequest.toLocalDate(),
+                cancer              = analysis.clinicalCancer ?:                                                                  throw Exception("${analysis.sample}의 환자 암종이 기재되지 않았습니다."),
+                cfDNAConcentration  = if(analysis.cfDnaConcentration != null) analysis.cfDnaConcentration.toFloat()          else throw Exception("${analysis.sample}의 환자 cfDnaConcentration가 기재되지 않았습니다."),
+                genomicInstability  = if(analysis.iscore != null) analysis.iscore.toFloat()                                  else throw Exception("${analysis.sample}의 환자 iscore가 기재되지 않았습니다."),
+                covScore            = if(analysis.covBc != null) analysis.covBc.toFloat()                                    else throw Exception("${analysis.sample}의 환자 covBc가 기재되지 않았습니다."),
+                femsScore           = if(analysis.femsBc != null) analysis.femsBc.toFloat()                                  else throw Exception("${analysis.sample}의 환자 femsBc가 기재되지 않았습니다.")
+            ).apply {
+                FEMSPath               = if(stringToCTEnum(analysis.result) != DNACTDto.Risk.NOT_DETECTED) analysis.femsPath?:    throw Exception("${analysis.sample}의 환자가 음성이 아님에도 fems 이미지 데이터가 입력되지 않았습니다.") else ""
+                GenomicPath            = if(stringToCTEnum(analysis.result) != DNACTDto.Risk.NOT_DETECTED) analysis.iscorePath ?: throw Exception("${analysis.sample}의 환자가 음성이 아님에도 iscore 이미지 데이터가 입력되지 않았습니다.") else ""
+            }
+        }
+        val dto = DNACTDto(
+            barcode,
+            stringToCTEnum(targetAnalysis.result),
+            result,
+            targetAnalysis.language ?: "ja-jp"
+        )
+
+        return dto.apply {
+            this.barcode = barcode
+            this.patientName = patient.name
+            this.birthDate = patient.birth
+            this.age = age(dto.birthDate, targetAnalysis.dateSampling.toLocalDate()).toString()
+            this.sex = sex(patient.sex)
+            this.requestNumber = dto.requestNumber ?: ""
+            this.collectionDate = targetAnalysis.dateSampling.toLocalDate()
+            this.receiptDate = targetAnalysis.dateRequest.toLocalDate()
+            this.reportDate = LocalDate.now()
+            this.medicalRecordNumber = targetAnalysis.patient.mrn ?: "-"
+            this.barcode = barcode
+            this.medicalInstitution = customerName ?: "-"
+            this.specimenType = targetAnalysis.sampleType
+            this.comment = targetAnalysis.comment ?: ""
+        }
+    }
+
+    private fun analysisToDNACXDto(analysis: Analysis): DNACXDto {
+        val patient = analysis.patient
+        val barcode = analysis.value
+        val customerName = if (patient.customerName == "GC Lymphotec") patient.customerName2 else patient.customerName
+        val dto = DNACXDto(
+            barcode,
+            stringToCXEnum(analysis.result),
+            DNACXDto.SummaryOfResult(
+                cancerToName(if (analysis.patient.sex == "F") analysis.too6Pred else analysis.too5Pred),
+                analysis.femsCovBc ?: throw Exception("fems_cov_bc 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
+                analysis.covBc ?: throw Exception("cov_bc 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
+                analysis.femsBc ?: throw Exception("fems_bc 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
+                analysis.cfDnaConcentration
+                    ?: throw Exception("cfDNA 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
+                analysis.iscore ?: throw Exception("iscore 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
+            ), if (analysis.language.isNullOrEmpty()) "ja-jp" else analysis.language
+        )
+        val age = age(dto.birthDate, dto.collectionDate)
+        dto.age = age.toString()
+        val (cutoff95, cutoff99) = calculateSignalScoreCutOff(age)
+        dto.result.signalScore95CutOff = cutoff95
+        dto.result.signalScore99CutOff = cutoff99
+
+        return dto.apply {
+            this.barcode = barcode
+            this.patientName = patient.name
+            this.birthDate = patient.birth
+            this.age = age(dto.birthDate, analysis.dateSampling.toLocalDate()).toString()
+            this.sex = sex(patient.sex)
+            this.requestNumber = dto.requestNumber ?: ""
+            this.collectionDate = analysis.dateSampling.toLocalDate()
+            this.receiptDate = analysis.dateRequest.toLocalDate()
+            this.reportDate = LocalDate.now()
+            this.medicalRecordNumber = analysis.patient.mrn ?: ""
+            this.barcode = barcode
+            this.medicalInstitution = customerName ?: ""
+            this.specimenType = analysis.sampleType
+            this.comment = analysis.comment ?: ""
+        }
+    }
+
+    private fun calculateSignalScoreCutOff(age: Int): Pair<Double, Double> {
+        return if (age <= 59) Pair(0.379, 0.614)
+        else if (age in 60..69) Pair(0.501, 0.678)
+        else Pair(0.581, 0.793)
+    }
+
     private fun analysisToAvoidDto(analysis: Analysis): AvoidDto {
         val cancerRepo = CancerRepo()
         val patient = analysis.patient
@@ -176,14 +306,17 @@ class ReportHandler(
 
         val (customerName, requestNumber) =
             if (patient.customerName == "Gclabs") Pair(patient.customerName2, formatSampleId(analysis.remark!!))
-            else if(patient.customerName2 != null) Pair(patient.customerName2, analysis.remark ?: formatSampleId(analysis.sample.toString()))
+            else if (patient.customerName2 != null) Pair(
+                patient.customerName2,
+                analysis.remark ?: formatSampleId(analysis.sample.toString())
+            )
             else Pair(patient.customerName, formatSampleId(analysis.sample.toString()))
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
         val cancer1 = when (stringToEnum(analysis.result)) {
             CancerRepo.결과.GENERAL -> AvoidDto.Cancer()
             CancerRepo.결과.CONCERN -> AvoidDto.Cancer("기타암종")
             else -> AvoidDto.Cancer(
-                cancerToFileName(result),
+                cancerToName(result),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
                     stringToCancer(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
@@ -222,7 +355,10 @@ class ReportHandler(
             else -> patient.customerName
         }
         val requestNumber = when {
-            analysis.remark != null -> if(patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(analysis.remark) else analysis.remark
+            analysis.remark != null -> if (patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(
+                analysis.remark
+            ) else analysis.remark
+
             else -> formatSampleId(analysis.sample.toString())
         }
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
@@ -230,7 +366,7 @@ class ReportHandler(
             CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
             CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종", comment = analysis.comment ?: "")
             else -> CancerchDto.Cancer(
-                cancerToFileName(result),
+                cancerToName(result),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
                     stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
@@ -254,7 +390,7 @@ class ReportHandler(
         cancerchDto.reportDate = LocalDate.now()
         cancerchDto.medicalRecordNumber = analysis.patient.mrn ?: ""
         cancerchDto.barcode = barcode
-        cancerchDto.medicalInstitution = customerName ?: ""
+        cancerchDto.medicalInstitution = customerName
         cancerchDto.specimenType = analysis.sampleType
 
         return cancerchDto
@@ -270,7 +406,10 @@ class ReportHandler(
             else -> patient.customerName
         }
         val requestNumber = when {
-            analysis.remark != null -> if(patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(analysis.remark) else analysis.remark
+            analysis.remark != null -> if (patient.customerName2 != null && patient.customerName == "Gclabs") formatSampleId(
+                analysis.remark
+            ) else analysis.remark
+
             else -> formatSampleId(analysis.sample.toString())
         }
         val result = if (sex(patient.sex) == Sex.M) analysis.too5Pred else analysis.too6Pred
@@ -278,7 +417,7 @@ class ReportHandler(
             CancerRepo.결과.GENERAL -> CancerchDto.Cancer(comment = analysis.comment ?: "")
             CancerRepo.결과.CONCERN -> CancerchDto.Cancer("기타암종", comment = analysis.comment ?: "")
             else -> CancerchDto.Cancer(
-                cancerToFileName(result),
+                cancerToName(result),
                 cancerRepo.findPPVbyAgeAndCancerAndSex(
                     stringToCancer2(result), age(patient.birth, analysis.dateSampling.toLocalDate()), sex(patient.sex)
                 )!!,
@@ -302,7 +441,7 @@ class ReportHandler(
         cancerchDto.reportDate = LocalDate.now()
         cancerchDto.medicalRecordNumber = analysis.patient.mrn ?: ""
         cancerchDto.barcode = barcode
-        cancerchDto.medicalInstitution = customerName ?: ""
+        cancerchDto.medicalInstitution = customerName
         cancerchDto.specimenType = analysis.sampleType
 
         return cancerchDto
@@ -320,12 +459,22 @@ class ReportHandler(
             else americanAge.toInt()
         }
     }
+
     private fun sex(sex: String): Sex {
         return Sex.valueOf(sex)
     }
 
     private fun build(dto: AvoidDto): PDDocument? {
         return builder(dto)?.build()
+    }
+
+    private fun build(dto: DNACXDto): PDDocument {
+        return builderDNACX(dto).build()
+    }
+
+    //
+    private fun build(dto: DNACTDto): PDDocument {
+        return builderDNACT(dto).build()
     }
 
     private fun build(dto: CancerchDto, type: String, service: String): PDDocument? {
@@ -360,15 +509,19 @@ class ReportHandler(
                 page = SectionPage(547f, 65f, resource.fontDefault())
                 return CancerchGangbukKoKr(template as CancerchTemplateN256<CancerchResource>, dto, sign, footer, page)
             }
+
             TestInfo.ON256.code() -> {
-                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
-                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    com.greencross.lims.report.enus.SectionSign(65f)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    SectionFooterEngGenomeNotColorBar()
                 val resource = CancerchResourceON256EnUs(doc)
                 val template = CancerchTemplateON256EnUs(resource, TestInfo.ON256)
                 page = SectionPage(547f, 65f, resource.fontDefault())
 
                 return CancerchGangbukEnUs(template as CancerchTemplateON256<CancerchResource>, dto, sign, footer, page)
             }
+
             else -> throw Exception("ERROR : Unknown Service Code : " + service)
         }
     }
@@ -377,7 +530,7 @@ class ReportHandler(
         val doc = PDDocument()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        when(service) {
+        when (service) {
             TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code(), TestInfo.J024.code() -> {
                 val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
                 val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeNotColorBar()
@@ -389,15 +542,62 @@ class ReportHandler(
             }
 
             TestInfo.ON203.code() -> {
-                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
-                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeNotColorBar()
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    com.greencross.lims.report.enus.SectionSign(65f)
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    SectionFooterEngGenomeNotColorBar()
                 val resource = CancerchResourceON203EnUs(doc)
                 val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
                 page = SectionPage(547f, 65f, resource.fontDefault())
 
                 return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
             }
+
             else -> throw Exception("ERROR : Unknown Service Code : " + service)
+        }
+    }
+
+    private fun builderDNACX(dto: DNACXDto): DNACXPageBuilder<*> {
+        val doc = PDDocument()
+        val page: Painter<DNACXTemplate<DNACXResource>, DNACXDto>
+        val sign: Painter<DNACXTemplate<DNACXResource>, DNACXDto> = com.greencross.lims.report.enus.SectionSign(65f)
+        val footer: Painter<DNACXTemplate<DNACXResource>, DNACXDto> = SectionFooterWithLymphotec()
+        return when (dto.language) {
+            "en-us" -> {
+                val template = DNACXTemplateON204EnUs(DNACXResourceON204EnUs(doc), TestInfo.ON204)
+                page = SectionPage(547f, 65f, template.resource().fontDefault())
+                DNACXON204EnUs(template as DNACXTemplateON204<DNACXResource>, dto, sign, footer, page)
+            }
+
+            "ja-jp" -> {
+                val template = DNACXTemplateON204JaJp(DNACXResourceON204JaJp(doc), TestInfo.ON204)
+                page = SectionPage(547f, 65f, template.resource().fontDefault())
+                DNACXON204JaJp(template as DNACXTemplateON204<DNACXResource>, dto, sign, footer, page)
+            }
+
+            else -> throw Exception("잘못된 언어 구분입니다.")
+        }
+    }
+
+    private fun builderDNACT(dto: DNACTDto): DNACTPageBuilder<*> {
+        val doc = PDDocument()
+        val page: Painter<DNACTTemplate<DNACTResource>, DNACTDto>
+        val sign: Painter<DNACTTemplate<DNACTResource>, DNACTDto> = com.greencross.lims.report.enus.SectionSign(65f)
+        val footer: Painter<DNACTTemplate<DNACTResource>, DNACTDto> = SectionFooterWithLymphotec()
+        return when (dto.language) {
+            "en-us" -> {
+                val template = DNACTTemplateON206EnUs(DNACTResourceON206EnUs(doc), TestInfo.ON206)
+                page = SectionPage(547f, 65f, template.resource().fontDefault())
+                DNACTON206EnUs(template as DNACTTemplateON206<DNACTResource>, dto, sign, footer, page)
+            }
+
+            "ja-jp" -> {
+                val template = DNACTTemplateON206JaJp(DNACTResourceON206JaJp(doc), TestInfo.ON206)
+                page = SectionPage(547f, 65f, template.resource().fontDefault())
+                DNACTON206JaJp(template as DNACTTemplateON206<DNACTResource>, dto, sign, footer, page)
+            }
+
+            else -> throw Exception("잘못된 언어 구분입니다.")
         }
     }
 
@@ -405,24 +605,29 @@ class ReportHandler(
         val doc = PDDocument()
         val page: Painter<CancerchTemplate<CancerchResource>, CancerchDto>
 
-        when(service) {
+        when (service) {
             TestInfo.N203.code(), TestInfo.N204.code(), TestInfo.N205.code(), TestInfo.N206.code(), TestInfo.J024.code() -> {
                 val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionSign(65f)
-                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterGenomeLabsNotColorBar()
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    SectionFooterGenomeLabsNotColorBar()
                 val resource = CancerchResourceN203KoKr(doc)
                 val template = CancerchTemplateN203KoKr(resource, TestInfo.N203)
                 page = SectionPage(547f, 65f, resource.fontDefault())
 
                 return CancerchN203(template as CancerchTemplateN203<CancerchResource>, dto, sign, footer, page)
             }
+
             TestInfo.ON203.code() -> {
-                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = com.greencross.lims.report.enus.SectionSign(65f)
+                val sign: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    com.greencross.lims.report.enus.SectionSign(65f)
                 val resource = CancerchResourceON203EnUs(doc)
                 val template = CancerchTemplateON203EnUs(resource, TestInfo.ON203)
-                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> = SectionFooterEngGenomeLabsNotColorBar()
+                val footer: Painter<CancerchTemplate<CancerchResource>, CancerchDto> =
+                    SectionFooterEngGenomeLabsNotColorBar()
                 page = SectionPage(547f, 65f, resource.fontDefault())
                 return CancerchON203(template as CancerchTemplateON203<CancerchResource>, dto, sign, footer, page)
             }
+
             else -> throw Exception("ERROR : Unknown Service Code : " + service)
         }
     }
@@ -430,7 +635,24 @@ class ReportHandler(
     private fun stringToEnum(result: String) = when (result) {
         "GENERAL" -> CancerRepo.결과.GENERAL
         "CONCERN" -> CancerRepo.결과.CONCERN
-        else -> CancerRepo.결과.RISK
+        "RISK" -> CancerRepo.결과.RISK
+        else -> throw Exception("분류되지 않은 결과지 출력 위험군입니다.")
+    }
+
+    private fun stringToCTEnum(result: String) = when (result) {
+        "NOT_DETECTED" -> DNACTDto.Risk.NOT_DETECTED
+        "WEAK" -> DNACTDto.Risk.WEAK
+        "MODE" -> DNACTDto.Risk.MODERATE
+        "STRONG" -> DNACTDto.Risk.STRONG
+        else -> throw Exception("분류되지 않은 결과지 출력 위험군입니다.")
+    }
+
+    private fun stringToCXEnum(result: String) = when (result) {
+        "LOW" -> DNACXDto.Risk.LOW
+        "MILD" -> DNACXDto.Risk.MILD
+        "MODERATE" -> DNACXDto.Risk.MODERATE
+        "HIGH" -> DNACXDto.Risk.HIGH
+        else -> throw Exception("분류되지 않은 결과지 출력 위험군입니다.")
     }
 
     private fun stringToCancer(result: String) = when (result) {
@@ -441,7 +663,7 @@ class ReportHandler(
         "Others" -> CancerRepo.암종.기타암종
         "ESO" -> CancerRepo.암종.식도암
         "OV" -> CancerRepo.암종.난소암
-        else -> CancerRepo.암종.유방암
+        else -> throw Exception("구분되지 않은 결과지 출력 암종입니다.")
     }
 
     private fun stringToCancer2(result: String) = when (result) {
@@ -455,7 +677,7 @@ class ReportHandler(
         else -> CancerchRepo.암종.유방암
     }
 
-    private fun cancerToFileName(cancer: String) = when (cancer) {
+    private fun cancerToName(cancer: String) = when (cancer) {
         "LuC" -> "폐암"
         "Panc" -> "췌장담도암"
         "HCC" -> "간암"

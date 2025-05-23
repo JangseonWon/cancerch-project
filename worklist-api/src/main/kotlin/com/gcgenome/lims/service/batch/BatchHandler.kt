@@ -19,9 +19,6 @@ class BatchHandler(private val repo: BatchRepository) {
             idx = dto.idx
             serial = dto.prefix+String.format("%03d", dto.idx)
         }
-        return repo.save(batch)
-    }
-    fun saveMany(dtos: List<Worklist>) : Flux<Any> {
-        return Flux.mergeSequential(dtos.map(this::save))
+        return repo.persist(batch)
     }
 }

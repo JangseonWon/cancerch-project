@@ -20,7 +20,7 @@ data class Report(
     val publishLog: String?,
     val isPrinted: String?,
     val language: String?,
-    val description: String?
+    val description: String?,
 ) {
     companion object{
         data class ReportBuilder(

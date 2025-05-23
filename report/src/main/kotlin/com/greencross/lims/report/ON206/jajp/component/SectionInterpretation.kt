@@ -21,7 +21,7 @@ class SectionInterpretation(private val y: Float = 363f) : Painter<DNACTTemplate
 
         stream.paragraph(55f, y-48f,505f, AlignHorizontal.LEFT,
             TextBlock(template.resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(14f),
-                template.resource().lblInterpretatioon(dto)))
+                template.resource().lblInterpretatioon(dto)+"\n\n"+dto.comment))
         stream.restoreGraphicsState()
         return stream
     }

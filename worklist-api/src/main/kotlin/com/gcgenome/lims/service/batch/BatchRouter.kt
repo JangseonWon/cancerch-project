@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 class BatchRouter(private val handler: BatchHandler) {
     @Bean("BatchRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        PUT("/worklist/{id}", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::save)
+        PUT("/worklist/{id}", ::save)
     }
     private fun save(request: ServerRequest): Mono<ServerResponse> =
         request.bodyToMono(Worklist::class.java)

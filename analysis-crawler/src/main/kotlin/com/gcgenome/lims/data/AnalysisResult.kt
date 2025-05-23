@@ -18,6 +18,14 @@ data class AnalysisResult(
     @FileColumn("Iscore_v1.6.4")
     var iscore:             Double = 0.0,
     @FileColumn("results")
-    var result:             String = ""
+    var result:             String = "",
+    @FileColumn("FEMS_COV_BC")
+    var femsCovBc:          Double = 0.0,
+    @FileColumn("FEMS_BC")
+    var femsBc:             Double = 0.0,
+    @FileColumn("COV_BC")
+    var covBc:              Double = 0.0,
+    @FileColumn("FEMS_COV_BERNN")
+    var femsCovBernn:       Double = 0.0,
 ) {
 }

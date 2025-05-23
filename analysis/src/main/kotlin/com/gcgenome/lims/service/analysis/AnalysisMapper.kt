@@ -52,6 +52,15 @@ class AnalysisMapper(private val om: ObjectMapper) {
             this.cadEnsembleProb                = entity.cadEnsembleProb
             this.result                         = entity.result
             this.comment                        = entity.comment ?: ""
+            this.femsCovBc                      = entity.femsCovBc ?: 0.0
+            this.femsBc                         = entity.femsBc ?: 0.0
+            this.covBc                          = entity.covBc ?: 0.0
+            this.femsCovBernn                   = entity.femsCovBernn ?: 0.0
+            this.femsPath                       = entity.femsPath ?: ""
+            this.iscorePath                     = entity.iscorePath ?: ""
+            this.language                       = entity.language ?: ""
+            this.clinicalCancer                 = entity.clinicalCancer ?: ""
+            this.cfDnaConcentration             = entity.cfDnaConcentration ?: 0.0
 
             this.request = Request(
                 Sample(entity.sample).apply{
@@ -103,44 +112,57 @@ class AnalysisMapper(private val om: ObjectMapper) {
     }
     fun createAnalysisQCEntity(entity: AnalysisQC, sample: Long, service: String): AnalysisQC {
         return AnalysisQC(sample, service, entity.batch, entity.row).apply {
-            this.file = entity.file
-            this.freemix = entity.freemix
-            this.rawReadsMillions = entity.rawReadsMillions
-            this.dupRate = entity.dupRate
-            this.totalReads = entity.totalReads
-            this.mean = entity.mean
-            this.median = entity.median
-            this.qc = entity.qc
-            this.gc = entity.gc
-            this.chrxCnt = entity.chrxCnt
-            this.chryCnt = entity.chryCnt
-            this.chrxProp = entity.chrxProp
-            this.chryProp = entity.chryProp
-            this.predSex = entity.predSex
-            this.freemixTmp = entity.freemixTmp
-            this.rawReadMillionsTmp = entity.rawReadMillionsTmp
-            this.dupRateTmp = entity.dupRateTmp
-            this.totalReadsTmp = entity.totalReadsTmp
-            this.meanTmp = entity.meanTmp
-            this.medianTmp = entity.medianTmp
-            this.qcTmp = entity.qcTmp
-            this.gcTmp = entity.gcTmp
-            this.chrxCntTmp = entity.chrxCntTmp
-            this.chryCntTmp = entity.chryCntTmp
-            this.chrxPropTmp = entity.chrxPropTmp
-            this.chryPropTmp = entity.chryPropTmp
-            this.predSexTmp = entity.predSexTmp
+            this.file                       = entity.file
+            this.freemix                    = entity.freemix
+            this.rawReadsMillions           = entity.rawReadsMillions
+            this.dupRate                    = entity.dupRate
+            this.totalReads                 = entity.totalReads
+            this.mean                       = entity.mean
+            this.median                     = entity.median
+            this.qc                         = entity.qc
+            this.gc                         = entity.gc
+            this.chrxCnt                    = entity.chrxCnt
+            this.chryCnt                    = entity.chryCnt
+            this.chrxProp                   = entity.chrxProp
+            this.chryProp                   = entity.chryProp
+            this.predSex                    = entity.predSex
+            this.freemixTmp                 = entity.freemixTmp
+            this.rawReadMillionsTmp         = entity.rawReadMillionsTmp
+            this.dupRateTmp                 = entity.dupRateTmp
+            this.totalReadsTmp              = entity.totalReadsTmp
+            this.meanTmp                    = entity.meanTmp
+            this.medianTmp                  = entity.medianTmp
+            this.qcTmp                      = entity.qcTmp
+            this.gcTmp                      = entity.gcTmp
+            this.chrxCntTmp                 = entity.chrxCntTmp
+            this.chryCntTmp                 = entity.chryCntTmp
+            this.chrxPropTmp                = entity.chrxPropTmp
+            this.chryPropTmp                = entity.chryPropTmp
+            this.predSexTmp                 = entity.predSexTmp
         }
     }
     fun createAnalysisResultEntity(entity: AnalysisResult, sample: Long, service: String): AnalysisResult {
         return AnalysisResult(sample, service, entity.batch, entity.row).apply {
-            this.cadEnsembleProb = entity.cadEnsembleProb
-            this.too5Pred = entity.too5Pred
-            this.too5RmdFemsEnsembleProb = entity.too5RmdFemsEnsembleProb
-            this.too6Pred = entity.too6Pred
-            this.iscore = entity.iscore
-            this.result = entity.result
-            this.comment = entity.comment
+            this.cadEnsembleProb            = entity.cadEnsembleProb
+            this.too5Pred                   = entity.too5Pred
+            this.too5RmdFemsEnsembleProb    = entity.too5RmdFemsEnsembleProb
+            this.too6Pred                   = entity.too6Pred
+            this.iscore                     = entity.iscore
+            this.result                     = entity.result
+            this.comment                    = entity.comment
+            this.femsCovBc                  = entity.femsCovBc
+            this.femsBc                     = entity.femsBc
+            this.covBc                      = entity.covBc
+            this.femsCovBernn               = entity.femsCovBernn
+            this.femsPath                   = entity.femsPath
+            this.iscorePath                 = entity.iscorePath
+            this.femsCovBc                  = entity.femsCovBc
+            this.femsBc                     = entity.femsBc
+            this.covBc                      = entity.covBc
+            this.femsCovBernn               = entity.femsCovBernn
+            this.femsPath                   = entity.femsPath
+            this.iscorePath                 = entity.iscorePath
+            this.cfDnaConcentration         = entity.cfDnaConcentration
         }
     }
 }

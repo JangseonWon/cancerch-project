@@ -1,19 +1,25 @@
 package com.greencross.lims.service.analysis
 
 import com.greencross.lims.entity.QAnalysis.analysis
+import com.greencross.lims.entity.Report
 import com.greencross.lims.entity.readonly.QSample.sample
 import com.greencross.lims.entity.readonly.QPatient.patient
 import com.greencross.lims.entity.readonly.QRequest.request
+import com.greencross.lims.entity.readonly.QRequestInfo
 import com.greencross.lims.entity.readonly.QRequestInfo.requestInfo
 import com.greencross.lims.projection.Analysis
+import com.greencross.lims.report.ON206.DNACTDto
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Repository
 class AnalysisDao(private val repo: AnalysisRepository) {
     private fun select(query: SQLQuery<*>): SQLQuery<Analysis.Companion.AnalysisBuilder> {
+        val language = QRequestInfo("language")
+        val clinicalCancer = QRequestInfo("clinical_cancer")
         return query.select(
             constructor(
                 Analysis.Companion.AnalysisBuilder::class.java,
@@ -38,17 +44,66 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 analysis.result,
                 analysis.too5Pred.`as`("too5Pred"),
                 analysis.too6Pred.`as`("too6Pred"),
-                analysis.comment
+                analysis.comment,
+                analysis.iscore,
+                analysis.femsCovBc.`as`("femsCovBc"),
+                analysis.femsBc.`as`("femsBc"),
+                analysis.covBc.`as`("covBc"),
+                analysis.femsCovBernn.`as`("femsCovBernn"),
+                analysis.femsPath.`as`("femsPath"),
+                analysis.iscorePath.`as`("iscorePath"),
+                language.value.`as`("language"),
+                clinicalCancer.value.`as`("clinicalCancer"),
+                analysis.cfDNAContentration.`as`("cfDnaConcentration")
             )
         ).from(analysis)
             .leftJoin(sample).on(sample.id.eq(analysis.sample))
             .leftJoin(request).on(request.sample.eq(analysis.sample).and(request.service.eq(analysis.service)))
             .leftJoin(patient).on(patient.id_SET.eq(sample.patient))
-            .leftJoin(requestInfo).on(request.sample.eq(requestInfo.sample).and(request.service.eq(requestInfo.service)).and(requestInfo.code.eq("TA0023")))
+            .leftJoin(requestInfo).on(
+                request.sample.eq(requestInfo.sample).and(request.service.eq(requestInfo.service))
+                    .and(requestInfo.code.eq("TA0023"))
+            )
+            .leftJoin(language).on(
+                request.sample.eq(language.sample).and(request.service.eq(language.service))
+                    .and(language.code.eq("TA0027"))
+            )
+            .leftJoin(clinicalCancer).on(
+                request.sample.eq(clinicalCancer.sample).and(request.service.eq(clinicalCancer.service))
+                    .and(clinicalCancer.code.eq("TA9999"))
+            )
+    }
+
+    fun findAllById(report: Report): Mono<List<Analysis>> {
+        return repo.query {
+            select(it)
+                .where(analysis.sample.eq(report.sample).and(analysis.service.eq(report.service)).and(analysis.batch.eq(report.batch))
+                    .and(analysis.row.eq(report.row)).and(analysis.sample.loe(report.sample)))
+                .orderBy(analysis.sample.desc()).limit(5)
+        }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
     }
     fun findById(sample: Long, service: String, batch: String, row: Long) : Mono<Analysis> {
         return repo.query{
             select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)).and(analysis.batch.eq(batch)).and(analysis.row.eq(row)))
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
+    }
+
+    fun findByPatientIdAndService(patientId: String, service: String): Mono<List<DNACTDto.SummaryOfResult>> {
+        return repo.query {
+            select(it).where(patient.id_SET.eq(patientId).and(analysis.service.eq(service)))
+                .orderBy(analysis.sample.desc()).limit(5)
+        }.all().map { analysis ->
+            DNACTDto.SummaryOfResult(
+                date = analysis.dateRequest.toLocalDate(),
+                cancer = analysis.clinicalCancer ?: throw Exception("${analysis.sample}의 Clinical Cancer가 없습니다."),
+                cfDNAConcentration = if (analysis.cfDnaConcentration != null) analysis.cfDnaConcentration.toFloat() else throw Exception("${analysis.sample}의 cfDNAConc 값이 없습니다."),
+                genomicInstability = if (analysis.iscore != null) analysis.iscore.toFloat() else throw Exception("${analysis.sample}의 cfDNAConc 값이 없습니다."),
+                covScore = if (analysis.covBc != null) analysis.covBc.toFloat() else throw Exception("${analysis.sample}의 cov bc 값이 없습니다."),
+                femsScore = if (analysis.femsBc != null) analysis.femsBc.toFloat() else throw Exception("${analysis.sample}의 fems bc 값이 없습니다.")
+            ).apply {
+                FEMSPath = analysis.femsPath ?: ""
+                GenomicPath = analysis.iscorePath ?: ""
+            }
+        }.collectList()
     }
 }

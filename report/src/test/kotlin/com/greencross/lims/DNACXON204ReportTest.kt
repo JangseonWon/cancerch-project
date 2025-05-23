@@ -118,6 +118,7 @@ class DNACXON204ReportTest {
             val (cutoff95, cutoff99) = calculateSignalScoreCutOff(age)
             dto.result.signalScore95CutOff = cutoff95
             dto.result.signalScore99CutOff = cutoff99
+            dto.comment = comment
 
             println("./ON204/${sor.first}${dto.risk}.pdf")
             builder(dto).build().save("./ON204/${sor.first}${dto.risk}_${language}.pdf")
@@ -140,6 +141,7 @@ class DNACXON204ReportTest {
         val (cutoff95, cutoff99) = calculateSignalScoreCutOff(age)
         dto.result.signalScore95CutOff = cutoff95
         dto.result.signalScore99CutOff = cutoff99
+        dto.comment = comment
 
         return builder(dto).build()
     }
@@ -186,6 +188,6 @@ class DNACXON204ReportTest {
 
 fun main() {
     val test = DNACXON204ReportTest()
-    test.createAllReport()
-//    test.test()
+//    test.createAllReport()
+    test.test()
 }

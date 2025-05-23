@@ -43,7 +43,7 @@ class DNACTON206ReportTest {
                 DNACTDto.SummaryOfResult(LocalDate.of(2025,2, 24), "Thyroid cancer", 3.9f, 3.4f, 0.019f, 0.548f),
                 DNACTDto.SummaryOfResult(LocalDate.of(2025,1,  7),"Thyroid cancer",3.3f,7.34f,0.006f,0.023f),
                 DNACTDto.SummaryOfResult(LocalDate.of(2024,9, 24), "Thyroid cancer", 3.9f, 3.4f, 0.019f, 0.548f)
-            ), language)
+            ), language).apply { this.comment = comment}
     fun test() {
         val doc: PDDocument? = build()
         if (doc != null) {

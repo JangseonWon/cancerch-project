@@ -14,11 +14,11 @@ import reactor.core.publisher.Mono
 class WorklistRouter(private val handler: WorklistHandler, private val om: ObjectMapper) {
     @Bean("WorklistRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        GET("/worklist/search",                 contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::search)
-        GET("/worklist/batches/current",        contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::current)
-        GET("/worklist/batches/{batch}/max",    contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::max)
+        GET("/worklist/search",                 ::search)
+        GET("/worklist/batches/current",        ::current)
+        GET("/worklist/batches/{batch}/max",    ::max)
     }
-    private fun search(request: ServerRequest): Mono<ServerResponse>{
+    private fun search(request: ServerRequest): Mono<ServerResponse> {
         return handler.search(searchParam(om, request.queryParams()))
             .flatMap { page->
                 ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
@@ -27,7 +27,7 @@ class WorklistRouter(private val handler: WorklistHandler, private val om: Objec
                     .body(page.data, List::class.java)
             }.switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build())
     }
-    private fun current(request: ServerRequest): Mono<ServerResponse>{
+    private fun current(request: ServerRequest): Mono<ServerResponse> {
         return handler.current()
             .flatMap(ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)::bodyValue)
     }

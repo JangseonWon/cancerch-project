@@ -47,11 +47,18 @@ class AnalysisHandler(
             .flatMap(analysisResultDao::insertAndUpdate)
     }
     fun updateResult(dto: Analysis): Mono<AnalysisResult>{
+        println(dto)
         return analysisResultDao.findByCompositeKey(dto.sample, dto.service, dto.batch, dto.row)
             .map { it.apply {
                 this.result     = dto.result
                 this.too5Pred   = dto.too5Pred
                 this.too6Pred   = dto.too6Pred
+                this.cfDnaConcentration = dto.cfDnaConcentration
+                this.femsBc = dto.femsBc
+                this.covBc = dto.covBc
+                this.femsCovBc = dto.femsCovBc
+                this.femsCovBernn = dto.femsCovBernn
+                this.iscore = dto.iscore
             }}
             .flatMap(analysisResultDao::insertAndUpdate)
     }

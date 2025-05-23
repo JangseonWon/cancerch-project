@@ -15,9 +15,6 @@ import static elemental2.core.Global.encodeURI;
 public class WorklistApi {
     public Promise<Response> search(Query query){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-        });
         request.setMethod("GET");
 
         StringBuilder urlBuilder = new StringBuilder("/worklist/search");
@@ -37,9 +34,6 @@ public class WorklistApi {
     }
     public Promise<String> batchCurrent(){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
-        });
         return FetchApi.request("/worklist/batches/current", request).then(response -> {
             if (!response.ok) return response.text().then(msg -> {
                 DomGlobal.alert(msg);
@@ -49,9 +43,6 @@ public class WorklistApi {
     }
     public Promise<Integer> max(String batch){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
-        });
         return FetchApi.request("/worklist/batches/" + batch + "/max", request).then(response -> {
             if (!response.ok) return response.text().then(msg -> {
                 DomGlobal.alert(msg);
@@ -61,9 +52,6 @@ public class WorklistApi {
     }
     public Promise<Response> merge(Worklist worklist){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][]{
-                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-        });
         request.setMethod("PUT");
         request.setBody(JSON.stringify(worklist));
         return FetchApi.request("/worklist/"+worklist.id(), request).then(response->{

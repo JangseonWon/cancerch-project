@@ -22,6 +22,7 @@ class SectionTestResultSmall(private val y: Float = 708f): Painter<DNACXTemplate
             DNACXDto.Risk.MILD     -> Quad(Color(250, 166,26), "低リスク", 80f, 160f)
             DNACXDto.Risk.MODERATE -> Quad(Color(243, 112,66), "中リスク", 80f, 160f)
             DNACXDto.Risk.HIGH     -> Quad(Color(186,  26,50), "高リスク", 80f, 160f)
+            else -> throw Exception("SectionTestResult에서 비정상적인 RISK가 입력됐습니다.")
         }
         stream.roundRect(120f, y-17f, roundRectWidth, 17f, 8.5f).setLineWidth(3f).setStrokingColor(color).setNonStrokingColor(color).fillAndStroke()
         stream.paragraph(paragraphSx, y-13f, 300f, AlignHorizontal.CENTER, TextBlock(template.resource().styleContentBold().clone().color(Color(255,255,255)).fontSize(14f), comment))

@@ -11,5 +11,6 @@ data class User(
     val name: String? = "",
     val role: String = ""
 ) {
-    fun isMaster(): Boolean = role == "M"
+    private fun isAdmin(): Boolean = role == "A"
+    fun isMaster(): Boolean = (role == "M") || isAdmin()
 }

@@ -44,6 +44,10 @@ class AnalysisRSCrawler(
                             this.too6FemsProb = it.too6Fems
                             this.iscore = it.iscore
                             this.result = it.result
+                            this.femsCovBc = it.femsCovBc
+                            this.femsBc = it.femsBc
+                            this.covBc = it.covBc
+                            this.femsCovBernn = it.femsCovBernn
                         }
                         logger.info("RS Crawl : $batch 배치 $row Sample")
                         dao.persist(entity).subscribeOn(Schedulers.boundedElastic()).subscribe()
@@ -56,7 +60,7 @@ class AnalysisRSCrawler(
             file.copyTo(File(processed.path + "/${folderName}/" + file.name), true)
             file.delete()
             logger.info("RS Crwal : Ended")
-            jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다. ヽ(✿ﾟ▽ﾟ)ノ", listOf(ConnectInfo().title("업로드 대상 : ${file.name}")))
+            jandi.sendWithConnectInfos("Result 결과 업로드가 완료되었습니다.", listOf(ConnectInfo().title("업로드 배치 : ${file.name}")))
         }
     }
 }

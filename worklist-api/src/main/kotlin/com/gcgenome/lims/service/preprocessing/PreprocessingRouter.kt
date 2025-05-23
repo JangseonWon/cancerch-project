@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono
 class PreprocessingRouter(private val handler: PreprocessingHandler) {
     @Bean("com.greencross.lims.service.PreprocessingRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        PUT("/worklist/{id}/works", contentType(MediaType("application", "vnd.avoid.v1+json", Charsets.UTF_8)), ::save)
+        PUT("/worklist/{id}/works", ::save)
     }
     private fun save(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(object : ParameterizedTypeReference<List<Preprocessing>>(){})

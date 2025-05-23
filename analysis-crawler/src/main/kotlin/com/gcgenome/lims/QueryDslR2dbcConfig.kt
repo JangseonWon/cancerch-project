@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration
 class QueryDslR2dbcConfig {
     @Bean
     fun sqlTemplates(): SQLTemplates {
-        return PostgreSQLTemplates.builder().printSchema().newLineToSingleSpace().build()
+        return PostgreSQLTemplates
+            .builder()
+            .newLineToSingleSpace()
+            .build()
     }
 }

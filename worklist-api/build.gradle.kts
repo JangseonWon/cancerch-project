@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":search"))
     implementation("com.gcgenome:gateway-page:1.0")
+    implementation("org.apache.httpcomponents:httpmime")
     implementation(libs.bundles.spring.client)
     implementation(libs.bundles.kotlin.webflux)
     implementation(libs.bundles.r2dbc.postgres)

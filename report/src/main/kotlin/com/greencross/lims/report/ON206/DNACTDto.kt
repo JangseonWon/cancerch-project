@@ -8,8 +8,9 @@ class DNACTDto(
     override var barcode: String?,
     var risk: Risk,
     var result: List<SummaryOfResult>,
-    val language: String
+    val language: String,
 ): AbstractReportDto(), HasServiceCode {
+    var comment: String = ""
     override fun code(): String? {
         return barcode
     }

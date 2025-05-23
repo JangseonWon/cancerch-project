@@ -44,11 +44,6 @@ class ReportDao(private val repo: ReportRepository) {
             .leftJoin(modifyBy).on(modifyBy.id.eq(report.lastModifyBy))
             .leftJoin(publishBy).on(publishBy.id.eq(report.publishBy))
     }
-    fun findBySampleAndService(sample: Long, service: String) : Flux<Report> {
-        return repo.query{
-            select(it).where(report.sample.eq(sample).and(report.service.eq(service)))
-        }.all().map(Report.Companion.ReportBuilder::build)
-    }
     fun findForCassandraReport(sample: Long, service: String, createdAt: LocalDateTime): Mono<Report>{
         return repo.query{
             select(it).where(report.sample.eq(sample).and(report.service.eq(service)).and(report.createAt.stringValue().eq(createdAt.toString().replace("T", " "))))

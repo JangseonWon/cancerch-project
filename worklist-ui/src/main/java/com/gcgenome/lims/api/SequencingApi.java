@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 public class SequencingApi {
     public Promise<Index[]> indices(String plate){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1; charset=utf-8"}
-        });
         return FetchApi.request("/plates/" + plate + "/indices", request).then(response -> {
             if(!response.ok) return response.text().then(msg->{
                 DomGlobal.alert(msg);
@@ -27,9 +24,6 @@ public class SequencingApi {
     }
     public Promise<Void> sequencing(Worklist[] worklists){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-        });
         request.setMethod("POST");
         String ids = Arrays.stream(worklists).map(Worklist::id).collect(Collectors.joining(","));
         request.setBody(ids);
@@ -42,9 +36,6 @@ public class SequencingApi {
     }
     public Promise<Void> sequencingB(Worklist[] worklists){
         RequestInit request = RequestInit.create();
-        request.setHeaders(new String[][] {
-                new String[] {"Content-Type", "application/vnd.avoid.v1+json; charset=utf-8"}
-        });
         request.setMethod("POST");
         String ids = Arrays.stream(worklists).map(Worklist::id).collect(Collectors.joining(","));
         request.setBody(ids);

@@ -10,32 +10,33 @@ import org.springframework.data.relational.core.mapping.Table
 @Schema("avoid")
 @Table("analysis_result")
 data class Analysis(
-    @Column("sample")           val sample:         Long,
-    @Column("service")          val service:        String
+    @Column("sample")                    val sample:                Long,
+    @Column("service")                   val service:               String
 ): Persistable<Analysis.Companion.AnalysisPK> {
-    @Column("batch")            lateinit var batch:          String
-    @Column("row")                       var row:            Long? = null
-    @Column("file")             lateinit var file:           String
-    @Column("result")           lateinit var result:         String
-    @Column("too5_pred")        lateinit var too5Pred:       String
-    @Column("too6_pred")        lateinit var too6Pred:       String
-    @Column("comment")                   var comment:        String = ""
+    @Column("batch")            lateinit var batch:                 String
+    @Column("row")                       var row:                   Long?   = null
+    @Column("file")             lateinit var file:                  String
+    @Column("result")           lateinit var result:                String
+    @Column("too5_pred")        lateinit var too5Pred:              String
+    @Column("too6_pred")        lateinit var too6Pred:              String
+    @Column("comment")                   var comment:               String  = ""
+    @Column("iscore")                    var iscore:                Double? = 0.0
+    @Column("fems_cov_bc")               var femsCovBc:             Double? = 0.0
+    @Column("fems_bc")                   var femsBc:                Double? = 0.0
+    @Column("cov_bc")                    var covBc:                 Double? = 0.0
+    @Column("fems_cov_bernn")            var femsCovBernn:          Double? = 0.0
+    @Column("fems_path")                 var femsPath:              String? = ""
+    @Column("iscore_path")               var iscorePath:            String? = ""
+    @Column("cfdna_concentration")       var cfDNAContentration:    Double? = 0.0
     @Id @Transient lateinit var _id: AnalysisPK
-    constructor(sample: Long, service: String, batch: String, row: Long, file: String, result: String, too5Pred: String, too6Pred: String, comment: String) : this(sample, service) {
-        this.row = row
-        this.batch = batch
-        this.file = file
-        this.result = result
-        this.too5Pred = too5Pred
-        this.too6Pred = too6Pred
-        this.comment = comment
-    }
+
     override fun getId(): AnalysisPK {
         return AnalysisPK(sample, service)
     }
     override fun isNew(): Boolean{
         return false
     }
+
    companion object {
        data class AnalysisPK(
            val sample: Long,

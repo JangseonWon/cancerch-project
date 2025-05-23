@@ -20,7 +20,17 @@ data class Analysis (
     val result: String,
     val too5Pred: String,
     val too6Pred: String,
-    val comment: String?
+    val comment: String?,
+    val iscore: Double?,
+    val femsCovBc: Double?,
+    val femsBc: Double?,
+    val covBc: Double?,
+    val femsCovBernn: Double?,
+    val femsPath: String?,
+    val iscorePath: String?,
+    val language: String?,
+    val clinicalCancer: String?,
+    val cfDnaConcentration: Double?
 ) {
     companion object {
         data class AnalysisBuilder(
@@ -45,9 +55,19 @@ data class Analysis (
             val result: String,
             val too5Pred: String,
             val too6Pred: String,
-            val comment: String?
+            val comment: String?,
+            val iscore: Double?,
+            val femsCovBc: Double?,
+            val femsBc: Double?,
+            val covBc: Double?,
+            val femsCovBernn: Double?,
+            val femsPath: String?,
+            val iscorePath: String?,
+            val language: String?,
+            val clinicalCancer: String?,
+            val cfDnaConcentration: Double?
         ){
-            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, ward, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred, comment)
+            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, ward, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred, comment, iscore, femsCovBc, femsBc, covBc, femsCovBernn, femsPath, iscorePath, language, clinicalCancer, cfDnaConcentration)
         }
     }
 }

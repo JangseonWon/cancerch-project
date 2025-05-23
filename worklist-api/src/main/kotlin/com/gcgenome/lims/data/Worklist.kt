@@ -1,38 +1,17 @@
 package com.gcgenome.lims.data
 
-import com.gcgenome.lims.entity.Worklist
-
 data class Worklist (
-    val id: String = "",
-    val title: String = "",
-    val createdAt: String = "",
-    val status: Worklist.Companion.Status? = null,
-    val prefix: String? = null,
-    val idx: Int? = null,
-    val serial: String? = null
+    val id: String = ""
 ) {
-    var remark: String? = null
-
-    companion object{
-        data class WorklistBuilder(
-            val id: String,
-            val title: String,
-            val createdAt: String,
-            val status: String,
-            val prefix: String,
-            val idx: Int,
-            val serial: String,
-            val remark: String? = null
-        ) {
-            fun build(): com.gcgenome.lims.data.Worklist = Worklist(
-                id = id,
-                title = title,
-                createdAt = createdAt,
-                status = Worklist.Companion.Status.valueOf(status),
-                prefix = prefix,
-                idx = idx,
-                serial = serial
-            )
-        }
-    }
+    var title:          String  = ""
+    var createAt:       String  = ""
+    var createBy:       String  = ""
+    var status:         String  = ""
+    var remark:         String  = ""
+    var domain:         String  = ""
+    var serial:         String  = ""
+    var prefix:         String  = ""
+    var idx:            Int     = -999999
+    var lastModifyAt:   String  = ""
+    var serializeBy:    String  = ""
 }

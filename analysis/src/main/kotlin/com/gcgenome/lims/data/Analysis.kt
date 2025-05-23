@@ -49,4 +49,13 @@ data class Analysis(
     var cadEnsembleProb:        Double = 0.0
     var result:                 String = ""
     var comment:                String = ""
+    var femsCovBc:              Double = 0.0
+    var femsBc:                 Double = 0.0
+    var covBc:                  Double = 0.0
+    var femsCovBernn:           Double = 0.0
+    var femsPath:               String = ""
+    var iscorePath:             String = ""
+    var language:               String = ""
+    var clinicalCancer:         String = ""
+    var cfDnaConcentration:     Double = 0.0
 }

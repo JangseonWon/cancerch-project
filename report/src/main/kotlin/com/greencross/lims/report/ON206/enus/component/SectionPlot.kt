@@ -28,7 +28,7 @@ class SectionPlot(private val y: Float = 708f): Painter<DNACTTemplate<DNACTResou
 
         var img = template.resource().imgGenomicInstability(dto.result[0].GenomicPath)
         var width = img.width * GENOMIC_RATE / img.height
-        stream.drawImage(img, 308f - width / 2, y - GENOMIC_RATE - 90, width, GENOMIC_RATE)
+        stream.drawImage(img, 308f - width / 2, y - GENOMIC_RATE - 70, width, GENOMIC_RATE)
 
         img = template.resource().imgGenomicInstabilityExample()
         width = img.width * GENOMIC_EXAMPLE_RATE / img.height
@@ -50,7 +50,7 @@ class SectionPlot(private val y: Float = 708f): Painter<DNACTTemplate<DNACTResou
         return stream
     }
     companion object {
-        private const val GENOMIC_RATE = 100f
+        private const val GENOMIC_RATE = 160f
         private const val GENOMIC_EXAMPLE_RATE = 87f
         private const val FEMS_RATE = 135f
         private const val FEMS_EXAMPLE_RATE = 107f

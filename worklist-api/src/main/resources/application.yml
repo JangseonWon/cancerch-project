@@ -3,7 +3,7 @@ spring:
   main.web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: localhost:12181
       discovery.root: /avoid-service
     stream:
       bindings:
@@ -13,17 +13,19 @@ spring:
         publish-worklist-events-out-0.destination: avoid-worklist-events
       kafka:
         binder:
-          brokers: gemini, pisces, aries, taurus, libra
+          brokers: localhost
           auto-add-partitions: true
   r2dbc:
-    url: r2dbc:postgresql://aries:5432/lims
+    url: r2dbc:postgresql://172.19.216.212:5432/lims
     compatibility-mode : true
     username: avoid
     password: avoid1004
+
 logging:
   level:
     io.r2dbc.postgresql.QUERY: TRACE
     io.r2dbc.postgresql.PARAM: TRACE
+
 
 server:
   resources : file:/data/lims/static/avoid-service/

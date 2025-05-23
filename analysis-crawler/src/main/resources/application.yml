@@ -3,10 +3,10 @@ spring:
   main.web-application-type: reactive
   cloud:
     zookeeper:
-      connect-string: test:12181
+      connect-string: localhost:12181
       discovery.root: /avoid-project
   r2dbc:
-    url: r2dbc:postgresql://172.19.216.212:5432/lims
+    url: r2dbc:postgresql://172.19.216.212:5432/lims?currentSchema=avoid
     compatibility-mode : true
     username: postgres
     password: X9ZWLERPs54RRYMic8FXJqV1TobIA2rwqGDgctFj1mQj1aco7TqkLoes9AByUFgW
@@ -17,8 +17,11 @@ logging:
     io.r2dbc.postgresql.QUERY: TRACE
     io.r2dbc.postgresql.PARAM: TRACE
 gcgenome:
-  tmp-dir: D:\\data\\lims\\tmp
-  out-dir: D:\\data\\lims\\avoid-processed
-
+  tmp-dir: D:\data\lims\tmp
+  out-dir: D:\data\lims\avoid-processed
+  fems-dir: D:\data\lims\tmp\avoid\img
+  iscore-dir: D:\data\lims\tmp\avoid\img
+  regex-fems: '^[0-9]{2}AIC[0-9]{3}-[0-9]{4}_[0-9]{3}_[0-9]{8}-[0-9]{3}-[0-9]{4}_fems\.png$'
+  regex-iscore: '^[0-9]{2}AIC[0-9]{3}-[0-9]{4}_[0-9]{3}_[0-9]{8}-[0-9]{3}-[0-9]{4}_iscore\.png$'
 webhook:
   url: https://wh.jandi.com/connect-api/webhook/17558388/69834a4cb47d80f9c339a0ce83ab7c90

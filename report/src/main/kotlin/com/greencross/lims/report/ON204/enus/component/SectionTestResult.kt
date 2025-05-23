@@ -23,6 +23,7 @@ class SectionTestResult(private val y: Float = 618f): Painter<DNACXTemplate<DNAC
             DNACXDto.Risk.MILD     -> Pair(Color(250, 166,26), "Mild Risk")
             DNACXDto.Risk.MODERATE -> Pair(Color(243, 112,66), "Moderate Risk")
             DNACXDto.Risk.HIGH     -> Pair(Color(186,  26,50), "High Risk")
+            else -> throw Exception("SectionTestResult에서 비정상적인 RISK가 입력됐습니다.")
         }
 
         stream.roundRect(120f, y-60f, 350f, 50f, 25f).setLineWidth(3f).setStrokingColor(color).stroke()

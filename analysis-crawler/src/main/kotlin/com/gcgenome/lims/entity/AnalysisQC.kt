@@ -1,6 +1,5 @@
 package com.gcgenome.lims.entity
 
-import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
@@ -9,7 +8,6 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Schema("avoid")
 @Table("analysis_qc")
 data class AnalysisQC(
     @Column("sample")                 val sample:          Long,

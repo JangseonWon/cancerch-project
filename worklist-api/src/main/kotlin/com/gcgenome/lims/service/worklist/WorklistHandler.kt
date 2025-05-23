@@ -16,9 +16,9 @@ class WorklistHandler(
 ) {
     fun search(query: SearchParam): Mono<PageReactive<Worklist>> = dao.search(query).map { it.map(mapper::toDto) }
     fun current(): Mono<String> {
-        return dao.findCurrent().map{ it.prefix }
+        return dao.findCurrent().map { it.prefix?: "" }
     }
     fun max(prefix: String): Mono<Int> {
-        return dao.findMax(prefix).map{ it.idx?.plus(1) }
+        return dao.findMax(prefix).mapNotNull { it.idx?.plus(1) }
     }
 }

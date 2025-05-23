@@ -32,6 +32,13 @@ data class AnalysisResult(
     @Column("iscore")                      var iscore:         Double = 0.0
     @Column("result")                      var result:         String = ""
     @Column("comment")                     var comment:        String? = ""
+    @Column("fems_cov_bc")                 var femsCovBc:      Double? = 0.0
+    @Column("fems_bc")                     var femsBc:         Double? = 0.0
+    @Column("cov_bc")                      var covBc:          Double? = 0.0
+    @Column("fems_cov_bernn")              var femsCovBernn:   Double? = 0.0
+    @Column("fems_path")                   var femsPath:       String? = ""
+    @Column("iscore_path")                 var iscorePath:     String? = ""
+    @Column("cfdna_concentration")         var cfDnaConcentration: Double? = 0.0
     @LastModifiedDate
     @Column("last_modify_at")     lateinit var lastModifyAt:   LocalDateTime
     @LastModifiedBy

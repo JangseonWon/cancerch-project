@@ -56,6 +56,15 @@ data class Analysis(
     @Column("iscore")                       val iscore:                 Double = 0.0,
     @Column("result")                       val result:                 String,
     @Column("comment")                      val comment:                String?,
+    @Column("fems_cov_bc")                  val femsCovBc:              Double? = 0.0,
+    @Column("fems_bc")                      val femsBc:                 Double? = 0.0,
+    @Column("cov_bc")                       val covBc:                  Double? = 0.0,
+    @Column("fems_cov_bernn")               val femsCovBernn:           Double? = 0.0,
+    @Column("fems_path")                    val femsPath:               String? = "",
+    @Column("iscore_path")                  val iscorePath:             String? = "",
+    @Column("language")                     val language:               String? = "",
+    @Column("clinical_cancer")              val clinicalCancer:         String? = "",
+    @Column("cfdna_concentration")          val cfDnaConcentration:     Double? = 0.0,
 
     @Column("analysis_at")                  val analysisAt:             LocalDateTime?,
     @LastModifiedDate

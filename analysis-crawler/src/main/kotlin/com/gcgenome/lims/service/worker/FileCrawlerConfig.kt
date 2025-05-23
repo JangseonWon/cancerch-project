@@ -35,6 +35,7 @@ class FileCrawlerConfig {
     fun result() : FileCrawler<AnalysisResult> {
         return TSVFileCrawler(Path.of(tmp), "[0-9]{2}AIC[0-9]{3}-[0-9]{4}_results\\.txt", AnalysisResult::class.java)
     }
+
     @Bean
     fun processedDir() : File{
         return File(processed)

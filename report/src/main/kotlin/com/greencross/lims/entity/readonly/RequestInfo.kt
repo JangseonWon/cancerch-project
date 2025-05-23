@@ -10,11 +10,11 @@ import org.springframework.data.relational.core.mapping.Table
 @Schema("public")
 @Table("request_info")
 data class RequestInfo(
-    val sample : Long,
-    val service : String,
-    @Column("code") val code: String,
-    @Column("value") val value: String,
-    @Column("desc") val desc: String
+    @Column("sample")   val sample : Long,
+    @Column("service")  val service : String,
+    @Column("code")     val code: String,
+    @Column("value")    val value: String,
+    @Column("desc")     val desc: String
 ):Persistable<RequestInfo.Companion.RequestInfoPK> {
     @Id @Transient lateinit var _id: RequestInfoPK
 

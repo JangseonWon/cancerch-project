@@ -21,8 +21,8 @@ class SectionInterpretation(private val y: Float = 669f): Painter<DNACXTemplate<
 
         stream.paragraph(55f, y-40f,505f, AlignHorizontal.LEFT,
             TextBlock(template.resource().styleContentBold().clone().color(Color(0,0,0)).fontSize(12f), template.resource().lblInterpretationBold(dto)+"\n\n"),
-            TextBlock(template.resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(12f),
-                template.resource().lblInterpretationRegular(dto)))
+            TextBlock(template.resource().styleContentRegualar().clone().color(Color(0,0,0)).fontSize(if(dto.comment != "") 10f else 12f),
+                template.resource().lblInterpretationRegular(dto)+"\n${dto.comment}"))
 
         stream.setLineWidth(0.8f).setStrokingColor(Color(0,0,0)).setNonStrokingColor(Color(0,0,0)).moveTo(35f, y-280f).lineTo(560f,y-280f).fill()
         stream.restoreGraphicsState()

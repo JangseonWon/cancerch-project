@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono
 class WorkRouter(private val handler: WorkHandler) {
     @Bean("com.greencross.lims.service.WorkRouter")
     fun router() = org.springframework.web.reactive.function.server.router {
-        GET("/worklist/{id}/works", contentType(MediaType("application", "vnd.avoid.v1", Charsets.UTF_8)), ::works)
+        GET("/worklist/{id}/works", ::works)
     }
     private fun works(request: ServerRequest): Mono<ServerResponse> {
         return handler.works(request.pathVariable("id")).collectList()

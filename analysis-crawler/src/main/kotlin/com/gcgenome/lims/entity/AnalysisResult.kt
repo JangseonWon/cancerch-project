@@ -1,22 +1,17 @@
 package com.gcgenome.lims.entity
 
-import com.infobip.spring.data.jdbc.annotation.processor.Schema
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.LastModifiedBy
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.annotation.Transient
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Schema("avoid")
 @Table("analysis_result")
 data class AnalysisResult(
     @Column("sample")  val sample:  Long,
     @Column("service") val service: String,
-
     @Column("batch")   val batch:   String,
     @Column("row")     val row:     Int
 ): Persistable<AnalysisResult.Companion.AnalysisResultPK> {
@@ -37,6 +32,19 @@ data class AnalysisResult(
              var iscore: Double = 0.0
     @Column("result")
              var result: String = ""
+    @Column("fems_cov_bc")
+             var femsCovBc: Double = 0.0
+    @Column("fems_bc")
+             var femsBc: Double = 0.0
+    @Column("cov_bc")
+             var covBc: Double = 0.0
+    @Column("fems_cov_bernn")
+             var femsCovBernn: Double = 0.0
+    @Column("fems_path")
+             var femsPath: String? = null
+    @Column("iscore_path")
+             var iscorePath: String? = null
+
 
     @Id @Transient
     lateinit var _id: AnalysisResultPK
