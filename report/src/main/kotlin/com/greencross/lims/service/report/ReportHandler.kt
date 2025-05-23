@@ -146,14 +146,6 @@ class ReportHandler(
     @Transactional
     fun scheduleReports(): Mono<Long> {
         logger.info("CronJob Running: Period 1 Min.")
-//        return reportDao.findReport()
-//            .doOnNext {
-//                logger.info(it.sample.toString() + "/" + it.service + " is printing.")
-//                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(it)))
-//            }
-//            .flatMap(analysisDao::findAllById)
-//            .map(this::createReport)
-//            .map(fileRepo::save)
         return reportDao.findReport()
             .doOnNext {
                 logger.info(it.sample.toString() + "/" + it.service + " is printing.")
