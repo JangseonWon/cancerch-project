@@ -65,6 +65,7 @@ data class Analysis(
     @Column("language")                     val language:               String? = "",
     @Column("clinical_cancer")              val clinicalCancer:         String? = "",
     @Column("cfdna_concentration")          val cfDnaConcentration:     Double? = 0.0,
+    @Column("clinical_info")                val clinicalInfo:           String? = "",
 
     @Column("analysis_at")                  val analysisAt:             LocalDateTime?,
     @LastModifiedDate

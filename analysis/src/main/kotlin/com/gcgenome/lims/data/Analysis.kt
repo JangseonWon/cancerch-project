@@ -58,4 +58,5 @@ data class Analysis(
     var language:               String = ""
     var clinicalCancer:         String = ""
     var cfDnaConcentration:     Double = 0.0
+    var clinicalInfo:           String = ""
 }

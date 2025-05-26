@@ -61,6 +61,7 @@ class AnalysisMapper(private val om: ObjectMapper) {
             this.language                       = entity.language ?: ""
             this.clinicalCancer                 = entity.clinicalCancer ?: ""
             this.cfDnaConcentration             = entity.cfDnaConcentration ?: 0.0
+            this.clinicalInfo                   = entity.clinicalInfo ?: ""
 
             this.request = Request(
                 Sample(entity.sample).apply{

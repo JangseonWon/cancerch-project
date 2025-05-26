@@ -46,9 +46,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             "remark".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.remark.eq(value)               else null
             "published".contentEquals(key, ignoreCase = true) -> return if(value != null)   analysis.publishAt.isNull               else null
             "printed".contentEquals(key, ignoreCase = true) -> return if(value != null)     analysis.reportedAt.isNull              else null
-            "result".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.result.eq(mapResult(value))    else null
             "batch".contentEquals(key, ignoreCase = true) -> return if (value != null)      analysis.batch.eq(value)                else null
-            "cancer".contentEquals(key, ignoreCase = true) -> return if(value != null)      analysis.too5Pred.eq(convert(value)).or(analysis.too6Pred.eq(convert(value))) else null
             "pass".contentEquals(key, ignoreCase = true) -> return if (value != null)       analysis.qc.eq("P").and(analysis.qcTmp.eq("P")) else null
             "to".contentEquals(key, ignoreCase = true) -> return if (value != null) {
                 val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.systemDefault())
@@ -93,20 +91,5 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         }
         val count = repo.query { it.select(Wildcard.count).from(analysis).where(predicates) }
         return count.one().map { PageReactive(it, param.limit, param.page, flux) }
-    }
-    private fun convert(cancer: String) = when(cancer){
-        "폐암"   -> "LuC"
-        "대장암" -> "colon"
-        "난소암" -> "OV"
-        "간암"   -> "HCC"
-        "식도암" -> "ESO"
-        "췌장암" -> "PanC"
-        else   -> "Others"
-    }
-    private fun mapResult(result: String) = when(result){
-        "집중관리", "집중" -> "RISK"
-        "관심관리", "관심" -> "CONCERN"
-        "일반관리", "일반" -> "GENERAL"
-        else -> ""
     }
 }
