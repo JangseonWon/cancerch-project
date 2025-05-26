@@ -70,7 +70,7 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             )
             .leftJoin(clinicalCancer).on(
                 request.sample.eq(clinicalCancer.sample).and(request.service.eq(clinicalCancer.service))
-                    .and(clinicalCancer.code.eq("TA9999"))
+                    .and(clinicalCancer.code.eq("TA0030"))
             )
     }
 
