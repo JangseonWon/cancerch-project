@@ -27,13 +27,20 @@ function apiResponseToSearchResult(header: RawAxiosResponseHeaders, body: Analys
 }
 
 function convertRowDataToSavableAnalysis(rowData: SavableAnalysis): {
-    result: string;
-    too6_pred: string;
-    service: string;
-    too5_pred: string;
-    batch: string;
-    row: number;
+    result: string
+    too6_pred: string
+    service: string
+    too5_pred: string
+    batch: string
+    row: number
     sample: string
+    iscore: number
+    fems_bc: number
+    cov_bc: number
+    fems_cov_bc: number
+    fems_cov_bernn: number
+    cf_dna_concentration: number
+
 } {
     return {
         sample: rowData.sampleId.replaceAll("-", ""),
@@ -42,7 +49,13 @@ function convertRowDataToSavableAnalysis(rowData: SavableAnalysis): {
         row: rowData.rowNumber,
         result: rowData.analysisResult,
         too6_pred: rowData.too6Pred,
-        too5_pred: rowData.too5Pred
+        too5_pred: rowData.too5Pred,
+        iscore: rowData.iscore,
+        fems_bc: rowData.femsBc,
+        cov_bc: rowData.covBc,
+        fems_cov_bc: rowData.femsCovBc,
+        fems_cov_bernn: rowData.femsCovBernn,
+        cf_dna_concentration: rowData.cfDnaConcentration
     }
 }
 function searchResultToRowData(analysis: Analysis): Object {
@@ -59,6 +72,8 @@ function searchResultToRowData(analysis: Analysis): Object {
         patientSex: analysis.request.sample.patient.sex,
         analysisResult: analysis.result,
         patientMrn: analysis.request.sample.patient.mrn,
+        clinicalCancer: analysis.clinical_cancer,
+        language: analysis.language,
         requestDate: analysis.request.date_request.toString().split("T")[0],
         requestTat: analysis.request.date_due.toString().split("T")[0],
         reportName: analysis.report.file_name,
@@ -68,13 +83,20 @@ function searchResultToRowData(analysis: Analysis): Object {
         reportResultType: analysis.report.report_result_type,
         reportComment: analysis.report.report_comment,
         reportText: analysis.report.report_text,
-        reportPublishAt: analysis.report.publish_at ? analysis.report.publish_at.toString().split("T")[0] : "",
-        reportPublishBy: analysis.report.publish_by.name ? analysis.report.publish_by.name : "미배포",
+        publishAt: analysis.report.publish_at ? analysis.report.publish_at.toString().split("T")[0] : "",
+        publisher: analysis.report.publish_by.name ? analysis.report.publish_by.name : "미배포",
         too5Pred: analysis.too5_pred,
         too5Fems: analysis.too5_fems_prob,
         too6Pred: analysis.too6_pred,
         too6Fems: analysis.too6_fems_prob,
         iscore: analysis.iscore,
+        iscorePath: analysis.iscore_path,
+        femsBc: analysis.fems_bc,
+        covBc: analysis.cov_bc,
+        femsCovBc: analysis.fems_cov_bc,
+        femsCovBernn: analysis.fems_cov_bernn,
+        femsPath: analysis.fems_path,
+        cfDnaConcentration: analysis.cf_dna_concentration,
         cadEnsembleProb: analysis.cad_ensemble_prob,
         freemixA: analysis.freemix,
         rawReadMillionA: analysis.raw_reads_millions,
@@ -137,6 +159,22 @@ function convertResultName(result: string): string {
             return "췌장암";
         case "Others":
             return "기타암";
+        case "LOW":
+            return "LOW"
+        case "MILD":
+            return "MILD"
+        case "MODERATE":
+            return "MODERATE"
+        case "HIGH":
+            return "HIGH"
+        case "NOT_DETECTED":
+            return "NOT_DETECTED"
+        case "WEAK":
+            return "WEAK"
+        case "MODE":
+            return "MODERATE"
+        case "STRONG":
+            return "STRONG"
         default:
             return "미분류";
     }
@@ -144,10 +182,19 @@ function convertResultName(result: string): string {
 function setColor(result: string): string {
     switch (result) {
         case "GENERAL":
+        case "LOW":
+        case "NOT_DETECTED":
             return "#8DC556";
         case "CONCERN":
+        case "MILD":
+        case "WEAK":
             return "#EFA718";
+        case "MODERATE":
+        case "MODE":
+            return "#F37042"
         case "RISK":
+        case "HIGH":
+        case "STRONG":
             return "#D9341D";
         case "LuC":
             return "#FF3846";
@@ -183,6 +230,10 @@ function isValidDate(dateString: string): boolean {
     const date = new Date(dateString)
     return !isNaN(date.getTime())
 }
+function setImageState(path: string): string {
+     if(path === "") return "미등록"
+     else return "등록"
+}
 function isOnlySinglePrintable(selectedAnalysis: SelectedAnalysis[]): boolean {
     return selectedAnalysis.filter(value=>value.reportCreateAt !== "null").length !== 0 && selectedAnalysis.length >= 2
 }
@@ -211,6 +262,7 @@ const utils = {
     isSinglePrintable,
     isMultiPrintable,
     isPublisable,
-    hasPrintingReport
+    hasPrintingReport,
+    setImageState
 }
 export default utils;

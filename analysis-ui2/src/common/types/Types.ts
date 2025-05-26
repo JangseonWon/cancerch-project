@@ -45,6 +45,15 @@ interface Analysis {
     too6_pred: string
     total_reads: number
     total_reads_tmp: number
+    iscore_path: string
+    fems_bc: number
+    cov_bc: number
+    fems_cov_bc: number
+    fems_cov_bernn: number
+    fems_path: string
+    clinical_cancer: string
+    language: string
+    cf_dna_concentration: number
 }
 
 interface Request {
@@ -226,7 +235,13 @@ interface SavableAnalysis {
     rowNumber: number,
     analysisResult: string,
     too6Pred: string,
-    too5Pred: string
+    too5Pred: string,
+    cfDnaConcentration: number
+    iscore: number
+    femsBc: number
+    covBc: number
+    femsCovBc: number
+    femsCovBernn: number
 }
 
 export type {

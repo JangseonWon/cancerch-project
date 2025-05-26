@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    DataGrid, GridActionsCellItem,
+    DataGrid, GridActionsCellItem, GridCellEditStopParams,
     GridColDef,
     GridRenderEditCellParams,
     GridRowId,
@@ -9,7 +9,7 @@ import {
 } from "@mui/x-data-grid";
 import utils from "../../common/utils/Mapper";
 import {
-    Button,
+    Button, Input,
     MenuItem, Select, SelectChangeEvent
 } from "@mui/material";
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -24,10 +24,6 @@ import useSearchTriggerStore from "../stores/SearchTriggerStore";
 import useReportDialogStore from "../stores/ReportDialogStore";
 import * as XLSX from "xlsx";
 import {saveAs} from "file-saver";
-
-interface Data {
-    [key: string]: any; // 유연한 데이터 타입
-}
 
 interface DataComponentProps {
     searchResult: SearchResult
@@ -68,9 +64,9 @@ export default function DataComponent(props: DataComponentProps) {
         setRows(props.searchResult.data.map(utils.searchResultToRowData))
     }, [props])
 
-    function selectableColumnOnChange(params: GridRenderEditCellParams, event: SelectChangeEvent<unknown>) {
+    function selectableColumnOnChange(params: GridRenderEditCellParams, value: string | number) {
         (async () => {
-            let newRow = {...params.row, [params.field]: event.target.value}
+            let newRow = {...params.row, [params.field]: value}
             params.api.stopCellEditMode({id: params.id, field: params.field});
             if (await AnalysisUpdateAPI(utils.convertRowDataToSavableAnalysis(newRow)) === 200) {
                 setSearchTrigger(true)
@@ -87,6 +83,8 @@ export default function DataComponent(props: DataComponentProps) {
         {field: 'patientName', headerName: '수진자명', width: 145},
         {field: 'patientMrn', headerName: 'MRN', width: 100},
         {field: 'patientSex', headerName: '성별', width: 70, align: "center"},
+        {field: 'language', headerName: '언어코드', width: 80, align: "center"},
+        {field: 'clinicalCancer', headerName: '의뢰암종', width: 100, align: "center"},
         {
             field: 'sexAnalysisA', headerName: "성별 예측 A", width: 100, align: "center"
         },
@@ -161,7 +159,7 @@ export default function DataComponent(props: DataComponentProps) {
                 <Select
                     value={params.value}
                     onChange={(event) => {
-                        selectableColumnOnChange(params, event)
+                        selectableColumnOnChange(params, event.target.value)
                     }}
                     fullWidth
                     sx={{
@@ -172,6 +170,14 @@ export default function DataComponent(props: DataComponentProps) {
                     <MenuItem value="GENERAL">일반관리</MenuItem>
                     <MenuItem value="CONCERN">관심관리</MenuItem>
                     <MenuItem value="RISK">집중관리</MenuItem>
+                    <MenuItem value="LOW">LOW</MenuItem>
+                    <MenuItem value="MILD">MILD</MenuItem>
+                    <MenuItem value="MODERATE">MODERATE(CX)</MenuItem>
+                    <MenuItem value="HIGH">HIGH</MenuItem>
+                    <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+                    <MenuItem value="WEAK">WEAK</MenuItem>
+                    <MenuItem value="MODE">MODERATE(CT)</MenuItem>
+                    <MenuItem value="STRONG">STRONG</MenuItem>
                 </Select>
             ), width: 100
         },
@@ -276,7 +282,7 @@ export default function DataComponent(props: DataComponentProps) {
                 <Select
                     value={params.value}
                     onChange={(event) => {
-                        selectableColumnOnChange(params, event)
+                        selectableColumnOnChange(params, event.target.value)
                     }}
                     fullWidth
                     sx={{
@@ -318,7 +324,7 @@ export default function DataComponent(props: DataComponentProps) {
                 <Select
                     value={params.value}
                     onChange={(event) => {
-                        selectableColumnOnChange(params, event)
+                        selectableColumnOnChange(params, event.target.value)
                     }}
                     fullWidth
                     sx={{
@@ -336,10 +342,20 @@ export default function DataComponent(props: DataComponentProps) {
             ), width: 90
         },
         {
-            field: 'too6Fems', headerName: "too6 FEMS PROB", renderCell: (params) => (
-                <div className={'RESULT__CELL'}>{params.value}</div>
-            ), align: "right", width: 150
+            field: 'too6Fems', headerName: "too6 FEMS PROB", align: "right", editable: true, type: "number", width: 150
         },
+        {field: 'cfDnaConcentration',   headerName: "cfDNA Concentration", align: "right", editable: true, type: "number", width: 180},
+        {field: 'iscore',               headerName: "I-Score",             align: "right", editable: true, type: "number", width: 150},
+        {field: 'covBc',                headerName: "COV BC",              align: "right", editable: true, type: "number", width: 150},
+        {field: 'femsBc',               headerName: "FEMS BC",             align: "right", editable: true, type: "number", width: 150},
+        {field: 'femsCovBc',            headerName: "FEMS COV BC",         align: "right", editable: true, type: "number", width: 150},
+        {field: 'femsCovBernn',         headerName: "FEMS COV BERNN",      align: "right", editable: true, type: "number", width: 150},
+        {field: 'femsPath', headerName: "FEMS IMG", align: "center", renderCell: (params) => (
+                <div>{ utils.setImageState(params.value) }</div>
+            ), width: 150},
+        {field: 'iscorePath', headerName: "I-SCORE IMG", align: "center", renderCell: (params) => (
+                <div>{ utils.setImageState(params.value) }</div>
+            ),  width: 150},
         {
             field: 'freemixA', headerName: "FREEMIX A", renderCell: (params) => (
                 <div className={'QC__Cell__A'}>{params.value}</div>
@@ -455,9 +471,6 @@ export default function DataComponent(props: DataComponentProps) {
         let reports = apiRef.current.getRow(id);
 
         (async () => {
-            console.log(reports)
-            console.log(reports["reportCreateAt"])
-            console.log(new Date(reports["reportCreateAt"]).getTime())
             const report = await ReportPreviewAPI(reports["sampleId"], reports["serviceCode"], new Date(reports["reportCreateAt"]).getTime())
             const blob = new Blob([report], {type: 'application/pdf'});
             const url = URL.createObjectURL(blob);
@@ -478,7 +491,6 @@ export default function DataComponent(props: DataComponentProps) {
             interpretation: row.interpretation
         })
     }
-
     const handleHistoryOnClick = (id: GridRowId) => () => {
         let row = apiRef.current.getRow(id);
 
@@ -543,6 +555,15 @@ export default function DataComponent(props: DataComponentProps) {
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={handleRowSelection}
+                onCellEditStop={(params, event, details)=> {
+                    (async () => {
+                        let newRow = {...params.row, [params.field]: parseFloat(event.target.value)}
+                        console.log(newRow)
+                        if (await AnalysisUpdateAPI(utils.convertRowDataToSavableAnalysis(newRow)) === 200) {
+                            setSearchTrigger(true)
+                        }
+                    })()
+                }}
                 apiRef={apiRef}
 
                 sx={{
