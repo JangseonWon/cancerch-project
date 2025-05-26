@@ -23,7 +23,7 @@ class SectionClinicalInformation(private val y: Float = 625f): Painter<DNACTTemp
         stream.restoreGraphicsState()
         return stream
     }
-    private fun toJPCancerName(cancer: String) = when(cancer.lowercase()) {
+    private fun toJPCancerName(cancer: String) = when(cancer) {
         "Liver cancer"                          -> "肝がん"
         "Colorectal cancer"                     -> "大腸がん"
         "Lung cancer"                           -> "肺がん"
