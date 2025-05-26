@@ -4,7 +4,7 @@ import {
     GridColDef,
     GridRenderEditCellParams,
     GridRowId,
-    GridRowsProp, GridToolbarContainer,
+    GridRowsProp, GridToolbarContainer, MuiEvent,
     useGridApiRef
 } from "@mui/x-data-grid";
 import utils from "../../common/utils/Mapper";
@@ -556,9 +556,10 @@ export default function DataComponent(props: DataComponentProps) {
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={handleRowSelection}
                 onCellEditStop={(params, event, details)=> {
+                    const nativeEvt = (event as any).nativeEvent as FocusEvent | KeyboardEvent;
+                    const newValue = (nativeEvt.target as HTMLInputElement).value;
                     (async () => {
-                        let newRow = {...params.row, [params.field]: parseFloat(event.target.value)}
-                        console.log(newRow)
+                        let newRow = {...params.row, [params.field]: parseFloat(newValue)}
                         if (await AnalysisUpdateAPI(utils.convertRowDataToSavableAnalysis(newRow)) === 200) {
                             setSearchTrigger(true)
                         }
