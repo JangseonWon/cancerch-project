@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {
-    DataGrid, GridActionsCellItem, GridCellEditStopParams,
+    DataGrid, GridActionsCellItem,
     GridColDef,
-    GridRenderEditCellParams,
+    GridRenderEditCellParams, GridRowHeightParams,
     GridRowId,
-    GridRowsProp, GridToolbarContainer, MuiEvent,
+    GridRowsProp, GridToolbarContainer,
     useGridApiRef
 } from "@mui/x-data-grid";
 import utils from "../../common/utils/Mapper";
 import {
-    Button, Input,
-    MenuItem, Select, SelectChangeEvent
+    Button, MenuItem, Select
 } from "@mui/material";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import HistoryIcon from '@mui/icons-material/History';
@@ -85,6 +84,18 @@ export default function DataComponent(props: DataComponentProps) {
         {field: 'patientSex', headerName: '성별', width: 70, align: "center"},
         {field: 'language', headerName: '언어코드', width: 80, align: "center"},
         {field: 'clinicalCancer', headerName: '의뢰암종', width: 100, align: "center"},
+        {field: 'clinicalInfo', headerName: '임상정보', flex: 1, minWidth : 300, maxWidth: 500, sortable: false, renderCell: (params) => (
+                <div
+                    style={{
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
+                        lineHeight: 1.4
+                    }}
+                >
+                    {params.value}
+                </div>
+            ),
+        },
         {
             field: 'sexAnalysisA', headerName: "성별 예측 A", width: 100, align: "center"
         },
@@ -548,6 +559,7 @@ export default function DataComponent(props: DataComponentProps) {
                 slotProps={{
                     toolbar: {onDownload}
                 }}
+                getRowHeight={()=>'auto'}
                 columnHeaderHeight={40}
                 checkboxSelection
                 disableRowSelectionOnClick
@@ -573,6 +585,7 @@ export default function DataComponent(props: DataComponentProps) {
                         fontSize: '12px',
                         fontFamily: 'Montserrat, Noto Sans KR',
                         padding: '0 0'
+
                     },
                     '& .MuiDataGrid-columnHeaders': {
                         textAlign: 'center',

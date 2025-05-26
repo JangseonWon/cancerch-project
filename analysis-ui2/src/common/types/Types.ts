@@ -54,6 +54,7 @@ interface Analysis {
     clinical_cancer: string
     language: string
     cf_dna_concentration: number
+    clinical_info: string
 }
 
 interface Request {

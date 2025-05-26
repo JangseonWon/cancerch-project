@@ -49,7 +49,6 @@ function AnalysisPage() {
                     setSearchTrigger(true);
                 })
                 reportQueueSSE.onerror = (event) => {
-                    console.log(event);
                     setSnackbar({ message: `결과지 생성 모듈에 오류가 발생했습니다. 재연결 중입니다.`, openType: "error", state: true });
                 };
 
@@ -60,7 +59,6 @@ function AnalysisPage() {
                     setSearchTrigger(true);
                 })
                 reportPublishSSE.onerror = (event) => {
-                    console.log(event);
                     setSnackbar({ message: `결과지 전송 모듈에 오류가 발생했습니다.`, openType: "error", state: true });
                 };
             } catch (error) {

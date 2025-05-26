@@ -127,7 +127,8 @@ function searchResultToRowData(analysis: Analysis): Object {
         sexPredictB: analysis.pred_sex_tmp === analysis.request.sample.patient.sex ? "P":"F",
         sexAnalysisB: analysis.pred_sex_tmp,
         interpretation: analysis.comment,
-        description: analysis.report.description
+        description: analysis.report.description,
+        clinicalInfo: analysis.clinical_info
     }
 }
 function convertPassOrFail(str: string): string{
