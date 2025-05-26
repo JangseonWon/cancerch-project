@@ -25,22 +25,22 @@ class SectionSignalScore(private val y: Float = 379f): Painter<DNACXTemplate<DNA
         val width = img.width * BACKGROUND_RATE / img.height
         stream.drawImage(img, 298f - width / 2, y - BACKGROUND_RATE - 55, width, BACKGROUND_RATE)
 
-        //0.00 x값 = 137f / 1.00 x값 = 479f
-        //0.01 당 3.42f 증가 0.38 일 경우 38*3.42 = 129.96f + 137ff
+        //0.00 x값 = 140f / 1.00 x값 = 479f
+        //0.01 당 3.42f 증가 0.38 일 경우 38*3.42 = 129.96f + 140f
         stream.restoreGraphicsState()
         stream.saveGraphicsState()
         stream.setLineWidth(2f).setStrokingColor(Color(186,26,50)).setNonStrokingColor(Color(186,26,50))
-            .setLineDashPattern(floatArrayOf(1.7f, 2f), 1f).moveTo(137f+(dto.result.signalScore95CutOff.toFloat()*100)*3.42f, y - BACKGROUND_RATE-14).lineTo(137f+(dto.result.signalScore95CutOff.toFloat()*100)*3.42f, y - BACKGROUND_RATE + 126f).stroke()
+            .setLineDashPattern(floatArrayOf(1.7f, 2f), 1f).moveTo(146f+(dto.result.signalScore95CutOff.toFloat()*100)*3.42f, y - BACKGROUND_RATE-14).lineTo(146f+(dto.result.signalScore95CutOff.toFloat()*100)*3.42f, y - BACKGROUND_RATE + 126f).stroke()
         stream.restoreGraphicsState()
         stream.saveGraphicsState()
         stream.setLineWidth(1.5f).setStrokingColor(Color(67,72,143)).setNonStrokingColor(Color(67,72,143))
-            .setLineDashPattern(floatArrayOf(2f, 1.7f), 3f).moveTo(137f+(dto.result.signalScore.toFloat()*100)*3.42f, y - BACKGROUND_RATE-14).lineTo(137f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 126f).stroke()
-        stream.circle(137f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 126f, 2.5f).fill()
+            .setLineDashPattern(floatArrayOf(2f, 1.7f), 3f).moveTo(146f+(dto.result.signalScore.toFloat()*100)*3.42f, y - BACKGROUND_RATE-14).lineTo(146f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 126f).stroke()
+        stream.circle(146f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 126f, 2.5f).fill()
         stream.restoreGraphicsState()
         stream.saveGraphicsState()
-        stream.paragraph(137f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 158f, 200f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(template.resource().styleContentBold().clone().color(Color(0,0,0)).fontSize(12f), "あなたのスコア"))
-        stream.setLineWidth(0.8f).setStrokingColor(Color(0,0,0)).setNonStrokingColor(Color(0,0,0)).moveTo(137f+(dto.result.signalScore.toFloat()*100)*3.42f-45, y - BACKGROUND_RATE + 149f).lineTo(137f+(dto.result.signalScore.toFloat()*100)*3.42f+47f,y - BACKGROUND_RATE + 149f).stroke()
-        stream.paragraph(137f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 140f, 200f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(template.resource().styleContentBold().clone().color(if(dto.result.signalScore >= dto.result.signalScore95CutOff) Color(186, 26, 50) else Color(111,186,44)).fontSize(16f), "${dto.result.signalScore}"))
+        stream.paragraph(146f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 158f, 200f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(template.resource().styleContentBold().clone().color(Color(0,0,0)).fontSize(12f), "あなたのスコア"))
+        stream.setLineWidth(0.8f).setStrokingColor(Color(0,0,0)).setNonStrokingColor(Color(0,0,0)).moveTo(146f+(dto.result.signalScore.toFloat()*100)*3.42f-45, y - BACKGROUND_RATE + 149f).lineTo(146f+(dto.result.signalScore.toFloat()*100)*3.42f+47f,y - BACKGROUND_RATE + 149f).stroke()
+        stream.paragraph(146f+(dto.result.signalScore.toFloat()*100)*3.42f,y - BACKGROUND_RATE + 140f, 200f, AlignHorizontal.CENTER, AlignVertical.MIDDLE, TextBlock(template.resource().styleContentBold().clone().color(if(dto.result.signalScore >= dto.result.signalScore95CutOff) Color(186, 26, 50) else Color(111,186,44)).fontSize(16f), "${dto.result.signalScore}"))
         stream.restoreGraphicsState()
         return stream
     }
