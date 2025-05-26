@@ -74,36 +74,16 @@ class AnalysisDao(private val repo: AnalysisRepository) {
             )
     }
 
-    fun findAllById(report: Report): Mono<List<Analysis>> {
-        return repo.query {
-            select(it)
-                .where(analysis.sample.eq(report.sample).and(analysis.service.eq(report.service)).and(analysis.batch.eq(report.batch))
-                    .and(analysis.row.eq(report.row)).and(analysis.sample.loe(report.sample)))
-                .orderBy(analysis.sample.desc()).limit(5)
-        }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
-    }
     fun findById(sample: Long, service: String, batch: String, row: Long) : Mono<Analysis> {
         return repo.query{
             select(it).where(analysis.sample.eq(sample).and(analysis.service.eq(service)).and(analysis.batch.eq(batch)).and(analysis.row.eq(row)))
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
     }
 
-    fun findByPatientIdAndService(patientId: String, service: String): Mono<List<DNACTDto.SummaryOfResult>> {
+    fun find5ByPatientIdAndService(patientId: String, service: String): Mono<List<Analysis>> {
         return repo.query {
             select(it).where(patient.id_SET.eq(patientId).and(analysis.service.eq(service)))
                 .orderBy(analysis.sample.desc()).limit(5)
-        }.all().map { analysis ->
-            DNACTDto.SummaryOfResult(
-                date = analysis.dateRequest.toLocalDate(),
-                cancer = analysis.clinicalCancer ?: throw Exception("${analysis.sample}의 Clinical Cancer가 없습니다."),
-                cfDNAConcentration = if (analysis.cfDnaConcentration != null) analysis.cfDnaConcentration.toFloat() else throw Exception("${analysis.sample}의 cfDNAConc 값이 없습니다."),
-                genomicInstability = if (analysis.iscore != null) analysis.iscore.toFloat() else throw Exception("${analysis.sample}의 cfDNAConc 값이 없습니다."),
-                covScore = if (analysis.covBc != null) analysis.covBc.toFloat() else throw Exception("${analysis.sample}의 cov bc 값이 없습니다."),
-                femsScore = if (analysis.femsBc != null) analysis.femsBc.toFloat() else throw Exception("${analysis.sample}의 fems bc 값이 없습니다.")
-            ).apply {
-                FEMSPath = analysis.femsPath ?: ""
-                GenomicPath = analysis.iscorePath ?: ""
-            }
-        }.collectList()
+        }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
     }
 }

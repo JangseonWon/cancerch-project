@@ -52,8 +52,8 @@ class ReportDao(private val repo: ReportRepository) {
     fun create(new: com.greencross.lims.entity.Report): Mono<com.greencross.lims.entity.Report> {
         return repo.save(new)
     }
-    fun merge(entity: com.greencross.lims.entity.Report): Mono<Void> {
-        return repo.persist(entity).then(Mono.empty())
+    fun merge(entity: com.greencross.lims.entity.Report): Mono<com.greencross.lims.entity.Report> {
+        return repo.persist(entity)
     }
     fun findReport():Flux<com.greencross.lims.entity.Report> {
         return repo.findTop5ByIsPrinted("PREPARE")

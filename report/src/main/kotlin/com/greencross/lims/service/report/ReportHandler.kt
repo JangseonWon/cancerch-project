@@ -57,6 +57,7 @@ import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
+import reactor.core.scheduler.Schedulers
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.time.*
@@ -145,32 +146,43 @@ class ReportHandler(
 
     @Transactional
     fun scheduleReports(): Mono<Long> {
-        logger.info("CronJob Running: Period 1 Min.")
         return reportDao.findReport()
             .doOnNext {
                 logger.info(it.sample.toString() + "/" + it.service + " is printing.")
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(it)))
             }
-            .flatMap {
-                analysisDao.findAllById(it).zipWith(Mono.just(it))
-                    .flatMap { zipped ->
-                        val reportFile = createReport(zipped.t1)
-                        fileRepo.save(reportFile)
-
-                        zipped.t2.apply {
-                            this.file = reportFile.id
-                            this.name = reportFile.name!!
-                            this.size = reportFile.size
-                            this.isPrinted = "COMPLETED"
-                        }
-
-                        reportDao.merge(zipped.t2)
-                            .doOnSuccess {
-                                logger.info(zipped.t1.first().sample.toString() + "/" + zipped.t1.first().service + " is finished.")
-                                publisher.tryEmitNext(MessageReport(MessageReport.MessageType.FINISH, mapper.toMessageDto(zipped.t2)))
+            .flatMapSequential({ report ->
+                analysisDao.findById(report.sample, report.service, report.batch, report.row)
+                    .flatMap { analysis ->
+                        analysisDao.find5ByPatientIdAndService(analysis.patient.id_SET, analysis.service)
+                            .flatMap { pastList ->
+                                Mono.fromCallable {
+                                    val reportFile = createReport(pastList)
+                                    fileRepo.save(reportFile)   // 동기적으로 ReportFile 반환
+                                }.subscribeOn(Schedulers.boundedElastic()) // 블로킹 작업 격리
+                            }
+                            .flatMap { savedFile ->
+                                report.apply {
+                                    file = savedFile.id
+                                    name = savedFile.name!!
+                                    size = savedFile.size
+                                    isPrinted = "COMPLETED"
+                                }
+                                reportDao.merge(report)  // Mono<Report>
+                            }
+                            .doOnSuccess { finishedReport ->
+                                logger.info("${finishedReport.sample}/${finishedReport.service} is finished.")
+                                publisher.tryEmitNext(
+                                    MessageReport(
+                                        MessageReport.MessageType.FINISH,
+                                        mapper.toMessageDto(finishedReport)
+                                    )
+                                )
                             }
                     }
-            }.then(Mono.empty())
+                    .thenReturn(1L)
+            }, 1)
+            .reduce(0L) { acc, item -> acc + item }
     }
 
     @Transactional
