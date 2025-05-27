@@ -154,7 +154,7 @@ class ReportHandler(
             .flatMapSequential({ report ->
                 analysisDao.findById(report.sample, report.service, report.batch, report.row)
                     .flatMap { analysis ->
-                        analysisDao.find5ByPatientIdAndService(analysis.patient.id_SET, analysis.service)
+                        analysisDao.findOneOrManyBy(analysis)
                             .flatMap { pastList ->
                                 Mono.fromCallable {
                                     val reportFile = createReport(pastList)
@@ -566,6 +566,7 @@ class ReportHandler(
         val page: Painter<DNACXTemplate<DNACXResource>, DNACXDto>
         val sign: Painter<DNACXTemplate<DNACXResource>, DNACXDto> = com.greencross.lims.report.enus.SectionSign(65f)
         val footer: Painter<DNACXTemplate<DNACXResource>, DNACXDto> = SectionFooterWithLymphotec()
+        println(dto.language)
         return when (dto.language) {
             "en-us" -> {
                 val template = DNACXTemplateON204EnUs(DNACXResourceON204EnUs(doc), TestInfo.ON204)

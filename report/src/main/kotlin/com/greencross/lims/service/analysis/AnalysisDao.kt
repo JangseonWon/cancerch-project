@@ -1,18 +1,15 @@
 package com.greencross.lims.service.analysis
 
 import com.greencross.lims.entity.QAnalysis.analysis
-import com.greencross.lims.entity.Report
 import com.greencross.lims.entity.readonly.QSample.sample
 import com.greencross.lims.entity.readonly.QPatient.patient
 import com.greencross.lims.entity.readonly.QRequest.request
 import com.greencross.lims.entity.readonly.QRequestInfo
 import com.greencross.lims.entity.readonly.QRequestInfo.requestInfo
 import com.greencross.lims.projection.Analysis
-import com.greencross.lims.report.ON206.DNACTDto
 import com.querydsl.core.types.Projections.constructor
 import com.querydsl.sql.SQLQuery
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Repository
@@ -80,10 +77,13 @@ class AnalysisDao(private val repo: AnalysisRepository) {
         }.one().map(Analysis.Companion.AnalysisBuilder::build)
     }
 
-    fun find5ByPatientIdAndService(patientId: String, service: String): Mono<List<Analysis>> {
-        return repo.query {
-            select(it).where(patient.id_SET.eq(patientId).and(analysis.service.eq(service)))
+    fun findOneOrManyBy(entity: Analysis): Mono<List<Analysis>> {
+        return if(entity.service == "ON206") repo.query {
+            select(it).where(patient.id_SET.eq(entity.patient.id_SET).and(analysis.service.eq(entity.service)))
                 .orderBy(analysis.sample.desc()).limit(5)
+        }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
+        else repo.query {
+            select(it).where(analysis.sample.eq(entity.sample).and(analysis.service.eq(entity.service)))
         }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
     }
 }
