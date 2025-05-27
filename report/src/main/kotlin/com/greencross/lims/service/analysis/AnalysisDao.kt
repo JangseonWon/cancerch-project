@@ -22,6 +22,8 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 Analysis.Companion.AnalysisBuilder::class.java,
                 analysis.sample,
                 analysis.service,
+                analysis.batch,
+                analysis.row,
                 request.dateRequest.`as`("dateRequest"),
                 request.dateSampling.`as`("dateSampling"),
                 request.dateDue.`as`("dateDue"),
@@ -79,11 +81,12 @@ class AnalysisDao(private val repo: AnalysisRepository) {
 
     fun findOneOrManyBy(entity: Analysis): Mono<List<Analysis>> {
         return if(entity.service == "ON206") repo.query {
-            select(it).where(patient.id_SET.eq(entity.patient.id_SET).and(analysis.service.eq(entity.service)))
+            select(it).where(patient.id_SET.eq(entity.patient.id_SET).and(analysis.service.eq(entity.service)
+                .and(analysis.sample.loe(entity.sample))))
                 .orderBy(analysis.sample.desc()).limit(5)
         }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
         else repo.query {
-            select(it).where(analysis.sample.eq(entity.sample).and(analysis.service.eq(entity.service)))
+            select(it).where(analysis.sample.eq(entity.sample).and(analysis.service.eq(entity.service)).and(analysis.batch.eq(entity.batch).and(analysis.row.eq(entity.row))))
         }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
     }
 }

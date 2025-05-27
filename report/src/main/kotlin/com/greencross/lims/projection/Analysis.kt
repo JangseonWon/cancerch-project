@@ -7,6 +7,8 @@ import java.time.LocalDateTime
 data class Analysis (
     val sample: Long,
     val service: String,
+    val batch: String,
+    val row: Long,
     val dateRequest: LocalDateTime,
     val dateSampling: LocalDateTime,
     val dateDue: LocalDateTime,
@@ -36,6 +38,8 @@ data class Analysis (
         data class AnalysisBuilder(
             val sample: Long,
             val service: String,
+            val batch: String,
+            val row: Long,
             val dateRequest: LocalDateTime,
             val dateSampling: LocalDateTime,
             val dateDue: LocalDateTime,
@@ -67,7 +71,7 @@ data class Analysis (
             val clinicalCancer: String?,
             val cfDnaConcentration: Double?
         ){
-            fun build() = Analysis(sample, service, dateRequest, dateSampling, dateDue, sampleType, remark, ward, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred, comment, iscore, femsCovBc, femsBc, covBc, femsCovBernn, femsPath, iscorePath, language, clinicalCancer, cfDnaConcentration)
+            fun build() = Analysis(sample, service, batch, row, dateRequest, dateSampling, dateDue, sampleType, remark, ward, code, value, Patient(patient, patientName, sex, birth, customerName, customerName2, mrn), barcode, result, too5Pred, too6Pred, comment, iscore, femsCovBc, femsBc, covBc, femsCovBernn, femsPath, iscorePath, language, clinicalCancer, cfDnaConcentration)
         }
     }
 }
