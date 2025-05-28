@@ -86,7 +86,10 @@ class AnalysisDao(private val repo: AnalysisRepository) {
                 .orderBy(analysis.sample.desc()).limit(5)
         }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
         else repo.query {
-            select(it).where(analysis.sample.eq(entity.sample).and(analysis.service.eq(entity.service)).and(analysis.batch.eq(entity.batch).and(analysis.row.eq(entity.row))))
+            select(it).where(analysis.sample.eq(entity.sample)
+                .and(analysis.service.eq(entity.service))
+                .and(analysis.batch.eq(entity.batch)
+                    .and(analysis.row.eq(entity.row))))
         }.all().map(Analysis.Companion.AnalysisBuilder::build).collectList()
     }
 }
