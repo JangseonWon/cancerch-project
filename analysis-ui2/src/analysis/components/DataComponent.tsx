@@ -355,10 +355,42 @@ export default function DataComponent(props: DataComponentProps) {
         {
             field: 'too6Fems', headerName: "too6 FEMS PROB", align: "right", editable: true, type: "number", width: 150
         },
-        {field: 'cfDnaConcentration',   headerName: "cfDNA Concentration", align: "right", editable: true, type: "number", width: 180},
-        {field: 'iscore',               headerName: "I-Score",             align: "right", editable: true, type: "number", width: 150},
-        {field: 'covBc',                headerName: "COV BC",              align: "right", editable: true, type: "number", width: 150},
-        {field: 'femsBc',               headerName: "FEMS BC",             align: "right", editable: true, type: "number", width: 150},
+        {field: 'cfDnaConcentration',   headerName: "cfDNA Concentration", align: "right", editable: true, type: "number", width: 180, renderCell: (params)=>(
+                <div className={'QC__Cell__A'} style={{
+                    backgroundColor: utils.setColorByCutoff("cfDNA", Number.parseFloat(params.value)),
+                    margin: 0,
+                    padding: 0,
+                    paddingRight: 5,
+                    color: "white",
+                }}>{params.value}</div>
+            )},
+        {field: 'iscore',               headerName: "I-Score",             align: "right", editable: true, type: "number", width: 150, renderCell: (params)=>(
+                <div className={'QC__Cell__A'} style={{
+                    backgroundColor: utils.setColorByCutoff("iscore", Number.parseFloat(params.value)),
+                    margin: 0,
+                    padding: 0,
+                    paddingRight: 5,
+                    color: "white",
+                }}>{params.value}</div>
+            )},
+        {field: 'covBc',                headerName: "COV BC",              align: "right", editable: true, type: "number", width: 150, renderCell: (params)=>(
+            <div className={'QC__Cell__A'} style={{
+                backgroundColor: utils.setColorByCutoff("cov", Number.parseFloat(params.value)),
+                margin: 0,
+                padding: 0,
+                paddingRight: 5,
+                color: "white",
+            }}>{params.value}</div>
+            )},
+        {field: 'femsBc',               headerName: "FEMS BC",             align: "right", editable: true, type: "number", width: 150, renderCell: (params)=>(
+                <div className={'QC__Cell__A'} style={{
+                    backgroundColor: utils.setColorByCutoff("fems", Number.parseFloat(params.value)),
+                    margin: 0,
+                    padding: 0,
+                    paddingRight: 5,
+                    color: "white",
+                }}>{params.value}</div>
+            )},
         {field: 'femsCovBc',            headerName: "FEMS COV BC",         align: "right", editable: true, type: "number", width: 150},
         {field: 'femsCovBernn',         headerName: "FEMS COV BERNN",      align: "right", editable: true, type: "number", width: 150},
         {field: 'femsPath', headerName: "FEMS IMG", align: "center", renderCell: (params) => (

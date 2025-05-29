@@ -250,7 +250,21 @@ function isPublisable(selectedAnalysis: SelectedAnalysis[]): boolean {
 function hasPrintingReport(selectedAnalysis: SelectedAnalysis[]): boolean {
     return selectedAnalysis.filter(value=>value.reportCreateAt !== "null" && value.reportName === null).length > 0
 }
+function setColorByCutoff(type: string, value: number): string {
+    if (type === "cov") {
+        return value >= 0.423 ? "#D9341D" : "#8DC556";
+    } else if (type === "fems") {
+        return value >= 0.531 ? "#D9341D" : "#8DC556";
+    } else if (type === "cfDNA") {
+        return value >= 9.625 ? "#D9341D" : "#8DC556";
+    } else if (type === "iscore") {
+        return value >= 4.0 ?   "#D9341D" : "#8DC556";
+    } else {
+        return "#FFFFFF";
+    }
+}
 const utils = {
+    setColorByCutoff,
     apiResponseToSearchResult,
     convertPredicatesToQueryString,
     convertResultName,

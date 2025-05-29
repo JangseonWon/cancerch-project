@@ -26,7 +26,7 @@ class SectionPlot(private val y: Float = 708f): Painter<DNACTTemplate<DNACTResou
             TextBlock(smallHeaderFont, "The genomic instability plot shows numerical changes across the entire chromosome observed in cancer patients."))
         stream.paragraph(44f, y-83f, 500f, AlignHorizontal.LEFT, TextBlock(subTitleFont, "Genomic Instability Plot of "), TextBlock(subTitleFontItalic, "Examinee"))
 
-        var img = template.resource().imgGenomicInstability(dto.result[0].GenomicPath)
+        var img = template.resource().imgGenomicInstability(if(dto.risk == DNACTDto.Risk.NOT_DETECTED) "" else dto.result[0].GenomicPath)
         var width = img.width * GENOMIC_RATE / img.height
         stream.drawImage(img, 308f - width / 2, y - GENOMIC_RATE - 70, width, GENOMIC_RATE)
 
@@ -34,7 +34,7 @@ class SectionPlot(private val y: Float = 708f): Painter<DNACTTemplate<DNACTResou
         width = img.width * GENOMIC_EXAMPLE_RATE / img.height
         stream.drawImage(img, 298f - width / 2, y - GENOMIC_EXAMPLE_RATE - 200, width, GENOMIC_EXAMPLE_RATE)
 
-        img = template.resource().imgFEMS(dto.result[0].FEMSPath)
+        img = template.resource().imgFEMS(if(dto.risk == DNACTDto.Risk.NOT_DETECTED) "" else dto.result[0].FEMSPath)
         width = img.width * FEMS_RATE / img.height
         stream.drawImage(img, 308f - width / 2, y - FEMS_RATE - 360, width, FEMS_RATE)
         stream.rect(35f, y-297f, 525f, 32f).setStrokingColor(Color(0,80,109)).setNonStrokingColor(Color(0,80,109)).fillAndStroke()
