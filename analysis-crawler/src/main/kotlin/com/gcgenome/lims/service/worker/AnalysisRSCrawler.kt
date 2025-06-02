@@ -97,9 +97,6 @@ class AnalysisRSCrawler(
                 }
             }
             .collectList()
-            .doFinally {
-                logger.info("ImageCrawler 완료: femsDir=${processedFems.path}, iscoreDir=${processedIscore.path}")
-            }
             .subscribe()
     }
 
