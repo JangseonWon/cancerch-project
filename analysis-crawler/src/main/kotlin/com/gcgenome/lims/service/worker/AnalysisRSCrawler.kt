@@ -97,6 +97,9 @@ class AnalysisRSCrawler(
                 }
             }
             .collectList()
+            .doFinally {
+                logger.info("ImageCrawler 완료: femsDir=${processedFems.path}, iscoreDir=${processedIscore.path}")
+            }
             .subscribe()
     }
 
@@ -124,10 +127,10 @@ class AnalysisRSCrawler(
         }
 
     private fun sendResultMessageToJandi(entity: com.gcgenome.lims.entity.AnalysisResult, type: String): Mono<Boolean> {
-        jandi.sendWithConnectInfos(
-            "DNA CT 검사의 $type 이미지가 입력됐습니다.",
-            listOf(ConnectInfo().title("업로드 대상: ${entity.sample} / ${entity.service}"))
-        )
+//        jandi.sendWithConnectInfos(
+//            "DNA CT 검사의 $type 이미지가 입력됐습니다.",
+//            listOf(ConnectInfo().title("업로드 대상: ${entity.sample} / ${entity.service}"))
+//        )
         return Mono.just(true)
     }
 
