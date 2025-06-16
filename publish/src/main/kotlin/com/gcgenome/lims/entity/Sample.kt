@@ -13,7 +13,8 @@ data class Sample(
     var patient: String,
     @Column("sample_type")  var sampleType: String,
     @Column("sample_type2") var sampleType2: String,
-    var barcode: Long? = 0
+    var barcode: Long? = null,
+    val remark: String? = null
 ): Persistable<Long> {
     override fun getId(): Long = id
 

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Transient
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema("public")
@@ -13,9 +14,10 @@ import java.time.LocalDateTime
 data class Request(
     val sample: Long,
     val service: String,
-    @Column("date_request")val dateRequest: LocalDateTime,
-    @Column("date_sampling") val dateSampling: LocalDateTime,
-    @Column("date_due") val dateDue: LocalDateTime,
+    @Column("date_request")val dateRequest: LocalDate,
+    @Column("date_sampling") val dateSampling: LocalDate,
+    @Column("date_due") val dateDue: LocalDate,
+    @Column("date_reception") val dateReception: LocalDateTime,
     @Column("info") val info: String
 
 ): Persistable<Request.Companion.RequestPK> {

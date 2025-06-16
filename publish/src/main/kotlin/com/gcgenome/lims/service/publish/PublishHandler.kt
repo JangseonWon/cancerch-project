@@ -1,14 +1,16 @@
 package com.gcgenome.lims.service.publish
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.gcgenome.EventConfig
 import com.gcgenome.alis.Client
 import com.gcgenome.alis.models.AlisResponse
-import com.gcgenome.lims.projection.Report
 import com.gcgenome.lims.model.ReportForRMS
 import com.gcgenome.lims.model.ResultInfo
+import com.gcgenome.lims.projection.Report
 import com.gcgenome.lims.service.report.ReportDao
 import com.gcgenome.lims.service.reportfile.ReportFileRepository
 import com.gcgenome.lims.service.request.RequestDao
+import com.gcgenome.lims.workflow.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
@@ -21,6 +23,7 @@ import reactor.core.publisher.Sinks
 import reactor.core.scheduler.Schedulers
 import reactor.util.function.Tuple2
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import java.util.function.Consumer
@@ -32,7 +35,8 @@ class PublishHandler(
     private val requestDao: RequestDao,
     private val reportFileRepo: ReportFileRepository,
     private val client: Client,
-    private val om: ObjectMapper
+    private val om: ObjectMapper,
+    private val event: EventConfig
 ) {
     private val subscriber = Sinks.many().multicast().directAllOrNothing<AlisResponse>()
     private val rmsPublisher = Sinks.many().unicast().onBackpressureBuffer<ReportForRMS>()
@@ -129,10 +133,58 @@ class PublishHandler(
                     it.t1.sample,
                     it.t1.service,
                     it.t2
+                ) to Event(
+                    UUID.randomUUID(),
+                    LocalDateTime.now(),
+                    com.gcgenome.lims.workflow.Request(
+                        it.t1.sample.toString()+":"+it.t1.service,
+                        com.gcgenome.lims.workflow.Organization(
+                            it.t1.institution?:"미입력",
+                            it.t1.institutionName?:"미입력"
+                        ),
+                        com.gcgenome.lims.workflow.Service(
+                            it.t1.service,
+                            it.t1.serviceName
+                        ),
+                        listOf(com.gcgenome.lims.workflow.Sample(
+                            it.t1.sample,
+                            it.t1.sampleType?:"-",
+                            com.gcgenome.lims.workflow.Patient(
+                                Organization(
+                                    if(it.t1.institution2!=null) it.t1.institution2?:"-" else it.t1.institution?:"-",
+                                    if(it.t1.institution2!=null) it.t1.institution2Name?:"-" else it.t1.institutionName?:"-"
+                                ),
+                                it.t1.patientName,
+                                    if(it.t1.sex == "M") Patient.Companion.Sex.M else Patient.Companion.Sex.F
+                                ,
+                                com.gcgenome.lims.workflow.Patient.Companion.Birth(
+                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).year,
+                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).monthValue,
+                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).dayOfMonth),
+                                it.t1.mrn
+                            ),
+                            it.t1.dateSampling,
+                            it.t1.age,
+                            it.t1.remark
+                            )),
+                        it.t1.dateRequest,
+                        it.t1.dateReception,
+                        it.t1.dateDuePublish
+                    ),
+                    "avoid-publish",
+                    EventProcess.FINISHED,
+                    EventType.COMPLETE,
+                    ParamImpl("New"),
+                    "avoid-publisher"
                 )
             }.map {
-                rmsPublisher.tryEmitNext(it)
+                rmsPublisher.tryEmitNext(it.first)
+                event.publishEvent(it.second)
             }.map { true }
             .onErrorResume { Mono.just(false) }
+    }
+
+    companion object {
+        class ParamImpl(override val processInfo: String) : HashMap<String, Any>(), Param
     }
 }

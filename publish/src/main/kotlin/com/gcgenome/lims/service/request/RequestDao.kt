@@ -4,6 +4,7 @@ import com.gcgenome.lims.entity.QPatient
 import com.gcgenome.lims.entity.QPatient.patient
 import com.gcgenome.lims.entity.QRequest.request
 import com.gcgenome.lims.entity.QSample
+import com.gcgenome.lims.entity.QSample.sample
 import com.gcgenome.lims.entity.QService
 import com.gcgenome.lims.entity.QService.service
 import com.gcgenome.lims.projection.Request
@@ -23,7 +24,8 @@ class RequestDao(
         return query.select(
             constructor(
                 Request.Companion.RequestBuilder::class.java,
-                patient.customerName2.`as`("institutionName"),
+                patient.customerName.`as`("institutionName"),
+                patient.customerName2.`as`("institution2Name"),
                 patient.customerDeptName.`as`("departmentName"),
                 patient.ward.`as`("wardName"),
                 service.serviceNm.`as`("serviceName"),
@@ -36,6 +38,13 @@ class RequestDao(
                 patient.customerCode2.`as`("institution2"),
                 patient.physician.`as`("physician"),
                 request.sample.`as`("sample"),
+                sample.sampleType.`as`("sampleType"),
+                request.dateRequest.`as`("dateRequest"),
+                request.dateReception.`as`("dateReception"),
+                request.dateSampling.`as`("dateSampling"),
+                request.dateDue.`as`("dateDuePublish"),
+                patient.age.`as`("age"),
+                sample.remark.`as`("remark"),
                 request.service.`as`("service")
             )
         ).from(request)
