@@ -242,9 +242,9 @@ class ReportHandler(
             this.barcode = barcode
             this.patientName = patient.name
             this.birthDate = patient.birth
-            this.age = age(dto.birthDate, targetAnalysis.dateSampling.toLocalDate()).toString()
+            this.age = age(patient.birth, targetAnalysis.dateSampling.toLocalDate()).toString()
             this.sex = sex(patient.sex)
-            this.requestNumber = dto.requestNumber ?: ""
+            this.requestNumber = formatSampleId(targetAnalysis.sample.toString())
             this.collectionDate = targetAnalysis.dateSampling.toLocalDate()
             this.receiptDate = targetAnalysis.dateRequest.toLocalDate()
             this.reportDate = LocalDate.now()
@@ -283,9 +283,9 @@ class ReportHandler(
             this.barcode = barcode
             this.patientName = patient.name
             this.birthDate = patient.birth
-            this.age = age(dto.birthDate, analysis.dateSampling.toLocalDate()).toString()
+            this.age = age(patient.birth, analysis.dateSampling.toLocalDate()).toString()
             this.sex = sex(patient.sex)
-            this.requestNumber = dto.requestNumber ?: ""
+            this.requestNumber = formatSampleId(analysis.sample.toString())
             this.collectionDate = analysis.dateSampling.toLocalDate()
             this.receiptDate = analysis.dateRequest.toLocalDate()
             this.reportDate = LocalDate.now()
