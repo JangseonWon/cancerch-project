@@ -34,7 +34,8 @@ class ReportMapper(private val om: ObjectMapper) {
             "GENERAL" -> "일반관리"
             "CONCERN" -> "관심관리"
             "RISK"    -> "집중관리"
-            else      -> "오류발생"
+            "LOW", "MILD", "MODERATE", "HIGH", "NOT_DETECTED", "WEAK", "MODE", "STRONG" -> analysis.result
+            else      -> "등록되지 않은 검사 결과"
         }
         val prediction = if(analysis.patient.sex == "F") replaceResult(analysis.too6Pred) else replaceResult(analysis.too5Pred)
         val comment = analysis.comment?:""
