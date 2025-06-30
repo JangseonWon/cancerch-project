@@ -61,7 +61,7 @@ class AnalysisRSCrawler(
                             this.too6Pred = it.too6Pred
                             this.too6FemsProb = it.too6Fems
                             this.iscore = it.iscore
-                            this.result = if(service != "ON204" && service != "ON206") it.result else null
+                            this.result = it.result
                             this.femsCovBc = it.femsCovBc
                             this.femsBc = it.femsBc
                             this.covBc = it.covBc
