@@ -133,6 +133,7 @@ abstract class DNACXResourceEnUs(doc: PDDocument): DNACXResource, HasSignEnUs, H
         }
     }
     override fun lblInterpretationRegular(dto: DNACXDto): String {
+        println("DTO SS : ${dto.result.signalScore} / cutOff : ${dto.result.signalScore95CutOff} / ${dto.result.signalScore99CutOff}")
         val ScoreParagraph = buildParagraph(
             dto.risk,
             dto.result.signalScore >= dto.result.signalScore95CutOff,
