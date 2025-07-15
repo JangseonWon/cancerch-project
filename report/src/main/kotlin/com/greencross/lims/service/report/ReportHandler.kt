@@ -273,7 +273,7 @@ class ReportHandler(
                 analysis.iscore ?: throw Exception("iscore 값이 없습니다 ${analysis.sample} / ${analysis.service}"),
             ), if (analysis.language.isNullOrEmpty()) "ja-jp" else analysis.language
         )
-        val age = age(dto.birthDate, dto.collectionDate)
+        val age = age(patient.birth, analysis.dateSampling.toLocalDate())
         dto.age = age.toString()
         val (cutoff95, cutoff99) = calculateSignalScoreCutOff(age)
         dto.result.signalScore95CutOff = cutoff95
@@ -283,7 +283,6 @@ class ReportHandler(
             this.barcode = barcode
             this.patientName = patient.name
             this.birthDate = patient.birth
-            this.age = age(patient.birth, analysis.dateSampling.toLocalDate()).toString()
             this.sex = sex(patient.sex)
             this.requestNumber = formatSampleId(analysis.sample.toString())
             this.collectionDate = analysis.dateSampling.toLocalDate()
