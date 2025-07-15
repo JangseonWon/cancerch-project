@@ -424,7 +424,7 @@ abstract class DNACXResourceJaJp(doc: PDDocument): DNACXResource, HasSignEnUs, H
                     "分類されることがあります。\n" +
                     "\n" +
                     "※確定診断もしくはモニタリングのため医師と相談することを推奨します。"
-            else -> throw Exception("분류되지 않은 케이스로 소견 문단 2번 생성이 불가능합니다.")
+            else -> throw Exception("분류되지 않은 케이스로 소견 문단 2번 생성이 불가능합니다. Risk: ${risk} ss95: ${ssIsIncreased95} ss99: ${ssIsIncreased99} cov: ${covIsIncreased} fems: ${femsIsIncreased} cfDNA: ${cfDNAIsIncreased} i-score: ${genomicIsIncreased}")
         }
     }
     override fun lblInterpretationRegular(dto: DNACXDto): String {

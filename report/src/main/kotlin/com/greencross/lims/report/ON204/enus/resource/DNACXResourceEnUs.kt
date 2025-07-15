@@ -129,7 +129,7 @@ abstract class DNACXResourceEnUs(doc: PDDocument): DNACXResource, HasSignEnUs, H
             //양성 5개
             risk == DNACXDto.Risk.HIGH      &&  ssIsIncreased95 && !ssIsIncreased99 &&  covIsIncreased &&  femsIsIncreased &&  cfDNAIsIncreased &&  genomicIsIncreased -> "Abnormal patterns were detected in the ai-CANCERCH TEST: Signal score, COV score, FEMS score, cfDNA concentration and genomic instability (i-score) showed an increase.\n" + "\n" + "A high risk does not imply a cancer diagnosis. Even 5% of healthy individuals may be classified as at high risk depending on their health conditions (e.g. benign diseases, autoimmune diseases).\n" + "\n" + "Note: Consultation with the physician for follow-ups is recommended."
             risk == DNACXDto.Risk.HIGH      &&  ssIsIncreased95 &&  ssIsIncreased99 &&  covIsIncreased &&  femsIsIncreased &&  cfDNAIsIncreased &&  genomicIsIncreased -> "Abnormal patterns were detected in the ai-CANCERCH TEST: Signal score, COV score, FEMS score, cfDNA concentration and genomic instability (i-score) showed an increase.\n" + "\n" + "A high risk does not imply a cancer diagnosis. Even 1% of healthy individuals may be classified as at high risk depending on their health conditions (e.g. benign diseases, autoimmune diseases).\n" + "\n" + "Note: Consultation with the physician for follow-ups is recommended."
-            else -> throw Exception("분류되지 않은 케이스로 소견 문단 2번 생성이 불가능합니다.")
+            else -> throw Exception("분류되지 않은 케이스로 소견 문단 2번 생성이 불가능합니다. Risk: ${risk} ss95: ${ssIsIncreased95} ss99: ${ssIsIncreased99} cov: ${covIsIncreased} fems: ${femsIsIncreased} cfDNA: ${cfDNAIsIncreased} i-score: ${genomicIsIncreased}")
         }
     }
     override fun lblInterpretationRegular(dto: DNACXDto): String {
