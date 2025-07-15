@@ -148,7 +148,7 @@ class ReportHandler(
     fun scheduleReports(): Mono<Long> {
         return reportDao.findReport()
             .doOnNext {
-                logger.info(it.sample.toString() + "/" + it.service + " is printing.")
+                logger.info(it.sample.toString() + "/" + it.service + " is printing." + "(batch : "+it.batch+" / row : "+it.row)
                 publisher.tryEmitNext(MessageReport(MessageReport.MessageType.PRINTING, mapper.toMessageDto(it)))
             }
             .flatMapSequential({ report ->
