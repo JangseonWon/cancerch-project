@@ -11,6 +11,8 @@ import com.gcgenome.lims.service.report.ReportDao
 import com.gcgenome.lims.service.reportfile.ReportFileRepository
 import com.gcgenome.lims.service.request.RequestDao
 import com.gcgenome.lims.workflow.*
+import com.greencross.lims.jandiwebhook.Webhook
+import com.greencross.lims.jandiwebhook.dto.ConnectInfo
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
@@ -36,6 +38,7 @@ class PublishHandler(
     private val reportFileRepo: ReportFileRepository,
     private val client: Client,
     private val om: ObjectMapper,
+    private val jandi: Webhook,
     private val event: EventConfig
 ) {
     private val subscriber = Sinks.many().multicast().directAllOrNothing<AlisResponse>()
@@ -136,20 +139,21 @@ class PublishHandler(
                 ) to Event(
                     UUID.randomUUID(),
                     LocalDateTime.now(),
-                    com.gcgenome.lims.workflow.Request(
+                    Request(
                         it.t1.sample.toString()+":"+it.t1.service,
-                        com.gcgenome.lims.workflow.Organization(
+                        Organization(
                             it.t1.institution?:"미입력",
                             it.t1.institutionName?:"미입력"
                         ),
-                        com.gcgenome.lims.workflow.Service(
+                        Service(
                             it.t1.service,
                             it.t1.serviceName
                         ),
-                        listOf(com.gcgenome.lims.workflow.Sample(
+                        listOf(
+                            Sample(
                             it.t1.sample,
                             it.t1.sampleType?:"-",
-                            com.gcgenome.lims.workflow.Patient(
+                            Patient(
                                 Organization(
                                     if(it.t1.institution2!=null) it.t1.institution2?:"-" else it.t1.institution?:"-",
                                     if(it.t1.institution2!=null) it.t1.institution2Name?:"-" else it.t1.institutionName?:"-"
@@ -157,7 +161,7 @@ class PublishHandler(
                                 it.t1.patientName,
                                     if(it.t1.sex == "M") Patient.Companion.Sex.M else Patient.Companion.Sex.F
                                 ,
-                                com.gcgenome.lims.workflow.Patient.Companion.Birth(
+                                Patient.Companion.Birth(
                                     (it.t1.birth?: LocalDate.of(1900, 1,1)).year,
                                     (it.t1.birth?: LocalDate.of(1900, 1,1)).monthValue,
                                     (it.t1.birth?: LocalDate.of(1900, 1,1)).dayOfMonth),
@@ -166,7 +170,8 @@ class PublishHandler(
                             it.t1.dateSampling,
                             it.t1.age,
                             it.t1.remark
-                            )),
+                            )
+                        ),
                         it.t1.dateRequest,
                         it.t1.dateReception,
                         it.t1.dateDuePublish
@@ -181,7 +186,11 @@ class PublishHandler(
                 rmsPublisher.tryEmitNext(it.first)
                 event.publishEvent(it.second)
             }.map { true }
-            .onErrorResume { Mono.just(false) }
+            .onErrorResume {
+                jandi.sendWithConnectInfos("RMS 결과지 전송 중 오류가 발생했습니다. 재전송이 필요합니다. ($sample / $service)",
+                    listOf(ConnectInfo().title("")))
+                Mono.just(false)
+            }
     }
 
     companion object {
