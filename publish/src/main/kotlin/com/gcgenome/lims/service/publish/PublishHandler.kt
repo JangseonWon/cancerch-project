@@ -182,10 +182,14 @@ class PublishHandler(
                     ParamImpl("New"),
                     "avoid-publisher"
                 )
-            }.map {
-                rmsPublisher.tryEmitNext(it.first)
-                event.publishEvent(it.second)
-            }.map { true }
+            }.flatMap { (report, eventObj) ->
+                val rmsResult = rmsPublisher.tryEmitNext(report)
+                if (rmsResult.isFailure) {
+                    return@flatMap Mono.error<Boolean>(RuntimeException("RMS Kafka 메시지 발행 실패 ($sample / $service)"))
+                }
+                logger.info("의뢰번호 : $sample / 검사코드 : $service RMS Kafka 메시지 발행 완료")
+                Mono.just(true)
+            }
             .onErrorResume {
                 jandi.sendWithConnectInfos("RMS 결과지 전송 중 오류가 발생했습니다. 재전송이 필요합니다. ($sample / $service)",
                     listOf(ConnectInfo().title("")))
