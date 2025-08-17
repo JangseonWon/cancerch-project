@@ -187,6 +187,7 @@ class PublishHandler(
                 if (rmsResult.isFailure) {
                     return@flatMap Mono.error<Boolean>(RuntimeException("RMS Kafka 메시지 발행 실패 ($sample / $service)"))
                 }
+                event.publishEvent(eventObj)
                 logger.info("의뢰번호 : $sample / 검사코드 : $service RMS Kafka 메시지 발행 완료")
                 Mono.just(true)
             }
