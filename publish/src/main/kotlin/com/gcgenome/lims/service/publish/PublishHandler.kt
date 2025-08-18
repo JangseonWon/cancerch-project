@@ -63,7 +63,7 @@ class PublishHandler(
                     LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
                 )
             }.map {
-                logger.info("의뢰번호 : "+sample+" / 검사코드 : "+service+" 전송 완료")
+                logger.info("의뢰번호 : " + sample + " / 검사코드 : " + service + " 전송 완료")
                 true
             }
             .switchIfEmpty(Mono.just(false))
@@ -84,14 +84,21 @@ class PublishHandler(
             rmsPublisher.asFlux()
                 .doOnSubscribe { logger.info("RMS 구독 시작") }
                 .doOnCancel { logger.warn("RMS 구독 취소") }
-                .mapNotNull {
-                try {
-                    om.writeValueAsString(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
+                .map { report ->
+                    try {
+                        val json = om.writeValueAsString(report)
+                        json
+                    } catch (e: Exception) {
+                        logger.error(
+                            "RMS 직렬화 실패: sample={}, service={}, err={}",
+                            report.sample, report.service, e.toString(), e
+                        )
+                        throw e
+                    }
                 }
-            }
+                .onErrorContinue { e, bad ->
+                    logger.error("RMS 직렬화 중 오류로 skip. data={}", bad, e)
+                }
         }
     }
 
@@ -115,15 +122,17 @@ class PublishHandler(
     }
 
     private fun publishRMS(sample: Long, service: String, createAt: Long): Mono<Boolean> {
-        logger.info("의뢰번호 : "+sample+" / 검사코드 : "+service+" RMS 전송 시작")
+        logger.info("의뢰번호 : " + sample + " / 검사코드 : " + service + " RMS 전송 시작")
         return requestDao.findById(sample, service)
             .zipWith(reportDao.findForCassandraReport(
                 sample,
                 service,
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(createAt), TimeZone.getDefault().toZoneId())
-            ).publishOn(Schedulers.boundedElastic()).map { reportFileRepo.findById(it.file).map { it.data?.array() }.get() }
+            ).publishOn(Schedulers.boundedElastic())
+                .map { reportFileRepo.findById(it.file).map { it.data?.array() }.get() }
             ).map {
-                val institution = if(it.t1.institution2.isNullOrBlank())it.t1.institution else it.t1.institution + "-" + it.t1.institution2
+                val institution =
+                    if (it.t1.institution2.isNullOrBlank()) it.t1.institution else it.t1.institution + "-" + it.t1.institution2
                 ReportForRMS(
                     it.t1.institutionName,
                     it.t1.departmentName,
@@ -143,10 +152,10 @@ class PublishHandler(
                     UUID.randomUUID(),
                     LocalDateTime.now(),
                     Request(
-                        it.t1.sample.toString()+":"+it.t1.service,
+                        it.t1.sample.toString() + ":" + it.t1.service,
                         Organization(
-                            it.t1.institution?:"미입력",
-                            it.t1.institutionName?:"미입력"
+                            it.t1.institution ?: "미입력",
+                            it.t1.institutionName ?: "미입력"
                         ),
                         Service(
                             it.t1.service,
@@ -154,25 +163,27 @@ class PublishHandler(
                         ),
                         listOf(
                             Sample(
-                            it.t1.sample,
-                            it.t1.sampleType?:"-",
-                            Patient(
-                                Organization(
-                                    if(it.t1.institution2!=null) it.t1.institution2?:"-" else it.t1.institution?:"-",
-                                    if(it.t1.institution2!=null) it.t1.institution2Name?:"-" else it.t1.institutionName?:"-"
+                                it.t1.sample,
+                                it.t1.sampleType ?: "-",
+                                Patient(
+                                    Organization(
+                                        if (it.t1.institution2 != null) it.t1.institution2 ?: "-" else it.t1.institution
+                                            ?: "-",
+                                        if (it.t1.institution2 != null) it.t1.institution2Name
+                                            ?: "-" else it.t1.institutionName ?: "-"
+                                    ),
+                                    it.t1.patientName,
+                                    if (it.t1.sex == "M") Patient.Companion.Sex.M else Patient.Companion.Sex.F,
+                                    Patient.Companion.Birth(
+                                        (it.t1.birth ?: LocalDate.of(1900, 1, 1)).year,
+                                        (it.t1.birth ?: LocalDate.of(1900, 1, 1)).monthValue,
+                                        (it.t1.birth ?: LocalDate.of(1900, 1, 1)).dayOfMonth
+                                    ),
+                                    it.t1.mrn
                                 ),
-                                it.t1.patientName,
-                                    if(it.t1.sex == "M") Patient.Companion.Sex.M else Patient.Companion.Sex.F
-                                ,
-                                Patient.Companion.Birth(
-                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).year,
-                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).monthValue,
-                                    (it.t1.birth?: LocalDate.of(1900, 1,1)).dayOfMonth),
-                                it.t1.mrn
-                            ),
-                            it.t1.dateSampling,
-                            it.t1.age,
-                            it.t1.remark
+                                it.t1.dateSampling,
+                                it.t1.age,
+                                it.t1.remark
                             )
                         ),
                         it.t1.dateRequest,
@@ -206,8 +217,10 @@ class PublishHandler(
                 Mono.just(true)
             }
             .onErrorResume {
-                jandi.sendWithConnectInfos("RMS 결과지 전송 중 오류가 발생했습니다. 재전송이 필요합니다. ($sample / $service)",
-                    listOf(ConnectInfo().title("")))
+                jandi.sendWithConnectInfos(
+                    "RMS 결과지 전송 중 오류가 발생했습니다. 재전송이 필요합니다. ($sample / $service)",
+                    listOf(ConnectInfo().title(""))
+                )
                 Mono.just(false)
             }
     }
