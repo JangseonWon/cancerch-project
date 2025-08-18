@@ -81,7 +81,10 @@ class PublishHandler(
     @Bean("publish")
     fun publish(): Supplier<Flux<String>> {
         return Supplier {
-            rmsPublisher.asFlux().mapNotNull {
+            rmsPublisher.asFlux()
+                .doOnSubscribe { logger.info("RMS 구독 시작") }
+                .doOnCancel { logger.warn("RMS 구독 취소") }
+                .mapNotNull {
                 try {
                     om.writeValueAsString(it)
                 } catch (e: Exception) {
@@ -185,6 +188,17 @@ class PublishHandler(
             }.flatMap { (report, eventObj) ->
                 val rmsResult = rmsPublisher.tryEmitNext(report)
                 if (rmsResult.isFailure) {
+                    when (rmsResult) {
+                        Sinks.EmitResult.FAIL_ZERO_SUBSCRIBER -> {
+                            logger.warn("RMS 메시지를 받을 구독자가 없습니다. ($sample / $service)")
+                        }
+                        Sinks.EmitResult.FAIL_OVERFLOW -> {
+                            logger.error("RMS Sink 버퍼 오버플로우 발생. ($sample / $service)")
+                        }
+                        else -> {
+                            logger.error("RMS Kafka 메시지 발행 실패 ($sample / $service), 원인: $rmsResult")
+                        }
+                    }
                     return@flatMap Mono.error<Boolean>(RuntimeException("RMS Kafka 메시지 발행 실패 ($sample / $service)"))
                 }
                 event.publishEvent(eventObj)
