@@ -81,7 +81,7 @@ class Client(
 
         val response = webClient
             .post()
-            .uri("https://lims/alis-queue/async")
+            .uri("http://lims/alis-queue/async")
             .cookies { it.addAll(cookieMap) }
             .contentType(MediaType.APPLICATION_JSON)
             .body(
