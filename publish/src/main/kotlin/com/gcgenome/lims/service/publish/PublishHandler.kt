@@ -43,6 +43,7 @@ class PublishHandler(
 ) {
     private val subscriber = Sinks.many().multicast().directAllOrNothing<AlisResponse>()
     private val rmsPublisher = Sinks.many().unicast().onBackpressureBuffer<ReportForRMS>()
+    private val rmsSingle = Schedulers.newSingle("rms-sink-serial")
     private val logger = LoggerFactory.getLogger(PublishHandler::class.java)
 
     fun subscribe(): Flux<AlisResponse> = subscriber.asFlux()
@@ -73,35 +74,40 @@ class PublishHandler(
         return ReactiveSecurityContextHolder.getContext()
     }
 
+    fun submitToRms(report: ReportForRMS): Mono<Boolean> =
+        Mono.fromCallable {
+            val r = rmsPublisher.tryEmitNext(report)
+            if (!r.isSuccess) {
+                when (r) {
+                    Sinks.EmitResult.FAIL_ZERO_SUBSCRIBER ->
+                        logger.warn("RMS 메시지를 받을 구독자가 없습니다. (sample=${report.sample} / service=${report.service})")
+                    Sinks.EmitResult.FAIL_OVERFLOW ->
+                        logger.error("RMS Sink 버퍼 오버플로우 발생. (sample=${report.sample} / service=${report.service})")
+                    Sinks.EmitResult.FAIL_TERMINATED ->
+                        logger.error("RMS Sink가 이미 종료되었습니다. (sample=${report.sample} / service=${report.service})")
+                    Sinks.EmitResult.FAIL_CANCELLED ->
+                        logger.error("RMS Sink가 취소되었습니다. (sample=${report.sample} / service=${report.service})")
+                    Sinks.EmitResult.FAIL_NON_SERIALIZED ->
+                        logger.warn("RMS 방출 비직렬화 오류(재시도 핸들러 실행 완료) (sample=${report.sample} / service=${report.service})")
+                    else -> logger.error("RMS Kafka 메시지 발행 실패: $r (sample=${report.sample} / service=${report.service})")
+                }
+                throw IllegalStateException("RMS emit fail: $r")
+            }
+            true
+        }.subscribeOn(rmsSingle)
+
     @Bean("broadcast-publishing")
     fun broadcastPublish(): Consumer<String> {
         return Consumer { c: String -> subscriber.tryEmitNext(stringToMessage(c)) }
     }
 
     @Bean("publish")
-    fun publish(): Supplier<Flux<String>> {
-        return Supplier {
-            rmsPublisher.asFlux()
-                .doOnSubscribe { logger.info("RMS 구독 시작") }
-                .doOnCancel { logger.warn("RMS 구독 취소") }
-                .map { report ->
-                    try {
-                        val json = om.writeValueAsString(report)
-                        json
-                    } catch (e: Exception) {
-                        logger.error(
-                            "RMS 직렬화 실패: sample={}, service={}, err={}",
-                            report.sample, report.service, e.toString(), e
-                        )
-                        throw e
-                    }
-                }
-                .onErrorContinue { e, bad ->
-                    logger.error("RMS 직렬화 중 오류로 skip. data={}", bad, e)
-                }
-        }
+    fun publish(): Supplier<Flux<String>> = Supplier {
+        rmsPublisher.asFlux()
+            .doOnSubscribe { logger.info("RMS 구독 시작") }
+            .publishOn(rmsSingle)
+            .map { om.writeValueAsString(it) }
     }
-
 
     private fun stringToMessage(str: String): AlisResponse {
         return om.readValue(str, AlisResponse::class.java)
@@ -197,26 +203,14 @@ class PublishHandler(
                     "avoid-publisher"
                 )
             }.flatMap { (report, eventObj) ->
-                val rmsResult = rmsPublisher.tryEmitNext(report)
-                if (rmsResult.isFailure) {
-                    when (rmsResult) {
-                        Sinks.EmitResult.FAIL_ZERO_SUBSCRIBER -> {
-                            logger.warn("RMS 메시지를 받을 구독자가 없습니다. ($sample / $service)")
-                        }
-                        Sinks.EmitResult.FAIL_OVERFLOW -> {
-                            logger.error("RMS Sink 버퍼 오버플로우 발생. ($sample / $service)")
-                        }
-                        else -> {
-                            logger.error("RMS Kafka 메시지 발행 실패 ($sample / $service), 원인: $rmsResult")
-                        }
-                    }
-                    return@flatMap Mono.error<Boolean>(RuntimeException("RMS Kafka 메시지 발행 실패 ($sample / $service)"))
-                }
-                event.publishEvent(eventObj)
-                logger.info("의뢰번호 : $sample / 검사코드 : $service RMS Kafka 메시지 발행 완료")
-                Mono.just(true)
+                submitToRms(report).doOnSuccess {
+                    // 성공 시에만 이벤트 발행 + 로그
+                    event.publishEvent(eventObj)
+                    logger.info("의뢰번호 : $sample / 검사코드 : $service RMS Kafka 메시지 발행 완료")
+                }.thenReturn(true)
             }
-            .onErrorResume {
+            .onErrorResume { e ->
+                logger.error("의뢰번호 : $sample / 검사코드 : $service RMS 전송 중 오류", e)
                 jandi.sendWithConnectInfos(
                     "RMS 결과지 전송 중 오류가 발생했습니다. 재전송이 필요합니다. ($sample / $service)",
                     listOf(ConnectInfo().title(""))
