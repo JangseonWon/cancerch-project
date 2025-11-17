@@ -1,1 +1,8 @@
-rootProject.name = "base-service"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "cancerch-service"

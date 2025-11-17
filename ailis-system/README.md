@@ -8,20 +8,21 @@ cancerch-project를 Clean Architecture 기반으로 재개발한 차세대 LIMS 
 ## 아키텍처
 
 ### 백엔드 (Cancerch Service)
-- **Framework**: Spring Boot 3.5.5
-- **Language**: Kotlin + JDK 21
+- **Framework**: Spring Boot 3.2.2
+- **Language**: Kotlin 1.9.22 + JDK 21
 - **Architecture**: Clean Architecture (Hexagonal Architecture)
-- **Database**: PostgreSQL 14 + R2DBC + jOOQ
+- **Database**: PostgreSQL 16 + R2DBC + jOOQ 3.19
 - **Reactive**: Kotlin Coroutines
 - **Testing**: JUnit 5 + MockK + Testcontainers
+- **Migration**: Flyway
 
-### 프론트엔드 (Bo-ui)
-- **Framework**: React 18 + TypeScript
+### 프론트엔드 (Cancerch Web)
+- **Framework**: React 18 + TypeScript 5
 - **Build Tool**: Vite 5
 - **UI Library**: PrimeReact 10
-- **State Management**: Zustand 5
+- **State Management**: Zustand 4
 - **Data Fetching**: SWR 2 + Axios
-- **Styling**: Tailwind CSS
+- **Date Handling**: date-fns 3
 
 ### 인프라
 - **Container**: Docker Compose
@@ -46,12 +47,11 @@ ailis-system/
 │       └── build.gradle.kts
 │
 ├── frontend/
-│   └── bo-ui/                 # React 18 프론트엔드
+│   └── cancerch-web/          # React 18 프론트엔드
 │       ├── src/
-│       │   ├── components/    # 재사용 컴포넌트
-│       │   ├── pages/         # 페이지
-│       │   ├── hooks/         # 커스텀 훅
-│       │   ├── store/         # Zustand 스토어
+│       │   ├── api/           # API 클라이언트
+│       │   ├── pages/         # 페이지 컴포넌트
+│       │   ├── hooks/         # 커스텀 훅 (SWR)
 │       │   └── types/         # TypeScript 타입
 │       └── package.json
 │
@@ -122,7 +122,7 @@ docker-compose ps
 - Kafka: `localhost:9092`
 - Redis: `localhost:6379`
 - Prometheus: `localhost:9090`
-- Grafana: `localhost:3001` (admin/admin)
+- Grafana: `localhost:3001` (admin/admin1234)
 
 ### 2. 백엔드 실행
 
@@ -150,7 +150,7 @@ API 서버: http://localhost:8080
 ### 3. 프론트엔드 실행
 
 ```bash
-cd frontend/bo-ui
+cd frontend/cancerch-web
 
 # 의존성 설치
 npm install
@@ -279,25 +279,30 @@ export function WorklistTable() {
 
 ## 현재 구현 상태
 
-### ✅ 완료
-- [x] Clean Architecture 구조
-- [x] Worklist 도메인 모델
-- [x] CRUD 유스케이스
-- [x] REST API
-- [x] jOOQ + R2DBC 연동
-- [x] 단위/통합 테스트
+### ✅ 완료 (v0.0.1-SNAPSHOT)
+- [x] Clean Architecture 구조 (Domain/Application/Adapter/Infrastructure)
+- [x] Worklist 도메인 모델 (Entity, ValueObject, DomainService)
+- [x] CRUD 유스케이스 (Create, Read, Update, List)
+- [x] REST API (Spring WebFlux + Kotlin Coroutines)
+- [x] R2DBC + jOOQ 연동 (Type-Safe SQL)
+- [x] Flyway 마이그레이션
+- [x] 단위/통합 테스트 (WorklistTest, ServiceTest, ControllerTest)
 - [x] React 18 + TypeScript 프로젝트
-- [x] Worklist 목록/상세 UI
-- [x] SWR 데이터 페칭
-- [x] Docker Compose 인프라
+- [x] Worklist 목록/상세/생성 UI
+- [x] SWR 데이터 페칭 + 자동 리프레시
+- [x] Docker Compose 인프라 (PostgreSQL, Kafka, Redis, Prometheus, Grafana)
+- [x] Gradle Wrapper 설정
+- [x] 완전한 문서화
 
-### 🚧 진행 중
-- [ ] Kafka 이벤트 발행
-- [ ] Redis 캐싱
-- [ ] Prometheus 메트릭
-- [ ] Grafana 대시보드
+### 📋 향후 계획 (v0.1.0)
+- [ ] Kafka 이벤트 발행 (worklist.created, worklist.updated)
+- [ ] Redis 캐싱 전략
+- [ ] Prometheus 커스텀 메트릭
+- [ ] Grafana 대시보드 구성
+- [ ] jOOQ 기반 실제 Repository 구현 (현재 InMemory)
+- [ ] E2E 테스트
 
-### 📋 향후 계획
+### 🚀 로드맵 (v1.0.0)
 - [ ] Analysis 모듈 마이그레이션
 - [ ] Report 모듈 마이그레이션
 - [ ] Publish 모듈 마이그레이션
