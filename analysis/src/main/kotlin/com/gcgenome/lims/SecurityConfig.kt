@@ -47,6 +47,7 @@ class SecurityConfig(
             .anyExchange().authenticated()
             .and().build()
     }
+
     @Bean
     fun auditorProvider(): ReactiveAuditorAware<String> {
         return ReactiveAuditorAware {

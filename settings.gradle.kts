@@ -19,6 +19,21 @@ include("alis")
 include("publish")
 
 dependencyResolutionManagement {
+    repositories {
+        maven(url = "http://172.19.208.171/api/packages/LIMS/maven"){
+            isAllowInsecureProtocol = true
+        }
+        flatDir {
+            dirs(
+                file("${rootDir}/sayaya/ui"),
+                file("${rootDir}/sayaya/chart"),
+                file("${rootDir}/sayaya/calculator"),
+                file("${rootDir}/sayaya/dto"),
+                file("${rootDir}/sayaya/jandi")
+            )
+        }
+    }
+
     versionCatalogs {
         create("libs") {
             library("reflect", "org.jetbrains.kotlin", "kotlin-reflect").withoutVersion()
@@ -63,7 +78,7 @@ dependencyResolutionManagement {
             library("gwt-user", "org.gwtproject", "gwt-user").version { require("2.10.0") }
             library("gwt-dev", "org.gwtproject", "gwt-dev").version { require("2.10.0") }
             bundle("gwt", listOf("elemento-core", "elemental2-svg", "gwt-user"))
-            library("lombok", "org.projectlombok", "lombok").version { require("1.18.24") }
+            library("lombok", "org.projectlombok", "lombok").version { require("1.18.32") }
             library("jackson-annotations", "com.fasterxml.jackson.core", "jackson-annotations").version { require("2.13.3") }
         }
     }

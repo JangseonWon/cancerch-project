@@ -7,8 +7,6 @@ plugins {
 
 group = "com.gcgenome"
 version = "1.0"
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     implementation("com.gcgenome:sample-data:1.0")
