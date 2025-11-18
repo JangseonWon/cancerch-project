@@ -8,6 +8,10 @@ value class SampleId(val value: Long) {
     init {
         require(value > 0) { "Sample ID must be positive" }
     }
+
+    companion object {
+        fun from(value: Long): SampleId = SampleId(value)
+    }
 }
 
 /**

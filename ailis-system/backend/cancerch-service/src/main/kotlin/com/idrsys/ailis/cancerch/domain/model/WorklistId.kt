@@ -16,6 +16,8 @@ value class WorklistId(val value: Long) {
             // 실제로는 DB 시퀀스에서 생성
             return WorklistId(System.currentTimeMillis())
         }
+
+        fun from(value: Long): WorklistId = WorklistId(value)
     }
 }
 

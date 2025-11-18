@@ -15,9 +15,13 @@ class SearchAnalysisService(
 ) : SearchAnalysisUseCase {
 
     override suspend fun execute(query: SearchAnalysisQuery): PagedAnalysisResultResponse {
+        // search 파라미터가 있으면 sampleId 또는 serviceCode로 검색
+        val sampleIdParam = query.sampleId ?: query.search
+        val serviceCodeParam = query.serviceCode ?: query.search
+
         val allResults = analysisRepository.search(
-            sampleId = query.sampleId,
-            serviceCode = query.serviceCode,
+            sampleId = sampleIdParam,
+            serviceCode = if (query.sampleId == null && query.search != null) serviceCodeParam else query.serviceCode,
             batch = query.batch,
             result = query.result
         )

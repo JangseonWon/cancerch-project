@@ -44,3 +44,12 @@ data class ListPreprocessingsQuery(
     val page: Int = 0,
     val size: Int = 20
 )
+
+/**
+ * Preprocessing 업데이트 커맨드
+ */
+data class UpdatePreprocessingCommand(
+    val worklistId: Long,
+    val index: Int? = null,
+    val sequencingBatch: String? = null
+)

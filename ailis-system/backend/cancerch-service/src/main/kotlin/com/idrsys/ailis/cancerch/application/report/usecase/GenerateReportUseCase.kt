@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class GenerateReportUseCase(
     private val reportRepository: ReportRepository
 ) {
-    fun execute(command: GenerateReportCommand): Report {
+    suspend fun execute(command: GenerateReportCommand): Report {
         // Generate report file path
         val fileName = "${command.sampleId}_${command.serviceCode}_${System.currentTimeMillis()}.pdf"
         val filePath = "/reports/${command.batch}/${fileName}"

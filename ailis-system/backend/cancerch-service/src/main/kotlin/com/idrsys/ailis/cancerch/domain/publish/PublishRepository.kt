@@ -1,6 +1,6 @@
 package com.idrsys.ailis.cancerch.domain.publish
 
 interface PublishRepository {
-    fun publish(event: PublishEvent)
-    fun getPublishHistory(reportId: Long): List<PublishEvent>
+    suspend fun publish(event: PublishEvent)
+    suspend fun getPublishHistory(reportId: Long): List<PublishEvent>
 }

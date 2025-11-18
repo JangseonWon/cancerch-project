@@ -36,7 +36,7 @@ interface PreprocessingRepository {
     /**
      * 상태별 Preprocessing 목록 조회
      */
-    suspend fun findByState(state: PreprocessingState, limit: Int): List<Preprocessing>
+    suspend fun findByState(state: PreprocessingState, offset: Int, limit: Int): List<Preprocessing>
 
     /**
      * 모든 Preprocessing 조회 (페이징)

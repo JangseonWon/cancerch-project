@@ -15,7 +15,7 @@ class PublishReportUseCase(
     private val publishRepository: PublishRepository
 ) {
     @Transactional
-    fun execute(command: PublishReportCommand): Report {
+    suspend fun execute(command: PublishReportCommand): Report {
         // Get report
         val report = reportRepository.findById(command.reportId)
             ?: throw IllegalArgumentException("Report not found: ${command.reportId}")

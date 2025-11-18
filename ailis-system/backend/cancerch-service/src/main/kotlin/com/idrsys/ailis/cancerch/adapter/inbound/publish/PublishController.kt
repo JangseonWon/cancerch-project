@@ -13,7 +13,7 @@ class PublishController(
 ) {
 
     @PostMapping("/reports/{id}")
-    fun publishReport(
+    suspend fun publishReport(
         @PathVariable id: Long,
         @RequestBody(required = false) request: PublishRequest?
     ): ResponseEntity<PublishResponse> {

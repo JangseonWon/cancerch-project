@@ -7,6 +7,7 @@ import java.time.Instant
  * 분석 결과 응답
  */
 data class AnalysisResultResponse(
+    val id: Long? = null,  // 단순 숫자 ID (프론트엔드 호환용)
     val sampleId: String,
     val serviceCode: String,
     val batch: String,
@@ -25,8 +26,9 @@ data class AnalysisResultResponse(
     val version: Int
 ) {
     companion object {
-        fun from(analysisResult: AnalysisResult): AnalysisResultResponse {
+        fun from(analysisResult: AnalysisResult, numericId: Long? = null): AnalysisResultResponse {
             return AnalysisResultResponse(
+                id = numericId,
                 sampleId = analysisResult.id.sampleId,
                 serviceCode = analysisResult.id.serviceCode,
                 batch = analysisResult.id.batch,

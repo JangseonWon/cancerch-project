@@ -1,7 +1,9 @@
 package com.idrsys.ailis.cancerch.application.report.usecase
 
+import com.idrsys.ailis.cancerch.domain.report.PagedReports
 import com.idrsys.ailis.cancerch.domain.report.Report
 import com.idrsys.ailis.cancerch.domain.report.ReportRepository
+import com.idrsys.ailis.cancerch.domain.report.ReportStatus
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -9,21 +11,25 @@ import java.util.UUID
 class GetReportUseCase(
     private val reportRepository: ReportRepository
 ) {
-    fun getById(id: Long): Report {
+    suspend fun getById(id: Long): Report {
         return reportRepository.findById(id)
             ?: throw IllegalArgumentException("Report not found: $id")
     }
 
-    fun getByUuid(uuid: UUID): Report {
+    suspend fun getByUuid(uuid: UUID): Report {
         return reportRepository.findByUuid(uuid)
             ?: throw IllegalArgumentException("Report not found: $uuid")
     }
 
-    fun getBySampleAndService(sampleId: String, serviceCode: String): List<Report> {
+    suspend fun getBySampleAndService(sampleId: String, serviceCode: String): List<Report> {
         return reportRepository.findBySampleIdAndServiceCode(sampleId, serviceCode)
     }
 
-    fun getAllReports(): List<Report> {
+    suspend fun getAllReports(): List<Report> {
         return reportRepository.findAll()
+    }
+
+    suspend fun getReportsPaged(page: Int, size: Int, status: ReportStatus?): PagedReports {
+        return reportRepository.findAllPaged(page, size, status)
     }
 }

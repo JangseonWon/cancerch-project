@@ -12,7 +12,7 @@ class KafkaPublishAdapter : PublishRepository {
     private val logger = LoggerFactory.getLogger(KafkaPublishAdapter::class.java)
     private val publishHistory = ConcurrentHashMap<Long, MutableList<PublishEvent>>()
 
-    override fun publish(event: PublishEvent) {
+    override suspend fun publish(event: PublishEvent) {
         // In real implementation, this would publish to Kafka
         logger.info("""
             ==========================================
@@ -35,7 +35,7 @@ class KafkaPublishAdapter : PublishRepository {
         logger.info("Event published successfully to topic: report-events")
     }
 
-    override fun getPublishHistory(reportId: Long): List<PublishEvent> {
+    override suspend fun getPublishHistory(reportId: Long): List<PublishEvent> {
         return publishHistory[reportId]?.toList() ?: emptyList()
     }
 }

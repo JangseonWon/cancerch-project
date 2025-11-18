@@ -1,9 +1,12 @@
 package com.idrsys.ailis.cancerch.adapter.inbound.report
 
+import com.idrsys.ailis.cancerch.application.publish.command.PublishReportCommand
+import com.idrsys.ailis.cancerch.application.publish.usecase.PublishReportUseCase
 import com.idrsys.ailis.cancerch.application.report.command.GenerateReportCommand
 import com.idrsys.ailis.cancerch.application.report.usecase.GenerateReportUseCase
 import com.idrsys.ailis.cancerch.application.report.usecase.GetReportUseCase
 import com.idrsys.ailis.cancerch.domain.report.Report
+import com.idrsys.ailis.cancerch.domain.report.ReportStatus
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -12,11 +15,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/reports")
 class ReportController(
     private val generateReportUseCase: GenerateReportUseCase,
-    private val getReportUseCase: GetReportUseCase
+    private val getReportUseCase: GetReportUseCase,
+    private val publishReportUseCase: PublishReportUseCase
 ) {
 
     @GetMapping("/samples/{sampleId}/services/{serviceCode}")
-    fun getReportsBySampleAndService(
+    suspend fun getReportsBySampleAndService(
         @PathVariable sampleId: String,
         @PathVariable serviceCode: String
     ): ResponseEntity<List<ReportResponse>> {
@@ -25,7 +29,7 @@ class ReportController(
     }
 
     @GetMapping("/{id}")
-    fun getReportById(@PathVariable id: Long): ResponseEntity<ReportResponse> {
+    suspend fun getReportById(@PathVariable id: Long): ResponseEntity<ReportResponse> {
         return try {
             val report = getReportUseCase.getById(id)
             ResponseEntity.ok(report.toResponse())
@@ -35,13 +39,32 @@ class ReportController(
     }
 
     @GetMapping
-    fun getAllReports(): ResponseEntity<List<ReportResponse>> {
-        val reports = getReportUseCase.getAllReports()
-        return ResponseEntity.ok(reports.map { it.toResponse() })
+    suspend fun getAllReports(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(required = false) status: String?
+    ): ResponseEntity<PagedReportResponse> {
+        val reportStatus = status?.let {
+            try {
+                ReportStatus.valueOf(it.uppercase())
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+
+        val pagedReports = getReportUseCase.getReportsPaged(page, size, reportStatus)
+        val response = PagedReportResponse(
+            reports = pagedReports.reports.map { it.toResponse() },
+            totalElements = pagedReports.totalElements,
+            totalPages = pagedReports.totalPages,
+            currentPage = pagedReports.currentPage,
+            pageSize = pagedReports.pageSize
+        )
+        return ResponseEntity.ok(response)
     }
 
-    @PostMapping("/generate")
-    fun generateReport(@RequestBody request: GenerateReportRequest): ResponseEntity<ReportResponse> {
+    @PostMapping
+    suspend fun generateReport(@RequestBody request: GenerateReportRequest): ResponseEntity<ReportResponse> {
         val command = GenerateReportCommand(
             sampleId = request.sampleId,
             serviceCode = request.serviceCode,
@@ -52,6 +75,41 @@ class ReportController(
 
         val report = generateReportUseCase.execute(command)
         return ResponseEntity.status(HttpStatus.CREATED).body(report.toResponse())
+    }
+
+    @PostMapping("/{id}/publish")
+    suspend fun publishReport(
+        @PathVariable id: Long,
+        @RequestBody(required = false) request: PublishRequest?
+    ): ResponseEntity<PublishResponse> {
+        return try {
+            val command = PublishReportCommand(
+                reportId = id,
+                metadata = request?.metadata ?: emptyMap()
+            )
+
+            val publishedReport = publishReportUseCase.execute(command)
+
+            ResponseEntity.ok(
+                PublishResponse(
+                    success = true,
+                    message = "Report published successfully",
+                    reportId = publishedReport.id!!,
+                    status = publishedReport.status.name,
+                    publishedAt = publishedReport.publishedAt?.toString()
+                )
+            )
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().body(
+                PublishResponse(
+                    success = false,
+                    message = e.message ?: "Failed to publish report",
+                    reportId = id,
+                    status = null,
+                    publishedAt = null
+                )
+            )
+        }
     }
 
     private fun Report.toResponse() = ReportResponse(
@@ -94,5 +152,25 @@ data class ReportResponse(
     val status: String,
     val isPrinted: Boolean,
     val createdAt: String,
+    val publishedAt: String?
+)
+
+data class PagedReportResponse(
+    val reports: List<ReportResponse>,
+    val totalElements: Long,
+    val totalPages: Int,
+    val currentPage: Int,
+    val pageSize: Int
+)
+
+data class PublishRequest(
+    val metadata: Map<String, Any> = emptyMap()
+)
+
+data class PublishResponse(
+    val success: Boolean,
+    val message: String,
+    val reportId: Long,
+    val status: String?,
     val publishedAt: String?
 )

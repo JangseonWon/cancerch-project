@@ -2,11 +2,16 @@ package com.idrsys.ailis.cancerch.adapter.web
 
 import com.idrsys.ailis.cancerch.application.dto.request.CreatePreprocessingCommand
 import com.idrsys.ailis.cancerch.application.dto.request.GetPreprocessingQuery
+import com.idrsys.ailis.cancerch.application.dto.request.ListPreprocessingsQuery
 import com.idrsys.ailis.cancerch.application.dto.request.PreprocessingAction
+import com.idrsys.ailis.cancerch.application.dto.request.UpdatePreprocessingCommand
 import com.idrsys.ailis.cancerch.application.dto.request.UpdatePreprocessingStateCommand
+import com.idrsys.ailis.cancerch.application.dto.response.PagedPreprocessingResponse
 import com.idrsys.ailis.cancerch.application.dto.response.PreprocessingResponse
 import com.idrsys.ailis.cancerch.application.usecase.CreatePreprocessingUseCase
 import com.idrsys.ailis.cancerch.application.usecase.GetPreprocessingUseCase
+import com.idrsys.ailis.cancerch.application.usecase.ListPreprocessingsUseCase
+import com.idrsys.ailis.cancerch.application.usecase.UpdatePreprocessingUseCase
 import com.idrsys.ailis.cancerch.application.usecase.UpdatePreprocessingStateUseCase
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -20,11 +25,40 @@ import org.springframework.web.bind.annotation.*
 class PreprocessingController(
     private val createPreprocessingUseCase: CreatePreprocessingUseCase,
     private val getPreprocessingUseCase: GetPreprocessingUseCase,
+    private val listPreprocessingsUseCase: ListPreprocessingsUseCase,
+    private val updatePreprocessingUseCase: UpdatePreprocessingUseCase,
     private val updatePreprocessingStateUseCase: UpdatePreprocessingStateUseCase
 ) {
 
     /**
-     * Worklist의 Preprocessing 조회
+     * Preprocessing 목록 조회 (프론트엔드 호환)
+     */
+    @GetMapping
+    suspend fun listPreprocessings(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+        @RequestParam(required = false) status: String?
+    ): PagedPreprocessingResponse {
+        val query = ListPreprocessingsQuery(
+            state = status,
+            page = page,
+            size = size
+        )
+        return listPreprocessingsUseCase.execute(query)
+    }
+
+    /**
+     * Preprocessing 단일 조회 (프론트엔드 호환)
+     * {id}는 실제로 worklistId를 의미
+     */
+    @GetMapping("/{id}")
+    suspend fun getPreprocessingById(@PathVariable id: Long): PreprocessingResponse {
+        val query = GetPreprocessingQuery(worklistId = id)
+        return getPreprocessingUseCase.execute(query)
+    }
+
+    /**
+     * Worklist의 Preprocessing 조회 (기존 엔드포인트 - 하위 호환성)
      */
     @GetMapping("/worklists/{worklistId}")
     suspend fun getPreprocessing(@PathVariable worklistId: Long): PreprocessingResponse {
@@ -49,7 +83,47 @@ class PreprocessingController(
     }
 
     /**
-     * A 프로세스 시작
+     * Preprocessing 시작 (프론트엔드 호환 - A 프로세스 시작)
+     */
+    @PostMapping("/{worklistId}/start")
+    suspend fun start(@PathVariable worklistId: Long): PreprocessingResponse {
+        val command = UpdatePreprocessingStateCommand(
+            worklistId = worklistId,
+            action = PreprocessingAction.START_A
+        )
+        return updatePreprocessingStateUseCase.execute(command)
+    }
+
+    /**
+     * Preprocessing 완료 (프론트엔드 호환 - A 프로세스 완료)
+     */
+    @PostMapping("/{worklistId}/complete")
+    suspend fun complete(@PathVariable worklistId: Long): PreprocessingResponse {
+        val command = UpdatePreprocessingStateCommand(
+            worklistId = worklistId,
+            action = PreprocessingAction.COMPLETE_A
+        )
+        return updatePreprocessingStateUseCase.execute(command)
+    }
+
+    /**
+     * Preprocessing 업데이트 (프론트엔드 호환)
+     */
+    @PatchMapping("/{worklistId}")
+    suspend fun updatePreprocessing(
+        @PathVariable worklistId: Long,
+        @Valid @RequestBody request: UpdatePreprocessingRequest
+    ): PreprocessingResponse {
+        val command = UpdatePreprocessingCommand(
+            worklistId = worklistId,
+            index = request.index,
+            sequencingBatch = request.sequencingBatch
+        )
+        return updatePreprocessingUseCase.execute(command)
+    }
+
+    /**
+     * A 프로세스 시작 (기존 엔드포인트 - 하위 호환성)
      */
     @PostMapping("/worklists/{worklistId}/start-a")
     suspend fun startA(@PathVariable worklistId: Long): PreprocessingResponse {
@@ -128,4 +202,12 @@ data class CreatePreprocessingRequest(
     val worklistId: Long,
     val index: Int,
     val sequencingBatch: String
+)
+
+/**
+ * Preprocessing 업데이트 요청
+ */
+data class UpdatePreprocessingRequest(
+    val index: Int? = null,
+    val sequencingBatch: String? = null
 )

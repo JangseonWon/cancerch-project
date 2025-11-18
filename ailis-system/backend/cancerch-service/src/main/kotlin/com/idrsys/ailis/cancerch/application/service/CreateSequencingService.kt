@@ -3,7 +3,7 @@ package com.idrsys.ailis.cancerch.application.service
 import com.idrsys.ailis.cancerch.application.dto.request.CreateSequencingCommand
 import com.idrsys.ailis.cancerch.application.dto.response.SequencingResponse
 import com.idrsys.ailis.cancerch.application.usecase.CreateSequencingUseCase
-import com.idrsys.ailis.cancerch.domain.exception.DomainException
+import com.idrsys.ailis.cancerch.domain.exception.DuplicateEntityException
 import com.idrsys.ailis.cancerch.domain.model.SampleId
 import com.idrsys.ailis.cancerch.domain.model.WorklistId
 import com.idrsys.ailis.cancerch.domain.sequencing.Sequencing
@@ -20,7 +20,7 @@ class CreateSequencingService(
     override suspend fun execute(command: CreateSequencingCommand): SequencingResponse {
         // 1. 중복 체크
         if (sequencingRepository.existsByBarcode(command.barcode)) {
-            throw DomainException("Sequencing with barcode ${command.barcode} already exists")
+            throw DuplicateEntityException("Sequencing", command.barcode)
         }
 
         // 2. 도메인 모델 생성

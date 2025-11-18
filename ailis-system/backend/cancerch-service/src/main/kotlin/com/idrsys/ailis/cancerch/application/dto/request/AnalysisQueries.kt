@@ -8,6 +8,7 @@ data class SearchAnalysisQuery(
     val serviceCode: String? = null,
     val batch: String? = null,
     val result: String? = null,
+    val search: String? = null,  // 프론트엔드 호환용 통합 검색 파라미터 (sampleId 또는 serviceCode로 검색)
     val page: Int = 0,
     val size: Int = 20
 )

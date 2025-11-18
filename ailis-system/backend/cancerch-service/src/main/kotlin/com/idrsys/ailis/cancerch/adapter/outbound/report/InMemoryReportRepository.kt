@@ -13,32 +13,58 @@ class InMemoryReportRepository : ReportRepository {
     private val storage = ConcurrentHashMap<Long, Report>()
     private val idGenerator = AtomicLong(1)
 
-    override fun save(report: Report): Report {
+    override suspend fun save(report: Report): Report {
         val id = idGenerator.getAndIncrement()
         val savedReport = report.copy(id = id)
         storage[id] = savedReport
         return savedReport
     }
 
-    override fun findById(id: Long): Report? {
+    override suspend fun findById(id: Long): Report? {
         return storage[id]
     }
 
-    override fun findByUuid(uuid: UUID): Report? {
+    override suspend fun findByUuid(uuid: UUID): Report? {
         return storage.values.find { it.uuid == uuid }
     }
 
-    override fun findBySampleIdAndServiceCode(sampleId: String, serviceCode: String): List<Report> {
+    override suspend fun findBySampleIdAndServiceCode(sampleId: String, serviceCode: String): List<Report> {
         return storage.values
             .filter { it.sampleId == sampleId && it.serviceCode == serviceCode }
             .sortedByDescending { it.createdAt }
     }
 
-    override fun findAll(): List<Report> {
+    override suspend fun findAll(): List<Report> {
         return storage.values.sortedByDescending { it.createdAt }
     }
 
-    override fun update(report: Report): Report {
+    override suspend fun findAllPaged(page: Int, size: Int, status: com.idrsys.ailis.cancerch.domain.report.ReportStatus?): com.idrsys.ailis.cancerch.domain.report.PagedReports {
+        // Filter by status if provided
+        val filtered = if (status != null) {
+            storage.values.filter { it.status == status }
+        } else {
+            storage.values.toList()
+        }
+
+        // Sort by createdAt descending
+        val sorted = filtered.sortedByDescending { it.createdAt }
+
+        // Calculate pagination
+        val totalElements = sorted.size.toLong()
+        val totalPages = ((totalElements + size - 1) / size).toInt()
+        val offset = page * size
+        val paged = sorted.drop(offset).take(size)
+
+        return com.idrsys.ailis.cancerch.domain.report.PagedReports(
+            reports = paged,
+            totalElements = totalElements,
+            totalPages = totalPages,
+            currentPage = page,
+            pageSize = size
+        )
+    }
+
+    override suspend fun update(report: Report): Report {
         val id = report.id ?: throw IllegalArgumentException("Report ID cannot be null for update")
         if (!storage.containsKey(id)) {
             throw IllegalArgumentException("Report not found: $id")
@@ -47,7 +73,7 @@ class InMemoryReportRepository : ReportRepository {
         return report
     }
 
-    override fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long) {
         storage.remove(id)
     }
 }

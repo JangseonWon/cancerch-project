@@ -17,9 +17,15 @@ import java.util.concurrent.ConcurrentHashMap
 class InMemoryAnalysisRepository : AnalysisRepository {
 
     private val storage = ConcurrentHashMap<AnalysisId, AnalysisResult>()
+    private val idStorage = ConcurrentHashMap<Long, AnalysisId>()
+    private var nextId = 1L
     private val mutex = Mutex()
 
     override suspend fun save(analysisResult: AnalysisResult): AnalysisResult = mutex.withLock {
+        // 기존에 없는 경우에만 새로운 숫자 ID 할당
+        if (!idStorage.containsValue(analysisResult.id)) {
+            idStorage[nextId++] = analysisResult.id
+        }
         storage[analysisResult.id] = analysisResult
         analysisResult
     }
@@ -67,10 +73,27 @@ class InMemoryAnalysisRepository : AnalysisRepository {
     }
 
     /**
+     * 숫자 ID로 분석 결과 조회
+     */
+    suspend fun findByNumericId(numericId: Long): AnalysisResult? {
+        val analysisId = idStorage[numericId] ?: return null
+        return storage[analysisId]
+    }
+
+    /**
+     * AnalysisId에 대한 숫자 ID 조회
+     */
+    fun getNumericId(analysisId: AnalysisId): Long? {
+        return idStorage.entries.find { it.value == analysisId }?.key
+    }
+
+    /**
      * 테스트 용도: 모든 데이터 삭제
      */
     suspend fun clear() = mutex.withLock {
         storage.clear()
+        idStorage.clear()
+        nextId = 1L
     }
 
     /**

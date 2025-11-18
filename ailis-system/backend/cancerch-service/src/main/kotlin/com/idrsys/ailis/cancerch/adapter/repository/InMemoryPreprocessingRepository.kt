@@ -49,11 +49,12 @@ class InMemoryPreprocessingRepository : PreprocessingRepository {
         storage.remove(id.value)
     }
 
-    override suspend fun findByState(state: PreprocessingState, limit: Int): List<Preprocessing> {
+    override suspend fun findByState(state: PreprocessingState, offset: Int, limit: Int): List<Preprocessing> {
         return storage.values
             .filter { it.state == state }
-            .take(limit)
             .sortedByDescending { it.createdAt }
+            .drop(offset)
+            .take(limit)
     }
 
     override suspend fun findAll(offset: Int, limit: Int): List<Preprocessing> {
