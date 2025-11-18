@@ -1,9 +1,9 @@
-# AILIS 차세대 시스템 (파일럿 프로젝트)
+# AILIS 차세대 시스템
 
 ## 프로젝트 개요
 
 cancerch-project를 Clean Architecture 기반으로 재개발한 차세대 LIMS 시스템입니다.
-현재 **Worklist 모듈**을 파일럿 프로젝트로 구현했습니다.
+**전체 5개 모듈(Worklist, Sequencing, Analysis, Report, Publish)** 완전 구현 완료.
 
 ## 아키텍처
 
@@ -279,34 +279,61 @@ export function WorklistTable() {
 
 ## 현재 구현 상태
 
-### ✅ 완료 (v0.0.1-SNAPSHOT)
-- [x] Clean Architecture 구조 (Domain/Application/Adapter/Infrastructure)
-- [x] Worklist 도메인 모델 (Entity, ValueObject, DomainService)
-- [x] CRUD 유스케이스 (Create, Read, Update, List)
-- [x] REST API (Spring WebFlux + Kotlin Coroutines)
-- [x] R2DBC + jOOQ 연동 (Type-Safe SQL)
-- [x] Flyway 마이그레이션
-- [x] 단위/통합 테스트 (WorklistTest, ServiceTest, ControllerTest)
-- [x] React 18 + TypeScript 프로젝트
-- [x] Worklist 목록/상세/생성 UI
-- [x] SWR 데이터 페칭 + 자동 리프레시
-- [x] Docker Compose 인프라 (PostgreSQL, Kafka, Redis, Prometheus, Grafana)
-- [x] Gradle Wrapper 설정
-- [x] 완전한 문서화
+### ✅ 완료 (v0.1.0-SNAPSHOT)
 
-### 📋 향후 계획 (v0.1.0)
-- [ ] Kafka 이벤트 발행 (worklist.created, worklist.updated)
+**Core Architecture**
+- [x] Clean Architecture 4-Layer 구조 (Domain/Application/Adapter/Infrastructure)
+- [x] DDD 패턴 (Entity, ValueObject, DomainService, Repository)
+- [x] CQRS 패턴 (Command/Query 분리)
+- [x] REST API (Spring WebFlux + Kotlin Coroutines)
+- [x] Flyway 마이그레이션 (V1-V7)
+
+**Module Implementation (86 Kotlin files)**
+- [x] **Worklist 모듈** - 검체 접수 관리 (26개 파일, 테스트 포함)
+- [x] **Sequencing 모듈** - Preprocessing 상태관리, Plate Index 관리 (26개 파일)
+- [x] **Analysis 모듈** - 분석 결과/QC 데이터 관리 (17개 파일)
+- [x] **Report 모듈** - 보고서 생성/조회/발행 (8개 파일)
+- [x] **Publish 모듈** - Kafka 이벤트 발행 (7개 파일)
+
+**Database Schema**
+- [x] Worklist 테이블 (worklist, worklist_item)
+- [x] Sequencing 테이블 (preprocessing, sequencing, plate_index)
+- [x] Analysis 테이블 (analysis_result, analysis_qc)
+- [x] Common 테이블 (patient, sample, service, request)
+- [x] Report 테이블 (report, report_log)
+- [x] 마스터 데이터 (17개 서비스 코드: AVOID, Cancerch, DNACX 등)
+
+**Frontend (React 18 + TypeScript)**
+- [x] WorklistList/Detail/Create - 워크리스트 관리
+- [x] SequencingList - Preprocessing 상태관리 UI
+- [x] AnalysisList - 분석 결과 조회/수정 UI
+- [x] ReportList - 보고서 생성/발행 UI
+- [x] SWR 데이터 페칭 + 30초 자동 리프레시
+- [x] PrimeReact DataTable, Dialog, Button 컴포넌트
+
+**Infrastructure**
+- [x] Docker Compose (PostgreSQL, Kafka, Redis, Prometheus, Grafana)
+- [x] Gradle Multi-Project 설정
+- [x] Kotlin 1.9.22 + JDK 21
+
+### 📋 향후 계획 (v0.2.0)
+- [ ] jOOQ 기반 실제 Repository 구현 (현재 InMemory)
+- [ ] Worklist → Sequencing → Analysis 자동화 워크플로우
+- [ ] Report PDF 생성 (Jasper Reports 연동)
+- [ ] Kafka 실제 메시지 발행 (현재 로그만)
 - [ ] Redis 캐싱 전략
 - [ ] Prometheus 커스텀 메트릭
 - [ ] Grafana 대시보드 구성
-- [ ] jOOQ 기반 실제 Repository 구현 (현재 InMemory)
-- [ ] E2E 테스트
+- [ ] E2E 테스트 (Playwright)
+- [ ] Analysis/Report/Publish 모듈 단위 테스트
 
 ### 🚀 로드맵 (v1.0.0)
-- [ ] Analysis 모듈 마이그레이션
-- [ ] Report 모듈 마이그레이션
-- [ ] Publish 모듈 마이그레이션
-- [ ] Legacy 시스템 통합
+- [ ] LIMS1 (Legacy) 시스템 연동
+- [ ] ALIS/RMS 외부 시스템 연동
+- [ ] 사용자 인증/권한 (Spring Security + JWT)
+- [ ] Audit Log (누가, 언제, 무엇을)
+- [ ] 성능 최적화 (N+1 쿼리 해결, 인덱스 튜닝)
+- [ ] 운영 환경 배포 (Kubernetes)
 
 ## 기술 부채 해소
 
