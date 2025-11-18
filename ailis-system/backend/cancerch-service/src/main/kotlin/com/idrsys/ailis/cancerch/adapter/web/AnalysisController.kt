@@ -179,7 +179,7 @@ class AnalysisResultsController(
         }
 
         return PagedAnalysisResultResponseWithId(
-            results = resultsWithId,
+            items = resultsWithId,
             totalCount = response.totalCount,
             page = response.page,
             size = response.size,
@@ -317,7 +317,7 @@ data class UpdateAnalysisResultRequest(
  * 분석 결과 목록 응답 (숫자 ID 포함)
  */
 data class PagedAnalysisResultResponseWithId(
-    val results: List<AnalysisResultResponse>,
+    val items: List<AnalysisResultResponse>,
     val totalCount: Int,
     val page: Int,
     val size: Int,

@@ -16,22 +16,28 @@ data class Report(
     val language: String = "ko",
     val status: ReportStatus = ReportStatus.GENERATED,
     val isPrinted: Boolean = false,
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val generatedAt: LocalDateTime? = null,
     val publishedAt: LocalDateTime? = null,
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    val publishedBy: String? = null,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val version: Int = 1
 ) {
-    fun publish(): Report {
+    fun publish(publishedBy: String? = null): Report {
         return copy(
             status = ReportStatus.PUBLISHED,
             publishedAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
+            publishedBy = publishedBy,
+            updatedAt = LocalDateTime.now(),
+            version = version + 1
         )
     }
 
     fun markAsPrinted(): Report {
         return copy(
             isPrinted = true,
-            updatedAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now(),
+            version = version + 1
         )
     }
 }

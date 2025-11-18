@@ -66,10 +66,10 @@ data class WorkSampleResponse(
  * 페이징된 Worklist 목록 응답
  */
 data class PagedWorklistResponse(
-    val content: List<WorklistResponse>,
+    val items: List<WorklistResponse>,
     val page: Int,
     val size: Int,
-    val totalElements: Long,
+    val totalCount: Long,
     val totalPages: Int
 ) {
     val hasNext: Boolean get() = page < totalPages - 1

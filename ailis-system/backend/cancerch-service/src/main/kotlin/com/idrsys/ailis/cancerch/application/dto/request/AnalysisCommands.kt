@@ -1,5 +1,7 @@
 package com.idrsys.ailis.cancerch.application.dto.request
 
+import java.time.Instant
+
 /**
  * 분석 결과 업데이트 Command
  */
@@ -15,7 +17,10 @@ data class UpdateAnalysisResultCommand(
     val result: String? = null,
     val comment: String? = null,
     val femsCovBc: Double? = null,
-    val cfdnaConcentration: Double? = null
+    val cfdnaConcentration: Double? = null,
+    val status: String? = null,
+    val analyzedAt: Instant? = null,
+    val analyzedBy: String? = null
 )
 
 /**
@@ -52,5 +57,8 @@ data class CreateAnalysisResultCommand(
     val comment: String? = null,
     val femsCovBc: Double? = null,
     val cfdnaConcentration: Double? = null,
-    val qc: UpdateAnalysisQCCommand? = null
+    val qc: UpdateAnalysisQCCommand? = null,
+    val status: String? = null,
+    val analyzedAt: Instant? = null,
+    val analyzedBy: String? = null
 )

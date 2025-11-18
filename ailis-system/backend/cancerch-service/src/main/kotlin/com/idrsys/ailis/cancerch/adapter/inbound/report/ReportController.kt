@@ -54,11 +54,11 @@ class ReportController(
 
         val pagedReports = getReportUseCase.getReportsPaged(page, size, reportStatus)
         val response = PagedReportResponse(
-            reports = pagedReports.reports.map { it.toResponse() },
-            totalElements = pagedReports.totalElements,
+            items = pagedReports.reports.map { it.toResponse() },
+            totalCount = pagedReports.totalElements,
             totalPages = pagedReports.totalPages,
-            currentPage = pagedReports.currentPage,
-            pageSize = pagedReports.pageSize
+            page = pagedReports.currentPage,
+            size = pagedReports.pageSize
         )
         return ResponseEntity.ok(response)
     }
@@ -85,6 +85,7 @@ class ReportController(
         return try {
             val command = PublishReportCommand(
                 reportId = id,
+                publishedBy = request?.publishedBy,
                 metadata = request?.metadata ?: emptyMap()
             )
 
@@ -120,13 +121,18 @@ class ReportController(
         batch = this.batch,
         rowNumber = this.rowNumber,
         reportName = this.reportName,
+        reportType = this.reportName,
         filePath = this.filePath,
         fileSize = this.fileSize,
         language = this.language,
         status = this.status.name,
         isPrinted = this.isPrinted,
+        generatedAt = this.generatedAt?.toString(),
+        publishedAt = this.publishedAt?.toString(),
+        publishedBy = this.publishedBy,
         createdAt = this.createdAt.toString(),
-        publishedAt = this.publishedAt?.toString()
+        updatedAt = this.updatedAt.toString(),
+        version = this.version
     )
 }
 
@@ -146,24 +152,30 @@ data class ReportResponse(
     val batch: String,
     val rowNumber: Int,
     val reportName: String,
+    val reportType: String,
     val filePath: String,
     val fileSize: Long,
     val language: String,
     val status: String,
     val isPrinted: Boolean,
+    val generatedAt: String?,
+    val publishedAt: String?,
+    val publishedBy: String?,
     val createdAt: String,
-    val publishedAt: String?
+    val updatedAt: String,
+    val version: Int
 )
 
 data class PagedReportResponse(
-    val reports: List<ReportResponse>,
-    val totalElements: Long,
+    val items: List<ReportResponse>,
+    val totalCount: Long,
     val totalPages: Int,
-    val currentPage: Int,
-    val pageSize: Int
+    val page: Int,
+    val size: Int
 )
 
 data class PublishRequest(
+    val publishedBy: String? = null,
     val metadata: Map<String, Any> = emptyMap()
 )
 

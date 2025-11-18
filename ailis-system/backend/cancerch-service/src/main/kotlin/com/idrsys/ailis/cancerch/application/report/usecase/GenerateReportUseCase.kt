@@ -16,6 +16,7 @@ class GenerateReportUseCase(
         val fileName = "${command.sampleId}_${command.serviceCode}_${System.currentTimeMillis()}.pdf"
         val filePath = "/reports/${command.batch}/${fileName}"
 
+        val now = LocalDateTime.now()
         val report = Report(
             sampleId = command.sampleId,
             serviceCode = command.serviceCode,
@@ -26,7 +27,9 @@ class GenerateReportUseCase(
             fileSize = 1024L, // Mock file size
             language = command.language,
             status = ReportStatus.GENERATED,
-            createdAt = LocalDateTime.now()
+            generatedAt = now,
+            createdAt = now,
+            updatedAt = now
         )
 
         return reportRepository.save(report)

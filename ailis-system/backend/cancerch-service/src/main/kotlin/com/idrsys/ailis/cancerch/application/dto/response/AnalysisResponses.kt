@@ -21,6 +21,9 @@ data class AnalysisResultResponse(
     val femsCovBc: Double?,
     val cfdnaConcentration: Double?,
     val qc: AnalysisQCResponse?,
+    val status: String,
+    val analyzedAt: Instant?,
+    val analyzedBy: String?,
     val createdAt: Instant,
     val updatedAt: Instant,
     val version: Int
@@ -42,6 +45,9 @@ data class AnalysisResultResponse(
                 femsCovBc = analysisResult.femsCovBc,
                 cfdnaConcentration = analysisResult.cfdnaConcentration,
                 qc = analysisResult.qc?.let { AnalysisQCResponse.from(it) },
+                status = analysisResult.status,
+                analyzedAt = analysisResult.analyzedAt,
+                analyzedBy = analysisResult.analyzedBy,
                 createdAt = analysisResult.createdAt,
                 updatedAt = analysisResult.updatedAt,
                 version = analysisResult.version
@@ -99,7 +105,7 @@ data class AnalysisQCResponse(
  * 분석 결과 목록 응답 (페이징)
  */
 data class PagedAnalysisResultResponse(
-    val results: List<AnalysisResultResponse>,
+    val items: List<AnalysisResultResponse>,
     val totalCount: Int,
     val page: Int,
     val size: Int,
@@ -114,7 +120,7 @@ data class PagedAnalysisResultResponse(
         ): PagedAnalysisResultResponse {
             val totalPages = if (size > 0) (totalCount + size - 1) / size else 0
             return PagedAnalysisResultResponse(
-                results = results.map { AnalysisResultResponse.from(it) },
+                items = results.map { AnalysisResultResponse.from(it) },
                 totalCount = totalCount,
                 page = page,
                 size = size,

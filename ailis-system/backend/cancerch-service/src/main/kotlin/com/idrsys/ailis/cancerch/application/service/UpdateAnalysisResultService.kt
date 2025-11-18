@@ -35,7 +35,10 @@ class UpdateAnalysisResultService(
             result = command.result,
             comment = command.comment,
             femsCovBc = command.femsCovBc,
-            cfdnaConcentration = command.cfdnaConcentration
+            cfdnaConcentration = command.cfdnaConcentration,
+            status = command.status ?: existing.status,
+            analyzedAt = command.analyzedAt ?: existing.analyzedAt,
+            analyzedBy = command.analyzedBy ?: existing.analyzedBy
         )
 
         val saved = analysisRepository.save(updated)

@@ -21,7 +21,7 @@ class PublishReportUseCase(
             ?: throw IllegalArgumentException("Report not found: ${command.reportId}")
 
         // Publish report (update status)
-        val publishedReport = report.publish()
+        val publishedReport = report.publish(command.publishedBy)
         reportRepository.update(publishedReport)
 
         // Create and publish event

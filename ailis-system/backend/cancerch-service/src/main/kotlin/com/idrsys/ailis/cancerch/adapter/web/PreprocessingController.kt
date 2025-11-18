@@ -86,10 +86,14 @@ class PreprocessingController(
      * Preprocessing 시작 (프론트엔드 호환 - A 프로세스 시작)
      */
     @PostMapping("/{worklistId}/start")
-    suspend fun start(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun start(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: StartPreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.START_A
+            action = PreprocessingAction.START_A,
+            startedBy = request?.startedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -98,10 +102,14 @@ class PreprocessingController(
      * Preprocessing 완료 (프론트엔드 호환 - A 프로세스 완료)
      */
     @PostMapping("/{worklistId}/complete")
-    suspend fun complete(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun complete(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: CompletePreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.COMPLETE_A
+            action = PreprocessingAction.COMPLETE_A,
+            completedBy = request?.completedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -126,10 +134,14 @@ class PreprocessingController(
      * A 프로세스 시작 (기존 엔드포인트 - 하위 호환성)
      */
     @PostMapping("/worklists/{worklistId}/start-a")
-    suspend fun startA(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun startA(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: StartPreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.START_A
+            action = PreprocessingAction.START_A,
+            startedBy = request?.startedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -138,10 +150,14 @@ class PreprocessingController(
      * A 프로세스 완료
      */
     @PostMapping("/worklists/{worklistId}/complete-a")
-    suspend fun completeA(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun completeA(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: CompletePreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.COMPLETE_A
+            action = PreprocessingAction.COMPLETE_A,
+            completedBy = request?.completedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -150,10 +166,14 @@ class PreprocessingController(
      * A 프로세스 보류
      */
     @PostMapping("/worklists/{worklistId}/hold-a")
-    suspend fun holdA(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun holdA(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: StartPreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.HOLD_A
+            action = PreprocessingAction.HOLD_A,
+            startedBy = request?.startedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -162,10 +182,14 @@ class PreprocessingController(
      * B 프로세스 시작
      */
     @PostMapping("/worklists/{worklistId}/start-b")
-    suspend fun startB(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun startB(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: StartPreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.START_B
+            action = PreprocessingAction.START_B,
+            startedBy = request?.startedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -174,10 +198,14 @@ class PreprocessingController(
      * B 프로세스 완료
      */
     @PostMapping("/worklists/{worklistId}/complete-b")
-    suspend fun completeB(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun completeB(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: CompletePreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.COMPLETE_B
+            action = PreprocessingAction.COMPLETE_B,
+            completedBy = request?.completedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -186,10 +214,14 @@ class PreprocessingController(
      * B 프로세스 보류
      */
     @PostMapping("/worklists/{worklistId}/hold-b")
-    suspend fun holdB(@PathVariable worklistId: Long): PreprocessingResponse {
+    suspend fun holdB(
+        @PathVariable worklistId: Long,
+        @RequestBody(required = false) request: StartPreprocessingRequest?
+    ): PreprocessingResponse {
         val command = UpdatePreprocessingStateCommand(
             worklistId = worklistId,
-            action = PreprocessingAction.HOLD_B
+            action = PreprocessingAction.HOLD_B,
+            startedBy = request?.startedBy
         )
         return updatePreprocessingStateUseCase.execute(command)
     }
@@ -210,4 +242,18 @@ data class CreatePreprocessingRequest(
 data class UpdatePreprocessingRequest(
     val index: Int? = null,
     val sequencingBatch: String? = null
+)
+
+/**
+ * Preprocessing 시작 요청
+ */
+data class StartPreprocessingRequest(
+    val startedBy: String? = null
+)
+
+/**
+ * Preprocessing 완료 요청
+ */
+data class CompletePreprocessingRequest(
+    val completedBy: String? = null
 )

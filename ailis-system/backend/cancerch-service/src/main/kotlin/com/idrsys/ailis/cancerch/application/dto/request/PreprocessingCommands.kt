@@ -14,7 +14,9 @@ data class CreatePreprocessingCommand(
  */
 data class UpdatePreprocessingStateCommand(
     val worklistId: Long,
-    val action: PreprocessingAction
+    val action: PreprocessingAction,
+    val startedBy: String? = null,
+    val completedBy: String? = null
 )
 
 /**

@@ -27,10 +27,10 @@ class ListWorklistsService(
         val totalPages = ((total + query.size - 1) / query.size).toInt()
 
         return PagedWorklistResponse(
-            content = worklists.map { WorklistResponse.from(it) },
+            items = worklists.map { WorklistResponse.from(it) },
             page = query.page,
             size = query.size,
-            totalElements = total,
+            totalCount = total,
             totalPages = totalPages
         )
     }

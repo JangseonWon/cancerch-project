@@ -5,13 +5,15 @@ import com.idrsys.ailis.cancerch.application.dto.response.PreprocessingResponse
 import com.idrsys.ailis.cancerch.application.usecase.UpdatePreprocessingUseCase
 import com.idrsys.ailis.cancerch.domain.exception.DomainException
 import com.idrsys.ailis.cancerch.domain.model.WorklistId
+import com.idrsys.ailis.cancerch.domain.repository.WorklistRepository
 import com.idrsys.ailis.cancerch.domain.sequencing.PreprocessingRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UpdatePreprocessingService(
-    private val preprocessingRepository: PreprocessingRepository
+    private val preprocessingRepository: PreprocessingRepository,
+    private val worklistRepository: WorklistRepository
 ) : UpdatePreprocessingUseCase {
 
     @Transactional
@@ -27,6 +29,11 @@ class UpdatePreprocessingService(
         )
 
         val saved = preprocessingRepository.save(updated)
-        return PreprocessingResponse.from(saved)
+
+        // Worklist 정보 조회
+        val worklist = worklistRepository.findById(saved.worklistId)
+            ?: throw DomainException("Worklist not found for id ${saved.worklistId.value}")
+
+        return PreprocessingResponse.from(saved, worklist)
     }
 }

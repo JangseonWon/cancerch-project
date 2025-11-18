@@ -47,7 +47,10 @@ class CreateAnalysisResultService(
             comment = command.comment,
             femsCovBc = command.femsCovBc,
             cfdnaConcentration = command.cfdnaConcentration,
-            qc = qc
+            qc = qc,
+            status = command.status ?: "PENDING",
+            analyzedAt = command.analyzedAt,
+            analyzedBy = command.analyzedBy
         )
 
         val saved = analysisRepository.save(analysisResult)

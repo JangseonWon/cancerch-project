@@ -18,6 +18,9 @@ data class AnalysisResult(
     val femsCovBc: Double?,
     val cfdnaConcentration: Double?,
     val qc: AnalysisQC?,
+    val status: String = "PENDING",
+    val analyzedAt: Instant? = null,
+    val analyzedBy: String? = null,
     val createdAt: Instant,
     val updatedAt: Instant,
     val version: Int = 1
@@ -40,7 +43,10 @@ data class AnalysisResult(
         result: String? = this.result,
         comment: String? = this.comment,
         femsCovBc: Double? = this.femsCovBc,
-        cfdnaConcentration: Double? = this.cfdnaConcentration
+        cfdnaConcentration: Double? = this.cfdnaConcentration,
+        status: String = this.status,
+        analyzedAt: Instant? = this.analyzedAt,
+        analyzedBy: String? = this.analyzedBy
     ): AnalysisResult {
         return copy(
             cadEnsembleProb = cadEnsembleProb,
@@ -51,6 +57,9 @@ data class AnalysisResult(
             comment = comment,
             femsCovBc = femsCovBc,
             cfdnaConcentration = cfdnaConcentration,
+            status = status,
+            analyzedAt = analyzedAt,
+            analyzedBy = analyzedBy,
             updatedAt = Instant.now(),
             version = version + 1
         )
@@ -92,7 +101,10 @@ data class AnalysisResult(
             comment: String? = null,
             femsCovBc: Double? = null,
             cfdnaConcentration: Double? = null,
-            qc: AnalysisQC? = null
+            qc: AnalysisQC? = null,
+            status: String = "PENDING",
+            analyzedAt: Instant? = null,
+            analyzedBy: String? = null
         ): AnalysisResult {
             val now = Instant.now()
             val id = AnalysisId.from(sampleId, serviceCode, batch, rowNumber)
@@ -108,6 +120,9 @@ data class AnalysisResult(
                 femsCovBc = femsCovBc,
                 cfdnaConcentration = cfdnaConcentration,
                 qc = qc,
+                status = status,
+                analyzedAt = analyzedAt,
+                analyzedBy = analyzedBy,
                 createdAt = now,
                 updatedAt = now,
                 version = 1

@@ -17,7 +17,11 @@ data class Preprocessing(
     val state: PreprocessingState,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val version: Int = 1
+    val version: Int = 1,
+    val startedBy: String? = null,
+    val startedAt: Instant? = null,
+    val completedBy: String? = null,
+    val completedAt: Instant? = null
 ) {
     init {
         require(index > 0) { "Index must be positive" }
@@ -27,37 +31,43 @@ data class Preprocessing(
     /**
      * A 프로세스 시작
      */
-    fun startA(): Preprocessing {
+    fun startA(startedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING || state == PreprocessingState.HOLDING) {
             "Cannot start A process from $state state"
         }
 
+        val now = Instant.now()
         return copy(
             state = PreprocessingState.PENDING,
-            updatedAt = Instant.now(),
-            version = version + 1
+            updatedAt = now,
+            version = version + 1,
+            startedBy = startedBy ?: this.startedBy,
+            startedAt = if (startedBy != null || this.startedAt == null) now else this.startedAt
         )
     }
 
     /**
      * A 프로세스 완료
      */
-    fun completeA(): Preprocessing {
+    fun completeA(completedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING) {
             "Cannot complete A process from $state state"
         }
 
+        val now = Instant.now()
         return copy(
             state = PreprocessingState.PENDING_B,
-            updatedAt = Instant.now(),
-            version = version + 1
+            updatedAt = now,
+            version = version + 1,
+            completedBy = completedBy ?: this.completedBy,
+            completedAt = if (completedBy != null || this.completedAt == null) now else this.completedAt
         )
     }
 
     /**
      * A 프로세스 보류
      */
-    fun holdA(): Preprocessing {
+    fun holdA(startedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING) {
             "Cannot hold A process from $state state"
         }
@@ -65,44 +75,51 @@ data class Preprocessing(
         return copy(
             state = PreprocessingState.HOLDING,
             updatedAt = Instant.now(),
-            version = version + 1
+            version = version + 1,
+            startedBy = startedBy ?: this.startedBy
         )
     }
 
     /**
      * B 프로세스 시작
      */
-    fun startB(): Preprocessing {
+    fun startB(startedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING_B || state == PreprocessingState.HOLDING_B) {
             "Cannot start B process from $state state"
         }
 
+        val now = Instant.now()
         return copy(
             state = PreprocessingState.PENDING_B,
-            updatedAt = Instant.now(),
-            version = version + 1
+            updatedAt = now,
+            version = version + 1,
+            startedBy = startedBy ?: this.startedBy,
+            startedAt = if (startedBy != null || this.startedAt == null) now else this.startedAt
         )
     }
 
     /**
      * B 프로세스 완료
      */
-    fun completeB(): Preprocessing {
+    fun completeB(completedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING_B) {
             "Cannot complete B process from $state state"
         }
 
+        val now = Instant.now()
         return copy(
             state = PreprocessingState.COMPLETE,
-            updatedAt = Instant.now(),
-            version = version + 1
+            updatedAt = now,
+            version = version + 1,
+            completedBy = completedBy ?: this.completedBy,
+            completedAt = if (completedBy != null || this.completedAt == null) now else this.completedAt
         )
     }
 
     /**
      * B 프로세스 보류
      */
-    fun holdB(): Preprocessing {
+    fun holdB(startedBy: String? = null): Preprocessing {
         require(state == PreprocessingState.PENDING_B) {
             "Cannot hold B process from $state state"
         }
@@ -110,7 +127,8 @@ data class Preprocessing(
         return copy(
             state = PreprocessingState.HOLDING_B,
             updatedAt = Instant.now(),
-            version = version + 1
+            version = version + 1,
+            startedBy = startedBy ?: this.startedBy
         )
     }
 

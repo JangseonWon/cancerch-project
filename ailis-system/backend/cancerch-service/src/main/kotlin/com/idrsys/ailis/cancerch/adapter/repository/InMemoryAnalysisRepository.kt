@@ -18,13 +18,16 @@ class InMemoryAnalysisRepository : AnalysisRepository {
 
     private val storage = ConcurrentHashMap<AnalysisId, AnalysisResult>()
     private val idStorage = ConcurrentHashMap<Long, AnalysisId>()
+    private val reverseIdStorage = ConcurrentHashMap<AnalysisId, Long>() // O(1) lookup을 위한 역방향 맵
     private var nextId = 1L
     private val mutex = Mutex()
 
     override suspend fun save(analysisResult: AnalysisResult): AnalysisResult = mutex.withLock {
         // 기존에 없는 경우에만 새로운 숫자 ID 할당
-        if (!idStorage.containsValue(analysisResult.id)) {
-            idStorage[nextId++] = analysisResult.id
+        if (!reverseIdStorage.containsKey(analysisResult.id)) {
+            val numericId = nextId++
+            idStorage[numericId] = analysisResult.id
+            reverseIdStorage[analysisResult.id] = numericId
         }
         storage[analysisResult.id] = analysisResult
         analysisResult
@@ -81,10 +84,10 @@ class InMemoryAnalysisRepository : AnalysisRepository {
     }
 
     /**
-     * AnalysisId에 대한 숫자 ID 조회
+     * AnalysisId에 대한 숫자 ID 조회 (O(1) 복잡도)
      */
     fun getNumericId(analysisId: AnalysisId): Long? {
-        return idStorage.entries.find { it.value == analysisId }?.key
+        return reverseIdStorage[analysisId]
     }
 
     /**
@@ -93,6 +96,7 @@ class InMemoryAnalysisRepository : AnalysisRepository {
     suspend fun clear() = mutex.withLock {
         storage.clear()
         idStorage.clear()
+        reverseIdStorage.clear()
         nextId = 1L
     }
 
