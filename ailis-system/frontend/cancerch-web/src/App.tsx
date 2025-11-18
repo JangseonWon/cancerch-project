@@ -2,6 +2,9 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { WorklistList } from './pages/WorklistList'
 import { WorklistDetail } from './pages/WorklistDetail'
 import { CreateWorklist } from './pages/CreateWorklist'
+import { SequencingList } from './pages/SequencingList'
+import { AnalysisList } from './pages/AnalysisList'
+import { ReportList } from './pages/ReportList'
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
           <Route path="/" element={<WorklistList />} />
           <Route path="/worklists/new" element={<CreateWorklist />} />
           <Route path="/worklists/:id" element={<WorklistDetail />} />
+          <Route path="/sequencing" element={<SequencingList />} />
+          <Route path="/analysis" element={<AnalysisList />} />
+          <Route path="/reports" element={<ReportList />} />
         </Routes>
       </main>
     </div>
