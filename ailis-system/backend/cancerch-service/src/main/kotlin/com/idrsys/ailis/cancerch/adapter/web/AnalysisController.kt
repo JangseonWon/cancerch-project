@@ -163,7 +163,7 @@ class AnalysisResultsController(
         val response = searchAnalysisUseCase.execute(query)
 
         // 각 결과에 숫자 ID 추가
-        val resultsWithId = response.results.map { result ->
+        val resultsWithId = response.items.map { result ->
             val analysisId = com.idrsys.ailis.cancerch.domain.model.AnalysisId.from(
                 result.sampleId,
                 result.serviceCode,
