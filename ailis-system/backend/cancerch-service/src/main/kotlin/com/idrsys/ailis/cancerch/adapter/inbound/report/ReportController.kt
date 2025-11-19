@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*
 class ReportController(
     private val generateReportUseCase: GenerateReportUseCase,
     private val getReportUseCase: GetReportUseCase,
-    private val publishReportUseCase: PublishReportUseCase
+    private val publishReportUseCase: PublishReportUseCase,
+    private val analysisRepository: com.idrsys.ailis.cancerch.domain.repository.AnalysisRepository
 ) {
 
     @GetMapping("/samples/{sampleId}/services/{serviceCode}")
@@ -77,39 +78,52 @@ class ReportController(
         return ResponseEntity.status(HttpStatus.CREATED).body(report.toResponse())
     }
 
+    @PostMapping("/generate")
+    suspend fun createReport(@RequestBody request: CreateReportRequest): ResponseEntity<ReportResponse> {
+        // Map reportType to serviceCode (assuming they're the same or similar)
+        val serviceCode = request.reportType
+
+        // Find the latest analysis result for this sample and service
+        val analysisResults = analysisRepository.search(
+            sampleId = request.sampleId,
+            serviceCode = serviceCode
+        )
+
+        if (analysisResults.isEmpty()) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        // Get the most recent analysis result
+        val latestAnalysis = analysisResults.maxByOrNull { it.createdAt }!!
+
+        val command = GenerateReportCommand(
+            sampleId = request.sampleId,
+            serviceCode = serviceCode,
+            batch = latestAnalysis.batch,
+            rowNumber = latestAnalysis.rowNumber,
+            language = "ko"
+        )
+
+        val report = generateReportUseCase.execute(command)
+        return ResponseEntity.status(HttpStatus.CREATED).body(report.toResponse())
+    }
+
     @PostMapping("/{id}/publish")
     suspend fun publishReport(
         @PathVariable id: Long,
-        @RequestBody(required = false) request: PublishRequest?
-    ): ResponseEntity<PublishResponse> {
+        @RequestBody request: PublishRequest
+    ): ResponseEntity<ReportResponse> {
         return try {
             val command = PublishReportCommand(
                 reportId = id,
-                publishedBy = request?.publishedBy,
-                metadata = request?.metadata ?: emptyMap()
+                publishedBy = request.publishedBy,
+                metadata = emptyMap()
             )
 
             val publishedReport = publishReportUseCase.execute(command)
-
-            ResponseEntity.ok(
-                PublishResponse(
-                    success = true,
-                    message = "Report published successfully",
-                    reportId = publishedReport.id!!,
-                    status = publishedReport.status.name,
-                    publishedAt = publishedReport.publishedAt?.toString()
-                )
-            )
+            ResponseEntity.ok(publishedReport.toResponse())
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(
-                PublishResponse(
-                    success = false,
-                    message = e.message ?: "Failed to publish report",
-                    reportId = id,
-                    status = null,
-                    publishedAt = null
-                )
-            )
+            ResponseEntity.badRequest().build()
         }
     }
 
@@ -144,6 +158,12 @@ data class GenerateReportRequest(
     val language: String? = "ko"
 )
 
+data class CreateReportRequest(
+    val sampleId: String,
+    val reportType: String,
+    val createdBy: String
+)
+
 data class ReportResponse(
     val id: Long,
     val uuid: String,
@@ -175,14 +195,5 @@ data class PagedReportResponse(
 )
 
 data class PublishRequest(
-    val publishedBy: String? = null,
-    val metadata: Map<String, Any> = emptyMap()
-)
-
-data class PublishResponse(
-    val success: Boolean,
-    val message: String,
-    val reportId: Long,
-    val status: String?,
-    val publishedAt: String?
+    val publishedBy: String
 )

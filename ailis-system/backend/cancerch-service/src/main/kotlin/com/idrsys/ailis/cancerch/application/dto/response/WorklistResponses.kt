@@ -45,7 +45,7 @@ data class WorklistResponse(
  * WorkSample 응답 DTO
  */
 data class WorkSampleResponse(
-    val sampleId: Long,
+    val sampleId: String,
     val barcode: String,
     val serviceCode: String,
     val rowNumber: Int
@@ -53,7 +53,7 @@ data class WorkSampleResponse(
     companion object {
         fun from(sample: WorkSample): WorkSampleResponse {
             return WorkSampleResponse(
-                sampleId = sample.sampleId.value,
+                sampleId = sample.sampleId.value.toString(),
                 barcode = sample.barcode.value,
                 serviceCode = sample.serviceCode,
                 rowNumber = sample.rowNumber

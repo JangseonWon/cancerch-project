@@ -1,6 +1,5 @@
 package com.idrsys.ailis.cancerch.adapter.web
 
-import com.idrsys.ailis.cancerch.adapter.repository.InMemoryAnalysisRepository
 import com.idrsys.ailis.cancerch.application.dto.request.CreateAnalysisResultCommand
 import com.idrsys.ailis.cancerch.application.dto.request.GetAnalysisResultQuery
 import com.idrsys.ailis.cancerch.application.dto.request.SearchAnalysisQuery
@@ -164,9 +163,6 @@ class AnalysisResultsController(
         val response = searchAnalysisUseCase.execute(query)
 
         // 각 결과에 숫자 ID 추가
-        val repo = analysisRepository as? InMemoryAnalysisRepository
-            ?: throw IllegalStateException("Repository must be InMemoryAnalysisRepository")
-
         val resultsWithId = response.results.map { result ->
             val analysisId = com.idrsys.ailis.cancerch.domain.model.AnalysisId.from(
                 result.sampleId,
@@ -174,7 +170,7 @@ class AnalysisResultsController(
                 result.batch,
                 result.rowNumber
             )
-            val numericId = repo.getNumericId(analysisId)
+            val numericId = analysisRepository.getNumericId(analysisId)
             result.copy(id = numericId)
         }
 
@@ -195,10 +191,7 @@ class AnalysisResultsController(
     suspend fun getAnalysisResultById(
         @PathVariable id: Long
     ): AnalysisResultResponse {
-        val repo = analysisRepository as? InMemoryAnalysisRepository
-            ?: throw IllegalStateException("Repository must be InMemoryAnalysisRepository")
-
-        val analysisResult = repo.findByNumericId(id)
+        val analysisResult = analysisRepository.findByNumericId(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Analysis result not found with id: $id")
 
         return AnalysisResultResponse.from(analysisResult, id)
@@ -213,10 +206,7 @@ class AnalysisResultsController(
         @PathVariable id: Long,
         @Valid @RequestBody request: UpdateAnalysisResultRequest
     ): AnalysisResultResponse {
-        val repo = analysisRepository as? InMemoryAnalysisRepository
-            ?: throw IllegalStateException("Repository must be InMemoryAnalysisRepository")
-
-        val analysisResult = repo.findByNumericId(id)
+        val analysisResult = analysisRepository.findByNumericId(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Analysis result not found with id: $id")
 
         val command = UpdateAnalysisResultCommand(

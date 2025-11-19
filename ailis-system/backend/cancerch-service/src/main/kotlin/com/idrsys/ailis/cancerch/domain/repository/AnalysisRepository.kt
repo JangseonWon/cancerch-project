@@ -59,4 +59,14 @@ interface AnalysisRepository {
      * 분석 결과 존재 여부 확인
      */
     suspend fun existsById(id: AnalysisId): Boolean
+
+    /**
+     * AnalysisId로 숫자 ID 조회 (Frontend용)
+     */
+    suspend fun getNumericId(id: AnalysisId): Long?
+
+    /**
+     * 숫자 ID로 분석 결과 조회 (Frontend용)
+     */
+    suspend fun findByNumericId(numericId: Long): AnalysisResult?
 }

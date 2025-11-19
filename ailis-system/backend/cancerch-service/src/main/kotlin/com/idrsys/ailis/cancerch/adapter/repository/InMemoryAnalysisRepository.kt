@@ -78,7 +78,7 @@ class InMemoryAnalysisRepository : AnalysisRepository {
     /**
      * 숫자 ID로 분석 결과 조회
      */
-    suspend fun findByNumericId(numericId: Long): AnalysisResult? {
+    override suspend fun findByNumericId(numericId: Long): AnalysisResult? {
         val analysisId = idStorage[numericId] ?: return null
         return storage[analysisId]
     }
@@ -86,7 +86,7 @@ class InMemoryAnalysisRepository : AnalysisRepository {
     /**
      * AnalysisId에 대한 숫자 ID 조회 (O(1) 복잡도)
      */
-    fun getNumericId(analysisId: AnalysisId): Long? {
+    override suspend fun getNumericId(analysisId: AnalysisId): Long? {
         return reverseIdStorage[analysisId]
     }
 
