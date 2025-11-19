@@ -255,16 +255,13 @@ class AnalysisResultsController(
         val createdResult = createAnalysisResultUseCase.execute(command)
 
         // 생성된 결과의 숫자 ID 조회
-        val repo = analysisRepository as? InMemoryAnalysisRepository
-            ?: throw IllegalStateException("Repository must be InMemoryAnalysisRepository")
-
         val analysisId = com.idrsys.ailis.cancerch.domain.model.AnalysisId.from(
             createdResult.sampleId,
             createdResult.serviceCode,
             createdResult.batch,
             createdResult.rowNumber
         )
-        val numericId = repo.getNumericId(analysisId)
+        val numericId = analysisRepository.getNumericId(analysisId)
 
         return createdResult.copy(id = numericId)
     }

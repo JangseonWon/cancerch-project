@@ -99,8 +99,8 @@ class ReportController(
         val command = GenerateReportCommand(
             sampleId = request.sampleId,
             serviceCode = serviceCode,
-            batch = latestAnalysis.batch,
-            rowNumber = latestAnalysis.rowNumber,
+            batch = latestAnalysis.id.batch,
+            rowNumber = latestAnalysis.id.rowNumber,
             language = "ko"
         )
 

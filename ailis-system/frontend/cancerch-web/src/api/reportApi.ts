@@ -34,7 +34,7 @@ export const reportApi = {
 
   // Create new report
   createReport: async (request: CreateReportRequest): Promise<ReportResponse> => {
-    const response = await apiClient.post<ReportResponse>('/api/reports', request)
+    const response = await apiClient.post<ReportResponse>('/api/reports/generate', request)
     return response.data
   },
 
